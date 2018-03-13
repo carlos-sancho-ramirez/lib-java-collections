@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+group = 'sword'
+version = '1.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
+ 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId 'collections-library'
+            from components.java
+
+            artifact sourceJar
+            artifact packageJavadoc
+        }
+    }
+}
+
+javadoc {
+  source = sourceSets.main.allJava
+  classpath = configurations.compileClasspath
+
+  options {
+    setMemberLevel JavadocMemberLevel.PUBLIC
+    setAuthor false
+
+    links "https://docs.oracle.com/javase/7/docs/api/"
+  }
+}
+
+task sourceJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allJava
+}
+
+task packageJavadoc(type: Jar) {
+  from javadoc
+  classifier = 'javadoc'
+}
