@@ -31,6 +31,26 @@ public class ImmutableIntKeyMapTest extends IntKeyMapTest {
         }
     }
 
+    private String mapValueFunction(String str) {
+        return (str != null)? "_" + str : null;
+    }
+    public void testMapValuesMethod() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntKeyMap<String> map = new ImmutableIntKeyMap.Builder<String>()
+                    .put(a, Integer.toString(a))
+                    .put(b, Integer.toString(b))
+                    .build();
+
+            final ImmutableIntKeyMap<String> map2 = map.mapValues(this::mapValueFunction);
+            assertEquals(map.size(), map2.size());
+            assertEquals(map.keySet(), map2.keySet());
+
+            for (int key : map.keySet()) {
+                assertEquals(mapValueFunction(map.get(key)), map2.get(key));
+            }
+        }));
+    }
+
     public void testPutMethod() {
         withImmutableIntKeyMap(array -> withInt(key -> withString(value -> {
             if (array != null) {

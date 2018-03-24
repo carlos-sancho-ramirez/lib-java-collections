@@ -76,6 +76,21 @@ public class ImmutableIntKeyMap<T> extends AbstractSizable implements IntKeyMap<
         return (_keys.length != 0)? new ImmutableIntSetImpl(_keys) : ImmutableIntSetImpl.empty();
     }
 
+    /**
+     * Return a new map instance where value has been transformed following the given function. Keys remain the same.
+     * @param mapFunc Function the must be applied to values in order to modify them.
+     * @param <U> New type for values
+     */
+    public <U> ImmutableIntKeyMap<U> mapValues(Function<T, U> mapFunc) {
+        final int size = _keys.length;
+        final Object[] newValues = new Object[size];
+        for (int i = 0; i < size; i++) {
+            newValues[i] = mapFunc.apply((T) _values[i]);
+        }
+
+        return new ImmutableIntKeyMap<>(_keys, newValues);
+    }
+
     @Override
     public ImmutableIntKeyMap<T> toImmutable() {
         return this;
