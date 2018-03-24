@@ -63,7 +63,7 @@ public class ImmutableIntValueMap<T> extends AbstractSizable implements Iterable
         this(keys, extractHashCodes(keys), values);
     }
 
-    private ImmutableIntValueMap(Object[] keys, int[] hashCodes, int[] values) {
+    ImmutableIntValueMap(Object[] keys, int[] hashCodes, int[] values) {
         _keys = keys;
         _values = values;
         _hashCodes = hashCodes;

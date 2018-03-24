@@ -148,7 +148,21 @@ public final class ImmutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> 
 
     /**
      * Return a new map instance where value has been transformed following the given function. Keys remain the same.
-     * @param mapFunc Function the must be applied to values in order to modify them.
+     * @param mapFunc Function to be applied to each value.
+     */
+    public ImmutableIntValueMap<K> mapValues(IntResultFunction<V> mapFunc) {
+        final int itemCount = _keys.length;
+        final int[] newValues = new int[itemCount];
+        for (int i = 0; i < itemCount; i++) {
+            newValues[i] = mapFunc.apply(valueAt(i));
+        }
+
+        return new ImmutableIntValueMap<>(_keys, _hashCodes, newValues);
+    }
+
+    /**
+     * Return a new map instance where value has been transformed following the given function. Keys remain the same.
+     * @param mapFunc Function to be applied to each value.
      * @param <U> New type for values
      */
     public <U> ImmutableMap<K, U> mapValues(Function<V, U> mapFunc) {

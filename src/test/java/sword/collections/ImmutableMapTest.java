@@ -4,7 +4,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public class ImmutableMapTest extends MapTest<Integer, String> {
+public final class ImmutableMapTest extends MapTest<Integer, String> {
 
     @Override
     ImmutableMap.Builder<Integer, String> newBuilder() {
@@ -79,6 +79,27 @@ public class ImmutableMapTest extends MapTest<Integer, String> {
                 }
             }
         }))));
+    }
+
+    public void testMapValuesForIntResult() {
+        withKey(ka -> withKey(kb -> {
+            final String va = valueFromKey(ka);
+            final String vb = valueFromKey(kb);
+            final ImmutableMap<Integer, String> map = newBuilder()
+                    .put(ka, va)
+                    .put(kb, vb)
+                    .build();
+
+            final IntResultFunction<String> mapFunc = str -> (str != null)? str.hashCode() : 0;
+            final ImmutableIntValueMap<Integer> map2 = map.mapValues(mapFunc);
+
+            final ImmutableSet<Integer> keySet = map.keySet();
+            assertEquals(keySet, map2.keySet());
+
+            for (Integer key : keySet) {
+                assertEquals(mapFunc.apply(map.get(key)), map2.get(key));
+            }
+        }));
     }
 
     public void testMapValues() {
