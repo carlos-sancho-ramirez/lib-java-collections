@@ -14,7 +14,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public class ImmutableIntKeyMap<T> extends AbstractSizable implements IntKeyMap<T> {
+public final class ImmutableIntKeyMap<T> extends AbstractSizable implements IntKeyMap<T> {
 
     private static final ImmutableIntKeyMap<Object> EMPTY = new ImmutableIntKeyMap<>(new int[0], new Object[0]);
 
@@ -74,6 +74,20 @@ public class ImmutableIntKeyMap<T> extends AbstractSizable implements IntKeyMap<
     @Override
     public ImmutableIntSet keySet() {
         return (_keys.length != 0)? new ImmutableIntSetImpl(_keys) : ImmutableIntSetImpl.empty();
+    }
+
+    /**
+     * Return a new map instance where value has been transformed following the given function. Keys remain the same.
+     * @param mapFunc Function the must be applied to values in order to modify them.
+     */
+    public ImmutableIntPairMap mapValues(IntResultFunction<T> mapFunc) {
+        final int size = _keys.length;
+        final int[] newValues = new int[size];
+        for (int i = 0; i < size; i++) {
+            newValues[i] = mapFunc.apply((T) _values[i]);
+        }
+
+        return new ImmutableIntPairMap(_keys, newValues);
     }
 
     /**

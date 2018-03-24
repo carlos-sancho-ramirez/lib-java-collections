@@ -6,7 +6,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public class ImmutableIntKeyMapTest extends IntKeyMapTest {
+public final class ImmutableIntKeyMapTest extends IntKeyMapTest {
 
     @Override
     <E> ImmutableIntKeyMap.Builder<E> newBuilder() {
@@ -34,6 +34,11 @@ public class ImmutableIntKeyMapTest extends IntKeyMapTest {
     private String mapValueFunction(String str) {
         return (str != null)? "_" + str : null;
     }
+
+    private int mapValueIntResultFunction(String str) {
+        return (str != null)? str.hashCode() : 0;
+    }
+
     public void testMapValuesMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntKeyMap<String> map = new ImmutableIntKeyMap.Builder<String>()
@@ -47,6 +52,23 @@ public class ImmutableIntKeyMapTest extends IntKeyMapTest {
 
             for (int key : map.keySet()) {
                 assertEquals(mapValueFunction(map.get(key)), map2.get(key));
+            }
+        }));
+    }
+
+    public void testMapValuesForIntResultMethod() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntKeyMap<String> map = new ImmutableIntKeyMap.Builder<String>()
+                    .put(a, Integer.toString(a))
+                    .put(b, Integer.toString(b))
+                    .build();
+
+            final ImmutableIntPairMap map2 = map.mapValues(this::mapValueIntResultFunction);
+            assertEquals(map.size(), map2.size());
+            assertEquals(map.keySet(), map2.keySet());
+
+            for (int key : map.keySet()) {
+                assertEquals(mapValueIntResultFunction(map.get(key)), map2.get(key));
             }
         }));
     }
