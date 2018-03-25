@@ -85,4 +85,42 @@ public class ImmutableIntValueMapTest extends TestCase {
             assertEquals(builder.build(), result);
         });
     }
+
+    public void testMapValuesForIntResult() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntValueMap<String> map = new ImmutableIntValueMap.Builder<String>()
+                    .put(Integer.toString(a), a)
+                    .put(Integer.toString(b), b)
+                    .build();
+
+            final IntToIntFunction mapFunc = value -> value + 3;
+            final ImmutableIntValueMap<String> map2 = map.mapValues(mapFunc);
+
+            final ImmutableSet<String> keySet = map.keySet();
+            assertEquals(keySet, map2.keySet());
+
+            for (String key : keySet) {
+                assertEquals(mapFunc.apply(map.get(key)), map2.get(key));
+            }
+        }));
+    }
+
+    public void testMapValues() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntValueMap<Integer> map = new ImmutableIntValueMap.Builder<Integer>()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            final IntFunction<String> mapFunc = Integer::toString;
+            final ImmutableMap<Integer, String> map2 = map.mapValues(mapFunc);
+
+            final ImmutableSet<Integer> keySet = map.keySet();
+            assertEquals(keySet, map2.keySet());
+
+            for (Integer key : keySet) {
+                assertEquals(mapFunc.apply(map.get(key)), map2.get(key));
+            }
+        }));
+    }
 }

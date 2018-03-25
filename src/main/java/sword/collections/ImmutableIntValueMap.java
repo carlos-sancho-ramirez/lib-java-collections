@@ -101,6 +101,35 @@ public class ImmutableIntValueMap<T> extends AbstractSizable implements Iterable
         }
     }
 
+    /**
+     * Return a new map instance where values has been transformed following the given function. Keys remain the same.
+     * @param mapFunc Function to be applied to each value.
+     */
+    public ImmutableIntValueMap<T> mapValues(IntToIntFunction mapFunc) {
+        final int itemCount = _keys.length;
+        final int[] newValues = new int[itemCount];
+        for (int i = 0; i < itemCount; i++) {
+            newValues[i] = mapFunc.apply(valueAt(i));
+        }
+
+        return new ImmutableIntValueMap<>(_keys, _hashCodes, newValues);
+    }
+
+    /**
+     * Return a new map instance where values has been transformed following the given function. Keys remain the same.
+     * @param mapFunc Function to be applied to each value.
+     * @param <U> New type for values
+     */
+    public <U> ImmutableMap<T, U> mapValues(IntFunction<U> mapFunc) {
+        final int itemCount = _keys.length;
+        final Object[] newValues = new Object[itemCount];
+        for (int i = 0; i < itemCount; i++) {
+            newValues[i] = mapFunc.apply(valueAt(i));
+        }
+
+        return new ImmutableMap<>(_keys, _hashCodes, newValues);
+    }
+
     public ImmutableIntKeyMap<T> reverse() {
         // TODO: Ensure that no repeated keys are going inside the reversed version
         final int length = _values.length;
