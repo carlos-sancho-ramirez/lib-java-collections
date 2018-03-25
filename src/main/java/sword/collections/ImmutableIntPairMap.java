@@ -89,6 +89,35 @@ public final class ImmutableIntPairMap extends AbstractSizable implements IntPai
         return (_keys.length != 0)? new ImmutableIntSetImpl(_keys) : ImmutableIntSetImpl.empty();
     }
 
+    /**
+     * Return a new map instance where values has been transformed following the given function. Keys remain the same.
+     * @param mapFunc Function to be applied to each value.
+     */
+    public ImmutableIntPairMap mapValues(IntToIntFunction mapFunc) {
+        final int size = _keys.length;
+        final int[] newValues = new int[size];
+        for (int i = 0; i < size; i++) {
+            newValues[i] = mapFunc.apply(_values[i]);
+        }
+
+        return new ImmutableIntPairMap(_keys, newValues);
+    }
+
+    /**
+     * Return a new map instance where values has been transformed following the given function. Keys remain the same.
+     * @param mapFunc Function to be applied to each value.
+     * @param <U> New type for values
+     */
+    public <U> ImmutableIntKeyMap<U> mapValues(IntFunction<U> mapFunc) {
+        final int size = _keys.length;
+        final Object[] newValues = new Object[size];
+        for (int i = 0; i < size; i++) {
+            newValues[i] = mapFunc.apply(_values[i]);
+        }
+
+        return new ImmutableIntKeyMap<>(_keys, newValues);
+    }
+
     @Override
     public ImmutableIntPairMap toImmutable() {
         return this;

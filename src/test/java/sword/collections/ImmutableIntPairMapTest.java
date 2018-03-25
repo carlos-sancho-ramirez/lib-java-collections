@@ -38,6 +38,48 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         }
     }
 
+    private String mapValueFunction(int value) {
+        return Integer.toString(value);
+    }
+
+    private int mapValueIntResultFunction(int value) {
+        return value + 1;
+    }
+
+    public void testMapValuesMethod() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntPairMap map = new ImmutableIntPairMap.Builder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            final ImmutableIntKeyMap<String> map2 = map.mapValues(this::mapValueFunction);
+            assertEquals(map.size(), map2.size());
+            assertEquals(map.keySet(), map2.keySet());
+
+            for (int key : map.keySet()) {
+                assertEquals(mapValueFunction(map.get(key)), map2.get(key));
+            }
+        }));
+    }
+
+    public void testMapValuesForIntResultMethod() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntPairMap map = new ImmutableIntPairMap.Builder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            final ImmutableIntPairMap map2 = map.mapValues(this::mapValueIntResultFunction);
+            assertEquals(map.size(), map2.size());
+            assertEquals(map.keySet(), map2.keySet());
+
+            for (int key : map.keySet()) {
+                assertEquals(mapValueIntResultFunction(map.get(key)), map2.get(key));
+            }
+        }));
+    }
+
     public void testPutMethod() {
         withImmutableSparseIntArray(array -> withInt(key -> withInt(value -> {
             if (array != null) {
