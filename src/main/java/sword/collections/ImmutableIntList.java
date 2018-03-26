@@ -53,6 +53,29 @@ public class ImmutableIntList extends AbstractImmutableIntIterable {
         return (ImmutableList<U>) super.map(func);
     }
 
+    /**
+     * Reduces the collection to a single element by applying the given function on each pair of values.
+     * @param func Associate function to be applied on each pair of elements.
+     * @return The resulting value of applying the given function to each value pair.
+     */
+    public int reduce(ReduceIntFunction func) {
+        final int size = _values.length;
+        if (size == 0) {
+            throw new UnsupportedOperationException("Unable to reduce an empty collection");
+        }
+
+        if (size == 1) {
+            return _values[0];
+        }
+
+        int result = func.apply(_values[0], _values[1]);
+        for (int i = 2; i < size; i++) {
+            result = func.apply(result, _values[i]);
+        }
+
+        return result;
+    }
+
     @Override
     public java.util.Iterator<Integer> iterator() {
         return new Iterator();

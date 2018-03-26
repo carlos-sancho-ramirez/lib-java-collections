@@ -2,6 +2,8 @@ package sword.collections;
 
 import java.util.Iterator;
 
+import static sword.collections.TestUtils.withInt;
+
 public class ImmutableIntListTest extends AbstractImmutableIntIterableTest {
 
     private static final int[] INT_VALUES = {
@@ -120,6 +122,47 @@ public class ImmutableIntListTest extends AbstractImmutableIntIterableTest {
                 assertEquals(defaultValue, first);
             }
         }))));
+    }
+
+    public void testReduceFor1Item() {
+        withInt(value ->  {
+            final ImmutableIntList list = new ImmutableIntList.Builder()
+                    .add(value)
+                    .build();
+
+            final ReduceIntFunction func = (l,r) -> {
+                fail("Should not be called for a single item");
+                return l;
+            };
+
+            assertEquals(list.get(0), list.reduce(func));
+        });
+    }
+
+    public void testReduceFor2Items() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntList list = new ImmutableIntList.Builder()
+                    .add(a)
+                    .add(b)
+                    .build();
+
+            final ReduceIntFunction func = (l,r) -> l + r;
+            assertEquals(func.apply(a, b), list.reduce(func));
+        }));
+    }
+
+    public void testReduceFor3Items() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final ImmutableIntList list = new ImmutableIntList.Builder()
+                    .add(a)
+                    .add(b)
+                    .add(c)
+                    .build();
+
+            final ReduceIntFunction func = (l,r) -> l + r;
+            final int result = list.reduce(func);
+            assertEquals(func.apply(func.apply(a, b), c), result);
+        })));
     }
 
     public void testAppendWhenEmpty() {
