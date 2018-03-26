@@ -3,6 +3,7 @@ package sword.collections;
 import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
+import static sword.collections.TestUtils.withInt;
 
 public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
 
@@ -207,6 +208,48 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
                 assertSame(ImmutableList.empty(), pair.right);
             }
         }))));
+    }
+
+    public void testReduceFor1Item() {
+        withString(value ->  {
+            final ImmutableList<String> list = new ImmutableList.Builder<String>()
+                    .add(value)
+                    .build();
+
+            final ReduceFunction<String> func = (l,r) -> {
+                fail("Should not be called for a single item");
+                return l;
+            };
+
+            assertEquals(list.get(0), list.reduce(func));
+        });
+    }
+
+    public void testReduceFor2Items() {
+        withInt(a -> withInt(b -> {
+            final ImmutableList<Integer> list = new ImmutableList.Builder<Integer>()
+                    .add(a)
+                    .add(b)
+                    .build();
+
+            final ReduceFunction<Integer> func = (l,r) -> l + r;
+            final Integer result = list.reduce(func);
+            assertEquals(func.apply(a, b), result);
+        }));
+    }
+
+    public void testReduceFor3Items() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final ImmutableList<String> list = new ImmutableList.Builder<String>()
+                    .add(Integer.toString(a))
+                    .add(Integer.toString(b))
+                    .add(Integer.toString(c))
+                    .build();
+
+            final ReduceFunction<String> func = (l,r) -> l + ", " + r;
+            final String result = list.reduce(func);
+            assertEquals(func.apply(func.apply(Integer.toString(a), Integer.toString(b)), Integer.toString(c)), result);
+        })));
     }
 
     public void testAppendWhenEmpty() {
