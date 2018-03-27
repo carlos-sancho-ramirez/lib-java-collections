@@ -123,6 +123,28 @@ final class SortUtils {
         return min;
     }
 
+    static int indexOf(Object[] values, int size, Object value) {
+        for (int i = 0; i < size; i++) {
+            final Object item = values[i];
+            if (value == null && item == null || value != null && value.equals(item)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    static <E> E findFirst(Object[] values, int length, Predicate<E> predicate, E defaultValue) {
+        for (int i = 0; i < length; i++) {
+            final E item = (E) values[i];
+            if (predicate.apply(item)) {
+                return item;
+            }
+        }
+
+        return defaultValue;
+    }
+
     static boolean equal(Object a, Object b) {
         return a == b || a != null && a.equals(b);
     }

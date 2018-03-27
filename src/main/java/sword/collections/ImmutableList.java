@@ -2,7 +2,7 @@ package sword.collections;
 
 import java.util.Collection;
 
-public class ImmutableList<T> extends AbstractImmutableIterable<T> {
+public final class ImmutableList<T> extends AbstractImmutableIterable<T> implements List<T> {
 
     private static final ImmutableList<Object> EMPTY = new ImmutableList<>(new Object[0]);
 
@@ -17,10 +17,11 @@ public class ImmutableList<T> extends AbstractImmutableIterable<T> {
 
     private final Object[] _values;
 
-    private ImmutableList(Object[] values) {
+    ImmutableList(Object[] values) {
         _values = values;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
         return (T) _values[index];
@@ -31,19 +32,9 @@ public class ImmutableList<T> extends AbstractImmutableIterable<T> {
         return _values.length;
     }
 
-    /**
-     * Returns the index within the list for the first element matching the given value. Or -1 if none matches.
-     * @param value Value to be matched. {@link #equals(Object)} will be called for this purpose.
-     */
+    @Override
     public int indexOf(T value) {
-        for (int i = 0; i < _values.length; i++) {
-            final Object item = _values[i];
-            if (value == null && item == null || value != null && value.equals(item)) {
-                return i;
-            }
-        }
-
-        return -1;
+        return SortUtils.indexOf(_values, _values.length, value);
     }
 
     /**
@@ -183,6 +174,22 @@ public class ImmutableList<T> extends AbstractImmutableIterable<T> {
         return new Builder<U>();
     }
 
+    @Override
+    public ImmutableList<T> toImmutable() {
+        return this;
+    }
+
+    @Override
+    public MutableList<T> mutate() {
+        final int length = _values.length;
+        final int newLength = MutableList.suitableArrayLength(length);
+
+        Object[] values = new Object[newLength];
+        System.arraycopy(_values, 0, values, 0, length);
+
+        return new MutableList<>(values, length);
+    }
+
     private class Iterator extends IteratorForImmutable<T> {
         private int _index;
 
@@ -198,19 +205,9 @@ public class ImmutableList<T> extends AbstractImmutableIterable<T> {
         }
     }
 
-    /**
-     * Returns the first item matching the predicate or the default value if none matches.
-     */
+    @Override
     public T findFirst(Predicate<T> predicate, T defaultValue) {
-        final int length = _values.length;
-        for (int i = 0; i < length; i++) {
-            final T item = get(i);
-            if (predicate.apply(item)) {
-                return item;
-            }
-        }
-
-        return defaultValue;
+        return SortUtils.findFirst(_values, _values.length, predicate, defaultValue);
     }
 
     public static class Builder<E> implements ImmutableCollectionBuilder<E> {
