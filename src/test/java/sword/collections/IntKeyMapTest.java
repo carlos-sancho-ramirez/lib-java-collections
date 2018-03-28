@@ -101,19 +101,25 @@ abstract class IntKeyMapTest extends TestCase {
         })));
     }
 
-    public void testKeySet() {
-        for (int amount = 0; amount < 3; amount++) {
-            final IntKeyMapBuilder<String> mapBuilder = newBuilder();
-            final ImmutableIntSetBuilder setBuilder = new ImmutableIntSetBuilder();
-            for (int i = 0; i < amount; i++) {
-                setBuilder.add(i);
-                mapBuilder.put(i, "");
-            }
+    public void testKeySetWhenEmpty() {
+        final IntKeyMapBuilder<String> builder = newBuilder();
+        final IntKeyMap<String> map = builder.build();
+        assertTrue(map.keySet().isEmpty());
+    }
 
-            final ImmutableIntSet expectedKeys = setBuilder.build();
-            final ImmutableIntSet keySet = mapBuilder.build().keySet().toImmutable();
-            assertEquals(expectedKeys, keySet);
-        }
+    public void testKeySet() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final IntKeyMapBuilder<String> builder = newBuilder();
+            final IntKeyMap<String> map = builder
+                    .put(a, Integer.toString(a))
+                    .put(b, Integer.toString(b))
+                    .put(c, Integer.toString(c))
+                    .build();
+
+            final ImmutableIntSet set = new ImmutableIntSetBuilder()
+                    .add(a).add(b).add(c).build();
+            assertEquals(set, map.keySet().toImmutable());
+        })));
     }
 
     public void testIndexOfKey() {
