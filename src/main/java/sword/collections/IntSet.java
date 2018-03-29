@@ -3,6 +3,14 @@ package sword.collections;
 public interface IntSet extends IterableIntCollection, Sizable {
 
     /**
+     * Value in the given index position.
+     *
+     * @param index Index within the array of values, valid indexes goes from 0 to {@link #size()} - 1
+     * @return The value in the given position.
+     */
+    int valueAt(int index);
+
+    /**
      * Return the minimum value within the set.
      * @throws EmptyCollectionException if collection is empty.
      */

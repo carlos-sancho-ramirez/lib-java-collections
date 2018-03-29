@@ -3,12 +3,12 @@ package sword.collections;
 /**
  * Sorted set of integers for a given range.
  */
-final class ImmutableIntRange extends AbstractImmutableIntSet {
+public final class ImmutableIntRange extends AbstractImmutableIntSet {
 
     private final int _min;
     private final int _max;
 
-    ImmutableIntRange(int min, int max) {
+    public ImmutableIntRange(int min, int max) {
         if (min > max) {
             throw new IllegalArgumentException();
         }
@@ -20,6 +20,15 @@ final class ImmutableIntRange extends AbstractImmutableIntSet {
     @Override
     public int size() {
         return _max - _min + 1;
+    }
+
+    @Override
+    public int valueAt(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        return _min + index;
     }
 
     @Override

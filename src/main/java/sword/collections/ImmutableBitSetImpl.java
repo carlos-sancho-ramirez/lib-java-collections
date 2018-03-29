@@ -161,6 +161,35 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
+    public int valueAt(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        int wordIndex = 0;
+        int value = 0;
+        int bitMask = 1;
+        while (true) {
+            if ((_value[wordIndex] & bitMask) != 0) {
+                if (index == 0) {
+                    return value;
+                }
+                else {
+                    index--;
+                }
+            }
+            ++value;
+            if ((value & OFFSET_MASK) == 0) {
+                ++wordIndex;
+                bitMask = 1;
+            }
+            else {
+                bitMask <<= 1;
+            }
+        }
+    }
+
+    @Override
     public int min() throws EmptyCollectionException {
         java.util.Iterator<Integer> it = iterator();
         if (!it.hasNext()) {

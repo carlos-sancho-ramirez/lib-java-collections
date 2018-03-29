@@ -32,7 +32,8 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet {
         System.arraycopy(oldKeys, 0, _values, 0, _size);
     }
 
-    int valueAt(int index) {
+    @Override
+    public int valueAt(int index) {
         return _values[index];
     }
 

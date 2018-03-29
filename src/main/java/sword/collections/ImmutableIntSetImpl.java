@@ -118,6 +118,11 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
+    public int valueAt(int index) {
+        return _values[index];
+    }
+
+    @Override
     public int min() throws EmptyCollectionException {
         if (_values.length == 0) {
             throw new EmptyCollectionException();

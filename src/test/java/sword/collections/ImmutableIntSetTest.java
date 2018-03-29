@@ -149,6 +149,17 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntIterableTest {
         });
     }
 
+    public void testValueAt() {
+        withItem(a -> withItem(b -> withItem(c -> {
+            final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
+            final Iterator<Integer> it = set.iterator();
+            int index = 0;
+            while (it.hasNext()) {
+                assertEquals(set.valueAt(index++), it.next().intValue());
+            }
+        })));
+    }
+
     public void testMin() {
         withItem(a -> withItem(b -> withItem(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
