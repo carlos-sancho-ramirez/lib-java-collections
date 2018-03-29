@@ -227,4 +227,26 @@ public final class MutableListTest extends AbstractIterableTest<String> {
             assertEquals(c, list1.get(2));
         })));
     }
+
+    public void testRemoveThroughIterator() {
+        final Predicate<String> predicate = str -> str != null && str.length() > 0;
+        withString(a -> withString(b -> withString(c -> withString(d -> withString(e -> {
+            final MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).add(c).add(d).add(e).build();
+            final MutableList.Builder<String> builder = new MutableList.Builder<>();
+            for (String str : list) {
+                if (predicate.apply(str)) {
+                    builder.add(str);
+                }
+            }
+
+            final Iterator<String> it = list.iterator();
+            while (it.hasNext()) {
+                if (!predicate.apply(it.next())) {
+                    it.remove();
+                }
+            }
+
+            assertEquals(builder.build(), list);
+        })))));
+    }
 }

@@ -118,6 +118,7 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
             if (_size > index) {
                 System.arraycopy(_values, index + 1, newValues, index, _size - index);
             }
+            _values = newValues;
         }
         else {
             for (int i = index; i < _size; i++) {
