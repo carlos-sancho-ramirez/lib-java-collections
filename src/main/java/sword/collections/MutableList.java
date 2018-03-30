@@ -1,5 +1,7 @@
 package sword.collections;
 
+import static sword.collections.SortUtils.equal;
+
 public final class MutableList<T> extends AbstractIterable<T> implements List<T> {
 
     private static final int GRANULARITY = 4;
@@ -125,6 +127,25 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
                 _values[i] = _values[i + 1];
             }
         }
+    }
+
+    /**
+     * Replace the value in the given index by the one provided here.
+     *
+     * This method will never modify the size of this collection.
+     * It will always replace an existing value in the given index.
+     *
+     * @param index Index where this value must be replaced.
+     *              Index must be between zero (included) and the value returned by {@link #size()} (excluded).
+     * @param value Value to be set in that position.
+     * @return True if this operation modified the collection values.
+     *         False if the value provided matches the one it was there before.
+     * @throws IndexOutOfBoundsException if the given index is not within the expected range.
+     */
+    public boolean put(int index, T value) {
+        final boolean result = !equal(_values[index], value);
+        _values[index] = value;
+        return result;
     }
 
     /**

@@ -301,4 +301,23 @@ public final class MutableListTest extends AbstractIterableTest<String> {
             }
         })));
     }
+
+    public void testPut() {
+        withString(a -> withString(b -> withString(c -> {
+            for (int i = 0; i < 2; i++) {
+                final MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).build();
+                final MutableList<String> expectedList = new MutableList.Builder<String>()
+                        .add((i == 0) ? c : a)
+                        .add((i == 1) ? c : b)
+                        .build();
+                if (i == 0 && equal(a, c) || i == 1 && equal(b, c)) {
+                    assertFalse(list.put(i, c));
+                } else {
+                    assertTrue(list.put(i, c));
+                }
+
+                assertEquals(expectedList, list);
+            }
+        })));
+    }
 }
