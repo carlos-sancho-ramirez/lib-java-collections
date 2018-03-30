@@ -249,4 +249,56 @@ public final class MutableListTest extends AbstractIterableTest<String> {
             assertEquals(builder.build(), list);
         })))));
     }
+
+    public void testInsertForEmptyList() {
+        withString(a -> {
+            final MutableList<String> list = MutableList.empty();
+            list.insert(0, a);
+            assertEquals(1, list.size());
+            assertEquals(a, list.get(0));
+        });
+    }
+
+    public void testInsertFirstForSingleElementList() {
+        withString(a -> withString(b -> {
+            final MutableList<String> list = new MutableList.Builder<String>().add(a).build();
+            list.insert(0, b);
+            assertEquals(2, list.size());
+            assertEquals(b, list.get(0));
+            assertEquals(a, list.get(1));
+        }));
+    }
+
+    public void testInsertLastForSingleElementList() {
+        withString(a -> withString(b -> {
+            final MutableList<String> list = new MutableList.Builder<String>().add(a).build();
+            list.insert(1, b);
+            assertEquals(2, list.size());
+            assertEquals(a, list.get(0));
+            assertEquals(b, list.get(1));
+        }));
+    }
+
+    public void testInsert() {
+        withString(a -> withString(b -> withString(c -> {
+            for (int i = 0; i <= 4; i++) {
+                MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).add(b).add(a).build();
+
+                MutableList.Builder<String> builder = new MutableList.Builder<>();
+                for (int j = 0; j < 4; j++) {
+                    if (j == i) {
+                        builder.add(c);
+                    }
+                    builder.add(list.get(j));
+                }
+
+                if (i == 4) {
+                    builder.add(c);
+                }
+
+                list.insert(i, c);
+                assertEquals(builder.build(), list);
+            }
+        })));
+    }
 }

@@ -127,15 +127,47 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
         }
     }
 
-    public void append(T item) {
+    /**
+     * Inserts the given value in the given position.
+     *
+     * This will shift all elements with higher index or equal index in one,
+     * in order to make space for the new value.
+     * @param index Index where this value wants to be included.
+     *              Index must be between zero and the value returned by {@link #size()}, both included.
+     * @param value Value to be inserted in that position.
+     * @throws IndexOutOfBoundsException if the given index is not within the expected range.
+     */
+    public void insert(int index, T value) {
+        if (index < 0 || index > _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         final int arrayLength = suitableArrayLength(_size + 1);
         if (arrayLength != _values.length) {
             Object[] newValues = new Object[arrayLength];
-            System.arraycopy(_values, 0, newValues, 0, _values.length);
+            if (index > 0) {
+                System.arraycopy(_values, 0, newValues, 0, index);
+            }
+            if (_size > index) {
+                System.arraycopy(_values, index, newValues, index + 1, _size - index);
+            }
             _values = newValues;
         }
+        else {
+            for (int i = _size; i > index; i--) {
+                _values[i] = _values[i - 1];
+            }
+        }
+        _values[index] = value;
+        ++_size;
+    }
 
-        _values[_size++] = item;
+    public void prepend(T item) {
+        insert(0, item);
+    }
+
+    public void append(T item) {
+        insert(_size, item);
     }
 
     public void appendAll(List<T> that) {
