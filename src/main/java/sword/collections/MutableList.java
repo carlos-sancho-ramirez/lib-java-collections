@@ -108,7 +108,19 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
         }
     }
 
-    private void removeAt(int index) {
+    /**
+     * Removes from this collection the item in the given position.
+     *
+     * If no exception is thrown because of a wrong index, this method will always
+     * shrink the size of this collection by 1.
+     * @param index Index within this collection for the element to be removed.
+     *              It must be between 0 (included) and the value returned by {@link #size()} (excluded)
+     */
+    public void removeAt(int index) {
+        if (index < 0 || index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         final int arrayLength = suitableArrayLength(--_size);
         if (arrayLength != _values.length) {
             Object[] newValues = new Object[arrayLength];

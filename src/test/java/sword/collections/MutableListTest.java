@@ -302,6 +302,50 @@ public final class MutableListTest extends AbstractIterableTest<String> {
         })));
     }
 
+    public void testRemoveAtForSingleElementList() {
+        withString(a -> {
+            final MutableList<String> list = new MutableList.Builder<String>().add(a).build();
+            list.removeAt(0);
+            assertTrue(list.isEmpty());
+        });
+    }
+
+    public void testRemoveFirstFor2ElementsList() {
+        withString(a -> withString(b -> {
+            final MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).build();
+            list.removeAt(0);
+            assertEquals(1, list.size());
+            assertEquals(b, list.get(0));
+        }));
+    }
+
+    public void testRemoveLstFor2ElementsList() {
+        withString(a -> withString(b -> {
+            final MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).build();
+            list.removeAt(1);
+            assertEquals(1, list.size());
+            assertEquals(a, list.get(0));
+        }));
+    }
+
+    public void testRemoveAt() {
+        withString(a -> withString(b -> {
+            for (int i = 0; i <= 4; i++) {
+                MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).add(a).add(b).add(a).build();
+
+                MutableList.Builder<String> builder = new MutableList.Builder<>();
+                for (int j = 0; j <= 4; j++) {
+                    if (j != i) {
+                        builder.add(list.get(j));
+                    }
+                }
+
+                list.removeAt(i);
+                assertEquals(builder.build(), list);
+            }
+        }));
+    }
+
     public void testPut() {
         withString(a -> withString(b -> withString(c -> {
             for (int i = 0; i < 2; i++) {
