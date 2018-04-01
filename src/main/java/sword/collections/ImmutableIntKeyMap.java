@@ -228,4 +228,21 @@ public final class ImmutableIntKeyMap<T> extends AbstractSizable implements IntK
         final ImmutableIntKeyMap that = (ImmutableIntKeyMap) other;
         return Arrays.equals(_keys, that._keys) && Arrays.equals(_values, that._values);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('(');
+        boolean itemAdded = false;
+
+        for (Entry<T> entry : this) {
+            if (itemAdded) {
+                sb.append(',');
+            }
+
+            sb.append(entry.getKey()).append(" -> ").append(String.valueOf(entry.getValue()));
+            itemAdded = true;
+        }
+
+        return sb.append(')').toString();
+    }
 }
