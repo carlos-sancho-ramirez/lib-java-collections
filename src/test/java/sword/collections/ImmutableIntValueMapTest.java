@@ -1,14 +1,12 @@
 package sword.collections;
 
-import junit.framework.TestCase;
-
 import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public class ImmutableIntValueMapTest extends TestCase {
+public final class ImmutableIntValueMapTest extends IntValueMapTest {
 
     private void withReversableArray(Procedure<ImmutableIntValueMap<String>> action) {
         withString(key1 -> withString(key2 -> withString(key3 -> {
@@ -26,6 +24,11 @@ public class ImmutableIntValueMapTest extends TestCase {
                 })));
             }
         })));
+    }
+
+    @Override
+    IntValueMapBuilder<String> newBuilder() {
+        return new ImmutableIntValueMap.Builder<>();
     }
 
     public void testEmptyBuilderBuildsEmptyArray() {

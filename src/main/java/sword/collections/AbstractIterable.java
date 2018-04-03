@@ -1,5 +1,9 @@
 package sword.collections;
 
+import java.util.Iterator;
+
+import static sword.collections.SortUtils.equal;
+
 abstract class AbstractIterable<T> extends AbstractSizable implements IterableCollection<T> {
 
     @Override
@@ -39,5 +43,24 @@ abstract class AbstractIterable<T> extends AbstractSizable implements IterableCo
         }
 
         return sb.append(')').toString();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof AbstractIterable)) {
+            return false;
+        }
+
+        final AbstractIterable that = (AbstractIterable) other;
+        final Iterator thisIt = iterator();
+        final Iterator thatIt = that.iterator();
+
+        while (thisIt.hasNext()) {
+            if (!thatIt.hasNext() || !equal(thisIt.next(), thatIt.next())) {
+                return false;
+            }
+        }
+
+        return !thatIt.hasNext();
     }
 }

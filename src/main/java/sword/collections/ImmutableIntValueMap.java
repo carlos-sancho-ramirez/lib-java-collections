@@ -29,7 +29,7 @@ import static sword.collections.SortUtils.quickSort;
  *
  * @param <T> Type for the keys within the Map
  */
-public class ImmutableIntValueMap<T> extends AbstractSizable implements Iterable<ImmutableIntValueMap.Entry<T>> {
+public final class ImmutableIntValueMap<T> extends AbstractIterable<IntValueMap.Entry<T>> implements IntValueMap<T> {
 
     private static final ImmutableIntValueMap<Object> EMPTY = new ImmutableIntValueMap<>(new Object[0], new int[0]);
 
@@ -74,6 +74,7 @@ public class ImmutableIntValueMap<T> extends AbstractSizable implements Iterable
         return (index >= 0)? _values[index] : defaultValue;
     }
 
+    @Override
     public int get(T key) {
         return get(key, DEFAULT_VALUE);
     }
@@ -83,15 +84,23 @@ public class ImmutableIntValueMap<T> extends AbstractSizable implements Iterable
         return _keys.length;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public T keyAt(int index) {
         return (T) _keys[index];
     }
 
+    @Override
     public int valueAt(int index) {
         return _values[index];
     }
 
+    @Override
+    public int indexOfKey(T key) {
+        return findKey(_hashCodes, _keys, _keys.length, key);
+    }
+
+    @Override
     public ImmutableSet<T> keySet() {
         if (_keys.length != 0) {
             return new ImmutableSet<>(_keys, _hashCodes);
@@ -99,6 +108,25 @@ public class ImmutableIntValueMap<T> extends AbstractSizable implements Iterable
         else {
             return ImmutableSet.empty();
         }
+    }
+
+    @Override
+    public ImmutableIntValueMap<T> toImmutable() {
+        return this;
+    }
+
+    @Override
+    public MutableIntValueMap mutate() {
+        final int newLength = MutableIntValueMap.suitableArrayLength(_keys.length);
+        Object[] newKeys = new Object[newLength];
+        int[] newHashCodes = new int[newLength];
+        int[] newValues = new int[newLength];
+
+        System.arraycopy(_keys, 0, newKeys, 0, _keys.length);
+        System.arraycopy(_hashCodes, 0, newHashCodes, 0, _hashCodes.length);
+        System.arraycopy(_values, 0, newValues, 0, _values.length);
+
+        return new MutableIntValueMap(newKeys, newHashCodes, newValues, _keys.length);
     }
 
     /**
@@ -184,32 +212,7 @@ public class ImmutableIntValueMap<T> extends AbstractSizable implements Iterable
         return new Iterator();
     }
 
-    public static class Entry<E> {
-        private final int _index;
-        private final E _key;
-        private final int _value;
-
-        public Entry(int index, E key, int value) {
-            _index = index;
-            _key = key;
-            _value = value;
-        }
-
-        public int getIndex() {
-            return _index;
-        }
-
-        @SuppressWarnings("unchecked")
-        public E getKey() {
-            return _key;
-        }
-
-        public int getValue() {
-            return _value;
-        }
-    }
-
-    public static class Builder<E> {
+    public static class Builder<E> implements IntValueMapBuilder<E> {
         private static final int GRANULARITY = 12;
         private int _size;
 
