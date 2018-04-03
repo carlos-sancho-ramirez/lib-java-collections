@@ -5,7 +5,8 @@ import static sword.collections.SortUtils.equal;
 public interface IntValueMap<T> extends Iterable<IntValueMap.Entry<T>>, Sizable {
 
     /**
-     * Return the value assigned to the given key, or 0 the given key is not mapped.
+     * Return the value assigned to the given key.
+     * @throws UnmappedKeyException if the given key is not found within the map.
      */
     int get(T key);
 

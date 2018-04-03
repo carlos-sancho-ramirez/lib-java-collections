@@ -52,14 +52,19 @@ public final class MutableIntPairMap extends AbstractSizable implements IntPairM
     }
 
     @Override
-    public int get(int key, int defaultValue) {
-        final int index = findKey(_keys, _size, key);
-        return (index >= 0)? _values[index] : defaultValue;
+    public int get(int key) {
+        final int index = findKey(_keys, _keys.length, key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return _values[index];
     }
 
     @Override
-    public int get(int key) {
-        return get(key, 0);
+    public int get(int key, int defaultValue) {
+        final int index = findKey(_keys, _size, key);
+        return (index >= 0)? _values[index] : defaultValue;
     }
 
     @Override

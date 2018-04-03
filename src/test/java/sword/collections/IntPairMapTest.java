@@ -43,6 +43,7 @@ abstract class IntPairMapTest extends TestCase {
     }
 
     public void testGet() {
+        final int defValue = -3;
         final int value = 21;
         withInt(a -> withInt(b -> {
             IntPairMap array = newBuilder()
@@ -51,8 +52,8 @@ abstract class IntPairMapTest extends TestCase {
                     .build();
 
             withInt(other -> {
-                final int expectedValue = (other == a || other == b)? value : 0;
-                assertEquals(expectedValue, array.get(other));
+                final int expectedValue = (other == a || other == b)? value : defValue;
+                assertEquals(expectedValue, array.get(other, defValue));
             });
         }));
     }

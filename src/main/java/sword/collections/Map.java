@@ -14,12 +14,14 @@ public interface Map<K, V> extends IterableCollection<Map.Entry<K, V>>, Sizable 
     boolean containsKey(K key);
 
     /**
-     * Return the value assigned to the given key. Or null if that key is not in the map.
+     * Return the value assigned to the given key.
+     * @throws UnmappedKeyException if the given key is not found within the map.
      */
     V get(K key);
 
     /**
-     * Return the value assigned to the given key. Or the given defaultValue if that key is not in the map.
+     * Return the value assigned to the given key.
+     * Or the given defaultValue if that key is not in the map.
      */
     V get(K key, V defaultValue);
 

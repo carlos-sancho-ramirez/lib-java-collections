@@ -57,7 +57,7 @@ abstract class MapTest<K, V> extends TestCase {
 
             withKey(other -> {
                 final V expectedValue = (equal(other, a) || equal(other, b))? value : null;
-                assertEquals(expectedValue, array.get(other));
+                assertEquals(expectedValue, array.get(other, null));
             });
         }));
     }

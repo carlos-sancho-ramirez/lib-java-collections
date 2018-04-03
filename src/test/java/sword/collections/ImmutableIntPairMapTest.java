@@ -152,7 +152,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         assertTrue(map2.isEmpty());
 
         map2.put(1, 4);
-        assertEquals(0, map1.get(1));
+        assertEquals(0, map1.get(1, 0));
     }
 
     public void testToImmutable() {
@@ -164,6 +164,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
     }
 
     public void testMutate() {
+        final int defValue = -4;
         withInt(a -> withInt(b -> {
             final ImmutableIntPairMap map1 = newBuilder().put(a, 1).put(b, 2).build();
             final MutableIntPairMap map2 = map1.mutate();
@@ -180,8 +181,8 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
             assertFalse(it2.hasNext());
 
             map2.remove(b);
-            assertEquals(2, map1.get(b));
-            assertEquals(0, map2.get(b));
+            assertEquals(2, map1.get(b, defValue));
+            assertEquals(defValue, map2.get(b, defValue));
         }));
     }
 }

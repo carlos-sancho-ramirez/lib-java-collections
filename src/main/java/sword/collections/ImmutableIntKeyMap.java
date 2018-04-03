@@ -47,7 +47,18 @@ public final class ImmutableIntKeyMap<T> extends AbstractSizable implements IntK
     @SuppressWarnings("unchecked")
     public T get(int key) {
         final int index = findKey(_keys, _keys.length, key);
-        return (index >= 0)? (T) _values[index] : null;
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return (T) _values[index];
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T get(int key, T defaultValue) {
+        final int index = findKey(_keys, _keys.length, key);
+        return (index >= 0)? (T) _values[index] : defaultValue;
     }
 
     @Override

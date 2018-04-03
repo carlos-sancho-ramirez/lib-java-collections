@@ -38,11 +38,6 @@ public final class ImmutableIntValueMap<T> extends AbstractIterable<IntValueMap.
         return (ImmutableIntValueMap<E>) EMPTY;
     }
 
-    /**
-     * Value returned when the key is not found.
-     */
-    public static final int DEFAULT_VALUE = 0;
-
     private final Object[] _keys;
     private final int[] _hashCodes;
     private final int[] _values;
@@ -69,14 +64,20 @@ public final class ImmutableIntValueMap<T> extends AbstractIterable<IntValueMap.
         _hashCodes = hashCodes;
     }
 
-    public int get(T key, int defaultValue) {
+    @Override
+    public int get(T key) {
         final int index = findKey(_hashCodes, _keys, _keys.length, key);
-        return (index >= 0)? _values[index] : defaultValue;
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return _values[index];
     }
 
     @Override
-    public int get(T key) {
-        return get(key, DEFAULT_VALUE);
+    public int get(T key, int defaultValue) {
+        final int index = findKey(_hashCodes, _keys, _keys.length, key);
+        return (index >= 0)? _values[index] : defaultValue;
     }
 
     @Override

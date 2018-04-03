@@ -59,12 +59,14 @@ public final class ImmutableIntPairMap extends AbstractSizable implements IntPai
         return (index >= 0)? _values[index] : valueIfKeyNotFound;
     }
 
-    /**
-     * Return the value assigned to the given key. Or 0 if that key is not in the map.
-     */
     @Override
     public int get(int key) {
-        return get(key, DEFAULT_VALUE);
+        final int index = findKey(_keys, _keys.length, key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return _values[index];
     }
 
     @Override

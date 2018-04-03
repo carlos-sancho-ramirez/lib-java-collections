@@ -66,8 +66,14 @@ public class MutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> implemen
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public V get(K key) {
-        return get(key, null);
+        final int index = findKey(_hashCodes, _keys, _keys.length, key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return (V) _values[index];
     }
 
     @Override

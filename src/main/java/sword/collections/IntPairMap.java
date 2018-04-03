@@ -3,14 +3,15 @@ package sword.collections;
 public interface IntPairMap extends Iterable<IntPairMap.Entry>, Sizable {
 
     /**
+     * Return the value assigned to the given key.
+     * @throws UnmappedKeyException if the given key is not found within the map.
+     */
+    int get(int key);
+
+    /**
      * Return the value assigned to the given key. Or <pre>defaultValue</pre> if that key is not in the map.
      */
     int get(int key, int defaultValue);
-
-    /**
-     * Return the value assigned to the given key. Or 0 if that key is not in the map.
-     */
-    int get(int key);
 
     /**
      * Key in the given index position.

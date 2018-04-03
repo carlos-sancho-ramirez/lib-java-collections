@@ -147,7 +147,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest {
         assertTrue(map2.isEmpty());
 
         map2.put(1, "");
-        assertEquals(null, map1.get(1));
+        assertEquals(null, map1.get(1, null));
     }
 
     public void testToImmutable() {
@@ -177,8 +177,8 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest {
             assertFalse(it2.hasNext());
 
             map2.remove(b);
-            assertEquals("", map1.get(b));
-            assertEquals(null, map2.get(b));
+            assertEquals("", map1.get(b, null));
+            assertEquals(null, map2.get(b, null));
         }));
     }
 }

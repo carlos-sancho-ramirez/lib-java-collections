@@ -46,6 +46,7 @@ abstract class IntKeyMapTest extends TestCase {
     }
 
     public void testGet() {
+        final String defValue = "defValue";
         final String value = "value";
         withInt(a -> withInt(b -> {
             IntKeyMapBuilder<String> builder = newBuilder();
@@ -55,8 +56,8 @@ abstract class IntKeyMapTest extends TestCase {
                     .build();
 
             withInt(other -> {
-                final String expectedValue = (other == a || other == b)? value : null;
-                assertEquals(expectedValue, array.get(other));
+                final String expectedValue = (other == a || other == b)? value : defValue;
+                assertEquals(expectedValue, array.get(other, defValue));
             });
         }));
     }

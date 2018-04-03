@@ -48,19 +48,24 @@ public final class MutableIntValueMap<T> extends AbstractIterable<IntValueMap.En
     }
 
     @Override
-    public int get(T key, int defaultValue) {
-        final int index = findKey(_hashCodes, _keys, _size, key);
-        return (index >= 0)? _values[index] : defaultValue;
-    }
-
-    @Override
     public int size() {
         return _size;
     }
 
     @Override
     public int get(T key) {
-        return get(key, 0);
+        final int index = findKey(_hashCodes, _keys, _keys.length, key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return _values[index];
+    }
+
+    @Override
+    public int get(T key, int defaultValue) {
+        final int index = findKey(_hashCodes, _keys, _size, key);
+        return (index >= 0)? _values[index] : defaultValue;
     }
 
     @Override

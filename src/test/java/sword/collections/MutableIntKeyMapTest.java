@@ -23,7 +23,7 @@ public class MutableIntKeyMapTest extends IntKeyMapTest {
         assertNotSame(map1, map2);
 
         map1.put(1, "");
-        assertEquals(null, map2.get(1));
+        assertEquals(null, map2.get(1, null));
     }
 
     public void testToImmutable() {
@@ -46,6 +46,7 @@ public class MutableIntKeyMapTest extends IntKeyMapTest {
     }
 
     public void testMutate() {
+        final String defValue = "notFound!";
         withInt(a -> withInt(b -> {
             final MutableIntKeyMap.Builder<String> builder = newBuilder();
             final MutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
@@ -63,8 +64,8 @@ public class MutableIntKeyMapTest extends IntKeyMapTest {
             assertFalse(it2.hasNext());
 
             map2.remove(b);
-            assertEquals("", map1.get(b));
-            assertEquals(null, map2.get(b));
+            assertEquals("", map1.get(b, defValue));
+            assertEquals(defValue, map2.get(b, defValue));
         }));
     }
 }

@@ -54,8 +54,19 @@ public final class MutableIntKeyMap<T> extends AbstractSizable implements IntKey
     @Override
     @SuppressWarnings("unchecked")
     public T get(int key) {
+        final int index = findKey(_keys, _keys.length, key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return (T) _values[index];
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T get(int key, T defaultValue) {
         final int index = findKey(_keys, _size, key);
-        return (index >= 0)? (T) _values[index] : null;
+        return (index >= 0)? (T) _values[index] : defaultValue;
     }
 
     @Override

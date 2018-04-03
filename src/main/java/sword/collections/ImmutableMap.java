@@ -54,8 +54,14 @@ public final class ImmutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public V get(K key) {
-        return get(key, null);
+        final int index = findKey(_hashCodes, _keys, _keys.length, key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return (V) _values[index];
     }
 
     @Override

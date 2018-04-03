@@ -3,9 +3,16 @@ package sword.collections;
 public interface IntKeyMap<T> extends Iterable<IntKeyMap.Entry<T>>, Sizable {
 
     /**
-     * Return the value assigned to the given key. Or null if that key is not in the map.
+     * Return the value assigned to the given key.
+     * @throws UnmappedKeyException if the given key is not found within the map.
      */
     T get(int key);
+
+    /**
+     * Return the value assigned to the given key.
+     * Or the given defaultValue if that key is not in the map.
+     */
+    T get(int key, T defaultValue);
 
     /**
      * Key in the given index position.
