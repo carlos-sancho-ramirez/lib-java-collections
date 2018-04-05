@@ -1,6 +1,8 @@
 package sword.collections;
 
-public interface IntKeyMap<T> extends Iterable<IntKeyMap.Entry<T>>, Sizable {
+import static sword.collections.SortUtils.equal;
+
+public interface IntKeyMap<T> extends IterableCollection<T>, Sizable {
 
     /**
      * Return the value assigned to the given key.
@@ -43,6 +45,12 @@ public interface IntKeyMap<T> extends Iterable<IntKeyMap.Entry<T>>, Sizable {
     IntSet keySet();
 
     /**
+     * Compose a set of key-value entries from this map.
+     * Resulting set is guaranteed to keep the same item order when it is iterated.
+     */
+    Set<Entry<T>> entries();
+
+    /**
      * Return an immutable map from the values contained in this map.
      * The same instance will be returned in case of being already immutable.
      */
@@ -55,26 +63,46 @@ public interface IntKeyMap<T> extends Iterable<IntKeyMap.Entry<T>>, Sizable {
     MutableIntKeyMap<T> mutate();
 
     final class Entry<E> {
-        private final int mKey;
-        private final E mValue;
-        private final int mIndex;
+        private final int _key;
+        private final E _value;
+        private final int _index;
 
         public Entry(int index, int key, E value) {
-            mIndex = index;
-            mKey = key;
-            mValue = value;
+            _index = index;
+            _key = key;
+            _value = value;
         }
 
         public int getIndex() {
-            return mIndex;
+            return _index;
         }
 
         public int getKey() {
-            return mKey;
+            return _key;
         }
 
         public E getValue() {
-            return mValue;
+            return _value;
+        }
+
+        @Override
+        public String toString() {
+            return Integer.toString(_key) + " -> " + _value;
+        }
+
+        @Override
+        public int hashCode() {
+            return _key;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (other == null || !(other instanceof Entry)) {
+                return false;
+            }
+
+            final Entry that = (Entry) other;
+            return (_key == that._key && equal(_value, that._value));
         }
     }
 }

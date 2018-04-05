@@ -13,7 +13,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class MutableIntPairMap extends AbstractSizable implements IntPairMap {
+public final class MutableIntPairMap extends AbstractIntIterable implements IntPairMap {
 
     private static final int GRANULARITY = 4;
 
@@ -85,6 +85,20 @@ public final class MutableIntPairMap extends AbstractSizable implements IntPairM
     @Override
     public int indexOfKey(int key) {
         return findKey(_keys, _size, key);
+    }
+
+    @Override
+    public Set<Entry> entries() {
+        final int length = _size;
+        final Entry[] entries = new Entry[length];
+        final int[] hashCodes = new int[length];
+
+        for (int index = 0; index < length; index++) {
+            entries[index] = new Entry(index, _keys[index], _values[index]);
+            hashCodes[index] = entries[index].hashCode();
+        }
+
+        return new ImmutableSet<>(entries, hashCodes);
     }
 
     @Override
@@ -216,7 +230,7 @@ public final class MutableIntPairMap extends AbstractSizable implements IntPairM
     }
 
     @Override
-    public java.util.Iterator<Entry> iterator() {
+    public java.util.Iterator<Integer> iterator() {
         return new Iterator();
     }
 
@@ -235,7 +249,7 @@ public final class MutableIntPairMap extends AbstractSizable implements IntPairM
         }
     }
 
-    private class Iterator implements java.util.Iterator<Entry> {
+    private class Iterator implements java.util.Iterator<Integer> {
 
         private int _index;
 
@@ -245,8 +259,8 @@ public final class MutableIntPairMap extends AbstractSizable implements IntPairM
         }
 
         @Override
-        public Entry next() {
-            return new Entry(_index, _keys[_index], _values[_index++]);
+        public Integer next() {
+            return _values[_index++];
         }
 
         @Override

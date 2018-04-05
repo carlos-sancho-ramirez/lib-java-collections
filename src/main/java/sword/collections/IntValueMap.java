@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.SortUtils.equal;
 
-public interface IntValueMap<T> extends Iterable<IntValueMap.Entry<T>>, Sizable {
+public interface IntValueMap<T> extends IterableIntCollection, Sizable {
 
     /**
      * Return the value assigned to the given key.
@@ -44,6 +44,12 @@ public interface IntValueMap<T> extends Iterable<IntValueMap.Entry<T>>, Sizable 
     Set<T> keySet();
 
     /**
+     * Compose a set of key-value entries from this map.
+     * Resulting set is guaranteed to keep the same item order when it is iterated.
+     */
+    Set<Entry<T>> entries();
+
+    /**
      * Return an immutable map from the values contained in this map.
      * The same instance will be returned in case of being already immutable.
      */
@@ -55,7 +61,7 @@ public interface IntValueMap<T> extends Iterable<IntValueMap.Entry<T>>, Sizable 
      */
     MutableIntValueMap<T> mutate();
 
-    class Entry<E> {
+    final class Entry<E> {
         private final int _index;
         private final E _key;
         private final int _value;

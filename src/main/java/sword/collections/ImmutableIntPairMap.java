@@ -17,7 +17,7 @@ import static sword.collections.SortUtils.quickSort;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class ImmutableIntPairMap extends AbstractSizable implements IntPairMap {
+public final class ImmutableIntPairMap extends AbstractIntIterable implements IntPairMap {
 
     private static final ImmutableIntPairMap EMPTY = new ImmutableIntPairMap(new int[0], new int[0]);
 
@@ -89,6 +89,20 @@ public final class ImmutableIntPairMap extends AbstractSizable implements IntPai
 
     public ImmutableIntSet keySet() {
         return (_keys.length != 0)? new ImmutableIntSetImpl(_keys) : ImmutableIntSetImpl.empty();
+    }
+
+    @Override
+    public ImmutableSet<Entry> entries() {
+        final int length = _keys.length;
+        final Entry[] entries = new Entry[length];
+        final int[] hashCodes = new int[length];
+
+        for (int index = 0; index < length; index++) {
+            entries[index] = new Entry(index, _keys[index], _values[index]);
+            hashCodes[index] = entries[index].hashCode();
+        }
+
+        return new ImmutableSet<>(entries, hashCodes);
     }
 
     /**
@@ -203,7 +217,7 @@ public final class ImmutableIntPairMap extends AbstractSizable implements IntPai
     }
 
     @Override
-    public java.util.Iterator<Entry> iterator() {
+    public java.util.Iterator<Integer> iterator() {
         return new Iterator();
     }
 
@@ -266,7 +280,7 @@ public final class ImmutableIntPairMap extends AbstractSizable implements IntPai
         }
     }
 
-    private class Iterator extends IteratorForImmutable<Entry> {
+    private class Iterator extends IteratorForImmutable<Integer> {
 
         private int _index;
 
@@ -276,10 +290,8 @@ public final class ImmutableIntPairMap extends AbstractSizable implements IntPai
         }
 
         @Override
-        public Entry next() {
-            final Entry entry = new Entry(_index, _keys[_index], _values[_index]);
-            _index++;
-            return entry;
+        public Integer next() {
+            return _values[_index++];
         }
     }
 

@@ -1,11 +1,13 @@
 package sword.collections;
 
+import static sword.collections.SortUtils.equal;
+
 /**
  * Root for both variants of Map, immutable and mutable.
  * @param <K> Type of key items within the map.
  * @param <V> Type of value items within the map.
  */
-public interface Map<K, V> extends IterableCollection<Map.Entry<K, V>>, Sizable {
+public interface Map<K, V> extends IterableCollection<V>, Sizable {
 
     /**
      * Check whether the given key is contained in the map
@@ -53,6 +55,12 @@ public interface Map<K, V> extends IterableCollection<Map.Entry<K, V>>, Sizable 
     Set<K> keySet();
 
     /**
+     * Compose a set of key-value entries from this map.
+     * Resulting set is guaranteed to keep the same item order when it is iterated.
+     */
+    Set<Entry<K, V>> entries();
+
+    /**
      * Return an immutable map from the values contained in this map.
      * The same instance will be returned in case of being already immutable.
      */
@@ -65,26 +73,46 @@ public interface Map<K, V> extends IterableCollection<Map.Entry<K, V>>, Sizable 
     MutableMap<K, V> mutate();
 
     final class Entry<A, B> {
-        private final A mKey;
-        private final B mValue;
-        private final int mIndex;
+        private final A _key;
+        private final B _value;
+        private final int _index;
 
         public Entry(int index, A key, B value) {
-            mIndex = index;
-            mKey = key;
-            mValue = value;
+            _index = index;
+            _key = key;
+            _value = value;
         }
 
         public int getIndex() {
-            return mIndex;
+            return _index;
         }
 
         public A getKey() {
-            return mKey;
+            return _key;
         }
 
         public B getValue() {
-            return mValue;
+            return _value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(_key) + " -> " + _value;
+        }
+
+        @Override
+        public int hashCode() {
+            return (_key != null)? _key.hashCode() : 0;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (other == null || !(other instanceof Entry)) {
+                return false;
+            }
+
+            final Entry that = (Entry) other;
+            return (equal(_key, that._key) && equal(_value, that._value));
         }
     }
 }

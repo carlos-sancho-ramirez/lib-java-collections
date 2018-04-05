@@ -126,7 +126,7 @@ abstract class IntPairMapTest extends TestCase {
         })));
     }
 
-    public void testIterator() {
+    public void testEntryIterator() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntPairMap array = newBuilder()
                     .put(a, a)
@@ -135,7 +135,7 @@ abstract class IntPairMapTest extends TestCase {
                     .build();
 
             final int size = array.size();
-            final Iterator<IntPairMap.Entry> iterator = array.iterator();
+            final Iterator<IntPairMap.Entry> iterator = array.entries().iterator();
             for (int i = 0; i < size; i++) {
                 assertTrue(iterator.hasNext());
 

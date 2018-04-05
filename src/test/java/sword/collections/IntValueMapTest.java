@@ -142,7 +142,7 @@ abstract class IntValueMapTest extends TestCase {
         })));
     }
 
-    public void testIterator() {
+    public void testEntryIterator() {
         withString(a -> withString(b -> withString(c -> {
             IntValueMap<String> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -151,7 +151,7 @@ abstract class IntValueMapTest extends TestCase {
                     .build();
 
             final int size = map.size();
-            final Iterator<IntValueMap.Entry<String>> iterator = map.iterator();
+            final Iterator<IntValueMap.Entry<String>> iterator = map.entries().iterator();
             for (int i = 0; i < size; i++) {
                 assertTrue(iterator.hasNext());
 
@@ -173,8 +173,8 @@ abstract class IntValueMapTest extends TestCase {
                     .build();
             MutableIntValueMap<String> map2 = map1.mutate();
 
-            final Iterator<IntValueMap.Entry<String>> it1 = map1.iterator();
-            final Iterator<IntValueMap.Entry<String>> it2 = map2.iterator();
+            final Iterator<IntValueMap.Entry<String>> it1 = map1.entries().iterator();
+            final Iterator<IntValueMap.Entry<String>> it2 = map2.entries().iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
 

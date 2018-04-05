@@ -29,6 +29,11 @@ abstract class AbstractIterable<T> extends AbstractSizable implements IterableCo
     }
 
     @Override
+    public int hashCode() {
+        return size();
+    }
+
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('(');
         boolean itemAdded = false;

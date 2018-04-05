@@ -47,7 +47,7 @@ public final class ImmutableIntValueMapTest extends IntValueMapTest {
 
             assertEquals(1, array.size());
 
-            final Iterator<ImmutableIntValueMap.Entry<String>> iterator = array.iterator();
+            final Iterator<ImmutableIntValueMap.Entry<String>> iterator = array.entries().iterator();
             assertTrue(iterator.hasNext());
 
             final ImmutableIntValueMap.Entry<String> entry = iterator.next();
@@ -65,7 +65,7 @@ public final class ImmutableIntValueMapTest extends IntValueMapTest {
             final ImmutableIntKeyMap<String> array = reversedArray.reverse();
             assertEquals(reversedArray.size(), array.size());
 
-            for (ImmutableIntValueMap.Entry<String> entry : reversedArray) {
+            for (ImmutableIntValueMap.Entry<String> entry : reversedArray.entries()) {
                 assertEquals(entry.getKey(), array.get(entry.getValue()));
             }
         });
@@ -81,7 +81,7 @@ public final class ImmutableIntValueMapTest extends IntValueMapTest {
             final ImmutableSet<String> result = array.keySet();
 
             final ImmutableSet.Builder<String> builder = new ImmutableSet.Builder<>();
-            for (ImmutableIntValueMap.Entry<String> entry : array) {
+            for (ImmutableIntValueMap.Entry<String> entry : array.entries()) {
                 builder.add(entry.getKey());
             }
 

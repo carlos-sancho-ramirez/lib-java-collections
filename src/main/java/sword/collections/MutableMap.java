@@ -22,7 +22,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * @param <K> Type for the key elements within the Map
  * @param <V> Type for the value elements within the Map
  */
-public class MutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> implements Map<K, V> {
+public class MutableMap<K, V> extends AbstractIterable<V> implements Map<K, V> {
 
     private static final int GRANULARITY = 4;
 
@@ -109,7 +109,21 @@ public class MutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> implemen
         return new ImmutableSet<>(keys, hashCodes);
     }
 
-    private class Iterator implements java.util.Iterator<Entry<K, V>> {
+    @Override
+    public Set<Entry<K, V>> entries() {
+        final int length = _size;
+        final Entry[] entries = new Entry[length];
+        final int[] hashCodes = new int[length];
+
+        for (int index = 0; index < length; index++) {
+            entries[index] = new Entry<>(index, _keys[index], _values[index]);
+            hashCodes[index] = entries[index].hashCode();
+        }
+
+        return new ImmutableSet<>(entries, hashCodes);
+    }
+
+    private class Iterator implements java.util.Iterator<V> {
 
         private int _index;
 
@@ -120,8 +134,8 @@ public class MutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> implemen
 
         @Override
         @SuppressWarnings("unchecked")
-        public Entry<K, V> next() {
-            return new Entry<>(_index, (K) _keys[_index], (V) _values[_index++]);
+        public V next() {
+            return (V) _values[_index++];
         }
 
         @Override

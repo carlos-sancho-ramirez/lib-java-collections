@@ -32,8 +32,8 @@ public class MutableIntKeyMapTest extends IntKeyMapTest {
             final MutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
             final ImmutableIntKeyMap<String> map2 = map1.toImmutable();
 
-            final Iterator<IntKeyMap.Entry<String>> it1 = map1.iterator();
-            final Iterator<IntKeyMap.Entry<String>> it2 = map2.iterator();
+            final Iterator<IntKeyMap.Entry<String>> it1 = map1.entries().iterator();
+            final Iterator<IntKeyMap.Entry<String>> it2 = map2.entries().iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
                 final IntKeyMap.Entry<String> item1 = it1.next();
@@ -52,8 +52,8 @@ public class MutableIntKeyMapTest extends IntKeyMapTest {
             final MutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
             final MutableIntKeyMap<String> map2 = map1.mutate();
 
-            final Iterator<IntKeyMap.Entry<String>> it1 = map1.iterator();
-            final Iterator<IntKeyMap.Entry<String>> it2 = map2.iterator();
+            final Iterator<IntKeyMap.Entry<String>> it1 = map1.entries().iterator();
+            final Iterator<IntKeyMap.Entry<String>> it2 = map2.entries().iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
                 final IntKeyMap.Entry<String> item1 = it1.next();

@@ -88,7 +88,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest {
 
                 if (!contained) {
                     final ImmutableIntKeyMap.Builder<String> builder = new ImmutableIntKeyMap.Builder<>();
-                    for (IntKeyMap.Entry<String> entry : array) {
+                    for (IntKeyMap.Entry<String> entry : array.entries()) {
                         builder.put(entry.getKey(), entry.getValue());
                     }
                     assertEquals(builder.put(key, value).build(), newArray);
@@ -165,8 +165,8 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest {
             final ImmutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
             final MutableIntKeyMap<String> map2 = map1.mutate();
 
-            final Iterator<IntKeyMap.Entry<String>> it1 = map1.iterator();
-            final Iterator<IntKeyMap.Entry<String>> it2 = map2.iterator();
+            final Iterator<IntKeyMap.Entry<String>> it1 = map1.entries().iterator();
+            final Iterator<IntKeyMap.Entry<String>> it2 = map2.entries().iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
                 final IntKeyMap.Entry<String> item1 = it1.next();

@@ -29,7 +29,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * @param <K> Type for the key elements within the Map
  * @param <V> Type for the value elements within the Map
  */
-public final class ImmutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> implements Map<K, V> {
+public final class ImmutableMap<K, V> extends AbstractIterable<V> implements Map<K, V> {
 
     private static final ImmutableMap<Object, Object> EMPTY = new ImmutableMap<>(new Object[0], new int[0], new Object[0]);
 
@@ -94,6 +94,20 @@ public final class ImmutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> 
     @Override
     public ImmutableSet<K> keySet() {
         return new ImmutableSet<>(_keys, _hashCodes);
+    }
+
+    @Override
+    public ImmutableSet<Entry<K, V>> entries() {
+        final int length = _keys.length;
+        final Entry[] entries = new Entry[length];
+        final int[] hashCodes = new int[length];
+
+        for (int index = 0; index < length; index++) {
+            entries[index] = new Entry<>(index, _keys[index], _values[index]);
+            hashCodes[index] = entries[index].hashCode();
+        }
+
+        return new ImmutableSet<>(entries, hashCodes);
     }
 
     @Override
@@ -181,7 +195,7 @@ public final class ImmutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> 
         return new ImmutableMap<>(_keys, _hashCodes, newValues);
     }
 
-    private class Iterator extends IteratorForImmutable<Entry<K, V>> {
+    private class Iterator extends IteratorForImmutable<V> {
 
         private int _index;
 
@@ -192,8 +206,8 @@ public final class ImmutableMap<K, V> extends AbstractIterable<Map.Entry<K, V>> 
 
         @Override
         @SuppressWarnings("unchecked")
-        public Entry<K, V> next() {
-            return new Entry<>(_index, (K) _keys[_index], (V) _values[_index++]);
+        public V next() {
+            return (V) _values[_index++];
         }
     }
 

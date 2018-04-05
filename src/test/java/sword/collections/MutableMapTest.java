@@ -45,8 +45,8 @@ public class MutableMapTest extends MapTest<Integer, String> {
                     .build();
             ImmutableMap<Integer, String> map2 = map1.toImmutable();
 
-            final Iterator<Map.Entry<Integer, String>> it1 = map1.iterator();
-            final Iterator<Map.Entry<Integer, String>> it2 = map2.iterator();
+            final Iterator<Map.Entry<Integer, String>> it1 = map1.entries().iterator();
+            final Iterator<Map.Entry<Integer, String>> it2 = map2.entries().iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
 

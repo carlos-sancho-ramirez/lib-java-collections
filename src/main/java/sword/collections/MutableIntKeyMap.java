@@ -13,7 +13,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class MutableIntKeyMap<T> extends AbstractSizable implements IntKeyMap<T> {
+public final class MutableIntKeyMap<T> extends AbstractIterable<T> implements IntKeyMap<T> {
 
     private static final int GRANULARITY = 4;
 
@@ -131,6 +131,20 @@ public final class MutableIntKeyMap<T> extends AbstractSizable implements IntKey
     }
 
     @Override
+    public ImmutableSet<Entry<T>> entries() {
+        final int length = _size;
+        final Entry[] entries = new Entry[length];
+        final int[] hashCodes = new int[length];
+
+        for (int index = 0; index < length; index++) {
+            entries[index] = new Entry<>(index, _keys[index], _values[index]);
+            hashCodes[index] = entries[index].hashCode();
+        }
+
+        return new ImmutableSet<>(entries, hashCodes);
+    }
+
+    @Override
     public ImmutableIntKeyMap<T> toImmutable() {
         final int[] keys = new int[_size];
         final Object[] values = new Object[_size];
@@ -229,7 +243,7 @@ public final class MutableIntKeyMap<T> extends AbstractSizable implements IntKey
     }
 
     @Override
-    public java.util.Iterator<Entry<T>> iterator() {
+    public java.util.Iterator<T> iterator() {
         return new Iterator();
     }
 
@@ -248,7 +262,7 @@ public final class MutableIntKeyMap<T> extends AbstractSizable implements IntKey
         }
     }
 
-    private class Iterator implements java.util.Iterator<Entry<T>> {
+    private class Iterator implements java.util.Iterator<T> {
 
         private int _index;
 
@@ -259,8 +273,8 @@ public final class MutableIntKeyMap<T> extends AbstractSizable implements IntKey
 
         @Override
         @SuppressWarnings("unchecked")
-        public Entry<T> next() {
-            return new Entry<>(_index, _keys[_index], (T) _values[_index++]);
+        public T next() {
+            return (T) _values[_index++];
         }
 
         @Override

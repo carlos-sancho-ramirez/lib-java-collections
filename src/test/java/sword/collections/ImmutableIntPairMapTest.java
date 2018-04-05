@@ -95,7 +95,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
 
                 if (!contained) {
                     final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
-                    for (IntPairMap.Entry entry : array) {
+                    for (IntPairMap.Entry entry : array.entries()) {
                         builder.put(entry.getKey(), entry.getValue());
                     }
                     assertEquals(builder.put(key, value).build(), newArray);
@@ -169,8 +169,8 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
             final ImmutableIntPairMap map1 = newBuilder().put(a, 1).put(b, 2).build();
             final MutableIntPairMap map2 = map1.mutate();
 
-            final Iterator<IntPairMap.Entry> it1 = map1.iterator();
-            final Iterator<IntPairMap.Entry> it2 = map2.iterator();
+            final Iterator<IntPairMap.Entry> it1 = map1.entries().iterator();
+            final Iterator<IntPairMap.Entry> it2 = map2.entries().iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
                 final IntPairMap.Entry item1 = it1.next();

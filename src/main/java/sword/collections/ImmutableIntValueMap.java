@@ -23,13 +23,11 @@ import static sword.collections.SortUtils.quickSort;
  * It is not guaranteed to work if any of the elements is mutable.
  *
  * This class also implements the {@link java.lang.Iterable} interface, which
- * ensures that the for-each construction can be used. However it is
- * recommended not to use it because a new instance creation will be required
- * on each element, which may impact on the performance.
+ * ensures that the for-each construction can be used.
  *
  * @param <T> Type for the keys within the Map
  */
-public final class ImmutableIntValueMap<T> extends AbstractIterable<IntValueMap.Entry<T>> implements IntValueMap<T> {
+public final class ImmutableIntValueMap<T> extends AbstractIntIterable implements IntValueMap<T> {
 
     private static final ImmutableIntValueMap<Object> EMPTY = new ImmutableIntValueMap<>(new Object[0], new int[0]);
 
@@ -112,6 +110,20 @@ public final class ImmutableIntValueMap<T> extends AbstractIterable<IntValueMap.
     }
 
     @Override
+    public ImmutableSet<Entry<T>> entries() {
+        final int length = _keys.length;
+        final Entry[] entries = new Entry[length];
+        final int[] hashCodes = new int[length];
+
+        for (int index = 0; index < length; index++) {
+            entries[index] = new Entry<>(index, _keys[index], _values[index]);
+            hashCodes[index] = entries[index].hashCode();
+        }
+
+        return new ImmutableSet<>(entries, hashCodes);
+    }
+
+    @Override
     public ImmutableIntValueMap<T> toImmutable() {
         return this;
     }
@@ -190,7 +202,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIterable<IntValueMap.
         }
     }
 
-    private class Iterator extends IteratorForImmutable<Entry<T>> {
+    private class Iterator extends IteratorForImmutable<Integer> {
 
         private int _index;
 
@@ -200,16 +212,13 @@ public final class ImmutableIntValueMap<T> extends AbstractIterable<IntValueMap.
         }
 
         @Override
-        @SuppressWarnings("unchecked")
-        public Entry<T> next() {
-            final Entry<T> entry = new Entry<>(_index, (T) _keys[_index], _values[_index]);
-            _index++;
-            return entry;
+        public Integer next() {
+            return _values[_index++];
         }
     }
 
     @Override
-    public java.util.Iterator<Entry<T>> iterator() {
+    public java.util.Iterator<Integer> iterator() {
         return new Iterator();
     }
 

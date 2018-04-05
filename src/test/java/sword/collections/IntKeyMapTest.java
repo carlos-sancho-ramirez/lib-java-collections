@@ -139,7 +139,7 @@ abstract class IntKeyMapTest extends TestCase {
         })));
     }
 
-    public void testIterator() {
+    public void testEntryIterator() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntKeyMapBuilder<String> builder = newBuilder();
             IntKeyMap<String> array = builder
@@ -149,7 +149,7 @@ abstract class IntKeyMapTest extends TestCase {
                     .build();
 
             final int size = array.size();
-            final Iterator<IntKeyMap.Entry<String>> iterator = array.iterator();
+            final Iterator<IntKeyMap.Entry<String>> iterator = array.entries().iterator();
             for (int i = 0; i < size; i++) {
                 assertTrue(iterator.hasNext());
 

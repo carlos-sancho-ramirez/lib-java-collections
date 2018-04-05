@@ -14,7 +14,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class ImmutableIntKeyMap<T> extends AbstractSizable implements IntKeyMap<T> {
+public final class ImmutableIntKeyMap<T> extends AbstractIterable<T> implements IntKeyMap<T> {
 
     private static final ImmutableIntKeyMap<Object> EMPTY = new ImmutableIntKeyMap<>(new int[0], new Object[0]);
 
@@ -85,6 +85,20 @@ public final class ImmutableIntKeyMap<T> extends AbstractSizable implements IntK
     @Override
     public ImmutableIntSet keySet() {
         return (_keys.length != 0)? new ImmutableIntSetImpl(_keys) : ImmutableIntSetImpl.empty();
+    }
+
+    @Override
+    public ImmutableSet<Entry<T>> entries() {
+        final int length = _keys.length;
+        final Entry[] entries = new Entry[length];
+        final int[] hashCodes = new int[length];
+
+        for (int index = 0; index < length; index++) {
+            entries[index] = new Entry<>(index, _keys[index], _values[index]);
+            hashCodes[index] = entries[index].hashCode();
+        }
+
+        return new ImmutableSet<>(entries, hashCodes);
     }
 
     /**
@@ -178,7 +192,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractSizable implements IntK
     }
 
     @Override
-    public java.util.Iterator<Entry<T>> iterator() {
+    public java.util.Iterator<T> iterator() {
         return new Iterator();
     }
 
@@ -206,7 +220,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractSizable implements IntK
         }
     }
 
-    private class Iterator extends IteratorForImmutable<Entry<T>> {
+    private class Iterator extends IteratorForImmutable<T> {
 
         private int _index;
 
@@ -217,11 +231,8 @@ public final class ImmutableIntKeyMap<T> extends AbstractSizable implements IntK
 
         @Override
         @SuppressWarnings("unchecked")
-        public Entry<T> next() {
-            final Entry<T> entry =
-                    new Entry<>(_index, _keys[_index], (T) _values[_index]);
-            _index++;
-            return entry;
+        public T next() {
+            return (T) _values[_index++];
         }
     }
 
@@ -238,22 +249,5 @@ public final class ImmutableIntKeyMap<T> extends AbstractSizable implements IntK
 
         final ImmutableIntKeyMap that = (ImmutableIntKeyMap) other;
         return Arrays.equals(_keys, that._keys) && Arrays.equals(_values, that._values);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('(');
-        boolean itemAdded = false;
-
-        for (Entry<T> entry : this) {
-            if (itemAdded) {
-                sb.append(',');
-            }
-
-            sb.append(entry.getKey()).append(" -> ").append(String.valueOf(entry.getValue()));
-            itemAdded = true;
-        }
-
-        return sb.append(')').toString();
     }
 }

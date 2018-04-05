@@ -129,7 +129,7 @@ abstract class MapTest<K, V> extends TestCase {
         })));
     }
 
-    public void testIterator() {
+    public void testEntryIterator() {
         withKey(a -> withKey(b -> withKey(c -> {
             Map<K, V> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -138,7 +138,7 @@ abstract class MapTest<K, V> extends TestCase {
                     .build();
 
             final int size = map.size();
-            final Iterator<Map.Entry<K, V>> iterator = map.iterator();
+            final Iterator<Map.Entry<K, V>> iterator = map.entries().iterator();
             for (int i = 0; i < size; i++) {
                 assertTrue(iterator.hasNext());
 
@@ -160,8 +160,8 @@ abstract class MapTest<K, V> extends TestCase {
                     .build();
             MutableMap<K, V> map2 = map1.mutate();
 
-            final Iterator<Map.Entry<K, V>> it1 = map1.iterator();
-            final Iterator<Map.Entry<K, V>> it2 = map2.iterator();
+            final Iterator<Map.Entry<K, V>> it1 = map1.entries().iterator();
+            final Iterator<Map.Entry<K, V>> it2 = map2.entries().iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
 
