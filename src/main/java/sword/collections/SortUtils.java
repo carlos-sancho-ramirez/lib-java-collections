@@ -134,17 +134,6 @@ final class SortUtils {
         return -1;
     }
 
-    static <E> E findFirst(Object[] values, int length, Predicate<E> predicate, E defaultValue) {
-        for (int i = 0; i < length; i++) {
-            final E item = (E) values[i];
-            if (predicate.apply(item)) {
-                return item;
-            }
-        }
-
-        return defaultValue;
-    }
-
     static boolean equal(Object a, Object b) {
         return a == b || a != null && a.equals(b);
     }

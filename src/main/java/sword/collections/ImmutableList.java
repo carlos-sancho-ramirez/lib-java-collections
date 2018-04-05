@@ -205,11 +205,6 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
         }
     }
 
-    @Override
-    public T findFirst(Predicate<T> predicate, T defaultValue) {
-        return SortUtils.findFirst(_values, _values.length, predicate, defaultValue);
-    }
-
     public static class Builder<E> implements ImmutableCollectionBuilder<E> {
         private static final int DEFAULT_GRANULARITY = 12;
         private final int _granularity;

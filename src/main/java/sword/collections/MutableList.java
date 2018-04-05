@@ -75,11 +75,6 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
     }
 
     @Override
-    public T findFirst(Predicate<T> predicate, T defaultValue) {
-        return SortUtils.findFirst(_values, _size, predicate, defaultValue);
-    }
-
-    @Override
     public ImmutableList<T> toImmutable() {
         final Object[] newValues = new Object[_size];
         System.arraycopy(_values, 0, newValues, 0, _size);

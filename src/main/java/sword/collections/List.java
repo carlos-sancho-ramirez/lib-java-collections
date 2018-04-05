@@ -21,11 +21,6 @@ public interface List<T> extends IterableCollection<T>, Sizable {
     int indexOf(T value);
 
     /**
-     * Returns the first item matching the predicate or the default value if none matches.
-     */
-    T findFirst(Predicate<T> predicate, T defaultValue);
-
-    /**
      * Return an immutable list from the values contained in this collection.
      * The same instance will be returned in case of being already immutable.
      */

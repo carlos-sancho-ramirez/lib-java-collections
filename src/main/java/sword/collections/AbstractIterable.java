@@ -29,6 +29,17 @@ abstract class AbstractIterable<T> extends AbstractSizable implements IterableCo
     }
 
     @Override
+    public T findFirst(Predicate<T> predicate, T defaultValue) {
+        for (T item : this) {
+            if (predicate.apply(item)) {
+                return item;
+            }
+        }
+
+        return defaultValue;
+    }
+
+    @Override
     public int hashCode() {
         return size();
     }

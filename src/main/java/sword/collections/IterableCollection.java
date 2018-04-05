@@ -18,4 +18,9 @@ public interface IterableCollection<T> extends Iterable<T> {
      * @param predicate Predicate to be evaluated.
      */
     boolean anyMatch(Predicate<T> predicate);
+
+    /**
+     * Returns the first item matching the predicate or the default value if none matches.
+     */
+    T findFirst(Predicate<T> predicate, T defaultValue);
 }
