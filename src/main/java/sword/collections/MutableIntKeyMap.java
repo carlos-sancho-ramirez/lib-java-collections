@@ -54,7 +54,7 @@ public final class MutableIntKeyMap<T> extends AbstractIterable<T> implements In
     @Override
     @SuppressWarnings("unchecked")
     public T get(int key) {
-        final int index = findKey(_keys, _keys.length, key);
+        final int index = findKey(_keys, _size, key);
         if (index < 0) {
             throw new UnmappedKeyException();
         }
