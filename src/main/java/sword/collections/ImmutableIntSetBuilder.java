@@ -12,7 +12,7 @@ package sword.collections;
  */
 public final class ImmutableIntSetBuilder implements ImmutableIntSet.Builder {
 
-    private final MutableIntSet _set = new MutableIntSet();
+    private final MutableIntSet _set = MutableIntSet.empty();
 
     @Override
     public ImmutableIntSet.Builder add(int value) {

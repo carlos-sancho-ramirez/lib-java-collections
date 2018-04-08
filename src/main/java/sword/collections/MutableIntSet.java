@@ -9,6 +9,10 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet {
 
     private static final int GRANULARITY = 4;
 
+    public static MutableIntSet empty() {
+        return new MutableIntSet(new int[GRANULARITY], 0);
+    }
+
     private static int suitableArrayLength(int size) {
         int s = ((size + GRANULARITY - 1) / GRANULARITY) * GRANULARITY;
         return (s > 0)? s : GRANULARITY;
@@ -16,10 +20,6 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet {
 
     private int _size;
     private int[] _values;
-
-    public MutableIntSet() {
-        _values = new int[GRANULARITY];
-    }
 
     private MutableIntSet(int[] values, int size) {
         _values = values;
@@ -180,7 +180,7 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet {
     }
 
     static MutableIntSet fromIntSet(IntSet set) {
-        final MutableIntSet result = new MutableIntSet();
+        final MutableIntSet result = MutableIntSet.empty();
         for (int value : set) {
             result.add(value);
         }
@@ -200,7 +200,7 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet {
     }
 
     public static class Builder implements IntCollectionBuilder<MutableIntSet> {
-        private final MutableIntSet _set = new MutableIntSet();
+        private final MutableIntSet _set = MutableIntSet.empty();
 
         @Override
         public Builder add(int value) {

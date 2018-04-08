@@ -22,7 +22,7 @@ public class MutableIntSetTest extends AbstractIntIterableTest {
 
     @Override
     MutableIntSet emptyCollection() {
-        return new MutableIntSet();
+        return MutableIntSet.empty();
     }
 
     private boolean isPositiveValue(int value) {
@@ -87,7 +87,7 @@ public class MutableIntSetTest extends AbstractIntIterableTest {
 
     public void testAdd() {
         withItem(a -> withItem(b -> {
-            final MutableIntSet set = new MutableIntSet();
+            final MutableIntSet set = MutableIntSet.empty();
             assertTrue(set.add(a));
             assertFalse(set.isEmpty());
 
@@ -109,7 +109,7 @@ public class MutableIntSetTest extends AbstractIntIterableTest {
         withItem(a -> withItem(b -> {
             final ImmutableIntSet values = new ImmutableIntSetBuilder().add(a).add(b).build();
             withItem(c -> {
-                final MutableIntSet set = new MutableIntSet();
+                final MutableIntSet set = MutableIntSet.empty();
                 set.add(c);
 
                 if (c == a && c == b) {
