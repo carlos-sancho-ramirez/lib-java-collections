@@ -36,14 +36,6 @@ public interface Map<K, V> extends IterableCollection<V>, Sizable {
     K keyAt(int index);
 
     /**
-     * Value in the given index position.
-     *
-     * @param index Index within the array of values, valid indexes goes from 0 to {@link #size()} - 1
-     * @return The value in the given position.
-     */
-    V valueAt(int index);
-
-    /**
      * Returns the index for which {@link #keyAt(int)} would return the specified key,
      * or -1 if the specified key is not mapped.
      */

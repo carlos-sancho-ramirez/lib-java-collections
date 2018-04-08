@@ -21,6 +21,24 @@ abstract class AbstractIterable<T> extends AbstractSizable implements IterableCo
     }
 
     @Override
+    public T valueAt(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final Iterator<T> it = iterator();
+        T value = null;
+        while (index-- >= 0) {
+            if (!it.hasNext()) {
+                throw new IndexOutOfBoundsException();
+            }
+            value = it.next();
+        }
+
+        return value;
+    }
+
+    @Override
     public boolean contains(T value) {
         return indexOf(value) >= 0;
     }
