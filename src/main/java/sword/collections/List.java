@@ -15,12 +15,6 @@ public interface List<T> extends IterableCollection<T>, Sizable {
     T get(int index);
 
     /**
-     * Returns the index within the list for the first element matching the given value. Or -1 if none matches.
-     * @param value Value to be matched. {@link java.lang.Object#equals(Object)} will be called for this purpose.
-     */
-    int indexOf(T value);
-
-    /**
      * Return an immutable list from the values contained in this collection.
      * The same instance will be returned in case of being already immutable.
      */

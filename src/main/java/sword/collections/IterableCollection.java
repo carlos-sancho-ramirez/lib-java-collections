@@ -20,6 +20,13 @@ public interface IterableCollection<T> extends Iterable<T> {
     boolean anyMatch(Predicate<T> predicate);
 
     /**
+     * Returns the index within the collection for the first element matching the given value.
+     * Or -1 if none matches.
+     * @param value Value to be matched. {@link java.lang.Object#equals(Object)} will be called for this purpose.
+     */
+    int indexOf(T value);
+
+    /**
      * Returns the first item matching the predicate or the default value if none matches.
      */
     T findFirst(Predicate<T> predicate, T defaultValue);

@@ -7,14 +7,22 @@ import static sword.collections.SortUtils.equal;
 abstract class AbstractIterable<T> extends AbstractSizable implements IterableCollection<T> {
 
     @Override
-    public boolean contains(T value) {
+    public int indexOf(T value) {
+        int index = 0;
         for (T item : this) {
             if (value == null && item == null || value != null && value.equals(item)) {
-                return true;
+                return index;
             }
+
+            index++;
         }
 
-        return false;
+        return -1;
+    }
+
+    @Override
+    public boolean contains(T value) {
+        return indexOf(value) >= 0;
     }
 
     @Override
