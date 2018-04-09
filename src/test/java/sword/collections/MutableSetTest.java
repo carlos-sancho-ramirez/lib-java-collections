@@ -11,7 +11,7 @@ public class MutableSetTest extends AbstractIterableTest<String> {
     };
 
     @Override
-    void withItem(Procedure<String> procedure) {
+    void withValue(Procedure<String> procedure) {
         for (String str : STRING_VALUES) {
             procedure.apply(str);
         }
@@ -46,13 +46,8 @@ public class MutableSetTest extends AbstractIterableTest<String> {
         return new MutableSet.Builder<>();
     }
 
-    @Override
-    <E> MutableSet<E> emptyCollection() {
-        return MutableSet.empty();
-    }
-
     public void testSizeForTwoElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableSet<String> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
             if (equal(a, b)) {
@@ -65,7 +60,7 @@ public class MutableSetTest extends AbstractIterableTest<String> {
     }
 
     public void testIteratingForMultipleElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableSet<String> set = newBuilder().add(a).add(b).build();
             final Iterator<String> iterator = set.iterator();
 
@@ -108,7 +103,7 @@ public class MutableSetTest extends AbstractIterableTest<String> {
     }
 
     public void testToImmutable() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableSet<String> set = newBuilder().add(a).add(b).build();
             final ImmutableSet<String> set2 = set.toImmutable();
 
@@ -123,7 +118,7 @@ public class MutableSetTest extends AbstractIterableTest<String> {
     }
 
     public void testMutate() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableSet<String> set1 = newBuilder().add(a).add(b).build();
             final MutableSet<String> set2 = set1.mutate();
 

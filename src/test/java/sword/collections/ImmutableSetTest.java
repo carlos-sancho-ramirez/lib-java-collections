@@ -11,7 +11,7 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     };
 
     @Override
-    void withItem(Procedure<String> procedure) {
+    void withValue(Procedure<String> procedure) {
         for (String str : STRING_VALUES) {
             procedure.apply(str);
         }
@@ -52,7 +52,7 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testSizeForTwoElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableSet<String> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
             if (equal(a, b)) {
@@ -65,7 +65,7 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testIteratingForMultipleElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
             final Iterator<String> iterator = set.iterator();
 
@@ -93,7 +93,7 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testMapForMultipleElements() {
-        withMapFunc(f -> withItem(a -> withItem(b -> {
+        withMapFunc(f -> withValue(a -> withValue(b -> {
             final ImmutableSet<String> collection = newBuilder().add(a).add(b).build();
             final ImmutableSet<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
@@ -139,14 +139,14 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testToImmutable() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
             assertSame(set, set.toImmutable());
         }));
     }
 
     public void testMutate() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableSet<String> set1 = newBuilder().add(a).add(b).build();
             final MutableSet<String> set2 = set1.mutate();
 

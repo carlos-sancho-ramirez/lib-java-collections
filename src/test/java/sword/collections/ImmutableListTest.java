@@ -18,7 +18,7 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
     }
 
     @Override
-    void withItem(Procedure<String> procedure) {
+    void withValue(Procedure<String> procedure) {
         for (String str : STRING_VALUES) {
             procedure.apply(str);
         }
@@ -59,7 +59,7 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testSizeForTwoElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
             if (size != 2) {
@@ -70,7 +70,7 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testIteratingForMultipleElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).build();
             final Iterator<String> iterator = list.iterator();
 
@@ -85,7 +85,7 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testMapForMultipleElements() {
-        withMapFunc(f -> withItem(a -> withItem(b -> {
+        withMapFunc(f -> withValue(a -> withValue(b -> {
             final ImmutableList<String> collection = newBuilder().add(a).add(b).build();
             final ImmutableList<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
@@ -99,13 +99,13 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testIndexOfWhenEmpty() {
-        withItem(value -> {
+        withValue(value -> {
             assertEquals(-1, emptyCollection().indexOf(value));
         });
     }
 
     public void testIndexOfForSingleElement() {
-        withItem(a -> withItem(value -> {
+        withValue(a -> withValue(value -> {
             final ImmutableList<String> list = newBuilder().add(a).build();
             final int index = list.indexOf(value);
 
@@ -119,7 +119,7 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testIndexOfForMultipleElements() {
-        withItem(a -> withItem(b -> withItem(value -> {
+        withValue(a -> withValue(b -> withValue(value -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).build();
             final int index = list.indexOf(value);
 
@@ -174,7 +174,7 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testSkip() {
-        withFilterFunc(f -> withItem(a -> withItem(b -> withItem(c -> {
+        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
 
             assertSame(list, list.skip(0));
@@ -189,7 +189,7 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testSpan() {
-        withFilterFunc(f -> withItem(a -> withItem(b -> withItem(c -> {
+        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
             final ImmutableList<String> filtered = list.filter(f);
             final ImmutableList<String> filteredNot = list.filterNot(f);

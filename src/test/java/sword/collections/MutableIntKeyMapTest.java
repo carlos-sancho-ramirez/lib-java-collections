@@ -3,12 +3,57 @@ package sword.collections;
 import java.util.Iterator;
 
 import static sword.collections.TestUtils.withInt;
+import static sword.collections.TestUtils.withString;
 
-public class MutableIntKeyMapTest extends IntKeyMapTest {
+public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
 
     @Override
-    <E> MutableIntKeyMap.Builder<E> newBuilder() {
+    MutableIntKeyMap.Builder<String> newBuilder() {
         return new MutableIntKeyMap.Builder<>();
+    }
+
+    @Override
+    void withValue(Procedure<String> procedure) {
+        withString(procedure);
+    }
+
+    private boolean filterFunc(String value) {
+        return value != null && !value.isEmpty();
+    }
+
+    @Override
+    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+        procedure.apply(this::filterFunc);
+    }
+
+    private String prefixUnderscore(String value) {
+        return "_" + value;
+    }
+
+    private String charCounter(String value) {
+        final int length = (value != null)? value.length() : 0;
+        return Integer.toString(length);
+    }
+
+    @Override
+    void withMapFunc(Procedure<Function<String, String>> procedure) {
+        procedure.apply(this::prefixUnderscore);
+        procedure.apply(this::charCounter);
+    }
+
+    @Override
+    String getTestValue() {
+        return "value";
+    }
+
+    @Override
+    String getTestValue2() {
+        return "value2";
+    }
+
+    @Override
+    String valueForKey(int key) {
+        return Integer.toString(key);
     }
 
     public void testToImmutableForEmpty() {

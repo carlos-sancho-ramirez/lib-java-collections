@@ -8,7 +8,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
 
     abstract <E> AbstractIterable<E> emptyCollection();
     abstract ImmutableCollectionBuilder<T> newBuilder();
-    abstract void withItem(Procedure<T> procedure);
+    abstract void withValue(Procedure<T> procedure);
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
     abstract void withMapFunc(Procedure<Function<T, String>> procedure);
 
@@ -20,7 +20,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
     }
 
     public void testFilterForSingleElement() {
-        withFilterFunc(f -> withItem(value -> {
+        withFilterFunc(f -> withValue(value -> {
             final IterableImmutableCollection<T> list = newBuilder().add(value).build();
             final IterableCollection<T> filtered = list.filter(f);
 
@@ -34,7 +34,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
     }
 
     public void testFilterForMultipleElements() {
-        withFilterFunc(f -> withItem(a -> withItem(b -> {
+        withFilterFunc(f -> withValue(a -> withValue(b -> {
             final AbstractImmutableIterable<T> iterable = (AbstractImmutableIterable<T>) newBuilder().add(a).add(b).build();
             final AbstractIterable<T> filtered = (AbstractImmutableIterable<T>) iterable.filter(f);
 
@@ -70,7 +70,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
     }
 
     public void testFilterNotForSingleElement() {
-        withFilterFunc(f -> withItem(value -> {
+        withFilterFunc(f -> withValue(value -> {
             final IterableImmutableCollection<T> collection = newBuilder().add(value).build();
             final IterableImmutableCollection<T> filtered = collection.filterNot(f);
 
@@ -84,7 +84,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
     }
 
     public void testFilterNotForMultipleElements() {
-        withFilterFunc(f -> withItem(a -> withItem(b -> {
+        withFilterFunc(f -> withValue(a -> withValue(b -> {
             final AbstractImmutableIterable<T> iterable = (AbstractImmutableIterable<T>) newBuilder().add(a).add(b).build();
             final AbstractImmutableIterable<T> filtered = (AbstractImmutableIterable<T>) iterable.filterNot(f);
 
@@ -120,7 +120,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
     }
 
     public void testMapForSingleElement() {
-        withMapFunc(f -> withItem(value -> {
+        withMapFunc(f -> withValue(value -> {
             final IterableImmutableCollection<T> collection = newBuilder().add(value).build();
             final IterableImmutableCollection<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
@@ -131,7 +131,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
     }
 
     public void testMapForMultipleElements() {
-        withMapFunc(f -> withItem(a -> withItem(b -> {
+        withMapFunc(f -> withValue(a -> withValue(b -> {
             final IterableImmutableCollection<T> collection = newBuilder().add(a).add(b).build();
             final IterableImmutableCollection<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();

@@ -219,6 +219,11 @@ public final class MutableIntKeyMap<T> extends AbstractIterable<T> implements In
         return true;
     }
 
+    void add(T value) {
+        final int newKey = (_size > 0)? _keys[_size - 1] + 1 : 0;
+        put(newKey, value);
+    }
+
     /**
      * Remove the key-value pair matching the given key from the map.
      * @return True if something was removed, false otherwise.
@@ -249,6 +254,12 @@ public final class MutableIntKeyMap<T> extends AbstractIterable<T> implements In
 
     public static class Builder<E> implements IntKeyMapBuilder<E> {
         private final MutableIntKeyMap<E> _map = new MutableIntKeyMap<>();
+
+        @Override
+        public IntKeyMapBuilder<E> add(E element) {
+            _map.add(element);
+            return this;
+        }
 
         @Override
         public Builder<E> put(int key, E value) {

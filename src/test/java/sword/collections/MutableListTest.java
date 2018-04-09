@@ -17,7 +17,7 @@ public final class MutableListTest extends AbstractIterableTest<String> {
     }
 
     @Override
-    void withItem(Procedure<String> procedure) {
+    void withValue(Procedure<String> procedure) {
         for (String str : stringValues) {
             procedure.apply(str);
         }
@@ -48,17 +48,12 @@ public final class MutableListTest extends AbstractIterableTest<String> {
     }
 
     @Override
-    <E> ImmutableList<E> emptyCollection() {
-        return ImmutableList.empty();
-    }
-
-    @Override
     MutableList.Builder<String> newBuilder() {
         return new MutableList.Builder<>();
     }
 
     public void testSizeForTwoElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableList<String> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
             if (size != 2) {
@@ -69,7 +64,7 @@ public final class MutableListTest extends AbstractIterableTest<String> {
     }
 
     public void testIteratingForMultipleElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableList<String> list = newBuilder().add(a).add(b).build();
             final Iterator<String> iterator = list.iterator();
 
@@ -84,13 +79,13 @@ public final class MutableListTest extends AbstractIterableTest<String> {
     }
 
     public void testIndexOfWhenEmpty() {
-        withItem(value -> {
-            assertEquals(-1, emptyCollection().indexOf(value));
+        withValue(value -> {
+            assertEquals(-1, newBuilder().build().indexOf(value));
         });
     }
 
     public void testIndexOfForSingleElement() {
-        withItem(a -> withItem(value -> {
+        withValue(a -> withValue(value -> {
             final MutableList<String> list = newBuilder().add(a).build();
             final int index = list.indexOf(value);
 
@@ -104,7 +99,7 @@ public final class MutableListTest extends AbstractIterableTest<String> {
     }
 
     public void testIndexOfForMultipleElements() {
-        withItem(a -> withItem(b -> withItem(value -> {
+        withValue(a -> withValue(b -> withValue(value -> {
             final MutableList<String> list = newBuilder().add(a).add(b).build();
             final int index = list.indexOf(value);
 

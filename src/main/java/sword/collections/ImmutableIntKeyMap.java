@@ -188,7 +188,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIterable<T> implements 
      */
     @SuppressWarnings("unchecked")
     public ImmutableIntValueMap<T> reverse() {
-        return new ImmutableIntValueMap<T>(_values, _keys);
+        return new ImmutableIntValueMap<>(_values, _keys);
     }
 
     @Override
@@ -198,6 +198,12 @@ public final class ImmutableIntKeyMap<T> extends AbstractIterable<T> implements 
 
     public static class Builder<E> implements IntKeyMapBuilder<E> {
         private final MutableIntKeyMap<E> _map = new MutableIntKeyMap<>();
+
+        @Override
+        public IntKeyMapBuilder<E> add(E element) {
+            _map.add(element);
+            return this;
+        }
 
         @Override
         public Builder<E> put(int key, E value) {

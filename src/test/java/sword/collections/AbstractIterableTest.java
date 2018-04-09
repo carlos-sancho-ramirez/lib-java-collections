@@ -8,9 +8,8 @@ import static sword.collections.SortUtils.equal;
 
 abstract class AbstractIterableTest<T> extends TestCase {
 
-    abstract <E> AbstractIterable<E> emptyCollection();
     abstract CollectionBuilder<T> newBuilder();
-    abstract void withItem(Procedure<T> procedure);
+    abstract void withValue(Procedure<T> procedure);
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
     abstract void withMapFunc(Procedure<Function<T, String>> procedure);
 
@@ -20,7 +19,7 @@ abstract class AbstractIterableTest<T> extends TestCase {
     }
 
     public void testSizeForOneElement() {
-        withItem(value -> {
+        withValue(value -> {
             final AbstractIterable<T> iterable = (AbstractIterable<T>) newBuilder().add(value).build();
             assertEquals("Expected size 1 after building it adding a single value " + value, 1, iterable.size());
         });
@@ -32,7 +31,7 @@ abstract class AbstractIterableTest<T> extends TestCase {
     }
 
     public void testIsEmptyForASingleElement() {
-        withItem(value -> {
+        withValue(value -> {
             final AbstractIterable<T> iterable = (AbstractIterable<T>) newBuilder().add(value).build();
             assertFalse("isEmpty is expected to return false when iterable includes " + value, iterable.isEmpty());
         });
@@ -44,7 +43,7 @@ abstract class AbstractIterableTest<T> extends TestCase {
     }
 
     public void testIteratingForASingleElement() {
-        withItem(value -> {
+        withValue(value -> {
             final IterableCollection<T> list = newBuilder().add(value).build();
             final Iterator<T> iterator = list.iterator();
             assertTrue("Expected true in hasNext for no empty iterators", iterator.hasNext());
@@ -54,7 +53,7 @@ abstract class AbstractIterableTest<T> extends TestCase {
     }
 
     public void testContainsForEmptyList() {
-        withItem(value -> {
+        withValue(value -> {
             final IterableCollection<T> list = newBuilder().build();
             if (list.contains(value)) {
                 fail("contains method is expected to return false always for any empty set. " +
@@ -64,9 +63,9 @@ abstract class AbstractIterableTest<T> extends TestCase {
     }
 
     public void testContainsForListContainingASingleElement() {
-        withItem(valueIncluded -> {
+        withValue(valueIncluded -> {
             final IterableCollection<T> list = newBuilder().add(valueIncluded).build();
-            withItem(otherValue -> {
+            withValue(otherValue -> {
                 if (equal(valueIncluded, otherValue) && !list.contains(otherValue)) {
                     fail("contains method is expected to return true when containing the value. But failing for value " + otherValue);
                 }
@@ -78,9 +77,9 @@ abstract class AbstractIterableTest<T> extends TestCase {
     }
 
     public void testContainsForListContainingMultipleElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final IterableCollection<T> list = newBuilder().add(a).add(b).build();
-            withItem(value -> {
+            withValue(value -> {
                 if ((equal(a, value) || equal(b, value)) && !list.contains(value)) {
                     fail("contains method is expected to return true when containing the value. But failing for value " + value + " while containing " + a + " and " + b);
                 }
@@ -92,12 +91,12 @@ abstract class AbstractIterableTest<T> extends TestCase {
     }
 
     public void testAnyMatchWhenEmpty() {
-        final AbstractIterable<T> iterable = emptyCollection();
+        final IterableCollection<T> iterable = newBuilder().build();
         withFilterFunc(f -> assertFalse(iterable.anyMatch(f)));
     }
 
     public void testAnyMatchForSingleElement() {
-        withItem(value -> {
+        withValue(value -> {
             final IterableCollection<T> iterable = newBuilder().add(value).build();
             withFilterFunc(f -> {
                 if (f.apply(value)) {
@@ -111,7 +110,7 @@ abstract class AbstractIterableTest<T> extends TestCase {
     }
 
     public void testAnyMatchForMultipleElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final IterableCollection<T> iterable = newBuilder().add(a).add(b).build();
             withFilterFunc(f -> {
                 if (f.apply(a) || f.apply(b)) {
