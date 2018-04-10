@@ -27,6 +27,15 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         procedure.apply(this::filterFunc);
     }
 
+    private String reduceFunc(String left, String right) {
+        return String.valueOf(left) + '-' + String.valueOf(right);
+    }
+
+    @Override
+    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+        procedure.apply(this::reduceFunc);
+    }
+
     private String prefixUnderscore(String value) {
         return "_" + value;
     }

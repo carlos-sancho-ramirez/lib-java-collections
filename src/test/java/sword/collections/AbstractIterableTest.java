@@ -11,6 +11,7 @@ abstract class AbstractIterableTest<T> extends TestCase {
     abstract CollectionBuilder<T> newIterableBuilder();
     abstract void withValue(Procedure<T> procedure);
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
+    abstract void withReduceFunction(Procedure<ReduceFunction<T>> procedure);
     abstract void withMapFunc(Procedure<Function<T, String>> procedure);
 
     public void testSizeForNoElements() {
@@ -121,5 +122,30 @@ abstract class AbstractIterableTest<T> extends TestCase {
                 }
             });
         }));
+    }
+
+    private T unexpectedReduceFunction(T left, T right) {
+        fail("Unexpected call to the reduce function");
+        return null;
+    }
+
+    public void testReduceForSingleElement() {
+        withValue(value -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(value).build();
+            assertSame(value, iterable.reduce(this::unexpectedReduceFunction));
+        });
+    }
+
+    public void testReduceForMultipleElements() {
+        withReduceFunction(func -> withValue(a -> withValue(b -> withValue(c -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(a).add(b).add(c).build();
+            final Iterator<T> it = iterable.iterator();
+            T expectedValue = it.next();
+            while (it.hasNext()) {
+                expectedValue = func.apply(expectedValue, it.next());
+            }
+
+            assertEquals(expectedValue, iterable.reduce(func));
+        }))));
     }
 }

@@ -66,6 +66,21 @@ abstract class AbstractIterable<T> extends AbstractSizable implements IterableCo
     }
 
     @Override
+    public T reduce(ReduceFunction<T> func) {
+        final Iterator<T> it = iterator();
+        if (!it.hasNext()) {
+            throw new EmptyCollectionException();
+        }
+
+        T value = it.next();
+        while (it.hasNext()) {
+            value = func.apply(value, it.next());
+        }
+
+        return value;
+    }
+
+    @Override
     public int hashCode() {
         return size();
     }

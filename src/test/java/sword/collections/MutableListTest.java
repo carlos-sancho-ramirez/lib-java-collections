@@ -23,6 +23,15 @@ public final class MutableListTest extends AbstractIterableTest<String> {
         }
     }
 
+    private String reduceFunc(String left, String right) {
+        return String.valueOf(left) + '-' + String.valueOf(right);
+    }
+
+    @Override
+    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+        procedure.apply(this::reduceFunc);
+    }
+
     private String prefixUnderscore(String value) {
         return "_" + value;
     }
