@@ -41,9 +41,13 @@ public class MutableSetTest extends AbstractIterableTest<String> {
         procedure.apply(this::filterFunc);
     }
 
-    @Override
     MutableSet.Builder<String> newBuilder() {
         return new MutableSet.Builder<>();
+    }
+
+    @Override
+    MutableSet.Builder<String> newIterableBuilder() {
+        return newBuilder();
     }
 
     public void testSizeForTwoElements() {

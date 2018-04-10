@@ -200,12 +200,6 @@ public final class ImmutableIntKeyMap<T> extends AbstractIterable<T> implements 
         private final MutableIntKeyMap<E> _map = new MutableIntKeyMap<>();
 
         @Override
-        public IntKeyMapBuilder<E> add(E element) {
-            _map.add(element);
-            return this;
-        }
-
-        @Override
         public Builder<E> put(int key, E value) {
             _map.put(key, value);
             return this;

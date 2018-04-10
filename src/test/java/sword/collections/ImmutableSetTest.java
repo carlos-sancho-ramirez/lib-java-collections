@@ -41,9 +41,13 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
         procedure.apply(this::filterFunc);
     }
 
-    @Override
     ImmutableSet.Builder<String> newBuilder() {
-        return new ImmutableSet.Builder<String>();
+        return new ImmutableSet.Builder<>();
+    }
+
+    @Override
+    ImmutableSet.Builder<String> newIterableBuilder() {
+        return newBuilder();
     }
 
     @Override

@@ -53,9 +53,13 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
         return ImmutableList.empty();
     }
 
-    @Override
     ImmutableList.Builder<String> newBuilder() {
-        return new ImmutableList.Builder<String>();
+        return new ImmutableList.Builder<>();
+    }
+
+    @Override
+    ImmutableList.Builder<String> newIterableBuilder() {
+        return newBuilder();
     }
 
     public void testSizeForTwoElements() {

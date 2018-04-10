@@ -6,13 +6,35 @@ import static sword.collections.TestUtils.withInt;
 
 abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
 
-    abstract IntKeyMapBuilder<T> newBuilder();
+    abstract IntKeyMapBuilder<T> newMapBuilder();
     abstract T getTestValue();
     abstract T getTestValue2();
     abstract T valueForKey(int key);
 
+    private final class IterableBuilderAdapter implements CollectionBuilder<T> {
+
+        private final IntKeyMapBuilder<T> _builder = newMapBuilder();
+        private int _key = 0;
+
+        @Override
+        public CollectionBuilder<T> add(T element) {
+            _builder.put(_key++, element);
+            return this;
+        }
+
+        @Override
+        public IterableCollection<T> build() {
+            return _builder.build();
+        }
+    }
+
+    @Override
+    CollectionBuilder<T> newIterableBuilder() {
+        return new IterableBuilderAdapter();
+    }
+
     public void testEmptyBuilderBuildsEmptyArray() {
-        IntKeyMapBuilder<T> builder = newBuilder();
+        IntKeyMapBuilder<T> builder = newMapBuilder();
         IntKeyMap<T> array = builder.build();
         assertEquals(0, array.size());
     }
@@ -20,7 +42,7 @@ abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
     public void testSize() {
         final T value = getTestValue();
         withInt(a -> withInt(b -> withInt(c -> withInt(d -> {
-            IntKeyMapBuilder<T> builder = newBuilder();
+            IntKeyMapBuilder<T> builder = newMapBuilder();
             IntKeyMap<T> array = builder
                     .put(a, value)
                     .put(b, value)
@@ -49,7 +71,7 @@ abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
         final T value = getTestValue();
         final T defValue = getTestValue2();
         withInt(a -> withInt(b -> {
-            IntKeyMapBuilder<T> builder = newBuilder();
+            IntKeyMapBuilder<T> builder = newMapBuilder();
             IntKeyMap<T> array = builder
                     .put(a, value)
                     .put(b, value)
@@ -65,7 +87,7 @@ abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
     public void testKeyAtMethod() {
         final T value = getTestValue();
         withInt(a -> withInt(b -> withInt(c -> {
-            IntKeyMapBuilder<T> builder = newBuilder();
+            IntKeyMapBuilder<T> builder = newMapBuilder();
             IntKeyMap<T> array = builder
                     .put(a, value)
                     .put(b, value)
@@ -88,7 +110,7 @@ abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
 
     public void testValueAtMethod() {
         withInt(a -> withInt(b -> withInt(c -> {
-            IntKeyMapBuilder<T> builder = newBuilder();
+            IntKeyMapBuilder<T> builder = newMapBuilder();
             IntKeyMap<T> array = builder
                     .put(a, valueForKey(a))
                     .put(b, valueForKey(b))
@@ -104,14 +126,14 @@ abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
     }
 
     public void testKeySetWhenEmpty() {
-        final IntKeyMapBuilder<T> builder = newBuilder();
+        final IntKeyMapBuilder<T> builder = newMapBuilder();
         final IntKeyMap<T> map = builder.build();
         assertTrue(map.keySet().isEmpty());
     }
 
     public void testKeySet() {
         withInt(a -> withInt(b -> withInt(c -> {
-            final IntKeyMapBuilder<T> builder = newBuilder();
+            final IntKeyMapBuilder<T> builder = newMapBuilder();
             final IntKeyMap<T> map = builder
                     .put(a, valueForKey(a))
                     .put(b, valueForKey(b))
@@ -127,7 +149,7 @@ abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
     public void testIndexOfKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final T value = getTestValue();
-            final IntKeyMapBuilder<T> builder = newBuilder();
+            final IntKeyMapBuilder<T> builder = newMapBuilder();
             final IntKeyMap map = builder
                     .put(a, value)
                     .put(b, value)
@@ -142,7 +164,7 @@ abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
 
     public void testEntryIterator() {
         withInt(a -> withInt(b -> withInt(c -> {
-            IntKeyMapBuilder<T> builder = newBuilder();
+            IntKeyMapBuilder<T> builder = newMapBuilder();
             IntKeyMap<T> array = builder
                     .put(a, valueForKey(a))
                     .put(b, valueForKey(b))

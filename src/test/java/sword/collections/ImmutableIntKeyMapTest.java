@@ -9,7 +9,7 @@ import static sword.collections.TestUtils.withString;
 public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
 
     @Override
-    ImmutableIntKeyMap.Builder<String> newBuilder() {
+    ImmutableIntKeyMap.Builder<String> newMapBuilder() {
         return new ImmutableIntKeyMap.Builder<>();
     }
 
@@ -178,13 +178,13 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
     }
 
     public void testToImmutableForEmpty() {
-        final ImmutableIntKeyMap.Builder<String> builder = newBuilder();
+        final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
         final ImmutableIntKeyMap<String> map = builder.build();
         assertSame(map, map.toImmutable());
     }
 
     public void testMutateForEmpty() {
-        final ImmutableIntKeyMap.Builder<String> builder = newBuilder();
+        final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
         final ImmutableIntKeyMap<String> map1 = builder.build();
         final MutableIntKeyMap<String> map2 = map1.mutate();
 
@@ -196,7 +196,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
 
     public void testToImmutable() {
         withInt(a -> withInt(b -> {
-            final ImmutableIntKeyMap.Builder<String> builder = newBuilder();
+            final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
             final ImmutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
             final ImmutableIntKeyMap<String> map2 = map1.toImmutable();
             assertSame(map1, map2);
@@ -205,7 +205,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
 
     public void testMutate() {
         withInt(a -> withInt(b -> {
-            final ImmutableIntKeyMap.Builder<String> builder = newBuilder();
+            final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
             final ImmutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
             final MutableIntKeyMap<String> map2 = map1.mutate();
 

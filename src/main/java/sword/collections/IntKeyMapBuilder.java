@@ -1,7 +1,6 @@
 package sword.collections;
 
-public interface IntKeyMapBuilder<T> extends CollectionBuilder<T> {
-    IntKeyMapBuilder<T> add(T element);
+public interface IntKeyMapBuilder<T> {
     IntKeyMapBuilder<T> put(int key, T value);
     IntKeyMap<T> build();
 }

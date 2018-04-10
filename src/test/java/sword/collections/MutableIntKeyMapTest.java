@@ -8,7 +8,7 @@ import static sword.collections.TestUtils.withString;
 public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
 
     @Override
-    MutableIntKeyMap.Builder<String> newBuilder() {
+    MutableIntKeyMap.Builder<String> newMapBuilder() {
         return new MutableIntKeyMap.Builder<>();
     }
 
@@ -57,7 +57,7 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
     }
 
     public void testToImmutableForEmpty() {
-        assertTrue(newBuilder().build().toImmutable().isEmpty());
+        assertTrue(newMapBuilder().build().toImmutable().isEmpty());
     }
 
     public void testMutateForEmpty() {
@@ -73,7 +73,7 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
 
     public void testToImmutable() {
         withInt(a -> withInt(b -> {
-            final MutableIntKeyMap.Builder<String> builder = newBuilder();
+            final MutableIntKeyMap.Builder<String> builder = newMapBuilder();
             final MutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
             final ImmutableIntKeyMap<String> map2 = map1.toImmutable();
 
@@ -93,7 +93,7 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
     public void testMutate() {
         final String defValue = "notFound!";
         withInt(a -> withInt(b -> {
-            final MutableIntKeyMap.Builder<String> builder = newBuilder();
+            final MutableIntKeyMap.Builder<String> builder = newMapBuilder();
             final MutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
             final MutableIntKeyMap<String> map2 = map1.mutate();
 

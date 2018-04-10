@@ -7,21 +7,21 @@ import static sword.collections.SortUtils.equal;
 abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> {
 
     abstract <E> AbstractIterable<E> emptyCollection();
-    abstract ImmutableCollectionBuilder<T> newBuilder();
+    abstract ImmutableCollectionBuilder<T> newIterableBuilder();
     abstract void withValue(Procedure<T> procedure);
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
     abstract void withMapFunc(Procedure<Function<T, String>> procedure);
 
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
-            final IterableImmutableCollection<T> list = newBuilder().build();
+            final IterableImmutableCollection<T> list = newIterableBuilder().build();
             assertSame(list, list.filter(f));
         });
     }
 
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withValue(value -> {
-            final IterableImmutableCollection<T> list = newBuilder().add(value).build();
+            final IterableImmutableCollection<T> list = newIterableBuilder().add(value).build();
             final IterableCollection<T> filtered = list.filter(f);
 
             if (f.apply(value)) {
@@ -35,7 +35,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
 
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withValue(a -> withValue(b -> {
-            final AbstractImmutableIterable<T> iterable = (AbstractImmutableIterable<T>) newBuilder().add(a).add(b).build();
+            final AbstractImmutableIterable<T> iterable = (AbstractImmutableIterable<T>) newIterableBuilder().add(a).add(b).build();
             final AbstractIterable<T> filtered = (AbstractImmutableIterable<T>) iterable.filter(f);
 
             final boolean aPassed = f.apply(a);
@@ -64,14 +64,14 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
 
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
-            final IterableImmutableCollection<T> list = newBuilder().build();
+            final IterableImmutableCollection<T> list = newIterableBuilder().build();
             assertSame(list, list.filterNot(f));
         });
     }
 
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withValue(value -> {
-            final IterableImmutableCollection<T> collection = newBuilder().add(value).build();
+            final IterableImmutableCollection<T> collection = newIterableBuilder().add(value).build();
             final IterableImmutableCollection<T> filtered = collection.filterNot(f);
 
             if (f.apply(value)) {
@@ -85,7 +85,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
 
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withValue(a -> withValue(b -> {
-            final AbstractImmutableIterable<T> iterable = (AbstractImmutableIterable<T>) newBuilder().add(a).add(b).build();
+            final AbstractImmutableIterable<T> iterable = (AbstractImmutableIterable<T>) newIterableBuilder().add(a).add(b).build();
             final AbstractImmutableIterable<T> filtered = (AbstractImmutableIterable<T>) iterable.filterNot(f);
 
             final boolean aRemoved = f.apply(a);
@@ -114,14 +114,14 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
 
     public void testMapWhenEmpty() {
         withMapFunc(f -> {
-            final IterableImmutableCollection<T> collection = newBuilder().build();
+            final IterableImmutableCollection<T> collection = newIterableBuilder().build();
             assertSame(emptyCollection(), collection.map(f));
         });
     }
 
     public void testMapForSingleElement() {
         withMapFunc(f -> withValue(value -> {
-            final IterableImmutableCollection<T> collection = newBuilder().add(value).build();
+            final IterableImmutableCollection<T> collection = newIterableBuilder().add(value).build();
             final IterableImmutableCollection<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
             assertTrue(iterator.hasNext());
@@ -132,7 +132,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> 
 
     public void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> {
-            final IterableImmutableCollection<T> collection = newBuilder().add(a).add(b).build();
+            final IterableImmutableCollection<T> collection = newIterableBuilder().add(a).add(b).build();
             final IterableImmutableCollection<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
 
