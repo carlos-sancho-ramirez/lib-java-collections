@@ -19,6 +19,11 @@ public class ImmutableIntList extends AbstractImmutableIntIterable {
     }
 
     @Override
+    public int valueAt(int index) {
+        return _values[index];
+    }
+
+    @Override
     public int size() {
         return _values.length;
     }
