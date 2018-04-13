@@ -2,6 +2,7 @@ package sword.collections;
 
 import java.util.Arrays;
 
+import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 
@@ -15,7 +16,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  */
 public final class MutableIntKeyMap<T> extends AbstractIterable<T> implements IntKeyMap<T> {
 
-    private static final int GRANULARITY = 4;
+    private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
     private int[] _keys;
     private Object[] _values;

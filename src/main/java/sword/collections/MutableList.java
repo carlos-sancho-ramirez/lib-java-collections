@@ -1,10 +1,11 @@
 package sword.collections;
 
+import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.equal;
 
 public final class MutableList<T> extends AbstractIterable<T> implements List<T> {
 
-    private static final int GRANULARITY = 4;
+    private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
     public static <E> MutableList<E> empty() {
         final Object[] values = new Object[suitableArrayLength(0)];

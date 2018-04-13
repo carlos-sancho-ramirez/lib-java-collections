@@ -2,12 +2,13 @@ package sword.collections;
 
 import java.util.Arrays;
 
+import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 
 public final class MutableIntSet extends AbstractIntIterable implements IntSet {
 
-    private static final int GRANULARITY = 4;
+    private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
     public static MutableIntSet empty() {
         return new MutableIntSet(new int[GRANULARITY], 0);

@@ -1,5 +1,6 @@
 package sword.collections;
 
+import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
@@ -23,7 +24,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  */
 public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
 
-    private static final int GRANULARITY = 4;
+    private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
     public static <E> MutableSet<E> empty() {
         return new MutableSet<>();
