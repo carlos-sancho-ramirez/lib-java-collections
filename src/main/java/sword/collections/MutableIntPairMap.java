@@ -284,4 +284,21 @@ public final class MutableIntPairMap extends AbstractIntIterable implements IntP
         final MutableIntPairMap that = (MutableIntPairMap) other;
         return Arrays.equals(_keys, that._keys) && Arrays.equals(_values, that._values);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('(');
+        boolean itemAdded = false;
+
+        for (Entry value : entries()) {
+            if (itemAdded) {
+                sb.append(',');
+            }
+
+            sb.append(value.toString());
+            itemAdded = true;
+        }
+
+        return sb.append(')').toString();
+    }
 }
