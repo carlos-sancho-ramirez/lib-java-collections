@@ -36,6 +36,18 @@ abstract class AbstractIntIterable extends AbstractSizable implements IterableIn
     }
 
     @Override
+    public int size() {
+        final Iterator<Integer> it = iterator();
+        int size = 0;
+        while (it.hasNext()) {
+            it.next();
+            ++size;
+        }
+
+        return size;
+    }
+
+    @Override
     public int hashCode() {
         return size();
     }

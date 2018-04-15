@@ -1,7 +1,5 @@
 package sword.collections;
 
-import java.util.Arrays;
-
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
@@ -14,7 +12,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class MutableIntPairMap extends AbstractIntIterable implements IntPairMap {
+public final class MutableIntPairMap extends AbstractIntPairMap implements IntPairMap {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -268,37 +266,5 @@ public final class MutableIntPairMap extends AbstractIntIterable implements IntP
         public void remove() {
             removeAt(--_index);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(new Object[] {_keys, _values});
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null || !(other instanceof MutableIntPairMap)) {
-            return false;
-        }
-
-        final MutableIntPairMap that = (MutableIntPairMap) other;
-        return Arrays.equals(_keys, that._keys) && Arrays.equals(_values, that._values);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('(');
-        boolean itemAdded = false;
-
-        for (Entry value : entries()) {
-            if (itemAdded) {
-                sb.append(',');
-            }
-
-            sb.append(value.toString());
-            itemAdded = true;
-        }
-
-        return sb.append(')').toString();
     }
 }

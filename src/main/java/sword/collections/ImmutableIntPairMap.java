@@ -17,7 +17,7 @@ import static sword.collections.SortUtils.quickSort;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class ImmutableIntPairMap extends AbstractIntIterable implements IntPairMap {
+public final class ImmutableIntPairMap extends AbstractIntPairMap implements IntPairMap {
 
     private static final ImmutableIntPairMap EMPTY = new ImmutableIntPairMap(new int[0], new int[0]);
 
@@ -303,7 +303,7 @@ public final class ImmutableIntPairMap extends AbstractIntIterable implements In
     @Override
     public boolean equals(Object other) {
         if (other == null || !(other instanceof ImmutableIntPairMap)) {
-            return false;
+            return super.equals(other);
         }
 
         final ImmutableIntPairMap that = (ImmutableIntPairMap) other;
