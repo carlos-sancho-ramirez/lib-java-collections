@@ -2,6 +2,7 @@ package sword.collections;
 
 import java.util.Iterator;
 
+import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.equal;
 
 public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
@@ -175,5 +176,30 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
             assertTrue(set1.contains(b));
             assertFalse(set2.contains(b));
         }));
+    }
+
+    @Override
+    public void testIndexOfForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(value -> {
+            final int aHash = (a != null)? a.hashCode() : HASH_FOR_NULL;
+            final int bHash = (b != null)? b.hashCode() : HASH_FOR_NULL;
+            final boolean reversedOrder = bHash < aHash;
+            final IterableCollection<String> set = newIterableBuilder().add(a).add(b).build();
+            final int index = set.indexOf(value);
+
+            if (aHash == bHash) {
+                if (equal(a, value) || equal(b, value)) {
+                    assertTrue(index == 0 || index == 1);
+                }
+                else {
+                    assertEquals(-1, index);
+                }
+            }
+            else {
+                final int expectedIndex = (!reversedOrder && equal(a, value) || reversedOrder && equal(b, value)) ? 0 :
+                        (!reversedOrder && equal(b, value) || reversedOrder && equal(a, value)) ? 1 : -1;
+                assertEquals(expectedIndex, index);
+            }
+        })));
     }
 }

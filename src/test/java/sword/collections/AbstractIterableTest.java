@@ -124,6 +124,43 @@ abstract class AbstractIterableTest<T> extends TestCase {
         }));
     }
 
+    public void testIndexOfWhenEmpty() {
+        withValue(value -> {
+            assertEquals(-1, newIterableBuilder().build().indexOf(value));
+        });
+    }
+
+    public void testIndexOfForSingleElement() {
+        withValue(a -> withValue(value -> {
+            final IterableCollection<T> list = newIterableBuilder().add(a).build();
+            final int index = list.indexOf(value);
+
+            if (equal(a, value)) {
+                assertEquals(0, index);
+            }
+            else {
+                assertEquals(-1, index);
+            }
+        }));
+    }
+
+    public void testIndexOfForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(value -> {
+            final IterableCollection<T> list = newIterableBuilder().add(a).add(b).build();
+            final int index = list.indexOf(value);
+
+            if (equal(a, value)) {
+                assertEquals(0, index);
+            }
+            else if (equal(b, value)) {
+                assertEquals(1, index);
+            }
+            else {
+                assertEquals(-1, index);
+            }
+        })));
+    }
+
     private T unexpectedReduceFunction(T left, T right) {
         fail("Unexpected call to the reduce function");
         return null;

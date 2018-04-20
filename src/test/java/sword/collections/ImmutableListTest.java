@@ -2,7 +2,6 @@ package sword.collections;
 
 import java.util.Iterator;
 
-import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
 public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
@@ -108,43 +107,6 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
                 assertEquals(f.apply(item), iterator.next());
             }
             assertFalse(iterator.hasNext());
-        })));
-    }
-
-    public void testIndexOfWhenEmpty() {
-        withValue(value -> {
-            assertEquals(-1, emptyCollection().indexOf(value));
-        });
-    }
-
-    public void testIndexOfForSingleElement() {
-        withValue(a -> withValue(value -> {
-            final ImmutableList<String> list = newBuilder().add(a).build();
-            final int index = list.indexOf(value);
-
-            if (equal(a, value)) {
-                assertEquals(0, index);
-            }
-            else {
-                assertEquals(-1, index);
-            }
-        }));
-    }
-
-    public void testIndexOfForMultipleElements() {
-        withValue(a -> withValue(b -> withValue(value -> {
-            final ImmutableList<String> list = newBuilder().add(a).add(b).build();
-            final int index = list.indexOf(value);
-
-            if (equal(a, value)) {
-                assertEquals(0, index);
-            }
-            else if (equal(b, value)) {
-                assertEquals(1, index);
-            }
-            else {
-                assertEquals(-1, index);
-            }
         })));
     }
 

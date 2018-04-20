@@ -1,6 +1,6 @@
 package sword.collections;
 
-public class ImmutableIntList extends AbstractImmutableIntIterable {
+public final class ImmutableIntList extends AbstractImmutableIntIterable {
 
     private static final ImmutableIntList EMPTY = new ImmutableIntList(new int[0]);
 
@@ -28,7 +28,8 @@ public class ImmutableIntList extends AbstractImmutableIntIterable {
         return _values.length;
     }
 
-    private int indexOf(int value) {
+    @Override
+    public int indexOf(int value) {
         for (int i = 0; i < _values.length; i++) {
             if (value == _values[i]) {
                 return i;

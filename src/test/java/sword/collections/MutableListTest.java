@@ -111,23 +111,6 @@ public final class MutableListTest extends AbstractIterableTest<String> {
         }));
     }
 
-    public void testIndexOfForMultipleElements() {
-        withValue(a -> withValue(b -> withValue(value -> {
-            final MutableList<String> list = newBuilder().add(a).add(b).build();
-            final int index = list.indexOf(value);
-
-            if (equal(a, value)) {
-                assertEquals(0, index);
-            }
-            else if (equal(b, value)) {
-                assertEquals(1, index);
-            }
-            else {
-                assertEquals(-1, index);
-            }
-        })));
-    }
-
     public void testFindFirstWhenEmpty() {
         withFilterFunc(f -> withString(defaultValue -> {
             final MutableList<String> list = newBuilder().build();

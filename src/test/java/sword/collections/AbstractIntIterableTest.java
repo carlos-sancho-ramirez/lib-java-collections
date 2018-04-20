@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import java.util.Iterator;
 
+import static sword.collections.SortUtils.equal;
+
 abstract class AbstractIntIterableTest extends TestCase {
 
     abstract AbstractIntIterable emptyCollection();
@@ -122,5 +124,42 @@ abstract class AbstractIntIterableTest extends TestCase {
                 }
             });
         }));
+    }
+
+    public void testIndexOfWhenEmpty() {
+        withItem(value -> {
+            assertEquals(-1, newIntBuilder().build().indexOf(value));
+        });
+    }
+
+    public void testIndexOfForSingleElement() {
+        withItem(a -> withItem(value -> {
+            final IterableIntCollection list = newIntBuilder().add(a).build();
+            final int index = list.indexOf(value);
+
+            if (equal(a, value)) {
+                assertEquals(0, index);
+            }
+            else {
+                assertEquals(-1, index);
+            }
+        }));
+    }
+
+    public void testIndexOfForMultipleElements() {
+        withItem(a -> withItem(b -> withItem(value -> {
+            final IterableIntCollection list = newIntBuilder().add(a).add(b).build();
+            final int index = list.indexOf(value);
+
+            if (equal(a, value)) {
+                assertEquals(0, index);
+            }
+            else if (equal(b, value)) {
+                assertEquals(1, index);
+            }
+            else {
+                assertEquals(-1, index);
+            }
+        })));
     }
 }

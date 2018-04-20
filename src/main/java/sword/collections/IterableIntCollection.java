@@ -17,6 +17,13 @@ interface IterableIntCollection extends Iterable<Integer> {
     boolean anyMatch(IntPredicate predicate);
 
     /**
+     * Returns the index within the collection for the first element matching the given value.
+     * Or -1 if none matches.
+     * @param value Value to be matched.
+     */
+    int indexOf(int value);
+
+    /**
      * Return the value in the given index position.
      *
      * @param index Index within the array of values.

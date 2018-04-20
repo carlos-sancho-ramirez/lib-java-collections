@@ -47,6 +47,20 @@ abstract class AbstractIntIterable extends AbstractSizable implements IterableIn
     }
 
     @Override
+    public int indexOf(int value) {
+        int index = 0;
+        for (int item : this) {
+            if (value == item) {
+                return index;
+            }
+
+            index++;
+        }
+
+        return -1;
+    }
+
+    @Override
     public int size() {
         final Iterator<Integer> it = iterator();
         int size = 0;
