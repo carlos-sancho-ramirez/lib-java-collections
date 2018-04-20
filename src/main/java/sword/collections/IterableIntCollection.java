@@ -9,6 +9,14 @@ interface IterableIntCollection extends Iterable<Integer> {
     boolean contains(int value);
 
     /**
+     * Returns true if the given predicate returns true for any of the items
+     * in this collection.
+     *
+     * @param predicate Predicate to be evaluated.
+     */
+    boolean anyMatch(IntPredicate predicate);
+
+    /**
      * Return the value in the given index position.
      *
      * @param index Index within the array of values.

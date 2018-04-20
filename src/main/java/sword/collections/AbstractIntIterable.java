@@ -36,6 +36,17 @@ abstract class AbstractIntIterable extends AbstractSizable implements IterableIn
     }
 
     @Override
+    public boolean anyMatch(IntPredicate predicate) {
+        for (int item : this) {
+            if (predicate.apply(item)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public int size() {
         final Iterator<Integer> it = iterator();
         int size = 0;

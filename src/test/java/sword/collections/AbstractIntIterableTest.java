@@ -90,4 +90,37 @@ abstract class AbstractIntIterableTest extends TestCase {
             });
         }));
     }
+
+    public void testAnyMatchWhenEmpty() {
+        final IterableIntCollection iterable = newIntBuilder().build();
+        withFilterFunc(f -> assertFalse(iterable.anyMatch(f)));
+    }
+
+    public void testAnyMatchForSingleElement() {
+        withItem(value -> {
+            final IterableIntCollection iterable = newIntBuilder().add(value).build();
+            withFilterFunc(f -> {
+                if (f.apply(value)) {
+                    assertTrue(iterable.anyMatch(f));
+                }
+                else {
+                    assertFalse(iterable.anyMatch(f));
+                }
+            });
+        });
+    }
+
+    public void testAnyMatchForMultipleElements() {
+        withItem(a -> withItem(b -> {
+            final IterableIntCollection iterable = newIntBuilder().add(a).add(b).build();
+            withFilterFunc(f -> {
+                if (f.apply(a) || f.apply(b)) {
+                    assertTrue(iterable.anyMatch(f));
+                }
+                else {
+                    assertFalse(iterable.anyMatch(f));
+                }
+            });
+        }));
+    }
 }
