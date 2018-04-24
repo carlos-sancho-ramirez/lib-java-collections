@@ -237,4 +237,23 @@ public class MutableIntSetTest extends AbstractIntIterableTest {
             }
         })));
     }
+
+    @Override
+    public void testFindFirstForMultipleElements() {
+        withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
+            final IterableIntCollection collection = newIntBuilder().add(a).add(b).build();
+            final boolean reversed = b < a;
+            final int first = collection.findFirst(f, defaultValue);
+
+            if (f.apply(a) && (!reversed || !f.apply(b))) {
+                assertEquals(a, first);
+            }
+            else if (f.apply(b) && (reversed || !f.apply(a))) {
+                assertEquals(b, first);
+            }
+            else {
+                assertEquals(defaultValue, first);
+            }
+        }))));
+    }
 }

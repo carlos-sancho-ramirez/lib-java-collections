@@ -33,4 +33,9 @@ interface IterableIntCollection extends Iterable<Integer> {
      * @throws IndexOutOfBoundsException if the given index is invalid for this collection.
      */
     int valueAt(int index);
+
+    /**
+     * Returns the first item matching the predicate or the default value if none matches.
+     */
+    int findFirst(IntPredicate predicate, int defaultValue);
 }

@@ -161,6 +161,44 @@ abstract class AbstractIterableTest<T> extends TestCase {
         })));
     }
 
+    public void testFindFirstWhenEmpty() {
+        withFilterFunc(f -> withValue(defaultValue -> {
+            final IterableCollection<T> collection = newIterableBuilder().build();
+            assertEquals(defaultValue, collection.findFirst(f, defaultValue));
+        }));
+    }
+
+    public void testFindFirstForSingleElement() {
+        withFilterFunc(f -> withValue(defaultValue -> withValue(value -> {
+            final IterableCollection<T> collection = newIterableBuilder().add(value).build();
+            final T first = collection.findFirst(f, defaultValue);
+
+            if (f.apply(value)) {
+                assertSame(value, first);
+            }
+            else {
+                assertSame(defaultValue, first);
+            }
+        })));
+    }
+
+    public void testFindFirstForMultipleElements() {
+        withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
+            final IterableCollection<T> collection = newIterableBuilder().add(a).add(b).build();
+            final T first = collection.findFirst(f, defaultValue);
+
+            if (f.apply(a)) {
+                assertSame(a, first);
+            }
+            else if (f.apply(b)) {
+                assertSame(b, first);
+            }
+            else {
+                assertSame(defaultValue, first);
+            }
+        }))));
+    }
+
     private T unexpectedReduceFunction(T left, T right) {
         fail("Unexpected call to the reduce function");
         return null;

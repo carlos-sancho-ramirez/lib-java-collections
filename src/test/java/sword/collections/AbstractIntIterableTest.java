@@ -162,4 +162,42 @@ abstract class AbstractIntIterableTest extends TestCase {
             }
         })));
     }
+
+    public void testFindFirstWhenEmpty() {
+        withFilterFunc(f -> withItem(defaultValue -> {
+            final IterableIntCollection collection = newIntBuilder().build();
+            assertEquals(defaultValue, collection.findFirst(f, defaultValue));
+        }));
+    }
+
+    public void testFindFirstForSingleElement() {
+        withFilterFunc(f -> withItem(defaultValue -> withItem(value -> {
+            final IterableIntCollection collection = newIntBuilder().add(value).build();
+            final int first = collection.findFirst(f, defaultValue);
+
+            if (f.apply(value)) {
+                assertEquals(value, first);
+            }
+            else {
+                assertEquals(defaultValue, first);
+            }
+        })));
+    }
+
+    public void testFindFirstForMultipleElements() {
+        withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
+            final IterableIntCollection collection = newIntBuilder().add(a).add(b).build();
+            final int first = collection.findFirst(f, defaultValue);
+
+            if (f.apply(a)) {
+                assertSame(a, first);
+            }
+            else if (f.apply(b)) {
+                assertSame(b, first);
+            }
+            else {
+                assertSame(defaultValue, first);
+            }
+        }))));
+    }
 }

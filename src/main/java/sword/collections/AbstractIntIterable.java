@@ -61,6 +61,17 @@ abstract class AbstractIntIterable extends AbstractSizable implements IterableIn
     }
 
     @Override
+    public int findFirst(IntPredicate predicate, int defaultValue) {
+        for (int item : this) {
+            if (predicate.apply(item)) {
+                return item;
+            }
+        }
+
+        return defaultValue;
+    }
+
+    @Override
     public int size() {
         final Iterator<Integer> it = iterator();
         int size = 0;

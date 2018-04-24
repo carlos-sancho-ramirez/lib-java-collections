@@ -174,4 +174,29 @@ public class MutableSetTest extends AbstractIterableTest<String> {
             }
         })));
     }
+
+    @Override
+    public void testFindFirstForMultipleElements() {
+        withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
+            final int aHash = (a != null)? a.hashCode() : HASH_FOR_NULL;
+            final int bHash = (b != null)? b.hashCode() : HASH_FOR_NULL;
+            final boolean reversedOrder = bHash < aHash;
+            final IterableCollection<String> collection = newIterableBuilder().add(a).add(b).build();
+            final String first = collection.findFirst(f, defaultValue);
+
+            if (aHash == bHash) {
+                if (f.apply(a) || f.apply(b)) {
+                    assertTrue(equal(a, first) || equal(b, first));
+                }
+                else {
+                    assertSame(defaultValue, first);
+                }
+            }
+            else {
+                final String expected = (!reversedOrder && f.apply(a) || reversedOrder && !f.apply(b) && f.apply(a))? a :
+                        (reversedOrder && f.apply(b) || !reversedOrder && !f.apply(a) && f.apply(b))? b : defaultValue;
+                assertSame(expected, first);
+            }
+        }))));
+    }
 }

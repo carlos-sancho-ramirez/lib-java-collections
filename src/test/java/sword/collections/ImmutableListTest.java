@@ -110,44 +110,6 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
         })));
     }
 
-    public void testFindFirstWhenEmpty() {
-        withFilterFunc(f -> withString(defaultValue -> {
-            final ImmutableList<String> list = newBuilder().build();
-            assertEquals(defaultValue, list.findFirst(f, defaultValue));
-        }));
-    }
-
-    public void testFindFirstForSingleElement() {
-        withFilterFunc(f -> withString(defaultValue -> withString(value -> {
-            final ImmutableList<String> list = newBuilder().append(value).build();
-            final String first = list.findFirst(f, defaultValue);
-
-            if (f.apply(value)) {
-                assertSame(value, first);
-            }
-            else {
-                assertSame(defaultValue, first);
-            }
-        })));
-    }
-
-    public void testFindFirstForMultipleElements() {
-        withFilterFunc(f -> withString(defaultValue -> withString(a -> withString(b -> {
-            final ImmutableList<String> list = newBuilder().append(a).append(b).build();
-            final String first = list.findFirst(f, defaultValue);
-
-            if (f.apply(a)) {
-                assertSame(a, first);
-            }
-            else if (f.apply(b)) {
-                assertSame(b, first);
-            }
-            else {
-                assertSame(defaultValue, first);
-            }
-        }))));
-    }
-
     public void testSkip() {
         withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
