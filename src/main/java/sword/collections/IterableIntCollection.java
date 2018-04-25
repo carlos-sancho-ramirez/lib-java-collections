@@ -38,4 +38,12 @@ interface IterableIntCollection extends Iterable<Integer> {
      * Returns the first item matching the predicate or the default value if none matches.
      */
     int findFirst(IntPredicate predicate, int defaultValue);
+
+    /**
+     * Reduces the collection to a single element by applying the given function on each pair of values.
+     * @param func Associate function to be applied on each pair of elements.
+     * @return The resulting value of applying the given function to each value pair.
+     * @throws EmptyCollectionException in case the collection is empty.
+     */
+    int reduce(IntReduceFunction func);
 }

@@ -14,6 +14,15 @@ abstract class AbstractIntIterableTest extends TestCase {
     abstract IntCollectionBuilder newIntBuilder();
     abstract void withItem(IntProcedure procedure);
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);
+
+    private int hashReduceFunction(int left, int right) {
+        return left * 31 + right;
+    }
+
+    private void withReduceFunction(Procedure<IntReduceFunction> procedure) {
+        procedure.apply(this::hashReduceFunction);
+    }
+
     abstract void withMapFunc(Procedure<IntFunction<String>> procedure);
 
     public void testSizeForNoElements() {
@@ -198,6 +207,31 @@ abstract class AbstractIntIterableTest extends TestCase {
             else {
                 assertSame(defaultValue, first);
             }
+        }))));
+    }
+
+    private int unexpectedReduceFunction(int left, int right) {
+        fail("Unexpected call to the reduce function");
+        return 0;
+    }
+
+    public void testReduceForSingleElement() {
+        withItem(value -> {
+            final IterableIntCollection iterable = newIntBuilder().add(value).build();
+            assertEquals(value, iterable.reduce(this::unexpectedReduceFunction));
+        });
+    }
+
+    public void testReduceForMultipleElements() {
+        withReduceFunction(func -> withItem(a -> withItem(b -> withItem(c -> {
+            final IterableIntCollection iterable = newIntBuilder().add(a).add(b).add(c).build();
+            final Iterator<Integer> it = iterable.iterator();
+            int expectedValue = it.next();
+            while (it.hasNext()) {
+                expectedValue = func.apply(expectedValue, it.next());
+            }
+
+            assertEquals(expectedValue, iterable.reduce(func));
         }))));
     }
 }

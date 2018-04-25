@@ -72,6 +72,21 @@ abstract class AbstractIntIterable extends AbstractSizable implements IterableIn
     }
 
     @Override
+    public int reduce(IntReduceFunction func) {
+        final Iterator<Integer> it = iterator();
+        if (!it.hasNext()) {
+            throw new EmptyCollectionException();
+        }
+
+        int value = it.next();
+        while (it.hasNext()) {
+            value = func.apply(value, it.next());
+        }
+
+        return value;
+    }
+
+    @Override
     public int size() {
         final Iterator<Integer> it = iterator();
         int size = 0;
