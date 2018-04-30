@@ -59,7 +59,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             if (!contained) {
                 final ImmutableMap.Builder<Integer, String> builder = new ImmutableMap.Builder<>();
                 for (Map.Entry<Integer, String> entry : map.entries()) {
-                    builder.put(entry.getKey(), entry.getValue());
+                    builder.put(entry.key(), entry.value());
                 }
                 assertEquals(builder.put(key, value).build(), newMap);
             }

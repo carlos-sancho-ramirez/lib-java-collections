@@ -143,9 +143,9 @@ abstract class MapTest<K, V> extends TestCase {
                 assertTrue(iterator.hasNext());
 
                 final Map.Entry<K, V> entry = iterator.next();
-                assertEquals(i, entry.getIndex());
-                assertEquals(map.keyAt(i), entry.getKey());
-                assertEquals(map.valueAt(i), entry.getValue());
+                assertEquals(i, entry.index());
+                assertEquals(map.keyAt(i), entry.key());
+                assertEquals(map.valueAt(i), entry.value());
             }
 
             assertFalse(iterator.hasNext());
@@ -168,8 +168,8 @@ abstract class MapTest<K, V> extends TestCase {
                 final Map.Entry<K, V> entry1 = it1.next();
                 final Map.Entry<K, V> entry2 = it2.next();
 
-                assertEquals(entry1.getKey(), entry2.getKey());
-                assertEquals(entry1.getValue(), entry2.getValue());
+                assertEquals(entry1.key(), entry2.key());
+                assertEquals(entry1.value(), entry2.value());
             }
             assertFalse(it2.hasNext());
 

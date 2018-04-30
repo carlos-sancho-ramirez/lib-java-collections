@@ -140,9 +140,9 @@ abstract class IntPairMapTest extends TestCase {
                 assertTrue(iterator.hasNext());
 
                 final IntPairMap.Entry entry = iterator.next();
-                assertEquals(i, entry.getIndex());
-                assertEquals(array.keyAt(i), entry.getKey());
-                assertEquals(array.valueAt(i), entry.getValue());
+                assertEquals(i, entry.index());
+                assertEquals(array.keyAt(i), entry.key());
+                assertEquals(array.valueAt(i), entry.value());
             }
 
             assertFalse(iterator.hasNext());

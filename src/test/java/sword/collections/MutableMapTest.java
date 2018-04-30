@@ -53,8 +53,8 @@ public class MutableMapTest extends MapTest<Integer, String> {
                 final Map.Entry<Integer, String> entry1 = it1.next();
                 final Map.Entry<Integer, String> entry2 = it2.next();
 
-                assertEquals(entry1.getKey(), entry2.getKey());
-                assertEquals(entry1.getValue(), entry2.getValue());
+                assertEquals(entry1.key(), entry2.key());
+                assertEquals(entry1.value(), entry2.value());
             }
             assertFalse(it2.hasNext());
 

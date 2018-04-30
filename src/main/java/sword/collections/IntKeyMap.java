@@ -65,15 +65,15 @@ public interface IntKeyMap<T> extends IterableCollection<T>, Sizable {
             _value = value;
         }
 
-        public int getIndex() {
+        public int index() {
             return _index;
         }
 
-        public int getKey() {
+        public int key() {
             return _key;
         }
 
-        public E getValue() {
+        public E value() {
             return _value;
         }
 

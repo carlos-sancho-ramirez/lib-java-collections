@@ -177,9 +177,9 @@ abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
                 assertTrue(iterator.hasNext());
 
                 final IntKeyMap.Entry<T> entry = iterator.next();
-                assertEquals(i, entry.getIndex());
-                assertEquals(array.keyAt(i), entry.getKey());
-                assertEquals(array.valueAt(i), entry.getValue());
+                assertEquals(i, entry.index());
+                assertEquals(array.keyAt(i), entry.key());
+                assertEquals(array.valueAt(i), entry.value());
             }
 
             assertFalse(iterator.hasNext());

@@ -75,15 +75,15 @@ public interface Map<K, V> extends IterableCollection<V>, Sizable {
             _value = value;
         }
 
-        public int getIndex() {
+        public int index() {
             return _index;
         }
 
-        public A getKey() {
+        public A key() {
             return _key;
         }
 
-        public B getValue() {
+        public B value() {
             return _value;
         }
 

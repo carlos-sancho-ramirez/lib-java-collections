@@ -72,16 +72,16 @@ public interface IntValueMap<T> extends IterableIntCollection, Sizable {
             _value = value;
         }
 
-        public int getIndex() {
+        public int index() {
             return _index;
         }
 
         @SuppressWarnings("unchecked")
-        public E getKey() {
+        public E key() {
             return _key;
         }
 
-        public int getValue() {
+        public int value() {
             return _value;
         }
 

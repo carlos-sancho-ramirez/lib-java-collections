@@ -156,9 +156,9 @@ abstract class IntValueMapTest extends TestCase {
                 assertTrue(iterator.hasNext());
 
                 final IntValueMap.Entry<String> entry = iterator.next();
-                assertEquals(i, entry.getIndex());
-                assertEquals(map.keyAt(i), entry.getKey());
-                assertEquals(map.valueAt(i), entry.getValue());
+                assertEquals(i, entry.index());
+                assertEquals(map.keyAt(i), entry.key());
+                assertEquals(map.valueAt(i), entry.value());
             }
 
             assertFalse(iterator.hasNext());
@@ -181,8 +181,8 @@ abstract class IntValueMapTest extends TestCase {
                 final IntValueMap.Entry<String> entry1 = it1.next();
                 final IntValueMap.Entry<String> entry2 = it2.next();
 
-                assertEquals(entry1.getKey(), entry2.getKey());
-                assertEquals(entry1.getValue(), entry2.getValue());
+                assertEquals(entry1.key(), entry2.key());
+                assertEquals(entry1.value(), entry2.value());
             }
             assertFalse(it2.hasNext());
 

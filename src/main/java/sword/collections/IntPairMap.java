@@ -64,15 +64,15 @@ public interface IntPairMap extends IterableIntCollection, Sizable {
             _value = value;
         }
 
-        public int getIndex() {
+        public int index() {
             return _index;
         }
 
-        public int getKey() {
+        public int key() {
             return _key;
         }
 
-        public int getValue() {
+        public int value() {
             return _value;
         }
 
