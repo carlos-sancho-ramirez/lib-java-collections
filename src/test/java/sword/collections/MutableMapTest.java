@@ -63,4 +63,31 @@ public class MutableMapTest extends MapTest<Integer, String> {
             assertTrue(map2.containsKey(b));
         }));
     }
+
+    public void testHashCode() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final Map<Integer, String> mutable = newBuilder()
+                    .put(a, Integer.toString(b))
+                    .put(b, Integer.toString(c))
+                    .put(c, Integer.toString(a))
+                    .build();
+            final Map<Integer, String> immutable = mutable.toImmutable();
+            assertNotSame(mutable, immutable);
+            assertEquals(mutable.hashCode(), immutable.hashCode());
+        })));
+    }
+
+    public void testEquals() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final Map<Integer, String> mutable = newBuilder()
+                    .put(a, Integer.toString(b))
+                    .put(b, Integer.toString(c))
+                    .put(c, Integer.toString(a))
+                    .build();
+            final Map<Integer, String> immutable = mutable.toImmutable();
+            assertNotSame(mutable, immutable);
+            assertEquals(mutable, immutable);
+            assertEquals(immutable, mutable);
+        })));
+    }
 }
