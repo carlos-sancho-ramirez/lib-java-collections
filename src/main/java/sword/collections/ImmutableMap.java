@@ -29,7 +29,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * @param <K> Type for the key elements within the Map
  * @param <V> Type for the value elements within the Map
  */
-public final class ImmutableMap<K, V> extends AbstractIterable<V> implements Map<K, V> {
+public final class ImmutableMap<K, V> extends AbstractMap<K, V> {
 
     private static final ImmutableMap<Object, Object> EMPTY = new ImmutableMap<>(new Object[0], new int[0], new Object[0]);
 
@@ -241,70 +241,5 @@ public final class ImmutableMap<K, V> extends AbstractIterable<V> implements Map
         }
 
         return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (object == null || !(object instanceof ImmutableMap)) {
-            return false;
-        }
-        else if (this == object) {
-            return true;
-        }
-
-        final ImmutableMap that = (ImmutableMap) object;
-        final int[] thatHashCodes = that._hashCodes;
-        final int length = _hashCodes.length;
-        if (length != thatHashCodes.length) {
-            return false;
-        }
-
-        final ImmutableBitSetImpl.Builder builder = new ImmutableBitSetImpl.Builder();
-        for (int i = 0; i < length; i++) {
-            final int thisHash = _hashCodes[i];
-            if (thisHash != thatHashCodes[i]) {
-                return false;
-            }
-
-            if (i > 0 && _hashCodes[i - 1] == thisHash) {
-                builder.add(i - 1);
-                builder.add(i);
-            }
-        }
-        final ImmutableBitSetImpl thisDuplicated = builder.build();
-        ImmutableBitSetImpl thatDuplicated = thisDuplicated;
-
-        final Object[] thatKeys = that._keys;
-        final Object[] thatValues = that._values;
-        for (int i = 0; i < length; i++) {
-            final Object thisKey = _keys[i];
-            final Object thisValue = _values[i];
-            if (thisDuplicated.contains(i)) {
-                boolean found = false;
-                for (int pos : thatDuplicated) {
-                    if ((thisKey == null && thatKeys[pos] == null || thisKey != null && thisKey.equals(thatKeys[pos])) &&
-                            (thisValue == null && thatValues[pos] == null || thisValue != null && thisValue.equals(thatValues[pos]))) {
-                        thatDuplicated = thatDuplicated.remove(pos);
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    return false;
-                }
-            }
-            else {
-                final Object thatKey = thatKeys[i];
-                final Object thatValue = thatValues[i];
-
-                if (thisKey == null && thatKey != null || thisKey != null && !thisKey.equals(thatKey) ||
-                        thisValue == null && thatValue != null || thisValue != null && !thisValue.equals(thatValue)) {
-                    return false;
-                }
-            }
-        }
-
-        return thatDuplicated.isEmpty();
     }
 }
