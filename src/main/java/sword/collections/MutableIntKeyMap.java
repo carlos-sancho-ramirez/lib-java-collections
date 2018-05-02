@@ -1,8 +1,7 @@
 package sword.collections;
 
-import java.util.Arrays;
-
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
+import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 
@@ -14,7 +13,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class MutableIntKeyMap<T> extends AbstractIterable<T> implements IntKeyMap<T> {
+public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -286,16 +285,12 @@ public final class MutableIntKeyMap<T> extends AbstractIterable<T> implements In
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new Object[] {_keys, _values});
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null || !(other instanceof MutableIntKeyMap)) {
-            return false;
+        int hash = 0;
+        for (int i = 0; i < _size; i++) {
+            final Object value = _values[i];
+            hash = (hash * 31 + _keys[i]) * 31 + ((value != null)? value.hashCode() : HASH_FOR_NULL);
         }
 
-        final MutableIntKeyMap that = (MutableIntKeyMap) other;
-        return Arrays.equals(_keys, that._keys) && Arrays.equals(_values, that._values);
+        return hash;
     }
 }

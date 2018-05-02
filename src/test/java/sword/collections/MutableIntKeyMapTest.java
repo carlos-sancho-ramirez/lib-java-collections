@@ -122,4 +122,31 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
             assertEquals(defValue, map2.get(b, defValue));
         }));
     }
+
+    public void testHashCode() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final IntKeyMap<String> mutable = newMapBuilder()
+                    .put(a, Integer.toString(a))
+                    .put(b, Integer.toString(b))
+                    .put(c, Integer.toString(c))
+                    .build();
+            final IntKeyMap<String> immutable = mutable.toImmutable();
+            assertNotSame(mutable, immutable);
+            assertEquals(mutable.hashCode(), immutable.hashCode());
+        })));
+    }
+
+    public void testEquals() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final IntKeyMap<String> mutable = newMapBuilder()
+                    .put(a, Integer.toString(a))
+                    .put(b, Integer.toString(b))
+                    .put(c, Integer.toString(c))
+                    .build();
+            final IntKeyMap<String> immutable = mutable.toImmutable();
+            assertNotSame(mutable, immutable);
+            assertEquals(mutable, immutable);
+            assertEquals(immutable, mutable);
+        })));
+    }
 }
