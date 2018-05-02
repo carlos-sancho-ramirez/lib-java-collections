@@ -170,7 +170,7 @@ public final class ImmutableMap<K, V> extends AbstractMap<K, V> {
      * Return a new map instance where value has been transformed following the given function. Keys remain the same.
      * @param mapFunc Function to be applied to each value.
      */
-    public ImmutableIntValueMap<K> mapValues(IntResultFunction<V> mapFunc) {
+    public ImmutableIntValueMap<K> map(IntResultFunction<V> mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
         for (int i = 0; i < itemCount; i++) {
@@ -185,7 +185,7 @@ public final class ImmutableMap<K, V> extends AbstractMap<K, V> {
      * @param mapFunc Function to be applied to each value.
      * @param <U> New type for values
      */
-    public <U> ImmutableMap<K, U> mapValues(Function<V, U> mapFunc) {
+    public <U> ImmutableMap<K, U> map(Function<V, U> mapFunc) {
         final int itemCount = _keys.length;
         final Object[] newValues = new Object[itemCount];
         for (int i = 0; i < itemCount; i++) {

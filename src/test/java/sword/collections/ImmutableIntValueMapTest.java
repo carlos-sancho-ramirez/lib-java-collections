@@ -97,7 +97,7 @@ public final class ImmutableIntValueMapTest extends IntValueMapTest {
                     .build();
 
             final IntToIntFunction mapFunc = value -> value + 3;
-            final ImmutableIntValueMap<String> map2 = map.mapValues(mapFunc);
+            final ImmutableIntValueMap<String> map2 = map.map(mapFunc);
 
             final ImmutableSet<String> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());
@@ -116,7 +116,7 @@ public final class ImmutableIntValueMapTest extends IntValueMapTest {
                     .build();
 
             final IntFunction<String> mapFunc = Integer::toString;
-            final ImmutableMap<Integer, String> map2 = map.mapValues(mapFunc);
+            final ImmutableMap<Integer, String> map2 = map.map(mapFunc);
 
             final ImmutableSet<Integer> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());

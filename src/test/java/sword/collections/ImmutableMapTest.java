@@ -91,7 +91,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
                     .build();
 
             final IntResultFunction<String> mapFunc = str -> (str != null)? str.hashCode() : 0;
-            final ImmutableIntValueMap<Integer> map2 = map.mapValues(mapFunc);
+            final ImmutableIntValueMap<Integer> map2 = map.map(mapFunc);
 
             final ImmutableSet<Integer> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());
@@ -112,7 +112,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
                     .build();
 
             final Function<String, String> mapFunc = str -> (str != null)? "_" + str : "_";
-            final ImmutableMap<Integer, String> map2 = map.mapValues(mapFunc);
+            final ImmutableMap<Integer, String> map2 = map.map(mapFunc);
 
             final ImmutableSet<Integer> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());

@@ -53,7 +53,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
                     .put(b, b)
                     .build();
 
-            final ImmutableIntKeyMap<String> map2 = map.mapValues(this::mapValueFunction);
+            final ImmutableIntKeyMap<String> map2 = map.map(this::mapValueFunction);
             assertEquals(map.size(), map2.size());
             assertEquals(map.keySet(), map2.keySet());
 
@@ -70,7 +70,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
                     .put(b, b)
                     .build();
 
-            final ImmutableIntPairMap map2 = map.mapValues(this::mapValueIntResultFunction);
+            final ImmutableIntPairMap map2 = map.map(this::mapValueIntResultFunction);
             assertEquals(map.size(), map2.size());
             assertEquals(map.keySet(), map2.keySet());
 

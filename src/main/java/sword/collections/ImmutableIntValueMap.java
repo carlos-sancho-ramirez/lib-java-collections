@@ -129,7 +129,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
     }
 
     @Override
-    public MutableIntValueMap mutate() {
+    public MutableIntValueMap<T> mutate() {
         final int newLength = MutableIntValueMap.suitableArrayLength(_keys.length);
         Object[] newKeys = new Object[newLength];
         int[] newHashCodes = new int[newLength];
@@ -139,14 +139,14 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
         System.arraycopy(_hashCodes, 0, newHashCodes, 0, _hashCodes.length);
         System.arraycopy(_values, 0, newValues, 0, _values.length);
 
-        return new MutableIntValueMap(newKeys, newHashCodes, newValues, _keys.length);
+        return new MutableIntValueMap<>(newKeys, newHashCodes, newValues, _keys.length);
     }
 
     /**
      * Return a new map instance where values has been transformed following the given function. Keys remain the same.
      * @param mapFunc Function to be applied to each value.
      */
-    public ImmutableIntValueMap<T> mapValues(IntToIntFunction mapFunc) {
+    public ImmutableIntValueMap<T> map(IntToIntFunction mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
         for (int i = 0; i < itemCount; i++) {
@@ -161,7 +161,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
      * @param mapFunc Function to be applied to each value.
      * @param <U> New type for values
      */
-    public <U> ImmutableMap<T, U> mapValues(IntFunction<U> mapFunc) {
+    public <U> ImmutableMap<T, U> map(IntFunction<U> mapFunc) {
         final int itemCount = _keys.length;
         final Object[] newValues = new Object[itemCount];
         for (int i = 0; i < itemCount; i++) {
