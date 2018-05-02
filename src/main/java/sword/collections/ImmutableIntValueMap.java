@@ -27,7 +27,7 @@ import static sword.collections.SortUtils.quickSort;
  *
  * @param <T> Type for the keys within the Map
  */
-public final class ImmutableIntValueMap<T> extends AbstractIntIterable implements IntValueMap<T> {
+public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
 
     private static final ImmutableIntValueMap<Object> EMPTY = new ImmutableIntValueMap<>(new Object[0], new int[0]);
 

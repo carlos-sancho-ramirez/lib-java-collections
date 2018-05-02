@@ -22,7 +22,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  *
  * @param <T> Type for the key elements within the Map
  */
-public final class MutableIntValueMap<T> extends AbstractIntIterable implements IntValueMap<T> {
+public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -276,82 +276,5 @@ public final class MutableIntValueMap<T> extends AbstractIntIterable implements 
         public MutableIntValueMap<E> build() {
             return _map;
         }
-    }
-
-    @Override
-    public int hashCode() {
-        final int length = _hashCodes.length;
-        int hash = length;
-
-        for (int i = 0; i < length; i++) {
-            hash = hash * 31 + _hashCodes[i];
-        }
-
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (object == null || !(object instanceof MutableIntValueMap)) {
-            return false;
-        }
-        else if (this == object) {
-            return true;
-        }
-
-        final MutableIntValueMap that = (MutableIntValueMap) object;
-        final int[] thatHashCodes = that._hashCodes;
-        final int length = _hashCodes.length;
-        if (length != thatHashCodes.length) {
-            return false;
-        }
-
-        final ImmutableBitSetImpl.Builder builder = new ImmutableBitSetImpl.Builder();
-        for (int i = 0; i < length; i++) {
-            final int thisHash = _hashCodes[i];
-            if (thisHash != thatHashCodes[i]) {
-                return false;
-            }
-
-            if (i > 0 && _hashCodes[i - 1] == thisHash) {
-                builder.add(i - 1);
-                builder.add(i);
-            }
-        }
-        final ImmutableBitSetImpl thisDuplicated = builder.build();
-        ImmutableBitSetImpl thatDuplicated = thisDuplicated;
-
-        final Object[] thatKeys = that._keys;
-        final int[] thatValues = that._values;
-        for (int i = 0; i < length; i++) {
-            final Object thisKey = _keys[i];
-            final int thisValue = _values[i];
-            if (thisDuplicated.contains(i)) {
-                boolean found = false;
-                for (int pos : thatDuplicated) {
-                    if ((thisKey == null && thatKeys[pos] == null || thisKey != null && thisKey.equals(thatKeys[pos])) &&
-                            thisValue == thatValues[pos]) {
-                        thatDuplicated = thatDuplicated.remove(pos);
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    return false;
-                }
-            }
-            else {
-                final Object thatKey = thatKeys[i];
-                final int thatValue = thatValues[i];
-
-                if (thisKey == null && thatKey != null || thisKey != null && !thisKey.equals(thatKey) ||
-                        thisValue != thatValue) {
-                    return false;
-                }
-            }
-        }
-
-        return thatDuplicated.isEmpty();
     }
 }
