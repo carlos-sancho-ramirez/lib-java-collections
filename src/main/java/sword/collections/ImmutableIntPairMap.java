@@ -296,11 +296,6 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     @Override
-    public int hashCode() {
-        return Arrays.hashCode(new Object[] {_keys, _values});
-    }
-
-    @Override
     public boolean equals(Object other) {
         if (other == null || !(other instanceof ImmutableIntPairMap)) {
             return super.equals(other);

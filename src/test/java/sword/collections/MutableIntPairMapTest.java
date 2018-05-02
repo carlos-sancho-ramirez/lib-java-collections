@@ -66,4 +66,31 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
             assertEquals(defValue, map2.get(b, defValue));
         }));
     }
+
+    public void testHashCode() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final IntPairMap mutable = newBuilder()
+                    .put(a, b)
+                    .put(b, c)
+                    .put(c, a)
+                    .build();
+            final IntPairMap immutable = mutable.toImmutable();
+            assertNotSame(mutable, immutable);
+            assertEquals(mutable.hashCode(), immutable.hashCode());
+        })));
+    }
+
+    public void testEquals() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final IntPairMap mutable = newBuilder()
+                    .put(a, b)
+                    .put(b, c)
+                    .put(c, a)
+                    .build();
+            final IntPairMap immutable = mutable.toImmutable();
+            assertNotSame(mutable, immutable);
+            assertEquals(mutable, immutable);
+            assertEquals(immutable, mutable);
+        })));
+    }
 }
