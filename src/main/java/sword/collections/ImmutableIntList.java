@@ -1,6 +1,6 @@
 package sword.collections;
 
-public final class ImmutableIntList extends AbstractImmutableIntIterable {
+public final class ImmutableIntList extends AbstractImmutableIntIterable implements IntList {
 
     private static final ImmutableIntList EMPTY = new ImmutableIntList(new int[0]);
 
@@ -10,12 +10,27 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable {
 
     private final int[] _values;
 
-    private ImmutableIntList(int[] values) {
+    ImmutableIntList(int[] values) {
         _values = values;
     }
 
-    public int get(int index) {
-        return _values[index];
+    @Override
+    public int get(int key) {
+        if (key < 0 || key >= _values.length) {
+            throw new UnmappedKeyException();
+        }
+
+        return _values[key];
+    }
+
+    @Override
+    public int get(int key, int defaultValue) {
+        return (key >= 0 && key < _values.length)? _values[key] : defaultValue;
+    }
+
+    @Override
+    public ImmutableIntList toImmutable() {
+        return this;
     }
 
     @Override
@@ -127,57 +142,22 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable {
     }
 
     public static class Builder implements ImmutableIntCollectionBuilder<ImmutableIntList> {
-        private static final int DEFAULT_GRANULARITY = 12;
-        private final int _granularity;
-        private int _size;
-        private int[] _values;
-
-        public Builder() {
-            _granularity = DEFAULT_GRANULARITY;
-            _values = new int[_granularity];
-        }
-
-        public Builder(int length) {
-            _granularity = (length >= 0)? length : DEFAULT_GRANULARITY;
-            _values = new int[(length != 0)? _granularity : 0];
-        }
-
-        private void enlargeArray() {
-            int[] oldValues = _values;
-            _values = new int[_size + _granularity];
-            System.arraycopy(oldValues, 0, _values, 0, _size);
-        }
+        private final MutableIntList _list = MutableIntList.empty();
 
         public Builder append(int item) {
-            if (_size == _values.length) {
-                enlargeArray();
-            }
-
-            _values[_size++] = item;
+            _list.append(item);
             return this;
         }
 
         @Override
         public Builder add(int value) {
-            return append(value);
+            _list.append(value);
+            return this;
         }
 
         @Override
         public ImmutableIntList build() {
-            if (_size == 0) {
-                return empty();
-            }
-
-            final int[] values;
-            if (_size == _values.length) {
-                values = _values;
-            }
-            else {
-                values = new int[_size];
-                System.arraycopy(_values, 0, values, 0, _size);
-            }
-
-            return new ImmutableIntList(values);
+            return _list.toImmutable();
         }
     }
 
@@ -195,19 +175,19 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable {
         return new ImmutableIntList(newValues);
     }
 
-    public ImmutableIntList appendAll(ImmutableIntList that) {
+    public ImmutableIntList appendAll(IntList that) {
         if (that == null || that.isEmpty()) {
             return this;
         }
         else if (isEmpty()) {
-            return that;
+            return that.toImmutable();
         }
         else {
             final Builder builder = new Builder();
             final int thisLength = _values.length;
 
             for (int i = 0; i < thisLength; i++) {
-                builder.append(get(i));
+                builder.append(_values[i]);
             }
 
             for (int item : that) {
@@ -228,32 +208,5 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable {
         }
 
         return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (object == null || !(object instanceof ImmutableIntList)) {
-            return false;
-        }
-        else if (this == object) {
-            return true;
-        }
-
-        final ImmutableIntList that = (ImmutableIntList) object;
-        final int length = that._values.length;
-        if (length != _values.length) {
-            return false;
-        }
-
-        for (int i = 0; i < length; i++) {
-            final int thisValue = _values[i];
-            final int thatValue = that._values[i];
-
-            if (thisValue != thatValue) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

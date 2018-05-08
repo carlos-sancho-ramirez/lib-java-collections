@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntListTest extends AbstractImmutableIntIterableTest {
+public final class MutableIntListTest extends AbstractIntIterableTest {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE
@@ -42,13 +42,13 @@ public final class ImmutableIntListTest extends AbstractImmutableIntIterableTest
     }
 
     @Override
-    ImmutableIntList.Builder newIntBuilder() {
-        return new ImmutableIntList.Builder();
+    MutableIntList.Builder newIntBuilder() {
+        return new MutableIntList.Builder();
     }
 
     public void testSizeForTwoElements() {
         withItem(a -> withItem(b -> {
-            final ImmutableIntList list = newIntBuilder().add(a).add(b).build();
+            final MutableIntList list = newIntBuilder().add(a).add(b).build();
             final int size = list.size();
             if (size != 2) {
                 fail("Expected size 2 after building it adding values " + a + " and " + b +
@@ -59,7 +59,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntIterableTest
 
     public void testIteratingForMultipleElements() {
         withItem(a -> withItem(b -> {
-            final ImmutableIntList list = newIntBuilder().add(a).add(b).build();
+            final MutableIntList list = newIntBuilder().add(a).add(b).build();
             final Iterator<Integer> iterator = list.iterator();
 
             assertTrue(iterator.hasNext());
@@ -72,30 +72,16 @@ public final class ImmutableIntListTest extends AbstractImmutableIntIterableTest
         }));
     }
 
-    public void testMapForMultipleElements() {
-        withMapFunc(f -> withItem(a -> withItem(b -> {
-            final ImmutableIntList collection = newIntBuilder().add(a).add(b).build();
-            final ImmutableList<String> mapped = collection.map(f);
-            final Iterator<String> iterator = mapped.iterator();
-
-            for (int item : collection) {
-                assertTrue(iterator.hasNext());
-                assertEquals(f.apply(item), iterator.next());
-            }
-            assertFalse(iterator.hasNext());
-        })));
-    }
-
     public void testFindFirstWhenEmpty() {
         withFilterFunc(f -> withItem(defaultValue -> {
-            final ImmutableIntList list = newIntBuilder().build();
+            final MutableIntList list = newIntBuilder().build();
             assertEquals(defaultValue, list.findFirst(f, defaultValue));
         }));
     }
 
     public void testFindFirstForSingleElement() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(value -> {
-            final ImmutableIntList list = newIntBuilder().append(value).build();
+            final MutableIntList list = newIntBuilder().append(value).build();
             final int first = list.findFirst(f, defaultValue);
 
             if (f.apply(value)) {
@@ -109,7 +95,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntIterableTest
 
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
-            final ImmutableIntList list = newIntBuilder().append(a).append(b).build();
+            final MutableIntList list = newIntBuilder().append(a).append(b).build();
             final int first = list.findFirst(f, defaultValue);
 
             if (f.apply(a)) {
@@ -228,7 +214,51 @@ public final class ImmutableIntListTest extends AbstractImmutableIntIterableTest
         })));
     }
 
-    public void testFilterForSingleElement() {
-        super.testFilterForSingleElement();
+    public void testToImmutableForEmpty() {
+        assertTrue(newIntBuilder().build().toImmutable().isEmpty());
+    }
+
+    public void testToImmutable() {
+        withInt(a -> withInt(b -> {
+            final MutableIntList list1 = newIntBuilder().add(a).add(b).build();
+            final ImmutableIntList list2 = list1.toImmutable();
+
+            final Iterator<Integer> it1 = list1.iterator();
+            final Iterator<Integer> it2 = list2.iterator();
+            while (it1.hasNext()) {
+                assertTrue(it2.hasNext());
+                final Integer item1 = it1.next();
+                final Integer item2 = it2.next();
+                assertEquals(item1, item2);
+            }
+            assertFalse(it2.hasNext());
+        }));
+    }
+
+    public void testHashCode() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final MutableIntList mutable = newIntBuilder()
+                    .add(a)
+                    .add(b)
+                    .add(c)
+                    .build();
+            final ImmutableIntList immutable = mutable.toImmutable();
+            assertNotSame(mutable, immutable);
+            assertEquals(mutable.hashCode(), immutable.hashCode());
+        })));
+    }
+
+    public void testEquals() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final IntList mutable = newIntBuilder()
+                    .add(a)
+                    .add(b)
+                    .add(c)
+                    .build();
+            final IntList immutable = mutable.toImmutable();
+            assertNotSame(mutable, immutable);
+            assertEquals(mutable, immutable);
+            assertEquals(immutable, mutable);
+        })));
     }
 }
