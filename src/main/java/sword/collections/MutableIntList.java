@@ -71,7 +71,20 @@ public final class MutableIntList extends AbstractIntIterable implements IntList
         }
     }
 
-    private void removeAt(int index) {
+    /**
+     * Removes from this collection the item in the given position.
+     *
+     * If no exception is thrown because of a wrong index, this method will always
+     * shrink the size of this collection by 1.
+     * @param index Index within this collection for the element to be removed.
+     *              It must be between 0 (included) and the value returned by {@link #size()} (excluded)
+     * @throws java.lang.IndexOutOfBoundsException if index is negative or it is equal or greater than the current size
+     */
+    public void removeAt(int index) {
+        if (index < 0 || index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         final int length = suitableArrayLength(--_size);
         if (length != _values.length) {
             final int[] values = new int[length];
@@ -82,6 +95,7 @@ public final class MutableIntList extends AbstractIntIterable implements IntList
             if (index < _size) {
                 System.arraycopy(_values, index + 1, values, index, _size - index);
             }
+            _values = values;
         }
         else {
             for (int i = index; i < _size; i++) {

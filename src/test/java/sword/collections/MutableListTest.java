@@ -310,7 +310,7 @@ public final class MutableListTest extends AbstractIterableTest<String> {
         }));
     }
 
-    public void testRemoveLstFor2ElementsList() {
+    public void testRemoveLastFor2ElementsList() {
         withString(a -> withString(b -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).build();
             list.removeAt(1);

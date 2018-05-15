@@ -261,4 +261,48 @@ public final class MutableIntListTest extends AbstractIntIterableTest {
             assertEquals(immutable, mutable);
         })));
     }
+
+    public void testRemoveAtForSingleElementList() {
+        withInt(a -> {
+            final MutableIntList list = newIntBuilder().add(a).build();
+            list.removeAt(0);
+            assertTrue(list.isEmpty());
+        });
+    }
+
+    public void testRemoveFirstFor2ElementsList() {
+        withInt(a -> withInt(b -> {
+            final MutableIntList list = newIntBuilder().add(a).add(b).build();
+            list.removeAt(0);
+            assertEquals(1, list.size());
+            assertEquals(b, list.get(0));
+        }));
+    }
+
+    public void testRemoveLastFor2ElementsList() {
+        withInt(a -> withInt(b -> {
+            final MutableIntList list = newIntBuilder().add(a).add(b).build();
+            list.removeAt(1);
+            assertEquals(1, list.size());
+            assertEquals(a, list.get(0));
+        }));
+    }
+
+    public void testRemoveAt() {
+        withInt(a -> withInt(b -> {
+            for (int i = 0; i <= 4; i++) {
+                MutableIntList list = newIntBuilder().add(a).add(b).add(a).add(b).add(a).build();
+
+                MutableIntList.Builder builder = newIntBuilder();
+                for (int j = 0; j <= 4; j++) {
+                    if (j != i) {
+                        builder.add(list.get(j));
+                    }
+                }
+
+                list.removeAt(i);
+                assertEquals(builder.build(), list);
+            }
+        }));
+    }
 }
