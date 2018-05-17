@@ -99,6 +99,11 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
+    public ImmutableIntList toList() {
+        return new ImmutableIntList(_values);
+    }
+
+    @Override
     public java.util.Iterator<Integer> iterator() {
         return new IntIterator();
     }

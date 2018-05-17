@@ -161,6 +161,16 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
+    public ImmutableIntList toList() {
+        final ImmutableIntList.Builder builder = new ImmutableIntList.Builder();
+        for (int value : this) {
+            builder.add(value);
+        }
+
+        return builder.build();
+    }
+
+    @Override
     public int valueAt(int index) {
         if (index < 0) {
             throw new IndexOutOfBoundsException();

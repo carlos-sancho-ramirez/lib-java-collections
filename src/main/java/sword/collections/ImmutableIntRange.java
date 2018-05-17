@@ -109,6 +109,17 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
     }
 
     @Override
+    public ImmutableIntList toList() {
+        final int length = _max - _min + 1;
+        final int[] values = new int[length];
+        for (int i = 0; i < length; i++) {
+            values[i] = _min + i;
+        }
+
+        return new ImmutableIntList(values);
+    }
+
+    @Override
     public java.util.Iterator<Integer> iterator() {
         return new Iterator();
     }

@@ -67,6 +67,9 @@ public interface ImmutableIntSet extends IntSet, IterableImmutableIntCollection 
      */
     <E> ImmutableIntKeyMap<E> mapTo(IntFunction<E> function);
 
+    @Override
+    ImmutableIntList toList();
+
     /**
      * Builder to create a new instance of an {@link ImmutableIntSet}.
      */

@@ -150,6 +150,16 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet {
     }
 
     @Override
+    public IntList toList() {
+        final int[] values = new int[_size];
+        for (int i = 0; i < _size; i++) {
+            values[i] = _values[i];
+        }
+
+        return new ImmutableIntList(values);
+    }
+
+    @Override
     public ImmutableIntSet toImmutable() {
         return ImmutableIntSetBuilder.fromMutableIntSet(this);
     }

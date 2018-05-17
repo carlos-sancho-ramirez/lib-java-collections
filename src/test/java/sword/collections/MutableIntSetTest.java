@@ -256,4 +256,34 @@ public class MutableIntSetTest extends AbstractIntIterableTest {
             }
         }))));
     }
+
+    public void testToListWhenEmpty() {
+        final IntSet set = newIntBuilder().build();
+        assertTrue(set.isEmpty());
+        assertTrue(set.toList().isEmpty());
+    }
+
+    public void testToList() {
+        withItem(a -> withItem(b -> {
+            final IntSet set = newIntBuilder().add(a).add(b).build();
+            final IntList list = set.toList();
+
+            if (a == b) {
+                assertEquals(1, list.size());
+                assertEquals(a, list.get(0));
+            }
+            else {
+                assertEquals(2, list.size());
+
+                if (a < b) {
+                    assertEquals(a, list.get(0));
+                    assertEquals(b, list.get(1));
+                }
+                else {
+                    assertEquals(a, list.get(1));
+                    assertEquals(b, list.get(0));
+                }
+            }
+        }));
+    }
 }

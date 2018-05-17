@@ -129,4 +129,22 @@ public class ImmutableIntRangeTest extends TestCase {
             }
         }));
     }
+
+    public void testToList() {
+        for (int min : INT_VALUES) {
+            for (int i = 0; i < 3; i++) {
+                final int max = min + i;
+                if (max > min) {
+                    final ImmutableIntRange set = new ImmutableIntRange(min, max);
+                    final Iterator<Integer> listIt = set.toList().iterator();
+
+                    for (int value : set) {
+                        assertTrue(listIt.hasNext());
+                        assertEquals(value, (int) listIt.next());
+                    }
+                    assertFalse(listIt.hasNext());
+                }
+            }
+        }
+    }
 }
