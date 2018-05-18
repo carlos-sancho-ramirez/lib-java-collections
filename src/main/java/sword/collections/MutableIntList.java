@@ -38,6 +38,15 @@ public final class MutableIntList extends AbstractIntIterable implements IntList
     }
 
     @Override
+    public IntSet toSet() {
+        final ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
+        for (int i = 0; i < _size; i++) {
+            builder.add(_values[i]);
+        }
+        return builder.build();
+    }
+
+    @Override
     public int size() {
         return _size;
     }

@@ -29,6 +29,15 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable impleme
     }
 
     @Override
+    public ImmutableIntSet toSet() {
+        final ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
+        for (int i = 0; i < _values.length; i++) {
+            builder.add(_values[i]);
+        }
+        return builder.build();
+    }
+
+    @Override
     public ImmutableIntList toImmutable() {
         return this;
     }
