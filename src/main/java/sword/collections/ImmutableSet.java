@@ -77,6 +77,11 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
     }
 
     @Override
+    public ImmutableList<T> toList() {
+        return new ImmutableList<>(_keys);
+    }
+
+    @Override
     public ImmutableSet<T> toImmutable() {
         return this;
     }

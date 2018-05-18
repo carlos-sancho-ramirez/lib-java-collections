@@ -92,6 +92,15 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
     }
 
     @Override
+    public List<T> toList() {
+        final Object[] values = new Object[_size];
+        for (int i = 0; i < _size; i++) {
+            values[i] = _keys[i];
+        }
+        return new ImmutableList<>(values);
+    }
+
+    @Override
     public ImmutableSet<T> toImmutable() {
         Object[] keys = new Object[_size];
         int[] hashCodes = new int[_size];

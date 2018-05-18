@@ -227,4 +227,33 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
             }
         }))));
     }
+
+    public void testToListWhenEmpty() {
+        final ImmutableSet<String> set = newBuilder().build();
+        assertTrue(set.isEmpty());
+        assertTrue(set.toList().isEmpty());
+    }
+
+    public void testToList() {
+        withValue(a -> withValue(b -> {
+            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
+            final ImmutableList<String> list = set.toList();
+
+            if (equal(a, b)) {
+                assertEquals(1, list.size());
+                assertEquals(a, list.get(0));
+            }
+            else {
+                assertEquals(2, list.size());
+
+                if (equal(list.get(0), a)) {
+                    assertEquals(b, list.get(1));
+                }
+                else {
+                    assertEquals(a, list.get(1));
+                    assertEquals(b, list.get(0));
+                }
+            }
+        }));
+    }
 }
