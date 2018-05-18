@@ -36,6 +36,12 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public T valueAt(int index) {
+        return (T) _values[index];
+    }
+
+    @Override
     public int size() {
         return _size;
     }
@@ -73,6 +79,16 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
         public void remove() {
             removeAt(--_index);
         }
+    }
+
+    @Override
+    public Set<T> toSet() {
+        final ImmutableSet.Builder<T> builder = new ImmutableSet.Builder<>();
+        for (int i = 0; i < _size; i++) {
+            builder.add(valueAt(i));
+        }
+
+        return builder.build();
     }
 
     @Override

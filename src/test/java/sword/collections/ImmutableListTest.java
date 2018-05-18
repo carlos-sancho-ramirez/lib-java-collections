@@ -2,6 +2,7 @@ package sword.collections;
 
 import java.util.Iterator;
 
+import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
 public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
@@ -270,5 +271,41 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
             assertEquals(a, result21.get(1));
             assertEquals(b, result21.get(2));
         })));
+    }
+
+    public void testToSetWhenEmpty() {
+        final ImmutableList<String> list = newBuilder().build();
+        assertTrue(list.toSet().isEmpty());
+    }
+
+    public void testToSetWithSingleElement() {
+        withValue(a -> {
+            final ImmutableList<String> list = newBuilder().add(a).build();
+            final ImmutableSet<String> set = list.toSet();
+            assertEquals(1, set.size());
+            assertEquals(a, set.valueAt(0));
+        });
+    }
+
+    public void testToSetWithTwoElements() {
+        withValue(a -> withValue(b -> {
+            final ImmutableList<String> list = newBuilder().add(a).add(b).build();
+            final ImmutableSet<String> set = list.toSet();
+
+            if (equal(a, b)) {
+                assertEquals(1, set.size());
+                assertEquals(a, set.valueAt(0));
+            }
+            else {
+                assertEquals(2, set.size());
+                if (equal(a, set.valueAt(0))) {
+                    assertEquals(b, set.valueAt(1));
+                }
+                else {
+                    assertEquals(a, set.valueAt(1));
+                    assertEquals(b, set.valueAt(0));
+                }
+            }
+        }));
     }
 }

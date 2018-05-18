@@ -28,6 +28,12 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public T valueAt(int index) {
+        return (T) _values[index];
+    }
+
+    @Override
     public int size() {
         return _values.length;
     }
@@ -149,6 +155,16 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
     @Override
     <U> Builder<U> newBuilder() {
         return new Builder<U>();
+    }
+
+    @Override
+    public ImmutableSet<T> toSet() {
+        final ImmutableSet.Builder<T> builder = new ImmutableSet.Builder<>();
+        for (int i = 0; i < _values.length; i++) {
+            builder.add(valueAt(i));
+        }
+
+        return builder.build();
     }
 
     @Override

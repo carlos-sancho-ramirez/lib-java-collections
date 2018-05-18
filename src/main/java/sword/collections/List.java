@@ -15,6 +15,18 @@ public interface List<T> extends IterableCollection<T>, Sizable {
     T get(int index);
 
     /**
+     * Converts this list into a set.
+     *
+     * All duplicated elements within the list will be removed as sets does not allow duplicating values.
+     * Because of that, the amount of elements in the resulting set may be less
+     * than the amount of elements in the original list, but never more.
+     *
+     * The iteration order of elements in the resulting set is not guaranteed
+     * to be the same that was in the list even if no elements are removed for duplication.
+     */
+    Set<T> toSet();
+
+    /**
      * Return an immutable list from the values contained in this collection.
      * The same instance will be returned in case of being already immutable.
      */
