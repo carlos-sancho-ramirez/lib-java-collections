@@ -42,6 +42,11 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
         procedure.apply(this::charCounter);
     }
 
+    @Override
+    void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(str -> (str == null)? 0 : str.hashCode());
+    }
+
     private boolean filterFunc(String value) {
         return value != null && !value.isEmpty();
     }
@@ -58,6 +63,11 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     @Override
     ImmutableSet.Builder<String> newIterableBuilder() {
         return newBuilder();
+    }
+
+    @Override
+    ImmutableIntSetBuilder newIntIterableBuilder() {
+        return new ImmutableIntSetBuilder();
     }
 
     @Override
@@ -106,6 +116,7 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
         }));
     }
 
+    @Override
     public void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> {
             final ImmutableSet<String> collection = newBuilder().add(a).add(b).build();
@@ -129,6 +140,39 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
             else if (equal(mappedB, first)) {
                 assertTrue(iterator.hasNext());
                 assertEquals(mappedA, iterator.next());
+            }
+            else {
+                fail("Expected either " + mappedA + " or " + mappedB + " but found " + first);
+            }
+
+            assertFalse(iterator.hasNext());
+        })));
+    }
+
+    @Override
+    public void testMapToIntForMultipleElements() {
+        withMapToIntFunc(f -> withValue(a -> withValue(b -> {
+            final ImmutableSet<String> collection = newBuilder().add(a).add(b).build();
+            final ImmutableIntSet mapped = collection.map(f);
+            final Iterator<Integer> iterator = mapped.iterator();
+
+            final int mappedA = f.apply(a);
+            final int mappedB = f.apply(b);
+
+            assertTrue(iterator.hasNext());
+            final boolean sameMappedValue = equal(mappedA, mappedB);
+            final int first = iterator.next();
+
+            if (sameMappedValue) {
+                assertEquals(mappedA, first);
+            }
+            else if (equal(mappedA, first)) {
+                assertTrue(iterator.hasNext());
+                assertEquals(mappedB, (int) iterator.next());
+            }
+            else if (equal(mappedB, first)) {
+                assertTrue(iterator.hasNext());
+                assertEquals(mappedA, (int) iterator.next());
             }
             else {
                 fail("Expected either " + mappedA + " or " + mappedB + " but found " + first);

@@ -2,6 +2,7 @@ package sword.collections;
 
 abstract class AbstractImmutableIterable<T> extends AbstractIterable<T> implements IterableImmutableCollection<T> {
 
+    abstract ImmutableIntCollectionBuilder newIntBuilder();
     abstract <U> ImmutableCollectionBuilder<U> newBuilder();
 
     @Override
@@ -34,6 +35,17 @@ abstract class AbstractImmutableIterable<T> extends AbstractIterable<T> implemen
         }
 
         return somethingRemoved? builder.build() : this;
+    }
+
+    @Override
+    public IterableImmutableIntCollection map(IntResultFunction<T> func) {
+        final ImmutableIntCollectionBuilder builder = newIntBuilder();
+
+        for (T item : this) {
+            builder.add(func.apply(item));
+        }
+
+        return builder.build();
     }
 
     @Override

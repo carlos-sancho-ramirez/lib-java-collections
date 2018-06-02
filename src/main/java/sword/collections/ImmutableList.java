@@ -143,6 +143,11 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
     }
 
     @Override
+    public ImmutableIntList map(IntResultFunction<T> mapFunc) {
+        return (ImmutableIntList) super.map(mapFunc);
+    }
+
+    @Override
     public <U> ImmutableList<U> map(Function<T, U> func) {
         return (ImmutableList<U>) super.map(func);
     }
@@ -155,6 +160,11 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
     @Override
     <U> Builder<U> newBuilder() {
         return new Builder<U>();
+    }
+
+    @Override
+    ImmutableIntList.Builder newIntBuilder() {
+        return new ImmutableIntList.Builder();
     }
 
     @Override

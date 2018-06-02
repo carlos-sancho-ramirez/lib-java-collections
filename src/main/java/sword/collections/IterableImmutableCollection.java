@@ -22,7 +22,16 @@ public interface IterableImmutableCollection<T> extends IterableCollection<T> {
 
     /**
      * Applies the given function to each element on the collection and composes a
-     * new {@link IterableImmutableCollection} of the same size with the results of each
+     * new {@link IterableImmutableIntCollection} with the results of each
+     * function execution in the same list index.
+     *
+     * @param func Function to be applied to each element in the list
+     */
+    IterableImmutableIntCollection map(IntResultFunction<T> func);
+
+    /**
+     * Applies the given function to each element on the collection and composes a
+     * new {@link IterableImmutableCollection} with the results of each
      * function execution in the same list index.
      *
      * @param func Function to be applied to each element in the list

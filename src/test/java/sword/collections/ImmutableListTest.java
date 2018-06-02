@@ -5,7 +5,7 @@ import java.util.Iterator;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
+public final class ImmutableListTest extends AbstractIterableImmutableTest<String> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"
@@ -48,6 +48,11 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
         procedure.apply(this::charCounter);
     }
 
+    @Override
+    void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(str -> (str == null)? 0 : str.hashCode());
+    }
+
     private boolean filterFunc(String value) {
         return value != null && !value.isEmpty();
     }
@@ -69,6 +74,11 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
     @Override
     ImmutableList.Builder<String> newIterableBuilder() {
         return newBuilder();
+    }
+
+    @Override
+    ImmutableIntList.Builder newIntIterableBuilder() {
+        return new ImmutableIntList.Builder();
     }
 
     public void testSizeForTwoElements() {
@@ -97,6 +107,7 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
         }));
     }
 
+    @Override
     public void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> {
             final ImmutableList<String> collection = newBuilder().add(a).add(b).build();
@@ -106,6 +117,21 @@ public class ImmutableListTest extends AbstractIterableImmutableTest<String> {
             for (String item : collection) {
                 assertTrue(iterator.hasNext());
                 assertEquals(f.apply(item), iterator.next());
+            }
+            assertFalse(iterator.hasNext());
+        })));
+    }
+
+    @Override
+    public void testMapToIntForMultipleElements() {
+        withMapToIntFunc(f -> withValue(a -> withValue(b -> {
+            final ImmutableList<String> collection = newBuilder().add(a).add(b).build();
+            final ImmutableIntList mapped = collection.map(f);
+            final Iterator<Integer> iterator = mapped.iterator();
+
+            for (String item : collection) {
+                assertTrue(iterator.hasNext());
+                assertEquals(f.apply(item), (int) iterator.next());
             }
             assertFalse(iterator.hasNext());
         })));

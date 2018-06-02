@@ -44,6 +44,11 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
     }
 
     @Override
+    ImmutableIntSetBuilder newIntBuilder() {
+        return new ImmutableIntSetBuilder();
+    }
+
+    @Override
     <U> Builder<U> newBuilder() {
         return new Builder<>();
     }
@@ -72,8 +77,12 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
         return (ImmutableSet<T>) super.filterNot(predicate);
     }
 
-    public <E> ImmutableSet<E> map(Function<T, E> predicate) {
-        return (ImmutableSet<E>) super.map(predicate);
+    public ImmutableIntSet map(IntResultFunction<T> func) {
+        return (ImmutableIntSet) super.map(func);
+    }
+
+    public <E> ImmutableSet<E> map(Function<T, E> func) {
+        return (ImmutableSet<E>) super.map(func);
     }
 
     @Override
