@@ -26,7 +26,7 @@ import static sword.collections.SortUtils.findKey;
  *
  * @param <T> Type for the elements within the Set
  */
-public class ImmutableHashSet<T> extends AbstractImmutableIterable<T> implements Set<T> {
+public class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T> {
 
     private static final ImmutableHashSet<Object> EMPTY = new ImmutableHashSet<>(new Object[0], new int[0]);
 
@@ -35,11 +35,10 @@ public class ImmutableHashSet<T> extends AbstractImmutableIterable<T> implements
         return (ImmutableHashSet<E>) EMPTY;
     }
 
-    private final Object[] _keys;
     private final int[] _hashCodes;
 
     ImmutableHashSet(Object[] keys, int[] hashCodes) {
-        _keys = keys;
+        super(null, keys);
         _hashCodes = hashCodes;
     }
 
@@ -59,38 +58,6 @@ public class ImmutableHashSet<T> extends AbstractImmutableIterable<T> implements
     }
 
     @Override
-    public int size() {
-        return _keys.length;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T keyAt(int index) {
-        return (T) _keys[index];
-    }
-
-    @Override
-    public ImmutableHashSet<T> filter(Predicate<T> predicate) {
-        return (ImmutableHashSet<T>) super.filter(predicate);
-    }
-
-    public ImmutableHashSet<T> filterNot(Predicate<T> predicate) {
-        return (ImmutableHashSet<T>) super.filterNot(predicate);
-    }
-
-    public ImmutableIntSet map(IntResultFunction<T> func) {
-        return (ImmutableIntSet) super.map(func);
-    }
-
-    public <E> ImmutableHashSet<E> map(Function<T, E> func) {
-        return (ImmutableHashSet<E>) super.map(func);
-    }
-
-    @Override
-    public ImmutableList<T> toList() {
-        return new ImmutableList<>(_keys);
-    }
-
-    @Override
     public ImmutableHashSet<T> toImmutable() {
         return this;
     }
@@ -107,27 +74,6 @@ public class ImmutableHashSet<T> extends AbstractImmutableIterable<T> implements
         System.arraycopy(_hashCodes, 0, hashCodes, 0, length);
 
         return new MutableHashSet<>(keys, hashCodes, length);
-    }
-
-    private class Iterator extends IteratorForImmutable<T> {
-
-        private int _index;
-
-        @Override
-        public boolean hasNext() {
-            return _index < _keys.length;
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public T next() {
-            return (T) _keys[_index++];
-        }
-    }
-
-    @Override
-    public Iterator iterator() {
-        return new Iterator();
     }
 
     static <E> ImmutableHashSet<E> fromMutableSet(MutableHashSet<E> set) {

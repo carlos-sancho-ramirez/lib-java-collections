@@ -3,7 +3,6 @@ package sword.collections;
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.findKey;
-import static sword.collections.SortUtils.findSuitableIndex;
 
 /**
  * Efficient implementation for a mutable Set when few elements are included.
@@ -22,12 +21,12 @@ import static sword.collections.SortUtils.findSuitableIndex;
  *
  * @param <T> Type for the elements within the Set
  */
-public class MutableHashSet<T> extends AbstractIterable<T> implements Set<T> {
+public class MutableHashSet<T> extends MutableSet<T> implements Set<T> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
     public static <E> MutableHashSet<E> empty() {
-        return new MutableHashSet<>();
+        return new MutableHashSet<>(new Object[GRANULARITY], new int[GRANULARITY], 0);
     }
 
     static int suitableArrayLength(int size) {
@@ -35,69 +34,16 @@ public class MutableHashSet<T> extends AbstractIterable<T> implements Set<T> {
         return (s > 0)? s : GRANULARITY;
     }
 
-    private Object[] _keys;
     private int[] _hashCodes;
-    private int _size;
-
-    private MutableHashSet() {
-        _keys = new Object[GRANULARITY];
-        _hashCodes = new int[GRANULARITY];
-    }
 
     MutableHashSet(Object[] keys, int[] hashCodes, int size) {
-        _keys = keys;
+        super(null, keys, size);
         _hashCodes = hashCodes;
-        _size = size;
     }
 
     @Override
-    public boolean contains(T key) {
-        return findKey(_hashCodes, _keys, _size, key) >= 0;
-    }
-
-    @Override
-    public int size() {
-        return _size;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T keyAt(int index) {
-        return (T) _keys[index];
-    }
-
-    private class Iterator implements java.util.Iterator<T> {
-
-        private int _index;
-
-        @Override
-        public boolean hasNext() {
-            return _index < _size;
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public T next() {
-            return (T) _keys[_index++];
-        }
-
-        @Override
-        public void remove() {
-            removeAt(--_index);
-        }
-    }
-
-    @Override
-    public Iterator iterator() {
-        return new Iterator();
-    }
-
-    @Override
-    public List<T> toList() {
-        final Object[] values = new Object[_size];
-        for (int i = 0; i < _size; i++) {
-            values[i] = _keys[i];
-        }
-        return new ImmutableList<>(values);
+    public int indexOf(T value) {
+        return findKey(_hashCodes, _keys, _size, value);
     }
 
     @Override
@@ -135,31 +81,29 @@ public class MutableHashSet<T> extends AbstractIterable<T> implements Set<T> {
         }
     }
 
-    public boolean add(T key) {
-        int index = findKey(_hashCodes, _keys, _size, key);
-        if (index < 0) {
-            if (_size != 0 && _size % GRANULARITY == 0) {
-                enlargeArrays();
-            }
-
-            final int hashCode = (key != null)? key.hashCode() : HASH_FOR_NULL;
-            index = findSuitableIndex(_hashCodes, _size, hashCode);
-            for (int i = _size; i > index; i--) {
-                _keys[i] = _keys[i - 1];
-                _hashCodes[i] = _hashCodes[i - 1];
-            }
-
-            _keys[index] = key;
-            _hashCodes[index] = hashCode;
-
-            _size++;
-            return true;
-        }
-
-        return false;
+    @Override
+    int findSuitableIndex(T key) {
+        return SortUtils.findSuitableIndex(_hashCodes, _size, (key != null)? key.hashCode() : HASH_FOR_NULL);
     }
 
-    private void removeAt(int index) {
+    @Override
+    void insertAt(int index, T value) {
+        if (_size != 0 && _size % GRANULARITY == 0) {
+            enlargeArrays();
+        }
+
+        for (int i = _size; i > index; i--) {
+            _keys[i] = _keys[i - 1];
+            _hashCodes[i] = _hashCodes[i - 1];
+        }
+
+        _keys[index] = value;
+        _hashCodes[index] = (value != null)? value.hashCode() : HASH_FOR_NULL;
+        _size++;
+    }
+
+    @Override
+    void removeAt(int index) {
         if (_size != 1 && (_size % GRANULARITY) == 1) {
             Object[] oldKeys = _keys;
             int[] oldHashCodes = _hashCodes;
@@ -184,16 +128,6 @@ public class MutableHashSet<T> extends AbstractIterable<T> implements Set<T> {
                 _hashCodes[i] = _hashCodes[i + 1];
             }
         }
-    }
-
-    public boolean remove(T key) {
-        int index = findKey(_hashCodes, _keys, _size, key);
-        if (index >= 0) {
-            removeAt(index);
-            return true;
-        }
-
-        return false;
     }
 
     public static class Builder<E> implements CollectionBuilder<E> {

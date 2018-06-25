@@ -17,11 +17,11 @@ public interface Set<T> extends IterableCollection<T>, Sizable {
      * Return an immutable set from the values contained in this set.
      * The same instance will be returned in case of being already immutable.
      */
-    ImmutableHashSet<T> toImmutable();
+    ImmutableSet<T> toImmutable();
 
     /**
      * Return a new mutable set.
      * This method will always generate a new instance in order to avoid affecting the state of its original set.
      */
-    MutableHashSet<T> mutate();
+    MutableSet<T> mutate();
 }

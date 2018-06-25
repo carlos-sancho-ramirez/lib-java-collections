@@ -102,6 +102,56 @@ final class SortUtils {
         return -1;
     }
 
+    static <E> int findValue(SortFunction<E> sortFunction, Object[] keys, int length, E key) {
+        if (length == 0) {
+            return -1;
+        }
+
+        int min = -1;
+        int max = length - 1;
+        while (min < max) {
+            final int pos = (max - min + 1) / 2 + min;
+            final E element = (E) keys[pos];
+            if (sortFunction.lessThan(element, key)) {
+                min = pos;
+            }
+            else {
+                max = pos - 1;
+            }
+        }
+
+        ++min;
+        while (min < keys.length && !sortFunction.lessThan(key, (E) keys[min])) {
+            if (equal(key, keys[min])) {
+                return min;
+            }
+            ++min;
+        }
+
+        return -1;
+    }
+
+    static <E> int findSuitableIndex(SortFunction<E> sortFunction, Object[] values, int length, E value) {
+        if (length == 0) {
+            return 0;
+        }
+
+        int min = -1;
+        int max = length - 1;
+        while (min < max) {
+            final int pos = (max - min + 1) / 2 + min;
+            final E element = (E) values[pos];
+            if (sortFunction.lessThan(element, value)) {
+                max = pos - 1;
+            }
+            else {
+                min = pos;
+            }
+        }
+
+        return min + 1;
+    }
+
     /**
      * Return the index where the given key should be inserted in order to keep having a sorted set
      * of keys.

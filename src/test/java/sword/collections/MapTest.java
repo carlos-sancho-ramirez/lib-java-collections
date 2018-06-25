@@ -109,7 +109,7 @@ abstract class MapTest<K, V> extends TestCase {
             }
 
             final ImmutableHashSet<K> expectedKeys = setBuilder.build();
-            final ImmutableHashSet<K> keySet = mapBuilder.build().keySet().toImmutable();
+            final ImmutableSet<K> keySet = mapBuilder.build().keySet().toImmutable();
             assertEquals(expectedKeys, keySet);
         }
     }

@@ -122,7 +122,7 @@ abstract class IntValueMapTest extends TestCase {
             }
 
             final ImmutableHashSet<String> expectedKeys = setBuilder.build();
-            final ImmutableHashSet<String> keySet = mapBuilder.build().keySet().toImmutable();
+            final ImmutableSet<String> keySet = mapBuilder.build().keySet().toImmutable();
             assertEquals(expectedKeys, keySet);
         }
     }
