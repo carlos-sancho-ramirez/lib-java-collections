@@ -307,7 +307,7 @@ public final class ImmutableListTest extends AbstractIterableImmutableTest<Strin
     public void testToSetWithSingleElement() {
         withValue(a -> {
             final ImmutableList<String> list = newBuilder().add(a).build();
-            final ImmutableSet<String> set = list.toSet();
+            final ImmutableHashSet<String> set = list.toSet();
             assertEquals(1, set.size());
             assertEquals(a, set.valueAt(0));
         });
@@ -316,7 +316,7 @@ public final class ImmutableListTest extends AbstractIterableImmutableTest<Strin
     public void testToSetWithTwoElements() {
         withValue(a -> withValue(b -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).build();
-            final ImmutableSet<String> set = list.toSet();
+            final ImmutableHashSet<String> set = list.toSet();
 
             if (equal(a, b)) {
                 assertEquals(1, set.size());

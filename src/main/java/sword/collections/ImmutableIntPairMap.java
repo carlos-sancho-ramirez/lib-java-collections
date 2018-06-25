@@ -92,7 +92,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     @Override
-    public ImmutableSet<Entry> entries() {
+    public ImmutableHashSet<Entry> entries() {
         final int length = _keys.length;
         final Entry[] entries = new Entry[length];
         final int[] hashCodes = new int[length];
@@ -102,7 +102,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
             hashCodes[index] = entries[index].hashCode();
         }
 
-        return new ImmutableSet<>(entries, hashCodes);
+        return new ImmutableHashSet<>(entries, hashCodes);
     }
 
     /**

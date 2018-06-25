@@ -66,7 +66,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             else {
                 assertSame(map, map.put(key, valueFromKey(key)));
 
-                final ImmutableSet<Integer> keySet = map.keySet();
+                final ImmutableHashSet<Integer> keySet = map.keySet();
                 assertEquals(keySet, newMap.keySet());
 
                 for (Integer k : keySet) {
@@ -93,7 +93,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             final IntResultFunction<String> mapFunc = str -> (str != null)? str.hashCode() : 0;
             final ImmutableIntValueMap<Integer> map2 = map.map(mapFunc);
 
-            final ImmutableSet<Integer> keySet = map.keySet();
+            final ImmutableHashSet<Integer> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());
 
             for (Integer key : keySet) {
@@ -114,7 +114,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             final Function<String, String> mapFunc = str -> (str != null)? "_" + str : "_";
             final ImmutableMap<Integer, String> map2 = map.map(mapFunc);
 
-            final ImmutableSet<Integer> keySet = map.keySet();
+            final ImmutableHashSet<Integer> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());
 
             for (Integer key : keySet) {

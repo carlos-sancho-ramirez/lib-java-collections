@@ -73,14 +73,14 @@ public final class ImmutableIntValueMapTest extends IntValueMapTest {
 
     public void testKeySetWhenEmpty() {
         final ImmutableIntValueMap<String> empty = ImmutableIntValueMap.empty();
-        assertSame(ImmutableSet.empty(), empty.keySet());
+        assertSame(ImmutableHashSet.empty(), empty.keySet());
     }
 
     public void testKeySet() {
         withReversableArray(array -> {
-            final ImmutableSet<String> result = array.keySet();
+            final ImmutableHashSet<String> result = array.keySet();
 
-            final ImmutableSet.Builder<String> builder = new ImmutableSet.Builder<>();
+            final ImmutableHashSet.Builder<String> builder = new ImmutableHashSet.Builder<>();
             for (ImmutableIntValueMap.Entry<String> entry : array.entries()) {
                 builder.add(entry.key());
             }
@@ -99,7 +99,7 @@ public final class ImmutableIntValueMapTest extends IntValueMapTest {
             final IntToIntFunction mapFunc = value -> value + 3;
             final ImmutableIntValueMap<String> map2 = map.map(mapFunc);
 
-            final ImmutableSet<String> keySet = map.keySet();
+            final ImmutableHashSet<String> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());
 
             for (String key : keySet) {
@@ -118,7 +118,7 @@ public final class ImmutableIntValueMapTest extends IntValueMapTest {
             final IntFunction<String> mapFunc = Integer::toString;
             final ImmutableMap<Integer, String> map2 = map.map(mapFunc);
 
-            final ImmutableSet<Integer> keySet = map.keySet();
+            final ImmutableHashSet<Integer> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());
 
             for (Integer key : keySet) {

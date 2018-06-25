@@ -28,8 +28,8 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntIterableTest {
     }
 
     @Override
-    ImmutableSet<String> mapTargetEmptyCollection() {
-        return ImmutableSet.empty();
+    ImmutableHashSet<String> mapTargetEmptyCollection() {
+        return ImmutableHashSet.empty();
     }
 
     public void testSizeForMultipleElements() {
@@ -76,7 +76,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntIterableTest {
     public void testMapForMultipleElements() {
         withMapFunc(f -> withItem(a -> withItem(b -> {
             final ImmutableIntSet collection = newIntBuilder().add(a).add(b).build();
-            final ImmutableSet<String> mapped = collection.map(f);
+            final ImmutableHashSet<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
 
             final String mappedA = f.apply(a);

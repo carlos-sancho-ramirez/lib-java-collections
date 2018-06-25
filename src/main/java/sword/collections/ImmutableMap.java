@@ -92,12 +92,12 @@ public final class ImmutableMap<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
-    public ImmutableSet<K> keySet() {
-        return new ImmutableSet<>(_keys, _hashCodes);
+    public ImmutableHashSet<K> keySet() {
+        return new ImmutableHashSet<>(_keys, _hashCodes);
     }
 
     @Override
-    public ImmutableSet<Entry<K, V>> entries() {
+    public ImmutableHashSet<Entry<K, V>> entries() {
         final int length = _keys.length;
         final Entry[] entries = new Entry[length];
         final int[] hashCodes = new int[length];
@@ -107,7 +107,7 @@ public final class ImmutableMap<K, V> extends AbstractMap<K, V> {
             hashCodes[index] = entries[index].hashCode();
         }
 
-        return new ImmutableSet<>(entries, hashCodes);
+        return new ImmutableHashSet<>(entries, hashCodes);
     }
 
     @Override

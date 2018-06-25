@@ -131,7 +131,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
     }
 
     @Override
-    public ImmutableSet<Entry<T>> entries() {
+    public ImmutableHashSet<Entry<T>> entries() {
         final int length = _size;
         final Entry[] entries = new Entry[length];
         final int[] hashCodes = new int[length];
@@ -141,7 +141,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
             hashCodes[index] = entries[index].hashCode();
         }
 
-        return new ImmutableSet<>(entries, hashCodes);
+        return new ImmutableHashSet<>(entries, hashCodes);
     }
 
     @Override

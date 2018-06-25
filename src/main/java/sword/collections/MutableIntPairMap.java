@@ -97,7 +97,7 @@ public final class MutableIntPairMap extends AbstractIntPairMap {
             hashCodes[index] = entries[index].hashCode();
         }
 
-        return new ImmutableSet<>(entries, hashCodes);
+        return new ImmutableHashSet<>(entries, hashCodes);
     }
 
     @Override

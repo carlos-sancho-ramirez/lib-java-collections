@@ -22,12 +22,12 @@ import static sword.collections.SortUtils.findSuitableIndex;
  *
  * @param <T> Type for the elements within the Set
  */
-public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
+public class MutableHashSet<T> extends AbstractIterable<T> implements Set<T> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
-    public static <E> MutableSet<E> empty() {
-        return new MutableSet<>();
+    public static <E> MutableHashSet<E> empty() {
+        return new MutableHashSet<>();
     }
 
     static int suitableArrayLength(int size) {
@@ -39,12 +39,12 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
     private int[] _hashCodes;
     private int _size;
 
-    private MutableSet() {
+    private MutableHashSet() {
         _keys = new Object[GRANULARITY];
         _hashCodes = new int[GRANULARITY];
     }
 
-    MutableSet(Object[] keys, int[] hashCodes, int size) {
+    MutableHashSet(Object[] keys, int[] hashCodes, int size) {
         _keys = keys;
         _hashCodes = hashCodes;
         _size = size;
@@ -101,25 +101,25 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
     }
 
     @Override
-    public ImmutableSet<T> toImmutable() {
+    public ImmutableHashSet<T> toImmutable() {
         Object[] keys = new Object[_size];
         int[] hashCodes = new int[_size];
 
         System.arraycopy(_keys, 0, keys, 0, _size);
         System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
 
-        return new ImmutableSet<>(keys, hashCodes);
+        return new ImmutableHashSet<>(keys, hashCodes);
     }
 
     @Override
-    public MutableSet<T> mutate() {
+    public MutableHashSet<T> mutate() {
         Object[] keys = new Object[_keys.length];
         int[] hashCodes = new int[_hashCodes.length];
 
         System.arraycopy(_keys, 0, keys, 0, _size);
         System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
 
-        return new MutableSet<>(keys, hashCodes, _size);
+        return new MutableHashSet<>(keys, hashCodes, _size);
     }
 
     private void enlargeArrays() {
@@ -197,7 +197,7 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
     }
 
     public static class Builder<E> implements CollectionBuilder<E> {
-        private final MutableSet<E> _set = MutableSet.empty();
+        private final MutableHashSet<E> _set = MutableHashSet.empty();
 
         @Override
         public Builder<E> add(E key) {
@@ -206,7 +206,7 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
         }
 
         @Override
-        public MutableSet<E> build() {
+        public MutableHashSet<E> build() {
             return _set;
         }
     }
@@ -225,14 +225,14 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof MutableSet)) {
+        if (object == null || !(object instanceof MutableHashSet)) {
             return false;
         }
         else if (this == object) {
             return true;
         }
 
-        final MutableSet that = (MutableSet) object;
+        final MutableHashSet that = (MutableHashSet) object;
         final int[] thatHashCodes = that._hashCodes;
         final int length = _hashCodes.length;
         if (length != thatHashCodes.length) {

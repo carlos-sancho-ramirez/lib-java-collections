@@ -42,8 +42,8 @@ public class MutableIntSetTest extends AbstractIntIterableTest {
     }
 
     @Override
-    ImmutableSet<String> mapTargetEmptyCollection() {
-        return ImmutableSet.empty();
+    ImmutableHashSet<String> mapTargetEmptyCollection() {
+        return ImmutableHashSet.empty();
     }
 
     public void testSizeForMultipleElements() {

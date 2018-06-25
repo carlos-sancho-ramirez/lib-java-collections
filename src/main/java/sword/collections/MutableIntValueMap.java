@@ -93,7 +93,7 @@ public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
         System.arraycopy(_keys, 0, keys, 0, _size);
         System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
 
-        return new ImmutableSet<>(keys, hashCodes);
+        return new ImmutableHashSet<>(keys, hashCodes);
     }
 
     @Override
@@ -107,7 +107,7 @@ public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
             hashCodes[index] = entries[index].hashCode();
         }
 
-        return new ImmutableSet<>(entries, hashCodes);
+        return new ImmutableHashSet<>(entries, hashCodes);
     }
 
     private class Iterator implements java.util.Iterator<Integer> {

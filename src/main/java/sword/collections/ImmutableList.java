@@ -168,8 +168,8 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
     }
 
     @Override
-    public ImmutableSet<T> toSet() {
-        final ImmutableSet.Builder<T> builder = new ImmutableSet.Builder<>();
+    public ImmutableHashSet<T> toSet() {
+        final ImmutableHashSet.Builder<T> builder = new ImmutableHashSet.Builder<>();
         for (int i = 0; i < _values.length; i++) {
             builder.add(valueAt(i));
         }

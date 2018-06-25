@@ -6,7 +6,7 @@ abstract class AbstractImmutableIntSet extends AbstractImmutableIntIterable impl
 
     @Override
     <U> ImmutableCollectionBuilder<U> newBuilder() {
-        return new ImmutableSet.Builder<U>();
+        return new ImmutableHashSet.Builder<U>();
     }
 
     @Override
@@ -30,8 +30,8 @@ abstract class AbstractImmutableIntSet extends AbstractImmutableIntIterable impl
     }
 
     @Override
-    public <U> ImmutableSet<U> map(IntFunction<U> func) {
-        return (ImmutableSet<U>) super.map(func);
+    public <U> ImmutableHashSet<U> map(IntFunction<U> func) {
+        return (ImmutableHashSet<U>) super.map(func);
     }
 
     @Override

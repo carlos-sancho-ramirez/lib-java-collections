@@ -26,19 +26,19 @@ import static sword.collections.SortUtils.findKey;
  *
  * @param <T> Type for the elements within the Set
  */
-public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set<T> {
+public class ImmutableHashSet<T> extends AbstractImmutableIterable<T> implements Set<T> {
 
-    private static final ImmutableSet<Object> EMPTY = new ImmutableSet<>(new Object[0], new int[0]);
+    private static final ImmutableHashSet<Object> EMPTY = new ImmutableHashSet<>(new Object[0], new int[0]);
 
     @SuppressWarnings("unchecked")
-    public static <E> ImmutableSet<E> empty() {
-        return (ImmutableSet<E>) EMPTY;
+    public static <E> ImmutableHashSet<E> empty() {
+        return (ImmutableHashSet<E>) EMPTY;
     }
 
     private final Object[] _keys;
     private final int[] _hashCodes;
 
-    ImmutableSet(Object[] keys, int[] hashCodes) {
+    ImmutableHashSet(Object[] keys, int[] hashCodes) {
         _keys = keys;
         _hashCodes = hashCodes;
     }
@@ -69,20 +69,20 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
     }
 
     @Override
-    public ImmutableSet<T> filter(Predicate<T> predicate) {
-        return (ImmutableSet<T>) super.filter(predicate);
+    public ImmutableHashSet<T> filter(Predicate<T> predicate) {
+        return (ImmutableHashSet<T>) super.filter(predicate);
     }
 
-    public ImmutableSet<T> filterNot(Predicate<T> predicate) {
-        return (ImmutableSet<T>) super.filterNot(predicate);
+    public ImmutableHashSet<T> filterNot(Predicate<T> predicate) {
+        return (ImmutableHashSet<T>) super.filterNot(predicate);
     }
 
     public ImmutableIntSet map(IntResultFunction<T> func) {
         return (ImmutableIntSet) super.map(func);
     }
 
-    public <E> ImmutableSet<E> map(Function<T, E> func) {
-        return (ImmutableSet<E>) super.map(func);
+    public <E> ImmutableHashSet<E> map(Function<T, E> func) {
+        return (ImmutableHashSet<E>) super.map(func);
     }
 
     @Override
@@ -91,14 +91,14 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
     }
 
     @Override
-    public ImmutableSet<T> toImmutable() {
+    public ImmutableHashSet<T> toImmutable() {
         return this;
     }
 
     @Override
-    public MutableSet<T> mutate() {
+    public MutableHashSet<T> mutate() {
         final int length = _keys.length;
-        final int newLength = MutableSet.suitableArrayLength(length);
+        final int newLength = MutableHashSet.suitableArrayLength(length);
 
         Object[] keys = new Object[newLength];
         int[] hashCodes = new int[newLength];
@@ -106,7 +106,7 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
         System.arraycopy(_keys, 0, keys, 0, length);
         System.arraycopy(_hashCodes, 0, hashCodes, 0, length);
 
-        return new MutableSet<>(keys, hashCodes, length);
+        return new MutableHashSet<>(keys, hashCodes, length);
     }
 
     private class Iterator extends IteratorForImmutable<T> {
@@ -130,7 +130,7 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
         return new Iterator();
     }
 
-    static <E> ImmutableSet<E> fromMutableSet(MutableSet<E> set) {
+    static <E> ImmutableHashSet<E> fromMutableSet(MutableHashSet<E> set) {
         final int length = set.size();
         if (length == 0) {
             return empty();
@@ -145,11 +145,11 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
             hashCodes[i] = (key != null)? key.hashCode() : HASH_FOR_NULL;
         }
 
-        return new ImmutableSet<>(keys, hashCodes);
+        return new ImmutableHashSet<>(keys, hashCodes);
     }
 
     public static class Builder<E> implements ImmutableCollectionBuilder<E> {
-        private final MutableSet<E> _set = MutableSet.empty();
+        private final MutableHashSet<E> _set = MutableHashSet.empty();
 
         @Override
         public Builder<E> add(E key) {
@@ -158,7 +158,7 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
         }
 
         @Override
-        public ImmutableSet<E> build() {
+        public ImmutableHashSet<E> build() {
             return fromMutableSet(_set);
         }
     }
@@ -177,14 +177,14 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof ImmutableSet)) {
+        if (object == null || !(object instanceof ImmutableHashSet)) {
             return false;
         }
         else if (this == object) {
             return true;
         }
 
-        final ImmutableSet that = (ImmutableSet) object;
+        final ImmutableHashSet that = (ImmutableHashSet) object;
         final int[] thatHashCodes = that._hashCodes;
         final int length = _hashCodes.length;
         if (length != thatHashCodes.length) {

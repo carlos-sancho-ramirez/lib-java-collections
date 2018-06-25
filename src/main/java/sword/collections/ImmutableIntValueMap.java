@@ -100,17 +100,17 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
     }
 
     @Override
-    public ImmutableSet<T> keySet() {
+    public ImmutableHashSet<T> keySet() {
         if (_keys.length != 0) {
-            return new ImmutableSet<>(_keys, _hashCodes);
+            return new ImmutableHashSet<>(_keys, _hashCodes);
         }
         else {
-            return ImmutableSet.empty();
+            return ImmutableHashSet.empty();
         }
     }
 
     @Override
-    public ImmutableSet<Entry<T>> entries() {
+    public ImmutableHashSet<Entry<T>> entries() {
         final int length = _keys.length;
         final Entry[] entries = new Entry[length];
         final int[] hashCodes = new int[length];
@@ -120,7 +120,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
             hashCodes[index] = entries[index].hashCode();
         }
 
-        return new ImmutableSet<>(entries, hashCodes);
+        return new ImmutableHashSet<>(entries, hashCodes);
     }
 
     @Override

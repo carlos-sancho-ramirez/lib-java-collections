@@ -83,7 +83,7 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
 
     @Override
     public Set<T> toSet() {
-        final ImmutableSet.Builder<T> builder = new ImmutableSet.Builder<>();
+        final ImmutableHashSet.Builder<T> builder = new ImmutableHashSet.Builder<>();
         for (int i = 0; i < _size; i++) {
             builder.add(valueAt(i));
         }

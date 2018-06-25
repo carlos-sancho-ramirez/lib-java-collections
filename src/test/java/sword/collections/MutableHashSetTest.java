@@ -5,7 +5,7 @@ import java.util.Iterator;
 import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.equal;
 
-public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
+public class MutableHashSetTest extends AbstractIterableTest<String> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"
@@ -42,11 +42,6 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
         procedure.apply(this::charCounter);
     }
 
-    @Override
-    void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
-        procedure.apply(str -> (str == null)? 0 : str.hashCode());
-    }
-
     private boolean filterFunc(String value) {
         return value != null && !value.isEmpty();
     }
@@ -56,28 +51,18 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
         procedure.apply(this::filterFunc);
     }
 
-    ImmutableSet.Builder<String> newBuilder() {
-        return new ImmutableSet.Builder<>();
+    MutableHashSet.Builder<String> newBuilder() {
+        return new MutableHashSet.Builder<>();
     }
 
     @Override
-    ImmutableSet.Builder<String> newIterableBuilder() {
+    MutableHashSet.Builder<String> newIterableBuilder() {
         return newBuilder();
-    }
-
-    @Override
-    ImmutableIntSetBuilder newIntIterableBuilder() {
-        return new ImmutableIntSetBuilder();
-    }
-
-    @Override
-    <E> ImmutableSet<E> emptyCollection() {
-        return ImmutableSet.empty();
     }
 
     public void testSizeForTwoElements() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> list = newBuilder().add(a).add(b).build();
+            final MutableHashSet<String> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
             if (equal(a, b)) {
                 assertEquals(1, size);
@@ -90,7 +75,7 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
 
     public void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
+            final MutableHashSet<String> set = newBuilder().add(a).add(b).build();
             final Iterator<String> iterator = set.iterator();
 
             assertTrue(iterator.hasNext());
@@ -116,97 +101,40 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
         }));
     }
 
-    @Override
-    public void testMapForMultipleElements() {
-        withMapFunc(f -> withValue(a -> withValue(b -> {
-            final ImmutableSet<String> collection = newBuilder().add(a).add(b).build();
-            final ImmutableSet<String> mapped = collection.map(f);
-            final Iterator<String> iterator = mapped.iterator();
-
-            final String mappedA = f.apply(a);
-            final String mappedB = f.apply(b);
-
-            assertTrue(iterator.hasNext());
-            final boolean sameMappedValue = equal(mappedA, mappedB);
-            final String first = iterator.next();
-
-            if (sameMappedValue) {
-                assertEquals(mappedA, first);
-            }
-            else if (equal(mappedA, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedB, iterator.next());
-            }
-            else if (equal(mappedB, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedA, iterator.next());
-            }
-            else {
-                fail("Expected either " + mappedA + " or " + mappedB + " but found " + first);
-            }
-
-            assertFalse(iterator.hasNext());
-        })));
-    }
-
-    @Override
-    public void testMapToIntForMultipleElements() {
-        withMapToIntFunc(f -> withValue(a -> withValue(b -> {
-            final ImmutableSet<String> collection = newBuilder().add(a).add(b).build();
-            final ImmutableIntSet mapped = collection.map(f);
-            final Iterator<Integer> iterator = mapped.iterator();
-
-            final int mappedA = f.apply(a);
-            final int mappedB = f.apply(b);
-
-            assertTrue(iterator.hasNext());
-            final boolean sameMappedValue = equal(mappedA, mappedB);
-            final int first = iterator.next();
-
-            if (sameMappedValue) {
-                assertEquals(mappedA, first);
-            }
-            else if (equal(mappedA, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedB, (int) iterator.next());
-            }
-            else if (equal(mappedB, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedA, (int) iterator.next());
-            }
-            else {
-                fail("Expected either " + mappedA + " or " + mappedB + " but found " + first);
-            }
-
-            assertFalse(iterator.hasNext());
-        })));
-    }
-
     public void testToImmutableForEmpty() {
-        assertSame(ImmutableSet.empty(), ImmutableSet.empty().toImmutable());
+        assertTrue(newBuilder().build().toImmutable().isEmpty());
     }
 
     public void testMutateForEmpty() {
-        final ImmutableSet<String> set1 = newBuilder().build();
-        final MutableSet<String> set2 = set1.mutate();
+        final MutableHashSet<String> set1 = newBuilder().build();
+        final MutableHashSet<String> set2 = set1.mutate();
 
-        assertTrue(set2.isEmpty());
+        assertEquals(set1, set2);
+        assertNotSame(set1, set2);
 
-        set2.add("");
-        assertFalse(set1.contains(""));
+        set1.add("");
+        assertFalse(set2.contains(""));
     }
 
     public void testToImmutable() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
-            assertSame(set, set.toImmutable());
+            final MutableHashSet<String> set = newBuilder().add(a).add(b).build();
+            final ImmutableHashSet<String> set2 = set.toImmutable();
+
+            final Iterator<String> it1 = set.iterator();
+            final Iterator<String> it2 = set2.iterator();
+            while (it1.hasNext()) {
+                assertTrue(it2.hasNext());
+                assertEquals(it1.next(), it2.next());
+            }
+            assertFalse(it2.hasNext());
         }));
     }
 
     public void testMutate() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set1 = newBuilder().add(a).add(b).build();
-            final MutableSet<String> set2 = set1.mutate();
+            final MutableHashSet<String> set1 = newBuilder().add(a).add(b).build();
+            final MutableHashSet<String> set2 = set1.mutate();
 
             final Iterator<String> it1 = set1.iterator();
             final Iterator<String> it2 = set2.iterator();
@@ -273,15 +201,15 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testToListWhenEmpty() {
-        final ImmutableSet<String> set = newBuilder().build();
+        final Set<String> set = newBuilder().build();
         assertTrue(set.isEmpty());
         assertTrue(set.toList().isEmpty());
     }
 
     public void testToList() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
-            final ImmutableList<String> list = set.toList();
+            final Set<String> set = newBuilder().add(a).add(b).build();
+            final List<String> list = set.toList();
 
             if (equal(a, b)) {
                 assertEquals(1, list.size());

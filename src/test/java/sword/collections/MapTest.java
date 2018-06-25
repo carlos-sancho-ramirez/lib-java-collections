@@ -70,7 +70,7 @@ abstract class MapTest<K, V> extends TestCase {
                     .put(c, value)
                     .build();
 
-            MutableSet<K> keySet = new MutableSet.Builder<K>().add(a).add(b).add(c).build();
+            MutableHashSet<K> keySet = new MutableHashSet.Builder<K>().add(a).add(b).add(c).build();
 
             final int size = array.size();
             for (int i = 0; i < size; i++) {
@@ -101,15 +101,15 @@ abstract class MapTest<K, V> extends TestCase {
         final V value = getTestValue();
         for (int amount = 0; amount < 3; amount++) {
             final MapBuilder<K, V> mapBuilder = newBuilder();
-            final ImmutableSet.Builder<K> setBuilder = new ImmutableSet.Builder<>();
+            final ImmutableHashSet.Builder<K> setBuilder = new ImmutableHashSet.Builder<>();
             for (int i = 0; i < amount; i++) {
                 final K key = keyFromInt(i);
                 setBuilder.add(key);
                 mapBuilder.put(key, value);
             }
 
-            final ImmutableSet<K> expectedKeys = setBuilder.build();
-            final ImmutableSet<K> keySet = mapBuilder.build().keySet().toImmutable();
+            final ImmutableHashSet<K> expectedKeys = setBuilder.build();
+            final ImmutableHashSet<K> keySet = mapBuilder.build().keySet().toImmutable();
             assertEquals(expectedKeys, keySet);
         }
     }

@@ -28,7 +28,7 @@ public interface ImmutableIntSet extends IntSet, IterableImmutableIntCollection 
     ImmutableIntSet map(IntToIntFunction func);
 
     @Override
-    <U> ImmutableSet<U> map(IntFunction<U> func);
+    <U> ImmutableHashSet<U> map(IntFunction<U> func);
 
     /**
      * Add the given value from the current set if not included yet.
