@@ -1,6 +1,7 @@
 package sword.collections;
 
 import static sword.collections.SortUtils.HASH_FOR_NULL;
+import static sword.collections.SortUtils.equal;
 import static sword.collections.SortUtils.findValue;
 
 /**
@@ -96,6 +97,20 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
         Object[] keys = new Object[newLength];
         System.arraycopy(_keys, 0, keys, 0, length);
         return new MutableSet<>(_sortFunction, keys, length);
+    }
+
+    @Override
+    public ImmutableSet<T> sort(SortFunction<T> function) {
+        if (equal(_sortFunction, function)) {
+            return this;
+        }
+
+        final Builder<T> builder = new Builder<>(function);
+        for (T value : this) {
+            builder.add(value);
+        }
+
+        return builder.build();
     }
 
     class Iterator extends IteratorForImmutable<T> {

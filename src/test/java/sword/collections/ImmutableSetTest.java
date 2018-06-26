@@ -314,4 +314,22 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
             assertEquals(set, set3.mutate());
         }));
     }
+
+    public void testSort() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableSet<String> set = newBuilder().add(a).add(b).add(c).build();
+            final ImmutableSet.Builder<String> builder = new ImmutableSet.Builder<>(this::sortByLength);
+            for (String v : set) {
+                builder.add(v);
+            }
+
+            final ImmutableSet<String> sortedSet = set.sort(this::sortByLength);
+            final Iterator<String> it = sortedSet.iterator();
+            for (String v : builder.build()) {
+                assertTrue(it.hasNext());
+                assertSame(v, it.next());
+            }
+            assertFalse(it.hasNext());
+        })));
+    }
 }

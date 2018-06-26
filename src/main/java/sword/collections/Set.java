@@ -26,6 +26,16 @@ public interface Set<T> extends IterableCollection<T>, Sizable {
     MutableSet<T> mutate();
 
     /**
+     * Creates a new set where all current elements and future elements will be
+     * sorted following the given function.
+     *
+     * @param function Function the sort the elements within this collection.
+     * @return A new set where all current elements and future newly added will
+     * be sorted following the the given function.
+     */
+    Set<T> sort(SortFunction<T> function);
+
+    /**
      * Returns a hash code calculated from the hashcode of any of the elements.
      *
      * The resulting hashcode is guaranteed to be the same independently of the

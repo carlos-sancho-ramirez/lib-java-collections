@@ -109,6 +109,27 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
         return new MutableSet<>(_sortFunction, keys, _size);
     }
 
+    /**
+     * Creates a new set where all current elements are sorted following the given function.
+     *
+     * The result of this method is currently immutable, but it may change in the future.
+     * In the resulting instance of this method, call {@link #toImmutable()} to ensure
+     * immutability or {@link #mutate()} to get a mutable copy of it.
+     *
+     * @param function Function the sort the elements within this collection.
+     * @return A new set where all current elements and future newly added will
+     * be sorted following the the given function.
+     */
+    @Override
+    public Set<T> sort(SortFunction<T> function) {
+        final ImmutableSet.Builder<T> builder = new ImmutableSet.Builder<>(function);
+        for (T value : this) {
+            builder.add(value);
+        }
+
+        return builder.build();
+    }
+
     private void enlargeArrays() {
         Object[] oldKeys = _keys;
 

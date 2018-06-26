@@ -241,4 +241,22 @@ public class MutableSetTest extends AbstractIterableTest<String> {
             assertEquals(set, set3.mutate());
         }));
     }
+
+    public void testSort() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final MutableSet<String> set = newBuilder().add(a).add(b).add(c).build();
+            final MutableSet.Builder<String> builder = new MutableSet.Builder<>(this::sortByLength);
+            for (String v : set) {
+                builder.add(v);
+            }
+
+            final Set<String> sortedSet = set.sort(this::sortByLength);
+            final Iterator<String> it = sortedSet.iterator();
+            for (String v : builder.build()) {
+                assertTrue(it.hasNext());
+                assertSame(v, it.next());
+            }
+            assertFalse(it.hasNext());
+        })));
+    }
 }
