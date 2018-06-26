@@ -1,7 +1,7 @@
 package sword.collections;
 
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
-import static sword.collections.SortUtils.equal;
+import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.findValue;
 
 /**
@@ -196,27 +196,38 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
         }
     }
 
+    int itemHashCode(int index) {
+        return (_keys[index] != null)? _keys[index].hashCode() : HASH_FOR_NULL;
+    }
+
     @Override
     public int hashCode() {
-        return _size;
+        final int length = _size;
+        int hash = length * 11069;
+
+        for (int i = 0; i < length; i++) {
+            hash ^= itemHashCode(i);
+        }
+
+        return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof MutableSet)) {
+        if (object == null || !(object instanceof Set)) {
             return false;
         }
         else if (this == object) {
             return true;
         }
 
-        final MutableSet that = (MutableSet) object;
-        if (_size != that._size) {
+        final Set that = (Set) object;
+        if (_size != that.size()) {
             return false;
         }
 
         for (int index = 0; index < _size; index++) {
-            if (!equal(_keys[index], that._keys)) {
+            if (!that.contains(_keys[index])) {
                 return false;
             }
         }

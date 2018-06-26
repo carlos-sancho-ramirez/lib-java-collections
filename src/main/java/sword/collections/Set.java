@@ -24,4 +24,30 @@ public interface Set<T> extends IterableCollection<T>, Sizable {
      * This method will always generate a new instance in order to avoid affecting the state of its original set.
      */
     MutableSet<T> mutate();
+
+    /**
+     * Returns a hash code calculated from the hashcode of any of the elements.
+     *
+     * The resulting hashcode is guaranteed to be the same independently of the
+     * order of the elements within this set, and its mutability state.
+     */
+    @Override
+    int hashCode();
+
+    /**
+     * Check if 2 set instances contain equivalent elements.
+     *
+     * This method will call {@link Object#equals(Object)} on the elements
+     * within the sets in order to check if they are equivalent.
+     * Depending on the set implementation, {@link Object#hashCode()} may
+     * also be queried.
+     *
+     * Note that this method will return true even if the elements within the 2
+     * sets are not sorted in the same way.
+     *
+     * @param other set to be compared with this instance.
+     * @return whether the given set contains equivalent values to this one.
+     */
+    @Override
+    boolean equals(Object other);
 }

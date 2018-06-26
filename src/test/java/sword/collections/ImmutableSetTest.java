@@ -59,6 +59,10 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
         return b != null && (a == null || a.hashCode() < b.hashCode());
     }
 
+    boolean sortByLength(String a, String b) {
+        return b != null && (a == null || a.length() < b.length());
+    }
+
     ImmutableSet.Builder<String> newBuilder() {
         return new ImmutableSet.Builder<>(this::lessThan);
     }
@@ -283,6 +287,31 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
                     assertEquals(b, list.get(1));
                 }
             }
+        }));
+    }
+
+    public void testHashCodeAndEquals() {
+        withValue(a -> withValue(b -> {
+            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
+            final ImmutableSet<String> set1 = new ImmutableSet.Builder<String>(this::lessThan).add(a).add(b).build();
+            final ImmutableSet<String> set2 = new ImmutableSet.Builder<String>(this::sortByLength).add(a).add(b).build();
+            final ImmutableSet<String> set3 = new ImmutableHashSet.Builder<String>().add(a).add(b).build();
+
+            assertEquals(set.hashCode(), set1.hashCode());
+            assertEquals(set.hashCode(), set2.hashCode());
+            assertEquals(set.hashCode(), set3.hashCode());
+
+            assertEquals(set, set1);
+            assertEquals(set, set2);
+            assertEquals(set, set3);
+
+            assertEquals(set.hashCode(), set1.mutate().hashCode());
+            assertEquals(set.hashCode(), set2.mutate().hashCode());
+            assertEquals(set.hashCode(), set3.mutate().hashCode());
+
+            assertEquals(set, set1.mutate());
+            assertEquals(set, set2.mutate());
+            assertEquals(set, set3.mutate());
         }));
     }
 }
