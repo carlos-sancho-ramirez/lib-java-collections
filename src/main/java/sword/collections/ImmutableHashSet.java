@@ -94,8 +94,12 @@ public class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T> {
         return new ImmutableHashSet<>(keys, hashCodes);
     }
 
-    public static class Builder<E> implements ImmutableCollectionBuilder<E> {
+    public static class Builder<E> extends ImmutableSet.Builder<E> {
         private final MutableHashSet<E> _set = MutableHashSet.empty();
+
+        public Builder() {
+            super(null);
+        }
 
         @Override
         public Builder<E> add(E key) {
