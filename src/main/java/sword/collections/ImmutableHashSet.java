@@ -53,8 +53,8 @@ public class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T> {
     }
 
     @Override
-    public boolean contains(T key) {
-        return findKey(_hashCodes, _keys, _keys.length, key) >= 0;
+    public int indexOf(T value) {
+        return findKey(_hashCodes, _keys, _keys.length, value);
     }
 
     @Override

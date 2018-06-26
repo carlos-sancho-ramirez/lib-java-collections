@@ -121,7 +121,7 @@ final class SortUtils {
         }
 
         ++min;
-        while (min < keys.length && !sortFunction.lessThan(key, (E) keys[min])) {
+        while (min < length && !sortFunction.lessThan(key, (E) keys[min])) {
             if (equal(key, keys[min])) {
                 return min;
             }
@@ -141,7 +141,7 @@ final class SortUtils {
         while (min < max) {
             final int pos = (max - min + 1) / 2 + min;
             final E element = (E) values[pos];
-            if (sortFunction.lessThan(element, value)) {
+            if (sortFunction.lessThan(value, element)) {
                 max = pos - 1;
             }
             else {

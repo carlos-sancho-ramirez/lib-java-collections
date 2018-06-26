@@ -47,8 +47,8 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
     }
 
     @Override
-    public boolean contains(T key) {
-        return findValue(_sortFunction, _keys, _keys.length, key) >= 0;
+    public int indexOf(T value) {
+        return findValue(_sortFunction, _keys, _keys.length, value);
     }
 
     @Override
