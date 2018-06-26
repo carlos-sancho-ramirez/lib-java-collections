@@ -5,7 +5,7 @@ import java.util.Iterator;
 import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.equal;
 
-public class MutableHashSetTest extends AbstractIterableTest<String> {
+public final class MutableHashSetTest extends MutableSetTest {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"
@@ -60,19 +60,7 @@ public class MutableHashSetTest extends AbstractIterableTest<String> {
         return newBuilder();
     }
 
-    public void testSizeForTwoElements() {
-        withValue(a -> withValue(b -> {
-            final MutableHashSet<String> list = newBuilder().add(a).add(b).build();
-            final int size = list.size();
-            if (equal(a, b)) {
-                assertEquals(1, size);
-            }
-            else {
-                assertEquals(2, size);
-            }
-        }));
-    }
-
+    @Override
     public void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final MutableHashSet<String> set = newBuilder().add(a).add(b).build();
@@ -98,55 +86,6 @@ public class MutableHashSetTest extends AbstractIterableTest<String> {
             }
 
             assertFalse(iterator.hasNext());
-        }));
-    }
-
-    public void testToImmutableForEmpty() {
-        assertTrue(newBuilder().build().toImmutable().isEmpty());
-    }
-
-    public void testMutateForEmpty() {
-        final MutableHashSet<String> set1 = newBuilder().build();
-        final MutableHashSet<String> set2 = set1.mutate();
-
-        assertEquals(set1, set2);
-        assertNotSame(set1, set2);
-
-        set1.add("");
-        assertFalse(set2.contains(""));
-    }
-
-    public void testToImmutable() {
-        withValue(a -> withValue(b -> {
-            final MutableHashSet<String> set = newBuilder().add(a).add(b).build();
-            final ImmutableHashSet<String> set2 = set.toImmutable();
-
-            final Iterator<String> it1 = set.iterator();
-            final Iterator<String> it2 = set2.iterator();
-            while (it1.hasNext()) {
-                assertTrue(it2.hasNext());
-                assertEquals(it1.next(), it2.next());
-            }
-            assertFalse(it2.hasNext());
-        }));
-    }
-
-    public void testMutate() {
-        withValue(a -> withValue(b -> {
-            final MutableHashSet<String> set1 = newBuilder().add(a).add(b).build();
-            final MutableHashSet<String> set2 = set1.mutate();
-
-            final Iterator<String> it1 = set1.iterator();
-            final Iterator<String> it2 = set2.iterator();
-            while (it1.hasNext()) {
-                assertTrue(it2.hasNext());
-                assertEquals(it1.next(), it2.next());
-            }
-            assertFalse(it2.hasNext());
-
-            set2.remove(b);
-            assertTrue(set1.contains(b));
-            assertFalse(set2.contains(b));
         }));
     }
 
@@ -200,12 +139,7 @@ public class MutableHashSetTest extends AbstractIterableTest<String> {
         }))));
     }
 
-    public void testToListWhenEmpty() {
-        final Set<String> set = newBuilder().build();
-        assertTrue(set.isEmpty());
-        assertTrue(set.toList().isEmpty());
-    }
-
+    @Override
     public void testToList() {
         withValue(a -> withValue(b -> {
             final Set<String> set = newBuilder().add(a).add(b).build();

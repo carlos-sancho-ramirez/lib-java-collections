@@ -130,8 +130,12 @@ public class MutableHashSet<T> extends MutableSet<T> implements Set<T> {
         }
     }
 
-    public static class Builder<E> implements CollectionBuilder<E> {
+    public static class Builder<E> extends MutableSet.Builder<E> {
         private final MutableHashSet<E> _set = MutableHashSet.empty();
+
+        public Builder() {
+            super(null);
+        }
 
         @Override
         public Builder<E> add(E key) {
