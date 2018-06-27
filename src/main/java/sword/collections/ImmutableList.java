@@ -193,6 +193,34 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
         return new MutableList<>(values, length);
     }
 
+    /**
+     * Creates a new list where all current elements are sorted following the given function.
+     *
+     * @param function Function the sort the elements within this collection.
+     * @return A new list where all current elements are sorted following the given function.
+     */
+    ImmutableList<T> sort(SortFunction<T> function) {
+        final int length = _values.length;
+        if (length < 2) {
+            return this;
+        }
+
+        final Object[] newValues = new Object[length];
+        newValues[0] = _values[0];
+        boolean changed = false;
+
+        for (int i = 1; i < length; i++) {
+            final int index = SortUtils.findSuitableIndex(function, newValues, i, (T) _values[i]);
+            changed |= index != i;
+            for (int j = i; j > index; j--) {
+                newValues[j] = newValues[j - 1];
+            }
+            newValues[index] = _values[i];
+        }
+
+        return changed? new ImmutableList<>(newValues) : this;
+    }
+
     private class Iterator extends IteratorForImmutable<T> {
         private int _index;
 

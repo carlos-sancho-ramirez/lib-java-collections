@@ -31,7 +31,7 @@ public interface Set<T> extends IterableCollection<T>, Sizable {
      *
      * @param function Function the sort the elements within this collection.
      * @return A new set where all current elements and future newly added will
-     * be sorted following the the given function.
+     * be sorted following the given function.
      */
     Set<T> sort(SortFunction<T> function);
 

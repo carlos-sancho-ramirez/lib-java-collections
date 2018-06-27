@@ -62,6 +62,35 @@ public final class ImmutableListTest extends AbstractIterableImmutableTest<Strin
         procedure.apply(this::filterFunc);
     }
 
+    private boolean sortAlphabetically(String a, String b) {
+        if (b == null) {
+            return false;
+        }
+
+        if (a == null) {
+            return true;
+        }
+
+        final int aLength = a.length();
+        final int bLength = b.length();
+        for (int i = 0; i < aLength; i++) {
+            if (bLength == i) {
+                return false;
+            }
+
+            final char charA = a.charAt(i);
+            final char charB = b.charAt(i);
+            if (charA < charB) {
+                return true;
+            }
+            else if (charA > charB) {
+                return false;
+            }
+        }
+
+        return bLength > aLength;
+    }
+
     @Override
     <E> ImmutableList<E> emptyCollection() {
         return ImmutableList.empty();
@@ -333,5 +362,45 @@ public final class ImmutableListTest extends AbstractIterableImmutableTest<Strin
                 }
             }
         }));
+    }
+
+    public void testSort() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
+            final ImmutableList<String> sortedList = list.sort(this::sortAlphabetically);
+
+            if (sortAlphabetically(b, a)) {
+                if (sortAlphabetically(c, b)) {
+                    assertEquals(c, sortedList.valueAt(0));
+                    assertEquals(b, sortedList.valueAt(1));
+                    assertEquals(a, sortedList.valueAt(2));
+                }
+                else if (sortAlphabetically(c, a)) {
+                    assertEquals(b, sortedList.valueAt(0));
+                    assertEquals(c, sortedList.valueAt(1));
+                    assertEquals(a, sortedList.valueAt(2));
+                }
+                else {
+                    assertEquals(b, sortedList.valueAt(0));
+                    assertEquals(a, sortedList.valueAt(1));
+                    assertEquals(c, sortedList.valueAt(2));
+                }
+            }
+            else {
+                if (sortAlphabetically(c, a)) {
+                    assertEquals(c, sortedList.valueAt(0));
+                    assertEquals(a, sortedList.valueAt(1));
+                    assertEquals(b, sortedList.valueAt(2));
+                }
+                else if (sortAlphabetically(c, b)) {
+                    assertEquals(a, sortedList.valueAt(0));
+                    assertEquals(c, sortedList.valueAt(1));
+                    assertEquals(b, sortedList.valueAt(2));
+                }
+                else {
+                    assertSame(list, sortedList);
+                }
+            }
+        })));
     }
 }
