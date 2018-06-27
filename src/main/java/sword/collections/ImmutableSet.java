@@ -79,6 +79,24 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
         return (ImmutableHashSet<E>) super.map(func);
     }
 
+    /**
+     * Creates a new set containing all the current elements and the ones given in the iterable.
+     *
+     * As this is a set, duplicated elements will not be allowed.
+     * Than means that elements within the given iterable will be ignored if
+     * there is an equivalent element already included in this set.
+     *
+     * @param iterable Collection from where new items will be added.
+     */
+    public ImmutableSet<T> addAll(Iterable<T> iterable) {
+        final MutableSet<T> result = mutate();
+        for (T item : iterable) {
+            result.add(item);
+        }
+
+        return (result.size() == _keys.length)? this : result.toImmutable();
+    }
+
     @Override
     public ImmutableList<T> toList() {
         return new ImmutableList<>(_keys);
