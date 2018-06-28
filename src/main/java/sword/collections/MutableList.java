@@ -105,6 +105,34 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
         return new MutableList<>(newValues, _size);
     }
 
+    /**
+     * Sorts this collection according to the given function.
+     * @param function Used to sort the elements within this list.
+     * @return Whether if the collection has changed.
+     */
+    public boolean sort(SortFunction<T> function) {
+        final int length = _size;
+        if (length < 2) {
+            return false;
+        }
+
+        final Object[] newValues = new Object[length];
+        newValues[0] = _values[0];
+        boolean changed = false;
+
+        for (int i = 1; i < length; i++) {
+            final int index = SortUtils.findSuitableIndex(function, newValues, i, (T) _values[i]);
+            changed |= index != i;
+            for (int j = i; j > index; j--) {
+                newValues[j] = newValues[j - 1];
+            }
+            newValues[index] = _values[i];
+        }
+
+        _values = newValues;
+        return changed;
+    }
+
     public static class Builder<E> implements CollectionBuilder<E> {
         private final MutableList<E> _list = MutableList.empty();
 

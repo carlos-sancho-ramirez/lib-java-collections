@@ -199,7 +199,7 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
      * @param function Function the sort the elements within this collection.
      * @return A new list where all current elements are sorted following the given function.
      */
-    ImmutableList<T> sort(SortFunction<T> function) {
+    public ImmutableList<T> sort(SortFunction<T> function) {
         final int length = _values.length;
         if (length < 2) {
             return this;
