@@ -83,15 +83,11 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable impleme
         return (ImmutableList<U>) super.map(func);
     }
 
-    /**
-     * Reduces the collection to a single element by applying the given function on each pair of values.
-     * @param func Associate function to be applied on each pair of elements.
-     * @return The resulting value of applying the given function to each value pair.
-     */
-    public int reduce(ReduceIntFunction func) {
+    @Override
+    public int reduce(IntReduceFunction func) {
         final int size = _values.length;
         if (size == 0) {
-            throw new UnsupportedOperationException("Unable to reduce an empty collection");
+            throw new EmptyCollectionException();
         }
 
         if (size == 1) {
