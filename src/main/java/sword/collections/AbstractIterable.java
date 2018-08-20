@@ -65,6 +65,15 @@ abstract class AbstractIterable<T> extends AbstractSizable implements IterableCo
         return defaultValue;
     }
 
+    private T reduceSecured(Iterator<T> it, ReduceFunction<T> func) {
+        T value = it.next();
+        while (it.hasNext()) {
+            value = func.apply(value, it.next());
+        }
+
+        return value;
+    }
+
     @Override
     public T reduce(ReduceFunction<T> func) {
         final Iterator<T> it = iterator();
@@ -72,12 +81,13 @@ abstract class AbstractIterable<T> extends AbstractSizable implements IterableCo
             throw new EmptyCollectionException();
         }
 
-        T value = it.next();
-        while (it.hasNext()) {
-            value = func.apply(value, it.next());
-        }
+        return reduceSecured(it, func);
+    }
 
-        return value;
+    @Override
+    public T reduce(ReduceFunction<T> func, T defaultValue) {
+        final Iterator<T> it = iterator();
+        return it.hasNext()? reduceSecured(it, func) : defaultValue;
     }
 
     @Override
