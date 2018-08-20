@@ -234,4 +234,31 @@ abstract class AbstractIntIterableTest extends TestCase {
             assertEquals(expectedValue, iterable.reduce(func));
         }))));
     }
+
+    public void testReduceWithValueWhenEmpty() {
+        withItem(value -> {
+            final IterableIntCollection iterable = newIntBuilder().build();
+            assertEquals(value, iterable.reduce(this::unexpectedReduceFunction, value));
+        });
+    }
+
+    public void testReduceWithValueForSingleElement() {
+        withItem(value -> {
+            final IterableIntCollection iterable = newIntBuilder().add(value).build();
+            assertEquals(value, iterable.reduce(this::unexpectedReduceFunction, 0));
+        });
+    }
+
+    public void testReduceWithValueForMultipleElements() {
+        withReduceFunction(func -> withItem(a -> withItem(b -> withItem(c -> {
+            final IterableIntCollection iterable = newIntBuilder().add(a).add(b).add(c).build();
+            final Iterator<Integer> it = iterable.iterator();
+            int expectedValue = it.next();
+            while (it.hasNext()) {
+                expectedValue = func.apply(expectedValue, it.next());
+            }
+
+            assertEquals(expectedValue, iterable.reduce(func, 0));
+        }))));
+    }
 }

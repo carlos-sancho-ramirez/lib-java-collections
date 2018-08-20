@@ -46,4 +46,12 @@ interface IterableIntCollection extends Iterable<Integer> {
      * @throws EmptyCollectionException in case the collection is empty.
      */
     int reduce(IntReduceFunction func);
+
+    /**
+     * Reduces the collection to a single element by applying the given function on each pair of values,
+     * or return the defaultValue if the collection is empty.
+     * @param func Associate function to be applied on each pair of elements.
+     * @return The resulting value of applying the given function to each value pair, or the defaultValue if empty.
+     */
+    int reduce(IntReduceFunction func, int defaultValue);
 }

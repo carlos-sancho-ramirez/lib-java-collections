@@ -71,6 +71,15 @@ abstract class AbstractIntIterable extends AbstractSizable implements IterableIn
         return defaultValue;
     }
 
+    private int reduceSecured(Iterator<Integer> it, IntReduceFunction func) {
+        int value = it.next();
+        while (it.hasNext()) {
+            value = func.apply(value, it.next());
+        }
+
+        return value;
+    }
+
     @Override
     public int reduce(IntReduceFunction func) {
         final Iterator<Integer> it = iterator();
@@ -78,12 +87,13 @@ abstract class AbstractIntIterable extends AbstractSizable implements IterableIn
             throw new EmptyCollectionException();
         }
 
-        int value = it.next();
-        while (it.hasNext()) {
-            value = func.apply(value, it.next());
-        }
+        return reduceSecured(it, func);
+    }
 
-        return value;
+    @Override
+    public int reduce(IntReduceFunction func, int defaultValue) {
+        final Iterator<Integer> it = iterator();
+        return it.hasNext()? reduceSecured(it, func) : defaultValue;
     }
 
     @Override
