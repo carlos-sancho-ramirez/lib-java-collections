@@ -18,13 +18,18 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         withString(procedure);
     }
 
-    private boolean filterFunc(String value) {
+    private boolean stringIsEmpty(String value) {
         return value != null && !value.isEmpty();
+    }
+
+    private boolean hashCodeIsEven(String value) {
+        return value == null || (value.hashCode() & 1) == 0;
     }
 
     @Override
     void withFilterFunc(Procedure<Predicate<String>> procedure) {
-        procedure.apply(this::filterFunc);
+        procedure.apply(this::stringIsEmpty);
+        procedure.apply(this::hashCodeIsEven);
     }
 
     private String reduceFunc(String left, String right) {
@@ -82,6 +87,116 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         for (int i = 0; i < length; i++) {
             action.apply(IMMUTABLE_INT_KEY_MAP_VALUES[i]);
         }
+    }
+
+    public void testFilterWhenEmpty() {
+        withFilterFunc(f -> {
+            final ImmutableIntKeyMap<String> map = newMapBuilder().build();
+            assertSame(map, map.filter(f));
+        });
+    }
+
+    public void testFilterForSingleElement() {
+        withFilterFunc(f -> withInt(key -> {
+            final String value = Integer.toString(key);
+            final ImmutableIntKeyMap<String> map = newMapBuilder().put(key, value).build();
+            final ImmutableIntKeyMap<String> filtered = map.filter(f);
+
+            final ImmutableIntKeyMap<String> expected = f.apply(value)? map : newMapBuilder().build();
+            assertSame(expected, filtered);
+        }));
+    }
+
+    public void testFilterForMultipleElements() {
+        withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
+            final String valueA = Integer.toString(keyA);
+            final String valueB = Integer.toString(keyB);
+            final ImmutableIntKeyMap<String> map = newMapBuilder().put(keyA, valueA).put(keyB, valueB).build();
+            final ImmutableIntKeyMap<String> filtered = map.filter(f);
+
+            final boolean aPassed = f.apply(valueA);
+            final boolean bPassed = f.apply(valueB);
+
+            if (aPassed && bPassed) {
+                assertSame(map, filtered);
+            }
+            else if (aPassed) {
+                Iterator<IntKeyMap.Entry<String>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+                final IntKeyMap.Entry<String> entry = iterator.next();
+                assertEquals(keyA, entry.key());
+                assertSame(valueA, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else if (bPassed) {
+                Iterator<IntKeyMap.Entry<String>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+                final IntKeyMap.Entry<String> entry = iterator.next();
+                assertEquals(keyB, entry.key());
+                assertSame(valueB, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else {
+                assertSame(newMapBuilder().build(), filtered);
+            }
+        })));
+    }
+
+    public void testFilterNotWhenEmpty() {
+        withFilterFunc(f -> {
+            final ImmutableIntKeyMap<String> map = newMapBuilder().build();
+            assertSame(map, map.filterNot(f));
+        });
+    }
+
+    public void testFilterNotForSingleElement() {
+        withFilterFunc(f -> withInt(key -> {
+            final String value = Integer.toString(key);
+            final ImmutableIntKeyMap<String> map = newMapBuilder().put(key, value).build();
+            final ImmutableIntKeyMap<String> filtered = map.filterNot(f);
+
+            if (!f.apply(value)) {
+                assertSame(map, filtered);
+            }
+            else {
+                assertSame(newMapBuilder().build(), filtered);
+            }
+        }));
+    }
+
+    public void testFilterNotForMultipleElements() {
+        withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
+            final String valueA = Integer.toString(keyA);
+            final String valueB = Integer.toString(keyB);
+            final ImmutableIntKeyMap<String> map = newMapBuilder().put(keyA, valueA).put(keyB, valueB).build();
+            final ImmutableIntKeyMap<String> filtered = map.filterNot(f);
+
+            final boolean aRemoved = f.apply(valueA);
+            final boolean bRemoved = f.apply(valueB);
+
+            if (aRemoved && bRemoved) {
+                assertSame(newMapBuilder().build(), filtered);
+            }
+            else if (aRemoved) {
+                Iterator<IntKeyMap.Entry<String>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+                final IntKeyMap.Entry<String> entry = iterator.next();
+                assertEquals(keyB, entry.key());
+                assertSame(valueB, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else if (bRemoved) {
+                Iterator<IntKeyMap.Entry<String>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+                final IntKeyMap.Entry<String> entry = iterator.next();
+                assertEquals(keyA, entry.key());
+                assertSame(valueA, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else {
+                assertSame(map, filtered);
+            }
+        })));
     }
 
     private String mapValueFunction(String str) {

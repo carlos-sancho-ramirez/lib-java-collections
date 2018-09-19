@@ -13,7 +13,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
+public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements IterableImmutableCollection<T> {
 
     private static final ImmutableIntKeyMap<Object> EMPTY = new ImmutableIntKeyMap<>(new int[0], new Object[0]);
 
@@ -100,6 +100,42 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
         return new ImmutableHashSet<>(entries, hashCodes);
     }
 
+    @Override
+    public ImmutableIntKeyMap<T> filter(Predicate<T> predicate) {
+        final Builder<T> builder = new Builder<>();
+        final int length = _values.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            final T value = valueAt(i);
+            if (predicate.apply(value)) {
+                builder.put(_keys[i], value);
+            }
+            else {
+                changed = true;
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
+    public ImmutableIntKeyMap<T> filterNot(Predicate<T> predicate) {
+        final Builder<T> builder = new Builder<>();
+        final int length = _values.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            final T value = valueAt(i);
+            if (!predicate.apply(value)) {
+                builder.put(_keys[i], value);
+            }
+            else {
+                changed = true;
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
     /**
      * Return a new map instance where value has been transformed following the given function. Keys remain the same.
      * @param mapFunc Function the must be applied to values in order to modify them.
@@ -114,11 +150,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
         return new ImmutableIntPairMap(_keys, newValues);
     }
 
-    /**
-     * Return a new map instance where value has been transformed following the given function. Keys remain the same.
-     * @param mapFunc Function the must be applied to values in order to modify them.
-     * @param <U> New type for values
-     */
+    @Override
     public <U> ImmutableIntKeyMap<U> map(Function<T, U> mapFunc) {
         final int size = _keys.length;
         final Object[] newValues = new Object[size];
@@ -207,15 +239,20 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
         @Override
         public ImmutableIntKeyMap<E> build() {
             final int length = _map.size();
-            final int[] keys = new int[length];
-            final Object[] values = new Object[length];
-
-            for (int i = 0; i < length; i++) {
-                keys[i] = _map.keyAt(i);
-                values[i] = _map.valueAt(i);
+            if (length == 0) {
+                return empty();
             }
+            else {
+                final int[] keys = new int[length];
+                final Object[] values = new Object[length];
 
-            return new ImmutableIntKeyMap<>(keys, values);
+                for (int i = 0; i < length; i++) {
+                    keys[i] = _map.keyAt(i);
+                    values[i] = _map.valueAt(i);
+                }
+
+                return new ImmutableIntKeyMap<>(keys, values);
+            }
         }
     }
 

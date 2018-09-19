@@ -17,7 +17,7 @@ import static sword.collections.SortUtils.quickSort;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class ImmutableIntPairMap extends AbstractIntPairMap implements IntPairMap {
+public final class ImmutableIntPairMap extends AbstractIntPairMap implements IntPairMap, IterableImmutableIntCollection {
 
     private static final ImmutableIntPairMap EMPTY = new ImmutableIntPairMap(new int[0], new int[0]);
 
@@ -105,10 +105,43 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         return new ImmutableHashSet<>(entries, hashCodes);
     }
 
-    /**
-     * Return a new map instance where values has been transformed following the given function. Keys remain the same.
-     * @param mapFunc Function to be applied to each value.
-     */
+    @Override
+    public ImmutableIntPairMap filter(IntPredicate predicate) {
+        final Builder builder = new Builder();
+        final int length = _values.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            final int value = _values[i];
+            if (predicate.apply(value)) {
+                builder.put(_keys[i], value);
+            }
+            else {
+                changed = true;
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
+    public ImmutableIntPairMap filterNot(IntPredicate predicate) {
+        final Builder builder = new Builder();
+        final int length = _values.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            final int value = _values[i];
+            if (!predicate.apply(value)) {
+                builder.put(_keys[i], value);
+            }
+            else {
+                changed = true;
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
     public ImmutableIntPairMap map(IntToIntFunction mapFunc) {
         final int size = _keys.length;
         final int[] newValues = new int[size];
@@ -119,11 +152,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         return new ImmutableIntPairMap(_keys, newValues);
     }
 
-    /**
-     * Return a new map instance where values has been transformed following the given function. Keys remain the same.
-     * @param mapFunc Function to be applied to each value.
-     * @param <U> New type for values
-     */
+    @Override
     public <U> ImmutableIntKeyMap<U> map(IntFunction<U> mapFunc) {
         final int size = _keys.length;
         final Object[] newValues = new Object[size];
@@ -268,15 +297,20 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
 
         public ImmutableIntPairMap build() {
             final int length = _size;
-            final int[] keys = new int[length];
-            final int[] values = new int[length];
-
-            for (int i = 0; i < length; i++) {
-                keys[i] = _keys[i];
-                values[i] = _values[i];
+            if (length == 0) {
+                return empty();
             }
+            else {
+                final int[] keys = new int[length];
+                final int[] values = new int[length];
 
-            return new ImmutableIntPairMap(keys, values);
+                for (int i = 0; i < length; i++) {
+                    keys[i] = _keys[i];
+                    values[i] = _values[i];
+                }
+
+                return new ImmutableIntPairMap(keys, values);
+            }
         }
     }
 
