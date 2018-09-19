@@ -152,15 +152,20 @@ public final class MutableMap<K, V> extends AbstractMap<K, V> {
 
     @Override
     public ImmutableMap<K, V> toImmutable() {
-        Object[] keys = new Object[_size];
-        int[] hashCodes = new int[_size];
-        Object[] values = new Object[_size];
+        if (_size == 0) {
+            return ImmutableMap.empty();
+        }
+        else {
+            Object[] keys = new Object[_size];
+            int[] hashCodes = new int[_size];
+            Object[] values = new Object[_size];
 
-        System.arraycopy(_keys, 0, keys, 0, _size);
-        System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
-        System.arraycopy(_values, 0, values, 0, _size);
+            System.arraycopy(_keys, 0, keys, 0, _size);
+            System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
+            System.arraycopy(_values, 0, values, 0, _size);
 
-        return new ImmutableMap<>(keys, hashCodes, values);
+            return new ImmutableMap<>(keys, hashCodes, values);
+        }
     }
 
     @Override

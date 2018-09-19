@@ -27,7 +27,7 @@ import static sword.collections.SortUtils.quickSort;
  *
  * @param <T> Type for the keys within the Map
  */
-public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
+public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> implements IterableImmutableIntCollection {
 
     private static final ImmutableIntValueMap<Object> EMPTY = new ImmutableIntValueMap<>(new Object[0], new int[0]);
 
@@ -142,10 +142,43 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
         return new MutableIntValueMap<>(newKeys, newHashCodes, newValues, _keys.length);
     }
 
-    /**
-     * Return a new map instance where values has been transformed following the given function. Keys remain the same.
-     * @param mapFunc Function to be applied to each value.
-     */
+    @Override
+    public ImmutableIntValueMap<T> filter(IntPredicate predicate) {
+        final Builder<T> builder = new Builder<>();
+        final int length = _keys.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            int value = _values[i];
+            if (predicate.apply(value)) {
+                builder.put(keyAt(i), value);
+            }
+            else {
+                changed = true;
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
+    public ImmutableIntValueMap<T> filterNot(IntPredicate predicate) {
+        final Builder<T> builder = new Builder<>();
+        final int length = _keys.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            int value = _values[i];
+            if (predicate.apply(value)) {
+                changed = true;
+            }
+            else {
+                builder.put(keyAt(i), value);
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
     public ImmutableIntValueMap<T> map(IntToIntFunction mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
@@ -156,11 +189,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
         return new ImmutableIntValueMap<>(_keys, _hashCodes, newValues);
     }
 
-    /**
-     * Return a new map instance where values has been transformed following the given function. Keys remain the same.
-     * @param mapFunc Function to be applied to each value.
-     * @param <U> New type for values
-     */
+    @Override
     public <U> ImmutableMap<T, U> map(IntFunction<U> mapFunc) {
         final int itemCount = _keys.length;
         final Object[] newValues = new Object[itemCount];
@@ -285,17 +314,22 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> {
 
         public ImmutableIntValueMap<E> build() {
             final int length = _size;
-            final Object[] keys = new Object[length];
-            final int[] hashCodes = new int[length];
-            final int[] values = new int[length];
-
-            for (int i = 0; i < length; i++) {
-                keys[i] = _keys[i];
-                hashCodes[i] = _hashCodes[i];
-                values[i] = _values[i];
+            if (length == 0) {
+                return ImmutableIntValueMap.empty();
             }
+            else {
+                final Object[] keys = new Object[length];
+                final int[] hashCodes = new int[length];
+                final int[] values = new int[length];
 
-            return new ImmutableIntValueMap<E>(keys, hashCodes, values);
+                for (int i = 0; i < length; i++) {
+                    keys[i] = _keys[i];
+                    hashCodes[i] = _hashCodes[i];
+                    values[i] = _values[i];
+                }
+
+                return new ImmutableIntValueMap<E>(keys, hashCodes, values);
+            }
         }
     }
 }
