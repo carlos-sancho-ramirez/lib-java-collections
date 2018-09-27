@@ -156,7 +156,7 @@ public final class MutableIntPairMap extends AbstractIntPairMap {
     public IntSet keySet() {
         ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
         for (int i = 0; i < _size; i++) {
-            builder.add(i);
+            builder.add(_keys[i]);
         }
 
         return builder.build();

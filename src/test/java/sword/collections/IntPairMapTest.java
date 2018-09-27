@@ -100,7 +100,7 @@ abstract class IntPairMapTest extends TestCase {
         for (int amount = 0; amount < 3; amount++) {
             final IntPairMapBuilder mapBuilder = newBuilder();
             final ImmutableIntSetBuilder setBuilder = new ImmutableIntSetBuilder();
-            for (int i = 0; i < amount; i++) {
+            for (int i = 2; i < amount + 2; i++) {
                 setBuilder.add(i);
                 mapBuilder.put(i, 5);
             }
