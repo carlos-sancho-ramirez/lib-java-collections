@@ -1,10 +1,20 @@
 package sword.collections;
 
-public final class MutableIntTreeSet implements Iterable<Integer> {
+public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
     private Node _root;
 
     public boolean contains(int value) {
         return _root != null && _root.contains(value);
+    }
+
+    @Override
+    public boolean anyMatch(IntPredicate predicate) {
+        return iterator().anyMatch(predicate);
+    }
+
+    @Override
+    public int indexOf(int value) {
+        return iterator().indexOf(value);
     }
 
     public int min() {
@@ -42,8 +52,14 @@ public final class MutableIntTreeSet implements Iterable<Integer> {
         return _root.add(value);
     }
 
+    @Override
     public int size() {
         return (_root == null)? 0 : _root.size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return _root == null;
     }
 
     public ImmutableIntSet toImmutable() {
@@ -73,6 +89,21 @@ public final class MutableIntTreeSet implements Iterable<Integer> {
     }
 
     @Override
+    public int findFirst(IntPredicate predicate, int defaultValue) {
+        return iterator().findFirst(predicate, defaultValue);
+    }
+
+    @Override
+    public int reduce(IntReduceFunction func) throws EmptyCollectionException {
+        return iterator().reduce(func);
+    }
+
+    @Override
+    public int reduce(IntReduceFunction func, int defaultValue) {
+        return iterator().reduce(func, defaultValue);
+    }
+
+    @Override
     public Iterator iterator() {
         return new Iterator(_root);
     }
@@ -96,12 +127,11 @@ public final class MutableIntTreeSet implements Iterable<Integer> {
         @Override
         public Integer next() {
             if (_it != null) {
-                if (_it.hasNext()) {
-                    return _it.next();
-                }
-                else {
+                final int value = _it.next();
+                if (!_it.hasNext()) {
                     _it = null;
                 }
+                return value;
             }
 
             if (_node.right != null) {
@@ -112,16 +142,70 @@ public final class MutableIntTreeSet implements Iterable<Integer> {
             _node = null;
             return value;
         }
+
+        boolean anyMatch(IntPredicate predicate) {
+            while (hasNext()) {
+                if (predicate.apply(next())) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        int findFirst(IntPredicate predicate, int defaultValue) {
+            while (hasNext()) {
+                final int value = next();
+                if (predicate.apply(value)) {
+                    return value;
+                }
+            }
+
+            return defaultValue;
+        }
+
+        int indexOf(int value) {
+            for (int index = 0; hasNext(); index++) {
+                if (next() == value) {
+                    return index;
+                }
+            }
+
+            return -1;
+        }
+
+        private int reduceSecured(IntReduceFunction func) {
+            int result = next();
+            while (hasNext()) {
+                result = func.apply(result, next());
+            }
+
+            return result;
+        }
+
+        public int reduce(IntReduceFunction func) throws EmptyCollectionException {
+            if (!hasNext()) {
+                throw new EmptyCollectionException();
+            }
+
+            return reduceSecured(func);
+        }
+
+        public int reduce(IntReduceFunction func, int defaultValue) {
+            return hasNext()? reduceSecured(func) : defaultValue;
+        }
     }
 
-    public static final class Builder {
+    public static final class Builder implements IntCollectionBuilder<MutableIntTreeSet> {
         private final MutableIntTreeSet _set = new MutableIntTreeSet();
 
+        @Override
         public Builder add(int value) {
             _set.add(value);
             return this;
         }
 
+        @Override
         public MutableIntTreeSet build() {
             return _set;
         }

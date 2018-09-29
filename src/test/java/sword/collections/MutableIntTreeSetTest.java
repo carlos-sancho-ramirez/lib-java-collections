@@ -1,53 +1,34 @@
 package sword.collections;
 
-import junit.framework.TestCase;
-
-public final class MutableIntTreeSetTest extends TestCase {
+public final class MutableIntTreeSetTest extends AbstractIntIterableTest {
 
     private final int[] intValues = {
             Integer.MIN_VALUE, -100, -2, -1, 0, 1, 2, 5, Integer.MAX_VALUE
     };
 
-    MutableIntTreeSet.Builder newBuilder() {
+    @Override
+    AbstractIntIterable emptyCollection() {
+        return ImmutableIntSetImpl.empty();
+    }
+
+    @Override
+    IntCollectionBuilder newIntBuilder() {
         return new MutableIntTreeSet.Builder();
     }
 
-    public void withValue(IntProcedure procedure) {
+    @Override
+    void withItem(IntProcedure procedure) {
         for (int value : intValues) {
             procedure.apply(value);
         }
     }
 
-    public void testContainsForEmpty() {
-        final MutableIntTreeSet set = newBuilder().build();
-        withValue(value -> assertFalse(set.contains(value)));
+    private static boolean evenIntFilter(int value) {
+        return (value & 1) != 0;
     }
 
-    public void testContainsForSingleValue() {
-        withValue(a -> {
-            final MutableIntTreeSet set = newBuilder().add(a).build();
-            withValue(value -> {
-                if (a == value) {
-                    assertTrue(set.contains(value));
-                }
-                else {
-                    assertFalse(set.contains(value));
-                }
-            });
-        });
-    }
-
-    public void testContainsForMultipleValues() {
-        withValue(a -> withValue(b-> {
-            final MutableIntTreeSet set = newBuilder().add(a).add(b).build();
-            withValue(value -> {
-                if (a == value || b == value) {
-                    assertTrue(set.contains(value));
-                }
-                else {
-                    assertFalse(set.contains(value));
-                }
-            });
-        }));
+    @Override
+    void withFilterFunc(Procedure<IntPredicate> procedure) {
+        procedure.apply(MutableIntTreeSetTest::evenIntFilter);
     }
 }

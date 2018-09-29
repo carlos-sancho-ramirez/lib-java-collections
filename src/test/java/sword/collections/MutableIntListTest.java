@@ -17,7 +17,6 @@ public final class MutableIntListTest extends AbstractIntIterableTest {
         }
     }
 
-    @Override
     void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);
     }
@@ -34,11 +33,6 @@ public final class MutableIntListTest extends AbstractIntIterableTest {
     @Override
     ImmutableIntList emptyCollection() {
         return ImmutableIntList.empty();
-    }
-
-    @Override
-    ImmutableList<String> mapTargetEmptyCollection() {
-        return ImmutableList.empty();
     }
 
     @Override

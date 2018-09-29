@@ -9,7 +9,6 @@ import static sword.collections.SortUtils.equal;
 abstract class AbstractIntIterableTest extends TestCase {
 
     abstract AbstractIntIterable emptyCollection();
-    abstract AbstractIterable<String> mapTargetEmptyCollection();
 
     abstract IntCollectionBuilder newIntBuilder();
     abstract void withItem(IntProcedure procedure);
@@ -23,28 +22,26 @@ abstract class AbstractIntIterableTest extends TestCase {
         procedure.apply(this::hashReduceFunction);
     }
 
-    abstract void withMapFunc(Procedure<IntFunction<String>> procedure);
-
     public void testSizeForNoElements() {
-        final AbstractIntIterable iterable = (AbstractIntIterable) newIntBuilder().build();
+        final Sizable iterable = (Sizable) newIntBuilder().build();
         assertEquals("Expected size 0 after building an empty list", 0, iterable.size());
     }
 
     public void testSizeForOneElement() {
         withItem(value -> {
-            final AbstractIntIterable iterable = (AbstractIntIterable) newIntBuilder().add(value).build();
+            final Sizable iterable = (Sizable) newIntBuilder().add(value).build();
             assertEquals("Expected size 1 after building it adding a single value " + value, 1, iterable.size());
         });
     }
 
     public void testIsEmptyForNoElements() {
-        final AbstractIntIterable list = (AbstractIntIterable) newIntBuilder().build();
+        final Sizable list = (Sizable) newIntBuilder().build();
         assertTrue(list.isEmpty());
     }
 
     public void testIsEmptyForASingleElement() {
         withItem(value -> {
-            final AbstractIntIterable iterable = (AbstractIntIterable) newIntBuilder().add(value).build();
+            final Sizable iterable = (Sizable) newIntBuilder().add(value).build();
             assertFalse("isEmpty is expected to return false when iterable includes " + value, iterable.isEmpty());
         });
     }
@@ -158,12 +155,17 @@ abstract class AbstractIntIterableTest extends TestCase {
     public void testIndexOfForMultipleElements() {
         withItem(a -> withItem(b -> withItem(value -> {
             final IterableIntCollection list = newIntBuilder().add(a).add(b).build();
-            final int index = list.indexOf(value);
+            final Iterator<Integer> it = list.iterator();
+            final int first = it.next();
+            final boolean hasSecond = it.hasNext();
+            final int second = hasSecond? it.next() : 0;
+            assertFalse(it.hasNext());
 
-            if (equal(a, value)) {
+            final int index = list.indexOf(value);
+            if (equal(first, value)) {
                 assertEquals(0, index);
             }
-            else if (equal(b, value)) {
+            else if (hasSecond && equal(second, value)) {
                 assertEquals(1, index);
             }
             else {
@@ -196,17 +198,14 @@ abstract class AbstractIntIterableTest extends TestCase {
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
             final IterableIntCollection collection = newIntBuilder().add(a).add(b).build();
-            final int first = collection.findFirst(f, defaultValue);
+            final Iterator<Integer> it = collection.iterator();
+            final int first = it.next();
+            final boolean hasSecond = it.hasNext();
+            final int second = hasSecond? it.next() : 0;
 
-            if (f.apply(a)) {
-                assertSame(a, first);
-            }
-            else if (f.apply(b)) {
-                assertSame(b, first);
-            }
-            else {
-                assertSame(defaultValue, first);
-            }
+            final int expected = f.apply(first)? first :
+                    (hasSecond && f.apply(second))? second : defaultValue;
+            assertEquals(expected, collection.findFirst(f, defaultValue));
         }))));
     }
 
