@@ -57,11 +57,11 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
     }
 
     @Override
-    public java.util.Iterator<T> iterator() {
+    public Traverser<T> iterator() {
         return new Iterator();
     }
 
-    private class Iterator implements java.util.Iterator<T> {
+    private class Iterator implements Traverser<T> {
         private int _index;
 
         @Override

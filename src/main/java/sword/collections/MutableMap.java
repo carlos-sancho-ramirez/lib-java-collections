@@ -124,7 +124,7 @@ public final class MutableMap<K, V> extends AbstractMap<K, V> {
         return new ImmutableHashSet<>(entries, hashCodes);
     }
 
-    private class Iterator implements java.util.Iterator<V> {
+    private class Iterator implements Traverser<V> {
 
         private int _index;
 
@@ -146,7 +146,7 @@ public final class MutableMap<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
-    public Iterator iterator() {
+    public Traverser<V> iterator() {
         return new Iterator();
     }
 

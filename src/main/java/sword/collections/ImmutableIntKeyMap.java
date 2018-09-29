@@ -223,7 +223,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     @Override
-    public java.util.Iterator<T> iterator() {
+    public Traverser<T> iterator() {
         return new Iterator();
     }
 

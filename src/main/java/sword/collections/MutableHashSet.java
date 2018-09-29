@@ -21,7 +21,7 @@ import static sword.collections.SortUtils.findKey;
  *
  * @param <T> Type for the elements within the Set
  */
-public class MutableHashSet<T> extends MutableSet<T> implements Set<T> {
+public final class MutableHashSet<T> extends MutableSet<T> implements Set<T> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 

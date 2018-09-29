@@ -60,7 +60,7 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
         return (T) _keys[index];
     }
 
-    private class Iterator implements java.util.Iterator<T> {
+    private class Iterator implements Traverser<T> {
 
         private int _index;
 
@@ -82,7 +82,7 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
     }
 
     @Override
-    public Iterator iterator() {
+    public Traverser<T> iterator() {
         return new Iterator();
     }
 

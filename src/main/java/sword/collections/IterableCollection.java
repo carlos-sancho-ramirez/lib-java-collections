@@ -2,6 +2,8 @@ package sword.collections;
 
 public interface IterableCollection<T> extends Iterable<T> {
 
+    Traverser<T> iterator();
+
     /**
      * Return true if an equivalent item is found in the collection, this means
      * that it will be true if calling {@link Object#equals(Object)} with

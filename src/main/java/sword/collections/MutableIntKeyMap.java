@@ -243,7 +243,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
     }
 
     @Override
-    public java.util.Iterator<T> iterator() {
+    public Traverser<T> iterator() {
         return new Iterator();
     }
 
@@ -262,7 +262,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
         }
     }
 
-    private class Iterator implements java.util.Iterator<T> {
+    private class Iterator implements Traverser<T> {
 
         private int _index;
 
