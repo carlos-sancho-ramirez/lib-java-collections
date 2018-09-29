@@ -232,34 +232,43 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
                     (index == leftSize)? key : right.valueAt(index - leftSize - 1);
         }
 
-        public boolean add(int value) {
-            final boolean added;
-            if (value == key) {
-                added = false;
-            }
-            else if (value < key) {
+        private void addNotContained(int value) {
+            if (value < key) {
                 if (left == null) {
                     left = new Node(value);
-                    added = true;
+                }
+                else if (right == null) {
+                    right = new Node(key);
+                    key = value;
                 }
                 else {
-                    added = left.add(value);
+                    left.addNotContained(value);
                 }
             }
             else {
                 if (right == null) {
                     right = new Node(value);
-                    added = true;
+                }
+                else if (left == null) {
+                    left = new Node(key);
+                    key = value;
                 }
                 else {
-                    added = right.add(value);
+                    right.addNotContained(value);
                 }
             }
 
-            if (added) {
-                size++;
+            size++;
+        }
+
+        public boolean add(int value) {
+            if (contains(value)) {
+                return false;
             }
-            return added;
+            else {
+                addNotContained(value);
+                return true;
+            }
         }
     }
 }
