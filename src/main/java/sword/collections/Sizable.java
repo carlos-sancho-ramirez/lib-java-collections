@@ -11,7 +11,7 @@ public interface Sizable {
      * Checks if there is any element included in this collection.
      * @return True if empty, false if any value is included.
      */
-    boolean isEmpty();
-
-
+    default boolean isEmpty() {
+        return size() == 0;
+    }
 }

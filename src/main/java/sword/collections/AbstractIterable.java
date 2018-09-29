@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-abstract class AbstractIterable<T> extends AbstractSizable implements IterableCollection<T> {
+abstract class AbstractIterable<T> implements IterableCollection<T>, Sizable {
 
     @Override
     public int indexOf(T value) {
