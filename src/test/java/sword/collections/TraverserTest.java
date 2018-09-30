@@ -8,6 +8,7 @@ abstract class TraverserTest<T> extends TestCase {
 
     abstract CollectionBuilder<T> newIterableBuilder();
     abstract void withValue(Procedure<T> value);
+    abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
 
     public void testContainsWhenEmpty() {
         withValue(value -> {
@@ -43,6 +44,41 @@ abstract class TraverserTest<T> extends TestCase {
                 }
                 else if (!equal(a, value) && !equal(b, value) && traverser.contains(value)) {
                     fail("contains method is expected to return false when no containing the value. But failing for value " + value + " while containing " + a + " and " + b);
+                }
+            });
+        }));
+    }
+
+    public void testAnyMatchWhenEmpty() {
+        final IterableCollection<T> iterable = newIterableBuilder().build();
+        withFilterFunc(f -> assertFalse(iterable.iterator().anyMatch(f)));
+    }
+
+    public void testAnyMatchForSingleElement() {
+        withValue(value -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(value).build();
+            withFilterFunc(f -> {
+                final Traverser<T> traverser = iterable.iterator();
+                if (f.apply(value)) {
+                    assertTrue(traverser.anyMatch(f));
+                }
+                else {
+                    assertFalse(traverser.anyMatch(f));
+                }
+            });
+        });
+    }
+
+    public void testAnyMatchForMultipleElements() {
+        withValue(a -> withValue(b -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(a).add(b).build();
+            withFilterFunc(f -> {
+                final Traverser<T> traverser = iterable.iterator();
+                if (f.apply(a) || f.apply(b)) {
+                    assertTrue(traverser.anyMatch(f));
+                }
+                else {
+                    assertFalse(traverser.anyMatch(f));
                 }
             });
         }));

@@ -22,4 +22,20 @@ public interface Traverser<T> extends Iterator<T> {
 
         return false;
     }
+
+    /**
+     * Returns true if the given predicate returns true for any of the items
+     * in this collection.
+     *
+     * @param predicate Predicate to be evaluated.
+     */
+    default boolean anyMatch(Predicate<T> predicate) {
+        while (hasNext()) {
+            if (predicate.apply(next())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

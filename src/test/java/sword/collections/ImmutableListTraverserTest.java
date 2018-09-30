@@ -13,4 +13,9 @@ public final class ImmutableListTraverserTest extends TraverserTest<String> {
     void withValue(Procedure<String> procedure) {
         withString(procedure);
     }
+
+    @Override
+    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+        procedure.apply(SortUtils::isEmpty);
+    }
 }

@@ -190,6 +190,10 @@ final class SortUtils {
         return a == b || a != null && a.equals(b);
     }
 
+    static boolean isEmpty(String string) {
+        return string == null || string.length() == 0;
+    }
+
     private SortUtils() {
     }
 }
