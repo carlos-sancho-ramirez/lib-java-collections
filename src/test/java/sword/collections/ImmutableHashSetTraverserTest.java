@@ -5,8 +5,8 @@ import static sword.collections.TestUtils.withString;
 public final class ImmutableHashSetTraverserTest extends TraverserTest<String> {
 
     @Override
-    CollectionBuilder<String> newIterableBuilder() {
-        return new ImmutableHashSet.Builder<>();
+    void withBuilder(Procedure<CollectionBuilder<String>> procedure) {
+        procedure.apply(new ImmutableHashSet.Builder<>());
     }
 
     @Override
