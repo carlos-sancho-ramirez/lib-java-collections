@@ -179,23 +179,44 @@ abstract class TraverserTest<T> extends TestCase {
         }));
     }
 
-    public void testReduceWithValueWhenEmpty() {
-        final ReduceFunction<T> func = (a, b) -> {
-            throw new AssertionError("This should not be called");
-        };
+    private static <E> E unexpectedReduceFunction(E left, E right) {
+        throw new AssertionError("This should not be called");
+    }
 
+    public void testReduceForSingleElement() {
+        final ReduceFunction<T> func = TraverserTest::unexpectedReduceFunction;
+        withValue(value -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(value).build();
+            assertSame(value, iterable.iterator().reduce(func));
+        });
+    }
+
+    public void testReduceForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(a).add(b).add(c).build();
+            withReduceFunction(func -> {
+                final Iterator<T> it = iterable.iterator();
+                T expectedValue = it.next();
+                while (it.hasNext()) {
+                    expectedValue = func.apply(expectedValue, it.next());
+                }
+
+                assertEquals(expectedValue, iterable.iterator().reduce(func));
+            });
+        })));
+    }
+
+    public void testReduceWithValueWhenEmpty() {
         final IterableCollection<T> iterable = newIterableBuilder().build();
+        final ReduceFunction<T> func = TraverserTest::unexpectedReduceFunction;
         withValue(value -> assertSame(value, iterable.iterator().reduce(func, value)));
     }
 
     public void testReduceWithValueForSingleElement() {
-        final ReduceFunction<T> func = (a, b) -> {
-            throw new AssertionError("This should not be called");
-        };
-
+        final ReduceFunction<T> func = TraverserTest::unexpectedReduceFunction;
         withValue(value -> {
             final IterableCollection<T> iterable = newIterableBuilder().add(value).build();
-            withValue(defValue -> assertSame(value, iterable.reduce(func, defValue)));
+            withValue(defValue -> assertSame(value, iterable.iterator().reduce(func, defValue)));
         });
     }
 

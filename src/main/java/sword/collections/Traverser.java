@@ -90,6 +90,26 @@ public interface Traverser<T> extends Iterator<T> {
 
     /**
      * Traverses the whole collection reducing it to a single element by applying the given function
+     * on each pair of values from start to end.
+     * @param func Associate function to be applied on each pair of elements.
+     * @return The resulting value of applying the given function to each value pair.
+     * @throws EmptyCollectionException in case the collection is empty.
+     */
+    default T reduce(ReduceFunction<T> func) throws EmptyCollectionException {
+        if (!hasNext()) {
+            throw new EmptyCollectionException();
+        }
+
+        T result = next();
+        while (hasNext()) {
+            result = func.apply(result, next());
+        }
+
+        return result;
+    }
+
+    /**
+     * Traverses the whole collection reducing it to a single element by applying the given function
      * on each pair of values from start to end, or return the default value if the collection is empty.
      * @param func Associate function to be applied on each pair of elements.
      * @return The resulting value of applying the given function to each value pair, or the default value if empty.
