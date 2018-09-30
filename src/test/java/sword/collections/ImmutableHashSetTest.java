@@ -2,7 +2,6 @@ package sword.collections;
 
 import java.util.Iterator;
 
-import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.equal;
 
 public final class ImmutableHashSetTest extends ImmutableSetTest {
@@ -106,8 +105,8 @@ public final class ImmutableHashSetTest extends ImmutableSetTest {
     @Override
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withValue(value -> {
-            final int aHash = (a != null)? a.hashCode() : HASH_FOR_NULL;
-            final int bHash = (b != null)? b.hashCode() : HASH_FOR_NULL;
+            final int aHash = SortUtils.hashCode(a);
+            final int bHash = SortUtils.hashCode(b);
             final boolean reversedOrder = bHash < aHash;
             final IterableCollection<String> set = newIterableBuilder().add(a).add(b).build();
             final int index = set.indexOf(value);
@@ -131,8 +130,8 @@ public final class ImmutableHashSetTest extends ImmutableSetTest {
     @Override
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
-            final int aHash = (a != null)? a.hashCode() : HASH_FOR_NULL;
-            final int bHash = (b != null)? b.hashCode() : HASH_FOR_NULL;
+            final int aHash = SortUtils.hashCode(a);
+            final int bHash = SortUtils.hashCode(b);
             final boolean reversedOrder = bHash < aHash;
             final IterableCollection<String> collection = newIterableBuilder().add(a).add(b).build();
             final String first = collection.findFirst(f, defaultValue);

@@ -1,7 +1,6 @@
 package sword.collections;
 
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
-import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 
@@ -179,7 +178,7 @@ public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
     public boolean put(T key, int value) {
         int index = findKey(_hashCodes, _keys, _size, key);
         if (index < 0) {
-            final int hashCode = (key != null)? key.hashCode() : HASH_FOR_NULL;
+            final int hashCode = SortUtils.hashCode(key);
             index = findSuitableIndex(_hashCodes, _size, hashCode);
 
             final int newLength = suitableArrayLength(_size + 1);

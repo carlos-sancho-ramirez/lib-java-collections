@@ -1,6 +1,5 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.findKey;
 
 /**
@@ -88,7 +87,7 @@ public class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T> {
         for (int i = 0; i < length; i++) {
             final E key = set.keyAt(i);
             keys[i] = key;
-            hashCodes[i] = (key != null)? key.hashCode() : HASH_FOR_NULL;
+            hashCodes[i] = SortUtils.hashCode(key);
         }
 
         return new ImmutableHashSet<>(keys, hashCodes);

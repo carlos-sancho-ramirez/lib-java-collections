@@ -1,7 +1,6 @@
 package sword.collections;
 
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
-import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.findValue;
 
 /**
@@ -218,7 +217,7 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
     }
 
     int itemHashCode(int index) {
-        return (_keys[index] != null)? _keys[index].hashCode() : HASH_FOR_NULL;
+        return SortUtils.hashCode(_keys[index]);
     }
 
     @Override

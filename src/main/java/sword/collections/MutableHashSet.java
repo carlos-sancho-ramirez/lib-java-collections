@@ -1,7 +1,6 @@
 package sword.collections;
 
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
-import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.findKey;
 
 /**
@@ -83,7 +82,7 @@ public final class MutableHashSet<T> extends MutableSet<T> implements Set<T> {
 
     @Override
     int findSuitableIndex(T key) {
-        return SortUtils.findSuitableIndex(_hashCodes, _size, (key != null)? key.hashCode() : HASH_FOR_NULL);
+        return SortUtils.findSuitableIndex(_hashCodes, _size, SortUtils.hashCode(key));
     }
 
     @Override
@@ -98,7 +97,7 @@ public final class MutableHashSet<T> extends MutableSet<T> implements Set<T> {
         }
 
         _keys[index] = value;
-        _hashCodes[index] = (value != null)? value.hashCode() : HASH_FOR_NULL;
+        _hashCodes[index] = SortUtils.hashCode(value);
         _size++;
     }
 

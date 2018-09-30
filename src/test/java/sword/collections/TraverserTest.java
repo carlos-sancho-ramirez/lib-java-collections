@@ -40,13 +40,19 @@ abstract class TraverserTest<T> extends TestCase {
     public void testContainsWhenContainingMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final IterableCollection<T> iterable = builder.add(a).add(b).build();
+            final Traverser<T> it = iterable.iterator();
+            final T first = it.next();
+            final boolean hasSecond = it.hasNext();
+            final T second = hasSecond? it.next() : null;
+            assertFalse(it.hasNext());
+
             withValue(value -> {
                 final Traverser<T> traverser = iterable.iterator();
-                if ((equal(a, value) || equal(b, value)) && !traverser.contains(value)) {
-                    fail("contains method is expected to return true when containing the value. But failing for value " + value + " while containing " + a + " and " + b);
+                if (equal(first, value) || hasSecond && equal(second, value)) {
+                    assertTrue(traverser.contains(value));
                 }
-                else if (!equal(a, value) && !equal(b, value) && traverser.contains(value)) {
-                    fail("contains method is expected to return false when no containing the value. But failing for value " + value + " while containing " + a + " and " + b);
+                else {
+                    assertFalse(traverser.contains(value));
                 }
             });
         })));

@@ -1,6 +1,5 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 import static sword.collections.SortUtils.quickSort;
@@ -46,7 +45,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> implem
 
         for (int i = 0; i < length; i++) {
             final Object key = keys[i];
-            hashCodes[i] = (key != null)? key.hashCode() : HASH_FOR_NULL;
+            hashCodes[i] = SortUtils.hashCode(key);
         }
 
         return hashCodes;
@@ -285,7 +284,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> implem
                     enlargeArrays();
                 }
 
-                final int hashCode = (key != null)? key.hashCode() : HASH_FOR_NULL;
+                final int hashCode = SortUtils.hashCode(key);
                 index = findSuitableIndex(_hashCodes, _size, hashCode);
                 for (int i = _size; i > index; i--) {
                     _keys[i] = _keys[i - 1];

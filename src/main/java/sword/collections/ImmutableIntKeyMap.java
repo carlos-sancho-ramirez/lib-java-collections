@@ -1,6 +1,5 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
@@ -278,7 +277,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         int hash = 0;
         for (int i = 0; i < length; i++) {
             final Object value = _values[i];
-            hash = (hash * 31 + _keys[i]) * 31 + ((value != null)? value.hashCode() : HASH_FOR_NULL);
+            hash = (hash * 31 + _keys[i]) * 31 + (SortUtils.hashCode(value));
         }
 
         return hash;

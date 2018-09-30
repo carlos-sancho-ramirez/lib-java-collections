@@ -1,6 +1,5 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.HASH_FOR_NULL;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.SortUtils.findValue;
 
@@ -172,7 +171,7 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
     }
 
     int itemHashCode(int index) {
-        return (_keys[index] != null)? _keys[index].hashCode() : HASH_FOR_NULL;
+        return SortUtils.hashCode(_keys[index]);
     }
 
     @Override

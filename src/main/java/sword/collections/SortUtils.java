@@ -7,7 +7,7 @@ final class SortUtils {
     /**
      * Internal value used as hashcode for null key, as null key is allowed.
      */
-    static final int HASH_FOR_NULL = 0;
+    private static final int HASH_FOR_NULL = 0;
 
     interface SwapMethod {
         void apply(int index1, int index2);
@@ -73,8 +73,7 @@ final class SortUtils {
     }
 
     static <E> int findKey(int[] hashCodes, E[] keys, int length, E key) {
-        final int hashCode = (key != null)? key.hashCode() : HASH_FOR_NULL;
-
+        final int hashCode = hashCode(key);
         final int hashIndex = findKey(hashCodes, length, hashCode);
         if (hashIndex >= 0) {
             // Hashes can be repeated, but duplicates should be just before or after. Let's check first if there is
@@ -192,6 +191,10 @@ final class SortUtils {
 
     static boolean isEmpty(String string) {
         return string == null || string.length() == 0;
+    }
+
+    static int hashCode(Object object) {
+        return (object != null)? object.hashCode() : HASH_FOR_NULL;
     }
 
     private SortUtils() {
