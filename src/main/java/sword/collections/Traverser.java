@@ -73,4 +73,18 @@ public interface Traverser<T> extends Iterator<T> {
 
         throw new IndexOutOfBoundsException();
     }
+
+    /**
+     * Returns the first item matching the predicate or the default value if none matches.
+     */
+    default T findFirst(Predicate<T> predicate, T defaultValue) {
+        while (hasNext()) {
+            final T value = next();
+            if (predicate.apply(value)) {
+                return value;
+            }
+        }
+
+        return defaultValue;
+    }
 }

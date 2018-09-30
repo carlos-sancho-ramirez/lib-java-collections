@@ -138,4 +138,41 @@ abstract class TraverserTest<T> extends TestCase {
             }
         }));
     }
+
+    public void testFindFirstWhenEmpty() {
+        final IterableCollection<T> iterable = newIterableBuilder().build();
+        final Predicate<T> predicate = value -> {
+            throw new AssertionError("This should not be called");
+        };
+
+        withValue(defaultValue -> {
+            assertEquals(defaultValue, iterable.iterator().findFirst(predicate, defaultValue));
+        });
+    }
+
+    public void testFindFirstForSingleElement() {
+        withValue(defaultValue -> withValue(value -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(value).build();
+            withFilterFunc(f -> {
+                final T expected = f.apply(value)? value : defaultValue;
+                assertSame(expected, iterable.iterator().findFirst(f, defaultValue));
+            });
+        }));
+    }
+
+    public void testFindFirstForMultipleElements() {
+        withValue(a -> withValue(b -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(a).add(b).build();
+            final Traverser<T> it = iterable.iterator();
+            final T first = it.next();
+            final boolean hasSecond = it.hasNext();
+            final T second = hasSecond? it.next() : null;
+
+            withFilterFunc(f -> withValue(defaultValue -> {
+                final T expected = f.apply(first)? first :
+                        (hasSecond && f.apply(second))? second : defaultValue;
+                assertSame(expected, iterable.iterator().findFirst(f, defaultValue));
+            }));
+        }));
+    }
 }
