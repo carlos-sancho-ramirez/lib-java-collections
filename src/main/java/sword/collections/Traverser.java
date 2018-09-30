@@ -38,4 +38,19 @@ public interface Traverser<T> extends Iterator<T> {
 
         return false;
     }
+
+    /**
+     * Returns the index from the current Traverser position for the first element matching the given value.
+     * Or -1 if none matches.
+     * @param value Value to be matched. {@link java.lang.Object#equals(Object)} will be called for this purpose.
+     */
+    default int indexOf(T value) {
+        for (int index = 0; hasNext(); index++) {
+            if (equal(value, next())) {
+                return index;
+            }
+        }
+
+        return -1;
+    }
 }

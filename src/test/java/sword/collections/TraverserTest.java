@@ -83,4 +83,36 @@ abstract class TraverserTest<T> extends TestCase {
             });
         }));
     }
+
+    public void testIndexOfWhenEmpty() {
+        IterableCollection<T> iterable = newIterableBuilder().build();
+        withValue(value -> assertEquals(-1, iterable.iterator().indexOf(value)));
+    }
+
+    public void testIndexOfForSingleElement() {
+        withValue(a -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(a).build();
+            withValue(value -> {
+                final int expected = equal(a, value)? 0 : -1;
+                assertEquals(expected, iterable.iterator().indexOf(value));
+            });
+        });
+    }
+
+    public void testIndexOfForMultipleElements() {
+        withValue(a -> withValue(b -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(a).add(b).build();
+            withValue(value -> {
+                final Traverser<T> it = iterable.iterator();
+                final T first = it.next();
+                final boolean hasSecond = it.hasNext();
+                final T second = hasSecond? it.next() : null;
+                assertFalse(it.hasNext());
+
+                final int expected = equal(first, value)? 0 :
+                        (hasSecond && equal(second, value))? 1 : -1;
+                assertEquals(expected, iterable.iterator().indexOf(value));
+            });
+        }));
+    }
 }
