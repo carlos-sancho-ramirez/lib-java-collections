@@ -53,4 +53,24 @@ public interface Traverser<T> extends Iterator<T> {
 
         return -1;
     }
+
+    /**
+     * Return the value in the given index position.
+     *
+     * @param index Index from the current position of the Traverser.
+     *              It must be zero or a positive number that must be below the number of elements
+     *              returned when this collection is iterated.
+     * @return The value in the given position.
+     * @throws IndexOutOfBoundsException if the given index is invalid for this Traverser.
+     */
+    default T valueAt(int index) {
+        for (int i = 0; hasNext(); i++) {
+            final T value = next();
+            if (i == index) {
+                return value;
+            }
+        }
+
+        throw new IndexOutOfBoundsException();
+    }
 }

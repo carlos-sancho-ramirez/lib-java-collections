@@ -115,4 +115,27 @@ abstract class TraverserTest<T> extends TestCase {
             });
         }));
     }
+
+    public void testValueAtForSingleElement() {
+        withValue(value -> {
+            final Traverser<T> traverser = newIterableBuilder().add(value).build().iterator();
+            assertEquals(value, traverser.valueAt(0));
+        });
+    }
+
+    public void testValueAtForMultipleElements() {
+        withValue(a -> withValue(b -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(a).add(b).build();
+            final Traverser<T> it = iterable.iterator();
+            final T first = it.next();
+            final boolean hasSecond = it.hasNext();
+            final T second = hasSecond? it.next() : null;
+            assertFalse(it.hasNext());
+
+            assertEquals(first, iterable.iterator().valueAt(0));
+            if (hasSecond) {
+                assertEquals(second, iterable.iterator().valueAt(1));
+            }
+        }));
+    }
 }
