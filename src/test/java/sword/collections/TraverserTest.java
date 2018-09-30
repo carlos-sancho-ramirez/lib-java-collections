@@ -2,6 +2,8 @@ package sword.collections;
 
 import junit.framework.TestCase;
 
+import java.util.Iterator;
+
 import static sword.collections.SortUtils.equal;
 
 abstract class TraverserTest<T> extends TestCase {
@@ -9,6 +11,7 @@ abstract class TraverserTest<T> extends TestCase {
     abstract CollectionBuilder<T> newIterableBuilder();
     abstract void withValue(Procedure<T> value);
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
+    abstract void withReduceFunction(Procedure<ReduceFunction<T>> procedure);
 
     public void testContainsWhenEmpty() {
         withValue(value -> {
@@ -174,5 +177,41 @@ abstract class TraverserTest<T> extends TestCase {
                 assertSame(expected, iterable.iterator().findFirst(f, defaultValue));
             }));
         }));
+    }
+
+    public void testReduceWithValueWhenEmpty() {
+        final ReduceFunction<T> func = (a, b) -> {
+            throw new AssertionError("This should not be called");
+        };
+
+        final IterableCollection<T> iterable = newIterableBuilder().build();
+        withValue(value -> assertSame(value, iterable.iterator().reduce(func, value)));
+    }
+
+    public void testReduceWithValueForSingleElement() {
+        final ReduceFunction<T> func = (a, b) -> {
+            throw new AssertionError("This should not be called");
+        };
+
+        withValue(value -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(value).build();
+            withValue(defValue -> assertSame(value, iterable.reduce(func, defValue)));
+        });
+    }
+
+    public void testReduceWithValueForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final IterableCollection<T> iterable = newIterableBuilder().add(a).add(b).add(c).build();
+            withReduceFunction(func -> {
+                final Iterator<T> it = iterable.iterator();
+                T v = it.next();
+                while (it.hasNext()) {
+                    v = func.apply(v, it.next());
+                }
+
+                final T expected = v;
+                withValue(defValue -> assertEquals(expected, iterable.iterator().reduce(func, defValue)));
+            });
+        })));
     }
 }
