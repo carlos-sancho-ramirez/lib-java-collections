@@ -237,8 +237,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
         return MutableIntSet.fromIntSet(this);
     }
 
-    private class Iterator extends IteratorForImmutable<Integer> {
-
+    private class Iterator implements IntTraverser {
         private int _wordIndex;
         private int _offset;
         private int _nextValue;
@@ -286,7 +285,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
-    public java.util.Iterator<Integer> iterator() {
+    public IntTraverser iterator() {
         return new Iterator();
     }
 

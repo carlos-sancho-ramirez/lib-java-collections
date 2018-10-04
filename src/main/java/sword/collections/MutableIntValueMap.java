@@ -109,7 +109,7 @@ public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
         return new ImmutableHashSet<>(entries, hashCodes);
     }
 
-    private class Iterator implements java.util.Iterator<Integer> {
+    private class Iterator implements IntTraverser {
 
         private int _index;
 
@@ -130,7 +130,7 @@ public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
     }
 
     @Override
-    public Iterator iterator() {
+    public IntTraverser iterator() {
         return new Iterator();
     }
 

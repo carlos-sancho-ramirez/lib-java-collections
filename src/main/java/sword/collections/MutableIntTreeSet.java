@@ -108,7 +108,7 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
         return new Iterator(_root);
     }
 
-    static class Iterator implements java.util.Iterator<Integer> {
+    static class Iterator implements IntTraverser {
         private Node _node;
         private Iterator _it;
 
@@ -143,7 +143,8 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
             return value;
         }
 
-        boolean anyMatch(IntPredicate predicate) {
+        @Override
+        public boolean anyMatch(IntPredicate predicate) {
             while (hasNext()) {
                 if (predicate.apply(next())) {
                     return true;
@@ -153,7 +154,8 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
             return false;
         }
 
-        int findFirst(IntPredicate predicate, int defaultValue) {
+        @Override
+        public int findFirst(IntPredicate predicate, int defaultValue) {
             while (hasNext()) {
                 final int value = next();
                 if (predicate.apply(value)) {
@@ -164,7 +166,8 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
             return defaultValue;
         }
 
-        int indexOf(int value) {
+        @Override
+        public int indexOf(int value) {
             for (int index = 0; hasNext(); index++) {
                 if (next() == value) {
                     return index;
@@ -183,6 +186,7 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
             return result;
         }
 
+        @Override
         public int reduce(IntReduceFunction func) throws EmptyCollectionException {
             if (!hasNext()) {
                 throw new EmptyCollectionException();
@@ -191,6 +195,7 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
             return reduceSecured(func);
         }
 
+        @Override
         public int reduce(IntReduceFunction func, int defaultValue) {
             return hasNext()? reduceSecured(func) : defaultValue;
         }

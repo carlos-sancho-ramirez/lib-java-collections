@@ -127,7 +127,7 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet {
     }
 
     @Override
-    public Iterator iterator() {
+    public IntTraverser iterator() {
         return new Iterator();
     }
 
@@ -169,7 +169,7 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet {
         return fromIntSet(this);
     }
 
-    private class Iterator implements java.util.Iterator<Integer> {
+    private class Iterator implements IntTraverser {
 
         private int _index;
 

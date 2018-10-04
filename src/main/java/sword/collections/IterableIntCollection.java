@@ -2,6 +2,9 @@ package sword.collections;
 
 interface IterableIntCollection extends Iterable<Integer> {
 
+    @Override
+    IntTraverser iterator();
+
     /**
      * Return true if the given value is found in the collection.
      * @param value Value to check

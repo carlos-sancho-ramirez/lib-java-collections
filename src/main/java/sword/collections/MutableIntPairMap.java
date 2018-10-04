@@ -229,7 +229,7 @@ public final class MutableIntPairMap extends AbstractIntPairMap {
     }
 
     @Override
-    public java.util.Iterator<Integer> iterator() {
+    public IntTraverser iterator() {
         return new Iterator();
     }
 
@@ -248,7 +248,7 @@ public final class MutableIntPairMap extends AbstractIntPairMap {
         }
     }
 
-    private class Iterator implements java.util.Iterator<Integer> {
+    private class Iterator implements IntTraverser {
 
         private int _index;
 

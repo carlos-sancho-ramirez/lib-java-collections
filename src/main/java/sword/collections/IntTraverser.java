@@ -2,20 +2,15 @@ package sword.collections;
 
 import java.util.Iterator;
 
-import static sword.collections.SortUtils.equal;
-
-public interface Traverser<T> extends Iterator<T> {
+public interface IntTraverser extends Iterator<Integer> {
 
     /**
-     * Return true if an equivalent item is found in the collection, this means
-     * that it will be true if calling {@link Object#equals(Object)} with
-     * this value returns true on any of the elements.
-     *
+     * Return true if the given value is found in the collection.
      * @param value Value to check
      */
-    default boolean contains(T value) {
+    default boolean contains(int value) {
         while (hasNext()) {
-            if (equal(next(), value)) {
+            if (value == next()) {
                 return true;
             }
         }
@@ -29,7 +24,7 @@ public interface Traverser<T> extends Iterator<T> {
      *
      * @param predicate Predicate to be evaluated.
      */
-    default boolean anyMatch(Predicate<T> predicate) {
+    default boolean anyMatch(IntPredicate predicate) {
         while (hasNext()) {
             if (predicate.apply(next())) {
                 return true;
@@ -44,10 +39,10 @@ public interface Traverser<T> extends Iterator<T> {
      * Or -1 if none matches.
      * @param value Value to be matched. {@link java.lang.Object#equals(Object)} will be called for this purpose.
      */
-    default int indexOf(T value) {
-        for (int index = 0; hasNext(); index++) {
-            if (equal(value, next())) {
-                return index;
+    default int indexOf(int value) {
+        for (int i = 0; hasNext(); i++) {
+            if (value == next()) {
+                return i;
             }
         }
 
@@ -63,11 +58,13 @@ public interface Traverser<T> extends Iterator<T> {
      * @return The value in the given position.
      * @throws IndexOutOfBoundsException if the given index is invalid for this Traverser.
      */
-    default T valueAt(int index) {
-        for (int i = 0; hasNext(); i++) {
-            final T value = next();
-            if (i == index) {
-                return value;
+    default int valueAt(int index) {
+        if (index >= 0) {
+            for (int i = 0; hasNext(); i++) {
+                final int value = next();
+                if (i == index) {
+                    return value;
+                }
             }
         }
 
@@ -77,9 +74,9 @@ public interface Traverser<T> extends Iterator<T> {
     /**
      * Returns the first item matching the predicate or the default value if none matches.
      */
-    default T findFirst(Predicate<T> predicate, T defaultValue) {
+    default int findFirst(IntPredicate predicate, int defaultValue) {
         while (hasNext()) {
-            final T value = next();
+            final int value = next();
             if (predicate.apply(value)) {
                 return value;
             }
@@ -95,17 +92,17 @@ public interface Traverser<T> extends Iterator<T> {
      * @return The resulting value of applying the given function to each value pair.
      * @throws EmptyCollectionException in case the collection is empty.
      */
-    default T reduce(ReduceFunction<T> func) throws EmptyCollectionException {
+    default int reduce(IntReduceFunction func) throws EmptyCollectionException {
         if (!hasNext()) {
             throw new EmptyCollectionException();
         }
 
-        T result = next();
+        int value = next();
         while (hasNext()) {
-            result = func.apply(result, next());
+            value = func.apply(value, next());
         }
 
-        return result;
+        return value;
     }
 
     /**
@@ -114,15 +111,16 @@ public interface Traverser<T> extends Iterator<T> {
      * @param func Associate function to be applied on each pair of elements.
      * @return The resulting value of applying the given function to each value pair, or the default value if empty.
      */
-    default T reduce(ReduceFunction<T> func, T defaultValue) {
-        T result = defaultValue;
-        if (hasNext()) {
-            result = next();
-            while (hasNext()) {
-                result = func.apply(result, next());
-            }
+    default int reduce(IntReduceFunction func, int defaultValue) {
+        if (!hasNext()) {
+            return defaultValue;
         }
 
-        return result;
+        int value = next();
+        while (hasNext()) {
+            value = func.apply(value, next());
+        }
+
+        return value;
     }
 }

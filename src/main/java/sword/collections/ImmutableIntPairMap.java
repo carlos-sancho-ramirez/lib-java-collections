@@ -246,7 +246,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     @Override
-    public java.util.Iterator<Integer> iterator() {
+    public IntTraverser iterator() {
         return new Iterator();
     }
 
@@ -314,7 +314,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         }
     }
 
-    private class Iterator extends IteratorForImmutable<Integer> {
+    private class Iterator implements IntTraverser {
 
         private int _index;
 
