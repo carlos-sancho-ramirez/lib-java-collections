@@ -31,4 +31,36 @@ public final class MutableIntTreeSetTest extends AbstractIntIterableTest {
     void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(MutableIntTreeSetTest::evenIntFilter);
     }
+
+    public void testIteratorOrderForAscending() {
+        final int amount = 10;
+        final MutableIntTreeSet set = new MutableIntTreeSet();
+        for (int i = 0; i < amount; i++) {
+            set.add(i);
+        }
+
+        assertEquals(amount, set.size());
+        final IntTraverser traverser = set.iterator();
+        for (int i = 0; i < amount; i++) {
+            assertTrue(traverser.hasNext());
+            assertEquals(i, traverser.next().intValue());
+        }
+        assertFalse(traverser.hasNext());
+    }
+
+    public void testIteratorOrderForDescending() {
+        final int amount = 10;
+        final MutableIntTreeSet set = new MutableIntTreeSet();
+        for (int i = amount - 1; i >= 0; i--) {
+            set.add(i);
+        }
+
+        assertEquals(amount, set.size());
+        final IntTraverser traverser = set.iterator();
+        for (int i = 0; i < amount; i++) {
+            assertTrue(traverser.hasNext());
+            assertEquals(i, traverser.next().intValue());
+        }
+        assertFalse(traverser.hasNext());
+    }
 }

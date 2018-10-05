@@ -228,13 +228,39 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
 
         public boolean contains(int value) {
             return value == key || value < key && left != null && left.contains(value) ||
-                    right != null && right.contains(value);
+                    value > key && right != null && right.contains(value);
         }
 
         int valueAt(int index) {
             final int leftSize = (left != null)? left.size : 0;
             return (index < leftSize)? left.valueAt(index) :
                     (index == leftSize)? key : right.valueAt(index - leftSize - 1);
+        }
+
+        private int replaceLeftNotContained(int value) {
+            if (value < key) {
+                return (left == null)? value : left.replaceLeftNotContained(key);
+            }
+            else {
+                final int toReturn = (left == null)? key : left.replaceLeftNotContained(key);
+                key = (right == null)? value : right.replaceLeftNotContained(value);
+                return toReturn;
+            }
+        }
+
+        // Include the given value within the tree without creating a new node.
+        // This method should find the maximum value that the tree starting within this node is containing
+        // and remove it to allow space for the given value. The maximum value removed has to be returned
+        // in order to be stored outside this tree.
+        private int replaceRightNotContained(int value) {
+            if (value > key) {
+                return (right == null)? value : right.replaceRightNotContained(value);
+            }
+            else {
+                final int toReturn = (right == null)? key : right.replaceRightNotContained(key);
+                key = (left == null)? value : left.replaceRightNotContained(value);
+                return toReturn;
+            }
         }
 
         private void addNotContained(int value) {
@@ -244,10 +270,16 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
                 }
                 else if (right == null) {
                     right = new Node(key);
-                    key = value;
+                    key = left.replaceRightNotContained(value);
                 }
                 else {
-                    left.addNotContained(value);
+                    if (right.size < left.size) {
+                        right.addNotContained(key);
+                        key = left.replaceRightNotContained(value);
+                    }
+                    else {
+                        left.addNotContained(value);
+                    }
                 }
             }
             else {
@@ -256,10 +288,16 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
                 }
                 else if (left == null) {
                     left = new Node(key);
-                    key = value;
+                    key = right.replaceLeftNotContained(value);
                 }
                 else {
-                    right.addNotContained(value);
+                    if (left.size < right.size) {
+                        left.addNotContained(key);
+                        key = right.replaceLeftNotContained(value);
+                    }
+                    else {
+                        right.addNotContained(value);
+                    }
                 }
             }
 
