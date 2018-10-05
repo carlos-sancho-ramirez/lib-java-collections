@@ -11,6 +11,17 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    performanceTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file("src/performanceTest/java")
+        }
+        resources.srcDir file("src/performanceTest/resources")
+    }
+}
+
 dependencies {
     testCompile 'junit:junit:4.12'
 }
