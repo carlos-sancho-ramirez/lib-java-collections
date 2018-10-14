@@ -11,7 +11,9 @@ public interface IterableCollection<T> extends Iterable<T> {
      *
      * @param value Value to check
      */
-    boolean contains(T value);
+    default boolean contains(T value) {
+        return iterator().contains(value);
+    }
 
     /**
      * Returns true if the given predicate returns true for any of the items
@@ -19,14 +21,18 @@ public interface IterableCollection<T> extends Iterable<T> {
      *
      * @param predicate Predicate to be evaluated.
      */
-    boolean anyMatch(Predicate<T> predicate);
+    default boolean anyMatch(Predicate<T> predicate) {
+        return iterator().anyMatch(predicate);
+    }
 
     /**
      * Returns the index within the collection for the first element matching the given value.
      * Or -1 if none matches.
      * @param value Value to be matched. {@link java.lang.Object#equals(Object)} will be called for this purpose.
      */
-    int indexOf(T value);
+    default int indexOf(T value) {
+        return iterator().indexOf(value);
+    }
 
     /**
      * Return the value in the given index position.
@@ -37,12 +43,16 @@ public interface IterableCollection<T> extends Iterable<T> {
      * @return The value in the given position.
      * @throws IndexOutOfBoundsException if the given index is invalid for this collection.
      */
-    T valueAt(int index);
+    default T valueAt(int index) {
+        return iterator().valueAt(index);
+    }
 
     /**
      * Returns the first item matching the predicate or the default value if none matches.
      */
-    T findFirst(Predicate<T> predicate, T defaultValue);
+    default T findFirst(Predicate<T> predicate, T defaultValue) {
+        return iterator().findFirst(predicate, defaultValue);
+    }
 
     /**
      * Reduces the collection to a single element by applying the given function on each pair of values.
@@ -50,7 +60,9 @@ public interface IterableCollection<T> extends Iterable<T> {
      * @return The resulting value of applying the given function to each value pair.
      * @throws EmptyCollectionException in case the collection is empty.
      */
-    T reduce(ReduceFunction<T> func);
+    default T reduce(ReduceFunction<T> func) {
+        return iterator().reduce(func);
+    }
 
     /**
      * Reduces the collection to a single element by applying the given function on each pair of values,
@@ -58,5 +70,7 @@ public interface IterableCollection<T> extends Iterable<T> {
      * @param func Associate function to be applied on each pair of elements.
      * @return The resulting value of applying the given function to each value pair, or the default value if empty.
      */
-    T reduce(ReduceFunction<T> func, T defaultValue);
+    default T reduce(ReduceFunction<T> func, T defaultValue) {
+        return iterator().reduce(func, defaultValue);
+    }
 }
