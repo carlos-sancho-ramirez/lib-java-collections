@@ -9,7 +9,9 @@ interface IterableIntCollection extends Iterable<Integer> {
      * Return true if the given value is found in the collection.
      * @param value Value to check
      */
-    boolean contains(int value);
+    default boolean contains(int value) {
+        return iterator().contains(value);
+    }
 
     /**
      * Returns true if the given predicate returns true for any of the items
@@ -17,14 +19,18 @@ interface IterableIntCollection extends Iterable<Integer> {
      *
      * @param predicate Predicate to be evaluated.
      */
-    boolean anyMatch(IntPredicate predicate);
+    default boolean anyMatch(IntPredicate predicate) {
+        return iterator().anyMatch(predicate);
+    }
 
     /**
      * Returns the index within the collection for the first element matching the given value.
      * Or -1 if none matches.
      * @param value Value to be matched.
      */
-    int indexOf(int value);
+    default int indexOf(int value) {
+        return iterator().indexOf(value);
+    }
 
     /**
      * Return the value in the given index position.
@@ -35,12 +41,16 @@ interface IterableIntCollection extends Iterable<Integer> {
      * @return The value in the given position.
      * @throws IndexOutOfBoundsException if the given index is invalid for this collection.
      */
-    int valueAt(int index);
+    default int valueAt(int index) {
+        return iterator().valueAt(index);
+    }
 
     /**
      * Returns the first item matching the predicate or the default value if none matches.
      */
-    int findFirst(IntPredicate predicate, int defaultValue);
+    default int findFirst(IntPredicate predicate, int defaultValue) {
+        return iterator().findFirst(predicate, defaultValue);
+    }
 
     /**
      * Reduces the collection to a single element by applying the given function on each pair of values.
@@ -48,7 +58,9 @@ interface IterableIntCollection extends Iterable<Integer> {
      * @return The resulting value of applying the given function to each value pair.
      * @throws EmptyCollectionException in case the collection is empty.
      */
-    int reduce(IntReduceFunction func);
+    default int reduce(IntReduceFunction func) {
+        return iterator().reduce(func);
+    }
 
     /**
      * Reduces the collection to a single element by applying the given function on each pair of values,
@@ -56,5 +68,23 @@ interface IterableIntCollection extends Iterable<Integer> {
      * @param func Associate function to be applied on each pair of elements.
      * @return The resulting value of applying the given function to each value pair, or the defaultValue if empty.
      */
-    int reduce(IntReduceFunction func, int defaultValue);
+    default int reduce(IntReduceFunction func, int defaultValue) {
+        return iterator().reduce(func, defaultValue);
+    }
+
+    /**
+     * Returns the minimum value within the collection.
+     * @throws EmptyCollectionException if the collection is empty.
+     */
+    default int min() throws EmptyCollectionException {
+        return iterator().min();
+    }
+
+    /**
+     * Returns the maximum value within the collection.
+     * @throws EmptyCollectionException if the collection is empty.
+     */
+    default int max() throws EmptyCollectionException {
+        return iterator().max();
+    }
 }

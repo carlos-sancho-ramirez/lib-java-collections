@@ -162,22 +162,6 @@ public class MutableIntSetTest extends AbstractIntIterableTest {
         })));
     }
 
-    public void testMin() {
-        withItem(a -> withItem(b -> withItem(c -> {
-            final MutableIntSet set = new MutableIntSet.Builder().add(a).add(b).add(c).build();
-            final int min = Math.min(Math.min(a, b), c);
-            assertEquals(min, set.min());
-        })));
-    }
-
-    public void testMax() {
-        withItem(a -> withItem(b -> withItem(c -> {
-            final MutableIntSet set = new MutableIntSet.Builder().add(a).add(b).add(c).build();
-            final int max = Math.max(Math.max(a, b), c);
-            assertEquals(max, set.max());
-        })));
-    }
-
     public void testToImmutableMethodReturnSameInstance() {
         withItem(a -> withItem(b -> {
             final MutableIntSet set = new MutableIntSet.Builder().add(a).add(b).build();

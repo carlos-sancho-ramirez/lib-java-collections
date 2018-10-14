@@ -260,4 +260,36 @@ abstract class AbstractIntIterableTest extends TestCase {
             assertEquals(expectedValue, iterable.reduce(func, 0));
         }))));
     }
+
+    public void testMinForSingleValue() {
+        withItem(a -> {
+            final IterableIntCollection iterable = newIntBuilder().add(a).build();
+            assertEquals(a, iterable.min());
+        });
+    }
+
+    public void testMinForMultipleValues() {
+        withItem(a -> withItem(b -> withItem(c -> {
+            final IterableIntCollection iterable = newIntBuilder().add(a).add(b).add(c).build();
+            final int halfMin = (a < b)? a : b;
+            final int min = (halfMin < c)? halfMin : c;
+            assertEquals(min, iterable.min());
+        })));
+    }
+
+    public void testMaxForSingleValue() {
+        withItem(a -> {
+            final IterableIntCollection iterable = newIntBuilder().add(a).build();
+            assertEquals(a, iterable.max());
+        });
+    }
+
+    public void testMaxForMultipleValues() {
+        withItem(a -> withItem(b -> withItem(c -> {
+            final IterableIntCollection iterable = newIntBuilder().add(a).add(b).add(c).build();
+            final int halfMax = (a > b)? a : b;
+            final int max = (halfMax > c)? halfMax : c;
+            assertEquals(max, iterable.max());
+        })));
+    }
 }

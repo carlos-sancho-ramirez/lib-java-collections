@@ -11,18 +11,6 @@ public interface IntSet extends IterableIntCollection, Sizable {
     int valueAt(int index);
 
     /**
-     * Return the minimum value within the set.
-     * @throws EmptyCollectionException if collection is empty.
-     */
-    int min() throws EmptyCollectionException;
-
-    /**
-     * Return the maximum value within the set.
-     * @throws EmptyCollectionException if collection is empty.
-     */
-    int max() throws EmptyCollectionException;
-
-    /**
      * Converts this set to a list.
      *
      * The order of iteration is guaranteed to be the same in the new list.
