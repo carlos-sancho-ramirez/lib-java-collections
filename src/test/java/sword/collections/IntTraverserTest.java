@@ -265,4 +265,36 @@ abstract class IntTraverserTest<C extends IterableIntCollection> extends TestCas
             });
         }))));
     }
+
+    public void testMinForSingleValue() {
+        withValue(a -> withBuilder(builder -> {
+            final C iterable = builder.add(a).build();
+            assertEquals(a, iterable.iterator().min());
+        }));
+    }
+
+    public void testMinForMultipleValues() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final C iterable = builder.add(a).add(b).add(c).build();
+            final int halfMin = (a < b)? a : b;
+            final int min = (halfMin < c)? halfMin : c;
+            assertEquals(min, iterable.iterator().min());
+        }))));
+    }
+
+    public void testMaxForSingleValue() {
+        withValue(a -> withBuilder(builder -> {
+            final C iterable = builder.add(a).build();
+            assertEquals(a, iterable.iterator().max());
+        }));
+    }
+
+    public void testMaxForMultipleValues() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final C iterable = builder.add(a).add(b).add(c).build();
+            final int halfMax = (a > b)? a : b;
+            final int max = (halfMax > c)? halfMax : c;
+            assertEquals(max, iterable.iterator().max());
+        }))));
+    }
 }

@@ -123,4 +123,44 @@ public interface IntTraverser extends Iterator<Integer> {
 
         return value;
     }
+
+    /**
+     * Traverses the whole collection and returns the minimum value found on it.
+     * @throws EmptyCollectionException is {@link IntTraverser} already reached the end.
+     */
+    default int min() throws EmptyCollectionException {
+        if (!hasNext()) {
+            throw new EmptyCollectionException();
+        }
+
+        int result = next();
+        while (hasNext()) {
+            final int value = next();
+            if (value < result) {
+                result = value;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Traverses the whole collection and returns the maximum value found on it.
+     * @throws EmptyCollectionException is {@link IntTraverser} already reached the end.
+     */
+    default int max() throws EmptyCollectionException {
+        if (!hasNext()) {
+            throw new EmptyCollectionException();
+        }
+
+        int result = next();
+        while (hasNext()) {
+            final int value = next();
+            if (value > result) {
+                result = value;
+            }
+        }
+
+        return result;
+    }
 }
