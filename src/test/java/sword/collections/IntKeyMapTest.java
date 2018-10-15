@@ -146,6 +146,30 @@ abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
         })));
     }
 
+    public void testValueListWhenEmpty() {
+        final IntKeyMapBuilder<T> builder = newMapBuilder();
+        final IntKeyMap<T> map = builder.build();
+        assertTrue(map.valueList().isEmpty());
+    }
+
+    public void testValueList() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final IntKeyMapBuilder<T> builder = newMapBuilder();
+            final IntKeyMap<T> map = builder
+                    .put(a, valueForKey(a))
+                    .put(b, valueForKey(b))
+                    .put(c, valueForKey(c))
+                    .build();
+
+            final ImmutableList.Builder<T> listBuilder = new ImmutableList.Builder<>();
+            for (T value : map) {
+                listBuilder.add(value);
+            }
+
+            assertEquals(listBuilder.build(), map.valueList().toImmutable());
+        })));
+    }
+
     public void testIndexOfKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final T value = getTestValue();

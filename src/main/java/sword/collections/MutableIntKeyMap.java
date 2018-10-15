@@ -130,6 +130,14 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
     }
 
     @Override
+    public List<T> valueList() {
+        final int length = _size;
+        final Object[] newValues = new Object[length];
+        System.arraycopy(_values, 0, newValues, 0, length);
+        return new ImmutableList<>(newValues);
+    }
+
+    @Override
     public ImmutableHashSet<Entry<T>> entries() {
         final int length = _size;
         final Entry[] entries = new Entry[length];
