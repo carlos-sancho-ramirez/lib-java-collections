@@ -110,6 +110,14 @@ public final class MutableMap<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
+    public List<V> valueList() {
+        final int length = _size;
+        final Object[] newValues = new Object[length];
+        System.arraycopy(_values, 0, newValues, 0, length);
+        return new ImmutableList<>(newValues);
+    }
+
+    @Override
     public Set<Entry<K, V>> entries() {
         final int length = _size;
         final Entry[] entries = new Entry[length];

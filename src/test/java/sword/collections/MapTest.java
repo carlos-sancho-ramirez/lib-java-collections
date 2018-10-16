@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
+import static sword.collections.TestUtils.withInt;
 
 abstract class MapTest<K, V> extends TestCase {
 
@@ -112,6 +113,27 @@ abstract class MapTest<K, V> extends TestCase {
             final ImmutableSet<K> keySet = mapBuilder.build().keySet().toImmutable();
             assertEquals(expectedKeys, keySet);
         }
+    }
+
+    public void testValueListWhenEmpty() {
+        assertTrue(newBuilder().build().valueList().isEmpty());
+    }
+
+    public void testValueList() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final Map<K, V> map = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            final ImmutableList.Builder<V> listBuilder = new ImmutableList.Builder<>();
+            for (V value : map) {
+                listBuilder.add(value);
+            }
+
+            assertEquals(listBuilder.build(), map.valueList().toImmutable());
+        })));
     }
 
     public void testIndexOfKey() {

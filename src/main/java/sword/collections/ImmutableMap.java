@@ -96,6 +96,11 @@ public final class ImmutableMap<K, V> extends AbstractMap<K, V> implements Itera
     }
 
     @Override
+    public ImmutableList<V> valueList() {
+        return new ImmutableList<>(_values);
+    }
+
+    @Override
     public ImmutableHashSet<Entry<K, V>> entries() {
         final int length = _keys.length;
         final Entry[] entries = new Entry[length];
