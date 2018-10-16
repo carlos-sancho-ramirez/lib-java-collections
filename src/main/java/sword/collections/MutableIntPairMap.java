@@ -162,6 +162,14 @@ public final class MutableIntPairMap extends AbstractIntPairMap {
         return builder.build();
     }
 
+    @Override
+    public IntList valueList() {
+        final int length = _size;
+        final int[] newValues = new int[length];
+        System.arraycopy(_values, 0, newValues, 0, length);
+        return new ImmutableIntList(newValues);
+    }
+
     /**
      * Remove all the content from the map, leaving it empty.
      */

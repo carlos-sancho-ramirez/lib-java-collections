@@ -111,6 +111,27 @@ abstract class IntPairMapTest extends TestCase {
         }
     }
 
+    public void testValueListWhenEmpty() {
+        assertTrue(newBuilder().build().valueList().isEmpty());
+    }
+
+    public void testValueList() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final IntPairMap map = newBuilder()
+                    .put(a, a * a)
+                    .put(b, b * b)
+                    .put(c, c * c)
+                    .build();
+
+            final ImmutableIntList.Builder listBuilder = new ImmutableIntList.Builder();
+            for (int value : map) {
+                listBuilder.add(value);
+            }
+
+            assertEquals(listBuilder.build(), map.valueList().toImmutable());
+        })));
+    }
+
     public void testIndexOfKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final int value = 34;
