@@ -127,6 +127,27 @@ abstract class IntValueMapTest extends TestCase {
         }
     }
 
+    public void testValueListWhenEmpty() {
+        assertTrue(newBuilder().build().valueList().isEmpty());
+    }
+
+    public void testValueList() {
+        withString(a -> withString(b -> withString(c -> {
+            final IntValueMap<String> map = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            final ImmutableIntList.Builder listBuilder = new ImmutableIntList.Builder();
+            for (int value : map) {
+                listBuilder.add(value);
+            }
+
+            assertEquals(listBuilder.build(), map.valueList().toImmutable());
+        })));
+    }
+
     public void testIndexOfKey() {
         final int value = 37;
         withString(a -> withString(b -> withString(c -> {

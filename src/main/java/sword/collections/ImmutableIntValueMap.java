@@ -109,6 +109,11 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> implem
     }
 
     @Override
+    public ImmutableIntList valueList() {
+        return new ImmutableIntList(_values);
+    }
+
+    @Override
     public ImmutableHashSet<Entry<T>> entries() {
         final int length = _keys.length;
         final Entry[] entries = new Entry[length];

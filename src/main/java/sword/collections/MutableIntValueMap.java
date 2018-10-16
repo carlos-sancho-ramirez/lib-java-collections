@@ -96,6 +96,14 @@ public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
     }
 
     @Override
+    public IntList valueList() {
+        final int length = _size;
+        final int[] newValues = new int[length];
+        System.arraycopy(_values, 0, newValues, 0, length);
+        return new ImmutableIntList(newValues);
+    }
+
+    @Override
     public Set<Entry<T>> entries() {
         final int length = _size;
         final Entry[] entries = new Entry[length];
