@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-public class MutableSetTest extends AbstractIterableTest<String> {
+public class MutableSetTest extends AbstractTransformableTest<String> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"

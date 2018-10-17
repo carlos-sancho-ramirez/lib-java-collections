@@ -4,7 +4,7 @@ package sword.collections;
  * Root for both variants of List, immutable and mutable.
  * @param <T> Type of items within the collection.
  */
-public interface List<T> extends IterableCollection<T>, Sizable {
+public interface List<T> extends Transformable<T>, Sizable {
 
     /**
      * Return the item in the given position

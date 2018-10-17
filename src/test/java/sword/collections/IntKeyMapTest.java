@@ -4,32 +4,32 @@ import java.util.Iterator;
 
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntKeyMapTest<T> extends AbstractIterableTest<T> {
+abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
 
     abstract IntKeyMapBuilder<T> newMapBuilder();
     abstract T getTestValue();
     abstract T getTestValue2();
     abstract T valueForKey(int key);
 
-    private final class IterableBuilderAdapter implements CollectionBuilder<T> {
+    private final class IterableBuilderAdapter implements TransformableBuilder<T> {
 
         private final IntKeyMapBuilder<T> _builder = newMapBuilder();
         private int _key = 0;
 
         @Override
-        public CollectionBuilder<T> add(T element) {
+        public TransformableBuilder<T> add(T element) {
             _builder.put(_key++, element);
             return this;
         }
 
         @Override
-        public IterableCollection<T> build() {
+        public Transformable<T> build() {
             return _builder.build();
         }
     }
 
     @Override
-    CollectionBuilder<T> newIterableBuilder() {
+    TransformableBuilder<T> newIterableBuilder() {
         return new IterableBuilderAdapter();
     }
 

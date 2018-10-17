@@ -57,11 +57,11 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
     }
 
     @Override
-    public Traverser<T> iterator() {
+    public Transformer<T> iterator() {
         return new Iterator();
     }
 
-    private class Iterator implements Traverser<T> {
+    private class Iterator extends AbstractTransformer<T> {
         private int _index;
 
         @Override
@@ -133,7 +133,7 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
         return changed;
     }
 
-    public static class Builder<E> implements CollectionBuilder<E> {
+    public static class Builder<E> implements TransformableBuilder<E> {
         private final MutableList<E> _list = MutableList.empty();
 
         @Override

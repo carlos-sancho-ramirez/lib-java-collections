@@ -260,7 +260,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         }
     }
 
-    private class Iterator extends IteratorForImmutable<T> {
+    private class Iterator extends AbstractTransformer<T> {
 
         private int _index;
 

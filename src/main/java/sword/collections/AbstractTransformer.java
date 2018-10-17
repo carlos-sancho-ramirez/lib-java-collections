@@ -5,7 +5,7 @@ package sword.collections;
  * All immutable collections should not allow modifications, so calling remove should be considered an error.
  * @param <E> Generic type holding this Iterator
  */
-public abstract class IteratorForImmutable<E> implements Transformer<E> {
+public abstract class AbstractTransformer<E> implements Transformer<E> {
 
     @Override
     public IntSet indexes() {
@@ -19,7 +19,7 @@ public abstract class IteratorForImmutable<E> implements Transformer<E> {
     }
 
     @Override
-    public final void remove() {
+    public void remove() {
         throw new UnsupportedOperationException("This class is immutable");
     }
 }

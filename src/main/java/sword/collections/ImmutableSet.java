@@ -130,7 +130,7 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
         return builder.build();
     }
 
-    class Iterator extends IteratorForImmutable<T> {
+    class Iterator extends AbstractTransformer<T> {
 
         private int _index;
 

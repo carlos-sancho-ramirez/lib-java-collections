@@ -250,7 +250,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
     }
 
     @Override
-    public Traverser<T> iterator() {
+    public Transformer<T> iterator() {
         return new Iterator();
     }
 
@@ -269,7 +269,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
         }
     }
 
-    private class Iterator implements Traverser<T> {
+    private class Iterator extends AbstractTransformer<T> {
 
         private int _index;
 

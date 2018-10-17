@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-abstract class AbstractIterableImmutableTest<T> extends AbstractIterableTest<T> {
+abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTest<T> {
 
     abstract <E> AbstractIterable<E> emptyCollection();
     abstract ImmutableCollectionBuilder<T> newIterableBuilder();

@@ -228,7 +228,7 @@ public final class ImmutableMap<K, V> extends AbstractMap<K, V> implements Itera
         return new ImmutableMap<>(_keys, _hashCodes, newValues);
     }
 
-    private class Iterator extends IteratorForImmutable<V> {
+    private class Iterator extends AbstractTransformer<V> {
 
         private int _index;
 

@@ -4,7 +4,7 @@ package sword.collections;
  * Root for both variants of Sets, immutable and mutable.
  * @param <T> Type of items within the set.
  */
-public interface Set<T> extends IterableCollection<T>, Sizable {
+public interface Set<T> extends Transformable<T>, Sizable {
 
     /**
      * Converts this set to a list.

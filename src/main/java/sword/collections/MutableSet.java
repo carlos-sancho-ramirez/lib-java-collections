@@ -59,7 +59,7 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
         return (T) _keys[index];
     }
 
-    private class Iterator implements Traverser<T> {
+    private class Iterator extends AbstractTransformer<T> {
 
         private int _index;
 
@@ -81,7 +81,7 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
     }
 
     @Override
-    public Traverser<T> iterator() {
+    public Transformer<T> iterator() {
         return new Iterator();
     }
 
@@ -197,7 +197,7 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
         return false;
     }
 
-    public static class Builder<E> implements CollectionBuilder<E> {
+    public static class Builder<E> implements TransformableBuilder<E> {
         private final MutableSet<E> _set;
 
         Builder(SortFunction<E> sortFunction) {

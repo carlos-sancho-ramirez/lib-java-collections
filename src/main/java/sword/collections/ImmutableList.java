@@ -221,7 +221,7 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
         return changed? new ImmutableList<>(newValues) : this;
     }
 
-    private class Iterator extends IteratorForImmutable<T> {
+    private class Iterator extends AbstractTransformer<T> {
         private int _index;
 
         @Override
