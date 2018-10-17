@@ -2,10 +2,10 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableIntKeyMapTraverserTest extends TraverserTest<String> {
+public final class ImmutableIntKeyMapTraverserTest extends TransformerTest<String, TransformableBuilder<String>> {
 
     @Override
-    void withBuilder(Procedure<CollectionBuilder<String>> procedure) {
+    void withBuilder(Procedure<TransformableBuilder<String>> procedure) {
         procedure.apply(new HashKeyBuilder());
         procedure.apply(new IndexedKeyBuilder());
     }
@@ -29,33 +29,33 @@ public final class ImmutableIntKeyMapTraverserTest extends TraverserTest<String>
         procedure.apply(ImmutableIntKeyMapTraverserTest::reduceFunc);
     }
 
-    private static final class HashKeyBuilder implements CollectionBuilder<String> {
+    private static final class HashKeyBuilder implements TransformableBuilder<String> {
         private final ImmutableIntKeyMap.Builder<String> builder = new ImmutableIntKeyMap.Builder<>();
 
         @Override
-        public CollectionBuilder<String> add(String element) {
+        public TransformableBuilder<String> add(String element) {
             builder.put(SortUtils.hashCode(element), element);
             return this;
         }
 
         @Override
-        public IterableCollection<String> build() {
+        public Transformable<String> build() {
             return builder.build();
         }
     }
 
-    private static final class IndexedKeyBuilder implements CollectionBuilder<String> {
+    private static final class IndexedKeyBuilder implements TransformableBuilder<String> {
         private final ImmutableIntKeyMap.Builder<String> builder = new ImmutableIntKeyMap.Builder<>();
         private int key;
 
         @Override
-        public CollectionBuilder<String> add(String element) {
+        public TransformableBuilder<String> add(String element) {
             builder.put(key++, element);
             return this;
         }
 
         @Override
-        public IterableCollection<String> build() {
+        public Transformable<String> build() {
             return builder.build();
         }
     }

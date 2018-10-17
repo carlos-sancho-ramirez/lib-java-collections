@@ -5,7 +5,18 @@ package sword.collections;
  * All immutable collections should not allow modifications, so calling remove should be considered an error.
  * @param <E> Generic type holding this Iterator
  */
-public abstract class IteratorForImmutable<E> implements Traverser<E> {
+public abstract class IteratorForImmutable<E> implements Transformer<E> {
+
+    @Override
+    public IntSet indexes() {
+        int length = 0;
+        while (hasNext()) {
+            length++;
+            next();
+        }
+
+        return (length == 0)? ImmutableIntSetImpl.empty() : new ImmutableIntRange(0, length - 1);
+    }
 
     @Override
     public final void remove() {

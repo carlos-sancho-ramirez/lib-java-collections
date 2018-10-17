@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface IterableImmutableCollection<T> extends IterableCollection<T> {
+public interface IterableImmutableCollection<T> extends Transformable<T> {
 
     /**
      * Applies the given predicate to each of the items within the list and

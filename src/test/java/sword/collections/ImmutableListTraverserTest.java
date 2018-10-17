@@ -2,10 +2,10 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableListTraverserTest extends TraverserTest<String> {
+public final class ImmutableListTraverserTest extends TraverserTest<String, ImmutableList.Builder<String>> {
 
     @Override
-    void withBuilder(Procedure<CollectionBuilder<String>> procedure) {
+    void withBuilder(Procedure<ImmutableList.Builder<String>> procedure) {
         procedure.apply(new ImmutableList.Builder<>());
     }
 

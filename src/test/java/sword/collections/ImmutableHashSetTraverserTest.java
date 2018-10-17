@@ -2,10 +2,10 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableHashSetTraverserTest extends TraverserTest<String> {
+public final class ImmutableHashSetTraverserTest extends TransformerTest<String, ImmutableHashSet.Builder<String>> {
 
     @Override
-    void withBuilder(Procedure<CollectionBuilder<String>> procedure) {
+    void withBuilder(Procedure<ImmutableHashSet.Builder<String>> procedure) {
         procedure.apply(new ImmutableHashSet.Builder<>());
     }
 

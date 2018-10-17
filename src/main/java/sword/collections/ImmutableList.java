@@ -153,7 +153,7 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
     }
 
     @Override
-    public Traverser<T> iterator() {
+    public Transformer<T> iterator() {
         return new Iterator();
     }
 

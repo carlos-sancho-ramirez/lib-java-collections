@@ -6,9 +6,9 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-abstract class TraverserTest<T> extends TestCase {
+abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase {
 
-    abstract void withBuilder(Procedure<CollectionBuilder<T>> procedure);
+    abstract void withBuilder(Procedure<B> procedure);
     abstract void withValue(Procedure<T> value);
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
     abstract void withReduceFunction(Procedure<ReduceFunction<T>> procedure);
