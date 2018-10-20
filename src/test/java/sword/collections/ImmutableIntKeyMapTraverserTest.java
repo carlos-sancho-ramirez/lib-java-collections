@@ -29,6 +29,11 @@ public final class ImmutableIntKeyMapTraverserTest extends TransformerTest<Strin
         procedure.apply(ImmutableIntKeyMapTraverserTest::reduceFunc);
     }
 
+    @Override
+    void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(SortUtils::hashCode);
+    }
+
     private static final class HashKeyBuilder implements TransformableBuilder<String> {
         private final ImmutableIntKeyMap.Builder<String> builder = new ImmutableIntKeyMap.Builder<>();
 

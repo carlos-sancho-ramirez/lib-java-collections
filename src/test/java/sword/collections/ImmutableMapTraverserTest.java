@@ -29,6 +29,11 @@ public final class ImmutableMapTraverserTest extends TransformerTest<String, Tra
         procedure.apply(ImmutableMapTraverserTest::reduceFunc);
     }
 
+    @Override
+    void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(SortUtils::hashCode);
+    }
+
     private static final class SameKeyAndValueBuilder implements TransformableBuilder<String> {
         private final ImmutableMap.Builder<String, String> builder = new ImmutableMap.Builder<>();
 
