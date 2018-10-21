@@ -6,6 +6,29 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
 
     abstract void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
 
+    public void testToListWhenEmpty() {
+        withBuilder(builder -> assertTrue(builder.build().iterator().toList().isEmpty()));
+    }
+
+    public void testToListForSingleElement() {
+        withValue(value -> withBuilder(builder -> {
+            final Transformable<T> transformable = builder.add(value).build();
+            final List<T> expected = new ImmutableList.Builder<T>().add(value).build();
+            assertEquals(expected, transformable.iterator().toList().toImmutable());
+        }));
+    }
+
+    public void testToListForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
+            final ImmutableList.Builder<T> listBuilder = new ImmutableList.Builder<>();
+            for (T value : transformable) {
+                listBuilder.add(value);
+            }
+            assertEquals(listBuilder.build(), transformable.iterator().toList().toImmutable());
+        }))));
+    }
+
     public void testIndexesWhenEmpty() {
         withBuilder(builder -> assertTrue(builder.build().iterator().indexes().isEmpty()));
     }
@@ -42,14 +65,15 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
         final IntResultFunction<T> func = v -> {
             throw new AssertionError("This method should not be called");
         };
-        withBuilder(builder -> assertTrue(builder.build().iterator().mapToInt(func).isEmpty()));
+        withBuilder(builder -> assertFalse(builder.build().iterator().mapToInt(func).hasNext()));
     }
 
     public void testMapToIntForSingleValue() {
         withMapToIntFunc(func -> withValue(a -> withBuilder(builder -> {
-            final Transformable<T> transformable = builder.add(a).build();
-            final ImmutableIntList expectedList = new ImmutableIntList.Builder().add(func.apply(a)).build();
-            assertEquals(expectedList, transformable.iterator().mapToInt(func).toImmutable());
+            final IntTransformer transformer = builder.add(a).build().iterator().mapToInt(func);
+            assertTrue(transformer.hasNext());
+            assertEquals(func.apply(a), transformer.next().intValue());
+            assertFalse(transformer.hasNext());
         })));
     }
 
@@ -60,30 +84,13 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
             for (T value : transformable) {
                 expectedBuilder.add(func.apply(value));
             }
-            assertEquals(expectedBuilder.build(), transformable.iterator().mapToInt(func).toImmutable());
-        })))));
-    }
 
-    public void testToListWhenEmpty() {
-        withBuilder(builder -> assertTrue(builder.build().iterator().toList().isEmpty()));
-    }
-
-    public void testToListForSingleElement() {
-        withValue(value -> withBuilder(builder -> {
-            final Transformable<T> transformable = builder.add(value).build();
-            final List<T> expected = new ImmutableList.Builder<T>().add(value).build();
-            assertEquals(expected, transformable.iterator().toList().toImmutable());
-        }));
-    }
-
-    public void testToListForMultipleElements() {
-        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
-            final ImmutableList.Builder<T> listBuilder = new ImmutableList.Builder<>();
-            for (T value : transformable) {
-                listBuilder.add(value);
+            final IntTransformer transformer = transformable.iterator().mapToInt(func);
+            for (int newValue : expectedBuilder.build()) {
+                assertTrue(transformer.hasNext());
+                assertEquals(newValue, transformer.next().intValue());
             }
-            assertEquals(listBuilder.build(), transformable.iterator().toList().toImmutable());
-        }))));
+            assertFalse(transformer.hasNext());
+        })))));
     }
 }

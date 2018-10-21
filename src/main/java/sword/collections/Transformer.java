@@ -13,20 +13,20 @@ package sword.collections;
 public interface Transformer<T> extends Traverser<T> {
 
     /**
+     * Build a new list containing all elements given on traversing this collection
+     */
+    List toList();
+
+    /**
      * Traverses the collection and return all indexes from the current position.
      */
     IntSet indexes();
 
     /**
-     * Builds a new list of integers after applying the given function to each of the
+     * Applies the given function to each of the
      * values within this collection keeping its order.
      * @param mapFunc Function to be applied to each of the values within the collection.
-     * @return A new list of integers containing all the results of applying the given function.
+     * @return A transformer that applies the given function just in time.
      */
-    IntList mapToInt(IntResultFunction<T> mapFunc);
-
-    /**
-     * Build a new list containing all elements given on traversing this collection
-     */
-    List toList();
+    IntTransformer mapToInt(IntResultFunction<T> mapFunc);
 }
