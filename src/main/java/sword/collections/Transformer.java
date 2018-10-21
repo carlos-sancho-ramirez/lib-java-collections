@@ -24,4 +24,9 @@ public interface Transformer<T> extends Traverser<T> {
      * @return A new list of integers containing all the results of applying the given function.
      */
     IntList mapToInt(IntResultFunction<T> mapFunc);
+
+    /**
+     * Build a new list containing all elements given on traversing this collection
+     */
+    List toList();
 }

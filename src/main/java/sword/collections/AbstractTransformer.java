@@ -29,6 +29,16 @@ public abstract class AbstractTransformer<E> implements Transformer<E> {
     }
 
     @Override
+    public List<E> toList() {
+        final ImmutableList.Builder<E> builder = new ImmutableList.Builder<>();
+        while (hasNext()) {
+            builder.add(next());
+        }
+
+        return builder.build();
+    }
+
+    @Override
     public void remove() {
         throw new UnsupportedOperationException("This class is immutable");
     }

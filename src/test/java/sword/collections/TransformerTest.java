@@ -63,4 +63,27 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
             assertEquals(expectedBuilder.build(), transformable.iterator().mapToInt(func).toImmutable());
         })))));
     }
+
+    public void testToListWhenEmpty() {
+        withBuilder(builder -> assertTrue(builder.build().iterator().toList().isEmpty()));
+    }
+
+    public void testToListForSingleElement() {
+        withValue(value -> withBuilder(builder -> {
+            final Transformable<T> transformable = builder.add(value).build();
+            final List<T> expected = new ImmutableList.Builder<T>().add(value).build();
+            assertEquals(expected, transformable.iterator().toList().toImmutable());
+        }));
+    }
+
+    public void testToListForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
+            final ImmutableList.Builder<T> listBuilder = new ImmutableList.Builder<>();
+            for (T value : transformable) {
+                listBuilder.add(value);
+            }
+            assertEquals(listBuilder.build(), transformable.iterator().toList().toImmutable());
+        }))));
+    }
 }
