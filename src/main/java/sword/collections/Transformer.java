@@ -15,12 +15,12 @@ public interface Transformer<T> extends Traverser<T> {
     /**
      * Build a new list containing all elements given on traversing this collection
      */
-    List toList();
+    List<T> toList();
 
     /**
-     * Traverses the collection and return all indexes from the current position.
+     * Return all indexes from the current position ignoring the actual values of this collection.
      */
-    IntSet indexes();
+    IntTransformer indexes();
 
     /**
      * Applies the given function to each of the

@@ -30,12 +30,12 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     public void testIndexesWhenEmpty() {
-        withBuilder(builder -> assertTrue(builder.build().iterator().indexes().isEmpty()));
+        withBuilder(builder -> assertFalse(builder.build().iterator().indexes().hasNext()));
     }
 
     public void testIndexesForSingleValue() {
         withValue(value -> withBuilder(builder -> {
-            final Iterator<Integer> indexIterator = builder.add(value).build().iterator().indexes().iterator();
+            final Iterator<Integer> indexIterator = builder.add(value).build().iterator().indexes();
             assertTrue(indexIterator.hasNext());
             assertEquals(0, indexIterator.next().intValue());
             assertFalse(indexIterator.hasNext());
@@ -52,7 +52,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
                 it.next();
             }
 
-            final Iterator<Integer> indexIterator = transformable.iterator().indexes().iterator();
+            final IntTransformer indexIterator = transformable.iterator().indexes();
             for (int i = 0; i < length; i++) {
                 assertTrue(indexIterator.hasNext());
                 assertEquals(i, indexIterator.next().intValue());

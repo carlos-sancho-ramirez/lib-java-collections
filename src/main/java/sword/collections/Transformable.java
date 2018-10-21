@@ -8,6 +8,6 @@ public interface Transformable<T> extends IterableCollection<T> {
      * Return all indexes within this collection in ascending order.
      */
     default IntSet indexes() {
-        return iterator().indexes();
+        return iterator().indexes().toSet();
     }
 }

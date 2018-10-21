@@ -1,17 +1,16 @@
 package sword.collections;
 
-final class MapToIntTransformer<T> extends AbstractIntTransformer {
+final class IndexesTransformer<T> extends AbstractIntTransformer {
 
     private final Transformer<T> _source;
-    private final IntResultFunction<T> _func;
+    private int _index;
 
-    MapToIntTransformer(Transformer<T> source, IntResultFunction<T> func) {
-        if (source == null || func == null) {
+    IndexesTransformer(Transformer<T> source) {
+        if (source == null) {
             throw new IllegalArgumentException();
         }
 
         _source = source;
-        _func = func;
     }
 
     @Override
@@ -21,6 +20,7 @@ final class MapToIntTransformer<T> extends AbstractIntTransformer {
 
     @Override
     public Integer next() {
-        return _func.apply(_source.next());
+        _source.next();
+        return _index++;
     }
 }

@@ -8,14 +8,8 @@ package sword.collections;
 public abstract class AbstractTransformer<E> implements Transformer<E> {
 
     @Override
-    public IntSet indexes() {
-        int length = 0;
-        while (hasNext()) {
-            length++;
-            next();
-        }
-
-        return (length == 0)? ImmutableIntSetImpl.empty() : new ImmutableIntRange(0, length - 1);
+    public IntTransformer indexes() {
+        return new IndexesTransformer<E>(this);
     }
 
     @Override
