@@ -23,6 +23,14 @@ public interface Transformer<T> extends Traverser<T> {
     IntTransformer indexes();
 
     /**
+     * Composes a new Transformer that filters this one by applying the given predicate to the
+     * elements within this collection.
+     * @param predicate Only value returning true for the given this predicate will be present
+     *                  in the resulting Transformer.
+     */
+    Transformer<T> filter(Predicate<T> predicate);
+
+    /**
      * Applies the given function to each of the
      * values within this collection keeping its order.
      * @param mapFunc Function to be applied to each of the values within the collection.

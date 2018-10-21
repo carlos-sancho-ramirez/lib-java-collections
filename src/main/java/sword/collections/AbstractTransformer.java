@@ -13,6 +13,11 @@ public abstract class AbstractTransformer<E> implements Transformer<E> {
     }
 
     @Override
+    public Transformer<E> filter(Predicate<E> predicate) {
+        return new FilterTransformer<>(this, predicate);
+    }
+
+    @Override
     public IntTransformer mapToInt(IntResultFunction<E> mapFunc) {
         return new MapToIntTransformer<>(this, mapFunc);
     }
