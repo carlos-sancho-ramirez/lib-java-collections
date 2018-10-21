@@ -9,12 +9,17 @@ public abstract class AbstractTransformer<E> implements Transformer<E> {
 
     @Override
     public IntTransformer indexes() {
-        return new IndexesTransformer<E>(this);
+        return new IndexesTransformer<>(this);
     }
 
     @Override
     public IntTransformer mapToInt(IntResultFunction<E> mapFunc) {
         return new MapToIntTransformer<>(this, mapFunc);
+    }
+
+    @Override
+    public <U> Transformer<U> map(Function<E, U> mapFunc) {
+        return new MapTransformer<>(this, mapFunc);
     }
 
     @Override

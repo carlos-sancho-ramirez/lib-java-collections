@@ -24,6 +24,11 @@ public final class ImmutableHashSetTraverserTest extends TransformerTest<String,
         procedure.apply(SortUtils::isEmpty);
     }
 
+    @Override
+    void withMapFunc(Procedure<Function<String, Object>> procedure) {
+        procedure.apply(str -> (str != null)? "_" + str : null);
+    }
+
     private static String reduceFunc(String left, String right) {
         return String.valueOf(left) + '-' + String.valueOf(right);
     }

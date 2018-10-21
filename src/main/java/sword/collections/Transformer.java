@@ -29,4 +29,12 @@ public interface Transformer<T> extends Traverser<T> {
      * @return A transformer that applies the given function just in time.
      */
     IntTransformer mapToInt(IntResultFunction<T> mapFunc);
+
+    /**
+     * Applies the given function to each of the
+     * values within this collection keeping its order.
+     * @param mapFunc Function to be applied to each of the values within the collection.
+     * @return A transformer that applies the given function just in time.
+     */
+    <U> Transformer<U> map(Function<T, U> mapFunc);
 }

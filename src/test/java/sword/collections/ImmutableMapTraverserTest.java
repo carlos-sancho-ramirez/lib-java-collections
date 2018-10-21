@@ -30,6 +30,11 @@ public final class ImmutableMapTraverserTest extends TransformerTest<String, Tra
     }
 
     @Override
+    void withMapFunc(Procedure<Function<String, Object>> procedure) {
+        procedure.apply(str -> (str != null)? "_" + str : null);
+    }
+
+    @Override
     void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
         procedure.apply(SortUtils::hashCode);
     }

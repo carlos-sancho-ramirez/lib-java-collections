@@ -5,6 +5,7 @@ import java.util.Iterator;
 abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends TraverserTest<T, B> {
 
     abstract void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
+    abstract void withMapFunc(Procedure<Function<T, Object>> procedure);
 
     public void testToListWhenEmpty() {
         withBuilder(builder -> assertTrue(builder.build().iterator().toList().isEmpty()));
@@ -89,6 +90,39 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
             for (int newValue : expectedBuilder.build()) {
                 assertTrue(transformer.hasNext());
                 assertEquals(newValue, transformer.next().intValue());
+            }
+            assertFalse(transformer.hasNext());
+        })))));
+    }
+
+    public void testMapWhenEmpty() {
+        final Function<T, T> func = v -> {
+            throw new AssertionError("This method should not be called");
+        };
+        withBuilder(builder -> assertFalse(builder.build().iterator().map(func).hasNext()));
+    }
+
+    public void testMapForSingleValue() {
+        withMapFunc(func -> withValue(a -> withBuilder(builder -> {
+            final Transformer transformer = builder.add(a).build().iterator().map(func);
+            assertTrue(transformer.hasNext());
+            assertEquals(func.apply(a), transformer.next());
+            assertFalse(transformer.hasNext());
+        })));
+    }
+
+    public void testMapForMultipleValues() {
+        withMapFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
+            final ImmutableList.Builder<Object> expectedBuilder = new ImmutableList.Builder<>();
+            for (T value : transformable) {
+                expectedBuilder.add(func.apply(value));
+            }
+
+            final Transformer transformer = transformable.iterator().map(func);
+            for (Object newValue : expectedBuilder.build()) {
+                assertTrue(transformer.hasNext());
+                assertEquals(newValue, transformer.next());
             }
             assertFalse(transformer.hasNext());
         })))));

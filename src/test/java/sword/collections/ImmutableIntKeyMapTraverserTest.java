@@ -34,6 +34,11 @@ public final class ImmutableIntKeyMapTraverserTest extends TransformerTest<Strin
         procedure.apply(SortUtils::hashCode);
     }
 
+    @Override
+    void withMapFunc(Procedure<Function<String, Object>> procedure) {
+        procedure.apply(str -> (str != null)? "_" + str : null);
+    }
+
     private static final class HashKeyBuilder implements TransformableBuilder<String> {
         private final ImmutableIntKeyMap.Builder<String> builder = new ImmutableIntKeyMap.Builder<>();
 
