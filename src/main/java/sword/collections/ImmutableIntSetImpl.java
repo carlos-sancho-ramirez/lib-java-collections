@@ -104,7 +104,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
-    public IntTraverser iterator() {
+    public IntTransformer iterator() {
         return new IntIterator();
     }
 
@@ -172,8 +172,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
         }
     }
 
-    private class IntIterator implements IntTraverser {
-
+    private class IntIterator extends AbstractIntTransformer {
         private int _index;
 
         @Override

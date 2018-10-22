@@ -1,6 +1,6 @@
 package sword.collections;
 
-interface IterableImmutableIntCollection extends IterableIntCollection {
+interface IterableImmutableIntCollection extends IntTransformable {
 
     /**
      * Applies the given predicate to each of the values within the collection and

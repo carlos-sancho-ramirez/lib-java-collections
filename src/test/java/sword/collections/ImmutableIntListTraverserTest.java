@@ -1,9 +1,9 @@
 package sword.collections;
 
-public final class ImmutableIntListTraverserTest extends IntTraverserTest<ImmutableIntList> {
+public final class ImmutableIntListTraverserTest extends IntTransformerTest<ImmutableIntList, ImmutableIntList.Builder> {
 
     @Override
-    void withBuilder(Procedure<IntCollectionBuilder<ImmutableIntList>> procedure) {
+    void withBuilder(Procedure<ImmutableIntList.Builder> procedure) {
         procedure.apply(new ImmutableIntList.Builder());
     }
 }

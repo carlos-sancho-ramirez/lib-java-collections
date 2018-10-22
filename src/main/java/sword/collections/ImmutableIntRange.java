@@ -120,12 +120,11 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
     }
 
     @Override
-    public IntTraverser iterator() {
+    public IntTransformer iterator() {
         return new Iterator();
     }
 
-    private class Iterator implements IntTraverser {
-
+    private class Iterator extends AbstractIntTransformer {
         private int _value;
 
         Iterator() {

@@ -235,7 +235,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> implem
         }
     }
 
-    private class Iterator implements IntTraverser {
+    private class Iterator extends AbstractIntTransformer {
         private int _index;
 
         @Override
@@ -250,7 +250,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> implem
     }
 
     @Override
-    public IntTraverser iterator() {
+    public IntTransformer iterator() {
         return new Iterator();
     }
 

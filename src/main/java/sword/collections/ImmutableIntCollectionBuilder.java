@@ -1,6 +1,9 @@
 package sword.collections;
 
-public interface ImmutableIntCollectionBuilder<T extends IterableImmutableIntCollection> extends IntCollectionBuilder<T> {
+public interface ImmutableIntCollectionBuilder<T extends IterableImmutableIntCollection> extends IntTransformableBuilder<T> {
+    @Override
     ImmutableIntCollectionBuilder<T> add(int value);
+
+    @Override
     T build();
 }

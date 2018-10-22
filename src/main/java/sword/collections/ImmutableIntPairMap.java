@@ -251,7 +251,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     @Override
-    public IntTraverser iterator() {
+    public IntTransformer iterator() {
         return new Iterator();
     }
 
@@ -319,8 +319,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         }
     }
 
-    private class Iterator implements IntTraverser {
-
+    private class Iterator extends AbstractIntTransformer {
         private int _index;
 
         @Override

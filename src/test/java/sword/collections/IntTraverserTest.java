@@ -5,9 +5,9 @@ import junit.framework.TestCase;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntTraverserTest<C extends IterableIntCollection> extends TestCase {
+abstract class IntTraverserTest<C extends IterableIntCollection, B extends IntCollectionBuilder<C>> extends TestCase {
 
-    abstract void withBuilder(Procedure<IntCollectionBuilder<C>> procedure);
+    abstract void withBuilder(Procedure<B> procedure);
 
     void withValue(IntProcedure value) {
         withInt(value);
