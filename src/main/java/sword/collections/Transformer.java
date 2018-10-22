@@ -18,6 +18,12 @@ public interface Transformer<T> extends Traverser<T> {
     List<T> toList();
 
     /**
+     * Build a new set containing all elements given on traversing this collection.
+     * The resulting set will not contain any duplicated value.
+     */
+    Set<T> toSet();
+
+    /**
      * Return all indexes from the current position ignoring the actual values of this collection.
      */
     IntTransformer indexes();

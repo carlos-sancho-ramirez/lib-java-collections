@@ -38,6 +38,16 @@ public abstract class AbstractTransformer<E> implements Transformer<E> {
     }
 
     @Override
+    public Set<E> toSet() {
+        final ImmutableHashSet.Builder<E> builder = new ImmutableHashSet.Builder<>();
+        while (hasNext()) {
+            builder.add(next());
+        }
+
+        return builder.build();
+    }
+
+    @Override
     public void remove() {
         throw new UnsupportedOperationException("This class is immutable");
     }

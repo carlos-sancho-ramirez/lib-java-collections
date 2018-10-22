@@ -30,6 +30,29 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
         }))));
     }
 
+    public void testToSetWhenEmpty() {
+        withBuilder(builder -> assertTrue(builder.build().iterator().toSet().isEmpty()));
+    }
+
+    public void testToSetForSingleElement() {
+        withValue(value -> withBuilder(builder -> {
+            final Set<T> set = builder.add(value).build().iterator().toSet();
+            assertEquals(1, set.size());
+            assertEquals(value, set.valueAt(0));
+        }));
+    }
+
+    public void testToSetForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
+            final ImmutableHashSet.Builder<T> setBuilder = new ImmutableHashSet.Builder<>();
+            for (T value : transformable) {
+                setBuilder.add(value);
+            }
+            assertEquals(setBuilder.build(), transformable.iterator().toSet().toImmutable());
+        }))));
+    }
+
     public void testIndexesWhenEmpty() {
         withBuilder(builder -> assertFalse(builder.build().iterator().indexes().hasNext()));
     }
