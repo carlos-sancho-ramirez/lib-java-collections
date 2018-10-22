@@ -117,6 +117,38 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
         })))));
     }
 
+    public void testFilterNotWhenEmpty() {
+        final Predicate<T> func = value -> {
+            throw new AssertionError("Should never be called");
+        };
+        withBuilder(builder -> assertFalse(builder.build().iterator().filterNot(func).hasNext()));
+    }
+
+    public void testFilterNotForSingleElement() {
+        withFilterFunc(func -> withValue(value -> withBuilder(builder -> {
+            final Transformer<T> transformer = builder.add(value).build().iterator().filterNot(func);
+            if (!func.apply(value)) {
+                assertTrue(transformer.hasNext());
+                assertEquals(value, transformer.next());
+            }
+            assertFalse(transformer.hasNext());
+        })));
+    }
+
+    public void testFilterNotForMultipleElements() {
+        withFilterFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
+            final Transformer<T> transformer = transformable.iterator().filterNot(func);
+            for (T value : transformable) {
+                if (!func.apply(value)) {
+                    assertTrue(transformer.hasNext());
+                    assertEquals(value, transformer.next());
+                }
+            }
+            assertFalse(transformer.hasNext());
+        })))));
+    }
+
     public void testMapToIntWhenEmpty() {
         final IntResultFunction<T> func = v -> {
             throw new AssertionError("This method should not be called");
