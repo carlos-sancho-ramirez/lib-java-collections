@@ -113,4 +113,36 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntColle
             assertFalse(transformer.hasNext());
         })))));
     }
+
+    public void testFilterNotWhenEmpty() {
+        final IntPredicate func = value -> {
+            throw new AssertionError("Should never be called");
+        };
+        withBuilder(builder -> assertFalse(builder.build().iterator().filterNot(func).hasNext()));
+    }
+
+    public void testFilterNotForSingleElement() {
+        withFilterFunc(func -> withValue(value -> withBuilder(builder -> {
+            final IntTransformer transformer = builder.add(value).build().iterator().filterNot(func);
+            if (!func.apply(value)) {
+                assertTrue(transformer.hasNext());
+                assertEquals(value, transformer.next().intValue());
+            }
+            assertFalse(transformer.hasNext());
+        })));
+    }
+
+    public void testFilterNotForMultipleElements() {
+        withFilterFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformer transformer = transformable.iterator().filterNot(func);
+            for (int value : transformable) {
+                if (!func.apply(value)) {
+                    assertTrue(transformer.hasNext());
+                    assertEquals(value, transformer.next().intValue());
+                }
+            }
+            assertFalse(transformer.hasNext());
+        })))));
+    }
 }
