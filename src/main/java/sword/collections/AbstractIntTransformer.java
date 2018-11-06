@@ -26,4 +26,9 @@ abstract class AbstractIntTransformer implements IntTransformer {
     public IntTransformer indexes() {
         return new IndexesTransformer<>(this);
     }
+
+    @Override
+    public IntTransformer filter(IntPredicate predicate) {
+        return new FilterIntTransformer(this, predicate);
+    }
 }

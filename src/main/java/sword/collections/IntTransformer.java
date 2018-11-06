@@ -18,4 +18,12 @@ public interface IntTransformer extends IntTraverser {
      * Return all indexes from the current position ignoring the actual values of this collection.
      */
     IntTransformer indexes();
+
+    /**
+     * Composes a new IntTransformer that filters this one by applying the given predicate to the
+     * elements within this collection.
+     * @param predicate Only value returning true for the given this predicate will be present
+     *                  in the resulting Transformer.
+     */
+    IntTransformer filter(IntPredicate predicate);
 }

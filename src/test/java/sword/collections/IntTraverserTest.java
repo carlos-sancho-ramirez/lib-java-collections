@@ -17,7 +17,7 @@ abstract class IntTraverserTest<C extends IterableIntCollection, B extends IntCo
         return (value & 1) == 0;
     }
 
-    private void withFilterFunc(Procedure<IntPredicate> procedure) {
+    void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(IntTraverserTest::isEven);
     }
 
