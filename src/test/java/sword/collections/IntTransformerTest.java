@@ -1,5 +1,7 @@
 package sword.collections;
 
+import java.util.Iterator;
+
 abstract class IntTransformerTest<C extends IntTransformable, B extends IntCollectionBuilder<C>> extends IntTraverserTest<C, B> {
 
     public void testToListWhenEmpty() {
@@ -45,6 +47,38 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntColle
                 setBuilder.add(value);
             }
             assertEquals(setBuilder.build(), transformable.iterator().toSet().toImmutable());
+        }))));
+    }
+
+    public void testIndexesWhenEmpty() {
+        withBuilder(builder -> assertFalse(builder.build().iterator().indexes().hasNext()));
+    }
+
+    public void testIndexesForSingleValue() {
+        withValue(value -> withBuilder(builder -> {
+            final Iterator<Integer> indexIterator = builder.add(value).build().iterator().indexes();
+            assertTrue(indexIterator.hasNext());
+            assertEquals(0, indexIterator.next().intValue());
+            assertFalse(indexIterator.hasNext());
+        }));
+    }
+
+    public void testIndexesForMultipleValues() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformer it = transformable.iterator();
+            int length = 0;
+            while (it.hasNext()) {
+                length++;
+                it.next();
+            }
+
+            final IntTransformer indexIterator = transformable.iterator().indexes();
+            for (int i = 0; i < length; i++) {
+                assertTrue(indexIterator.hasNext());
+                assertEquals(i, indexIterator.next().intValue());
+            }
+            assertFalse(indexIterator.hasNext());
         }))));
     }
 }

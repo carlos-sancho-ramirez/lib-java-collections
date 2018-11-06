@@ -21,4 +21,9 @@ abstract class AbstractIntTransformer implements IntTransformer {
 
         return builder.build();
     }
+
+    @Override
+    public IntTransformer indexes() {
+        return new IndexesTransformer<>(this);
+    }
 }

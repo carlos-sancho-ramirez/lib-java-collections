@@ -13,4 +13,9 @@ public interface IntTransformer extends IntTraverser {
      * be sorted in ascending order.
      */
     IntSet toSet();
+
+    /**
+     * Return all indexes from the current position ignoring the actual values of this collection.
+     */
+    IntTransformer indexes();
 }

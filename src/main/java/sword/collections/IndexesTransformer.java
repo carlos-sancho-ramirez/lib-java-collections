@@ -1,11 +1,13 @@
 package sword.collections;
 
+import java.util.Iterator;
+
 final class IndexesTransformer<T> extends AbstractIntTransformer {
 
-    private final Transformer<T> _source;
+    private final Iterator<T> _source;
     private int _index;
 
-    IndexesTransformer(Transformer<T> source) {
+    IndexesTransformer(Iterator<T> source) {
         if (source == null) {
             throw new IllegalArgumentException();
         }
