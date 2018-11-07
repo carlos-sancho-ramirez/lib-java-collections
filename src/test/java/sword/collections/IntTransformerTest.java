@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 abstract class IntTransformerTest<C extends IntTransformable, B extends IntCollectionBuilder<C>> extends IntTraverserTest<C, B> {
 
+    abstract void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
+
     public void testToListWhenEmpty() {
         withBuilder(builder -> assertTrue(builder.build().iterator().toList().isEmpty()));
     }
@@ -141,6 +143,34 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntColle
                     assertTrue(transformer.hasNext());
                     assertEquals(value, transformer.next().intValue());
                 }
+            }
+            assertFalse(transformer.hasNext());
+        })))));
+    }
+
+    public void testMapToIntWhenEmpty() {
+        final IntToIntFunction func = v -> {
+            throw new AssertionError("This method should not be called");
+        };
+        withBuilder(builder -> assertFalse(builder.build().iterator().mapToInt(func).hasNext()));
+    }
+
+    public void testMapToIntForSingleValue() {
+        withMapToIntFunc(func -> withValue(a -> withBuilder(builder -> {
+            final IntTransformer transformer = builder.add(a).build().iterator().mapToInt(func);
+            assertTrue(transformer.hasNext());
+            assertEquals(func.apply(a), transformer.next().intValue());
+            assertFalse(transformer.hasNext());
+        })));
+    }
+
+    public void testMapToIntForMultipleValues() {
+        withMapToIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformer transformer = transformable.iterator().mapToInt(func);
+            for (int value : transformable) {
+                assertTrue(transformer.hasNext());
+                assertEquals(func.apply(value), transformer.next().intValue());
             }
             assertFalse(transformer.hasNext());
         })))));

@@ -34,4 +34,12 @@ public interface IntTransformer extends IntTraverser {
      *                  in the resulting IntTransformer.
      */
     IntTransformer filterNot(IntPredicate predicate);
+
+    /**
+     * Applies the given function to each of the
+     * values within this collection keeping its order.
+     * @param mapFunc Function to be applied to each of the values within the collection.
+     * @return A transformer that applies the given function just in time.
+     */
+    IntTransformer mapToInt(IntToIntFunction mapFunc);
 }

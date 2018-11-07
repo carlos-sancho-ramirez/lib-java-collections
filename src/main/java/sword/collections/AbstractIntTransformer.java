@@ -36,4 +36,9 @@ abstract class AbstractIntTransformer implements IntTransformer {
     public IntTransformer filterNot(IntPredicate predicate) {
         return new FilterIntTransformer(this, v -> !predicate.apply(v));
     }
+
+    @Override
+    public IntTransformer mapToInt(IntToIntFunction mapFunc) {
+        return new MapToIntIntTransformer<>(this, mapFunc);
+    }
 }

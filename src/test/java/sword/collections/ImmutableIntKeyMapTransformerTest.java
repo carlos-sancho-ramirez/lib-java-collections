@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableIntKeyMapTraverserTest extends TransformerTest<String, TransformableBuilder<String>> {
+public final class ImmutableIntKeyMapTransformerTest extends TransformerTest<String, TransformableBuilder<String>> {
 
     @Override
     void withBuilder(Procedure<TransformableBuilder<String>> procedure) {
@@ -26,7 +26,7 @@ public final class ImmutableIntKeyMapTraverserTest extends TransformerTest<Strin
 
     @Override
     void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
-        procedure.apply(ImmutableIntKeyMapTraverserTest::reduceFunc);
+        procedure.apply(ImmutableIntKeyMapTransformerTest::reduceFunc);
     }
 
     @Override

@@ -168,15 +168,10 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     public void testMapToIntForMultipleValues() {
         withMapToIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
-            final ImmutableIntList.Builder expectedBuilder = new ImmutableIntList.Builder();
-            for (T value : transformable) {
-                expectedBuilder.add(func.apply(value));
-            }
-
             final IntTransformer transformer = transformable.iterator().mapToInt(func);
-            for (int newValue : expectedBuilder.build()) {
+            for (T value : transformable) {
                 assertTrue(transformer.hasNext());
-                assertEquals(newValue, transformer.next().intValue());
+                assertEquals(func.apply(value), transformer.next().intValue());
             }
             assertFalse(transformer.hasNext());
         })))));
@@ -201,15 +196,10 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     public void testMapForMultipleValues() {
         withMapFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
-            final ImmutableList.Builder<Object> expectedBuilder = new ImmutableList.Builder<>();
-            for (T value : transformable) {
-                expectedBuilder.add(func.apply(value));
-            }
-
             final Transformer transformer = transformable.iterator().map(func);
-            for (Object newValue : expectedBuilder.build()) {
+            for (T value : transformable) {
                 assertTrue(transformer.hasNext());
-                assertEquals(newValue, transformer.next());
+                assertEquals(func.apply(value), transformer.next());
             }
             assertFalse(transformer.hasNext());
         })))));
