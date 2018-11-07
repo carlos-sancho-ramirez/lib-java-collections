@@ -14,6 +14,11 @@ public final class ImmutableBitSetTransformerTest extends IntTransformerTest<Imm
     }
 
     @Override
+    void withMapFunc(Procedure<IntFunction<Object>> procedure) {
+        procedure.apply(Integer::toString);
+    }
+
+    @Override
     void withBuilder(Procedure<ImmutableBitSetImpl.Builder> procedure) {
         procedure.apply(new ImmutableBitSetImpl.Builder());
     }

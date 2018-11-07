@@ -13,4 +13,9 @@ public final class ImmutableIntSetImplTransformerTest extends IntTransformerTest
         procedure.apply(v -> v * v);
         procedure.apply(v -> -v - 1);
     }
+
+    @Override
+    void withMapFunc(Procedure<IntFunction<Object>> procedure) {
+        procedure.apply(Integer::toString);
+    }
 }
