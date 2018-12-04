@@ -1,6 +1,6 @@
 package sword.collections;
 
-final class SortUtils {
+public final class SortUtils {
 
     static final int DEFAULT_GRANULARITY = 4;
 
@@ -195,6 +195,44 @@ final class SortUtils {
 
     static int hashCode(Object object) {
         return (object != null)? object.hashCode() : HASH_FOR_NULL;
+    }
+
+    /**
+     * Compare 2 char sequences and returns true if the first is expected to come before the second one.
+     * This method compares the given sequences from first character and keeps going to the
+     * following to the next character until a mismatch is found.
+     * Comparison between characters is done by unicode, which means among other things that
+     * numbers come first 0-9, followed by uppercase character A-Z and then lowercase ones a-z.
+     *
+     * @param a First char sequence to be compared
+     * @param b Second char sequence to be compared.
+     * @return True only if the first is expected to go before the second.
+     * Note that will be false even if they are equal.
+     */
+    public static boolean compareCharSequenceByUnicode(CharSequence a, CharSequence b) {
+        if (a == null) {
+            return b != null;
+        }
+
+        if (b == null) {
+            return false;
+        }
+
+        final int aLength = a.length();
+        final int bLength = b.length();
+        for (int i = 0; i < aLength; i++) {
+            if (i >= bLength) {
+                return false;
+            }
+
+            final char aChar = a.charAt(i);
+            final char bChar = b.charAt(i);
+            if (aChar != bChar) {
+                return aChar < bChar;
+            }
+        }
+
+        return aLength < bLength;
     }
 
     private SortUtils() {
