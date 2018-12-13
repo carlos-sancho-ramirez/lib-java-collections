@@ -124,6 +124,28 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntIterableTest {
         }));
     }
 
+    public void testAddAllForBothEmpty() {
+        ImmutableIntSet set = newIntBuilder().build();
+        assertSame(set, set.addAll(set));
+    }
+
+    public void testAddAllForEmptyGiven() {
+        final ImmutableIntSet empty = newIntBuilder().build();
+        withItem(a -> {
+            final ImmutableIntSet set = newIntBuilder().add(a).build();
+            assertSame(set, set.addAll(empty));
+        });
+    }
+
+    public void testAddAll() {
+        withItem(a -> withItem(b -> withItem(c -> withItem(d -> {
+            ImmutableIntSet set1 = newIntBuilder().add(a).add(b).build();
+            ImmutableIntSet set2 = newIntBuilder().add(c).add(d).build();
+            ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).add(d).build();
+            assertEquals(set, set1.addAll(set2));
+        }))));
+    }
+
     public void testRemoveForEmptySet() {
         final ImmutableIntSet set = newIntBuilder().build();
         withItem(value -> {

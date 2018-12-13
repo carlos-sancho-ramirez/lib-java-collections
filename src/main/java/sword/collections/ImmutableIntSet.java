@@ -31,17 +31,38 @@ public interface ImmutableIntSet extends IntSet, IterableImmutableIntCollection 
     <U> ImmutableHashSet<U> map(IntFunction<U> func);
 
     /**
-     * Add the given value from the current set if not included yet.
+     * Add the given value to the values of the current set if not
+     * included yet.
      *
      * As this class is immutable, this method do not affect in the
      * current values of this set, but a new set is returned instead.
      *
-     * @param value Value to be removed.
+     * @param value Value to be added.
      * @return A new set containing all elements included in this set
      *         plus the one given, or this same instance if the value
      *         was already present.
      */
     ImmutableIntSet add(int value);
+
+    /**
+     * Compose a new set including all current values within this set
+     * and all values from the given collection.
+     *
+     * As this class is immutable, this method do not affect in the
+     * current values of this set, but a new set is returned instead.
+     *
+     * Note that repeated values will be ignored. Thus, the resulting
+     * set will have a length smaller or equal than the sum of the
+     * lengths of both collections.
+     * @param values Values to be added to the ones of this set.
+     * @return A new set containing all elements included in this set
+     *         plus the given ones, or this same instance if the
+     *         values were already present.
+     */
+    default ImmutableIntSet addAll(Iterable<Integer> values) {
+        final MutableIntSet set = mutate();
+        return set.addAll(values)? set.toImmutable() : this;
+    }
 
     /**
      * Remove the given value from the current set if included.
