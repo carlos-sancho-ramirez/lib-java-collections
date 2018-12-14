@@ -54,7 +54,7 @@ public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
 
     @Override
     public int get(T key) {
-        final int index = findKey(_hashCodes, _keys, _keys.length, key);
+        final int index = findKey(_hashCodes, _keys, _size, key);
         if (index < 0) {
             throw new UnmappedKeyException();
         }

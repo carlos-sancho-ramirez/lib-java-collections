@@ -52,7 +52,7 @@ public final class MutableIntPairMap extends AbstractIntPairMap {
 
     @Override
     public int get(int key) {
-        final int index = findKey(_keys, _keys.length, key);
+        final int index = findKey(_keys, _size, key);
         if (index < 0) {
             throw new UnmappedKeyException();
         }
