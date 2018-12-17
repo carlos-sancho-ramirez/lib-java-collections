@@ -350,4 +350,118 @@ public final class ImmutableIntListTest extends AbstractImmutableIntIterableTest
             }
         }))));
     }
+
+    public void testGroupByIntWhenEmpty() {
+        final IntToIntFunction func = str -> {
+            throw new AssertionError("This function should not be executed");
+        };
+        final ImmutableIntList list = newIntBuilder().build();
+        assertTrue(list.groupByInt(func).isEmpty());
+    }
+
+    public void testGroupByInt() {
+        withGroupingIntFunc(func -> withItem(a -> withItem(b -> withItem(c -> {
+            final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
+            final int aGroup = func.apply(a);
+            final int bGroup = func.apply(b);
+            final int cGroup = func.apply(c);
+
+            final ImmutableIntKeyMap<ImmutableIntList> map = list.groupByInt(func);
+            if (aGroup == bGroup) {
+                if (aGroup == cGroup) {
+                    assertEquals(1, map.size());
+                    assertEquals(aGroup, map.keyAt(0));
+                    assertSame(list, map.valueAt(0));
+                }
+                else {
+                    assertEquals(2, map.size());
+                    if (aGroup == map.keyAt(0)) {
+                        assertEquals(cGroup, map.keyAt(1));
+                        assertEquals(newIntBuilder().add(a).add(b).build(), map.valueAt(0));
+                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(1));
+                    }
+                    else {
+                        assertEquals(cGroup, map.keyAt(0));
+                        assertEquals(aGroup, map.keyAt(1));
+                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(0));
+                        assertEquals(newIntBuilder().add(a).add(b).build(), map.valueAt(1));
+                    }
+                }
+            }
+            else if (aGroup == cGroup) {
+                assertEquals(2, map.size());
+                if (aGroup == map.keyAt(0)) {
+                    assertEquals(bGroup, map.keyAt(1));
+                    assertEquals(newIntBuilder().add(a).add(c).build(), map.valueAt(0));
+                    assertEquals(newIntBuilder().add(b).build(), map.valueAt(1));
+                }
+                else {
+                    assertEquals(bGroup, map.keyAt(0));
+                    assertEquals(aGroup, map.keyAt(1));
+                    assertEquals(newIntBuilder().add(b).build(), map.valueAt(0));
+                    assertEquals(newIntBuilder().add(a).add(c).build(), map.valueAt(1));
+                }
+            }
+            else if (bGroup == cGroup) {
+                assertEquals(2, map.size());
+                if (aGroup == map.keyAt(0)) {
+                    assertEquals(bGroup, map.keyAt(1));
+                    assertEquals(newIntBuilder().add(a).build(), map.valueAt(0));
+                    assertEquals(newIntBuilder().add(b).add(c).build(), map.valueAt(1));
+                }
+                else {
+                    assertEquals(bGroup, map.keyAt(0));
+                    assertEquals(aGroup, map.keyAt(1));
+                    assertEquals(newIntBuilder().add(b).add(c).build(), map.valueAt(0));
+                    assertEquals(newIntBuilder().add(a).build(), map.valueAt(1));
+                }
+            }
+            else {
+                assertEquals(3, map.size());
+                if (aGroup == map.keyAt(0)) {
+                    assertEquals(newIntBuilder().add(a).build(), map.valueAt(0));
+                    if (bGroup == map.keyAt(1)) {
+                        assertEquals(cGroup, map.keyAt(2));
+                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(1));
+                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(2));
+                    }
+                    else {
+                        assertEquals(cGroup, map.keyAt(1));
+                        assertEquals(bGroup, map.keyAt(2));
+                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(1));
+                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(2));
+                    }
+                }
+                else if (bGroup == map.keyAt(0)) {
+                    assertEquals(newIntBuilder().add(b).build(), map.valueAt(0));
+                    if (aGroup == map.keyAt(1)) {
+                        assertEquals(cGroup, map.keyAt(2));
+                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(1));
+                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(2));
+                    }
+                    else {
+                        assertEquals(cGroup, map.keyAt(1));
+                        assertEquals(aGroup, map.keyAt(2));
+                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(1));
+                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(2));
+                    }
+                }
+                else {
+                    assertEquals(cGroup, map.keyAt(0));
+                    assertEquals(newIntBuilder().add(c).build(), map.valueAt(0));
+                    if (aGroup == map.keyAt(1)) {
+                        assertEquals(bGroup, map.keyAt(2));
+                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(1));
+                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(2));
+                    }
+                    else {
+                        assertEquals(bGroup, map.keyAt(1));
+                        assertEquals(aGroup, map.keyAt(2));
+                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(1));
+                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(2));
+                    }
+                }
+            }
+        }))));
+    }
 }
