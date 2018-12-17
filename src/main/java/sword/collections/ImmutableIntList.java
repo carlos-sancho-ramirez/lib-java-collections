@@ -203,6 +203,34 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable impleme
         }
     }
 
+    /**
+     * Composes a new map traversing this list, applying the given function to each item.
+     *
+     * This method will compose a new list for all items that the given function does
+     * return an equivalent value. The resulting list will be the value within the new map,
+     * and the returned value will be the key within the map for that list.
+     *
+     * Example:
+     * List(1,2,3,4,5) grouped by func (item % 2) will create Map(0 -&gt; List(2,4), 1 -&gt; List(1,3,5))
+     *
+     * @param function Function to be applied to each item within the list to determine its group.
+     * @param <K> Type for the new key within the returned map.
+     * @return A new map where items have been grouped into different lists according with the function given.
+     */
+    public <K> ImmutableMap<K, ImmutableIntList> groupBy(IntFunction<K> function) {
+        MutableMap<K, ImmutableIntList> map = MutableMap.empty();
+        final int length = size();
+        for (int i = 0; i < length; i++) {
+            final int value = _values[i];
+            final K group = function.apply(value);
+            final ImmutableIntList current = map.get(group, ImmutableIntList.empty());
+            map.put(group, current.append(value));
+        }
+
+        return (map.size() != 1)? map.toImmutable() :
+                new ImmutableMap.Builder<K, ImmutableIntList>().put(map.keyAt(0), this).build();
+    }
+
     @Override
     public int hashCode() {
         final int length = _values.length;
