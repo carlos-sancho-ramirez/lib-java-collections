@@ -62,11 +62,15 @@ public final class ImmutableListTest extends AbstractIterableImmutableTest<Strin
         procedure.apply(this::filterFunc);
     }
 
-    private String takeStringLength(String str) {
-        return (str == null)? "0" : Integer.toString(str.length());
+    private int takeStringLength(String str) {
+        return (str == null)? 0 : str.length();
     }
 
     void withGroupingFunc(Procedure<Function<String, String>> procedure) {
+        procedure.apply(str -> Integer.toString(takeStringLength(str)));
+    }
+
+    void withGroupingIntFunc(Procedure<IntResultFunction<String>> procedure) {
         procedure.apply(this::takeStringLength);
     }
 
@@ -511,6 +515,120 @@ public final class ImmutableListTest extends AbstractIterableImmutableTest<Strin
                     assertEquals(cGroup, map.keyAt(0));
                     assertEquals(newBuilder().add(c).build(), map.valueAt(0));
                     if (aGroup.equals(map.keyAt(1))) {
+                        assertEquals(bGroup, map.keyAt(2));
+                        assertEquals(newBuilder().add(a).build(), map.valueAt(1));
+                        assertEquals(newBuilder().add(b).build(), map.valueAt(2));
+                    }
+                    else {
+                        assertEquals(bGroup, map.keyAt(1));
+                        assertEquals(aGroup, map.keyAt(2));
+                        assertEquals(newBuilder().add(b).build(), map.valueAt(1));
+                        assertEquals(newBuilder().add(a).build(), map.valueAt(2));
+                    }
+                }
+            }
+        }))));
+    }
+
+    public void testGroupByIntWhenEmpty() {
+        final IntResultFunction<String> func = str -> {
+            throw new AssertionError("This function should not be executed");
+        };
+        final ImmutableList<String> list = newBuilder().build();
+        assertTrue(list.groupByInt(func).isEmpty());
+    }
+
+    public void testGroupByInt() {
+        withGroupingIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
+            final int aGroup = func.apply(a);
+            final int bGroup = func.apply(b);
+            final int cGroup = func.apply(c);
+
+            final ImmutableIntKeyMap<ImmutableList<String>> map = list.groupByInt(func);
+            if (aGroup == bGroup) {
+                if (aGroup == cGroup) {
+                    assertEquals(1, map.size());
+                    assertEquals(aGroup, map.keyAt(0));
+                    assertSame(list, map.valueAt(0));
+                }
+                else {
+                    assertEquals(2, map.size());
+                    if (aGroup == map.keyAt(0)) {
+                        assertEquals(cGroup, map.keyAt(1));
+                        assertEquals(newBuilder().add(a).add(b).build(), map.valueAt(0));
+                        assertEquals(newBuilder().add(c).build(), map.valueAt(1));
+                    }
+                    else {
+                        assertEquals(cGroup, map.keyAt(0));
+                        assertEquals(aGroup, map.keyAt(1));
+                        assertEquals(newBuilder().add(c).build(), map.valueAt(0));
+                        assertEquals(newBuilder().add(a).add(b).build(), map.valueAt(1));
+                    }
+                }
+            }
+            else if (aGroup == cGroup) {
+                assertEquals(2, map.size());
+                if (aGroup == map.keyAt(0)) {
+                    assertEquals(bGroup, map.keyAt(1));
+                    assertEquals(newBuilder().add(a).add(c).build(), map.valueAt(0));
+                    assertEquals(newBuilder().add(b).build(), map.valueAt(1));
+                }
+                else {
+                    assertEquals(bGroup, map.keyAt(0));
+                    assertEquals(aGroup, map.keyAt(1));
+                    assertEquals(newBuilder().add(b).build(), map.valueAt(0));
+                    assertEquals(newBuilder().add(a).add(c).build(), map.valueAt(1));
+                }
+            }
+            else if (bGroup == cGroup) {
+                assertEquals(2, map.size());
+                if (aGroup == map.keyAt(0)) {
+                    assertEquals(bGroup, map.keyAt(1));
+                    assertEquals(newBuilder().add(a).build(), map.valueAt(0));
+                    assertEquals(newBuilder().add(b).add(c).build(), map.valueAt(1));
+                }
+                else {
+                    assertEquals(bGroup, map.keyAt(0));
+                    assertEquals(aGroup, map.keyAt(1));
+                    assertEquals(newBuilder().add(b).add(c).build(), map.valueAt(0));
+                    assertEquals(newBuilder().add(a).build(), map.valueAt(1));
+                }
+            }
+            else {
+                assertEquals(3, map.size());
+                if (aGroup == map.keyAt(0)) {
+                    assertEquals(newBuilder().add(a).build(), map.valueAt(0));
+                    if (bGroup == map.keyAt(1)) {
+                        assertEquals(cGroup, map.keyAt(2));
+                        assertEquals(newBuilder().add(b).build(), map.valueAt(1));
+                        assertEquals(newBuilder().add(c).build(), map.valueAt(2));
+                    }
+                    else {
+                        assertEquals(cGroup, map.keyAt(1));
+                        assertEquals(bGroup, map.keyAt(2));
+                        assertEquals(newBuilder().add(c).build(), map.valueAt(1));
+                        assertEquals(newBuilder().add(b).build(), map.valueAt(2));
+                    }
+                }
+                else if (bGroup == map.keyAt(0)) {
+                    assertEquals(newBuilder().add(b).build(), map.valueAt(0));
+                    if (aGroup == map.keyAt(1)) {
+                        assertEquals(cGroup, map.keyAt(2));
+                        assertEquals(newBuilder().add(a).build(), map.valueAt(1));
+                        assertEquals(newBuilder().add(c).build(), map.valueAt(2));
+                    }
+                    else {
+                        assertEquals(cGroup, map.keyAt(1));
+                        assertEquals(aGroup, map.keyAt(2));
+                        assertEquals(newBuilder().add(c).build(), map.valueAt(1));
+                        assertEquals(newBuilder().add(a).build(), map.valueAt(2));
+                    }
+                }
+                else {
+                    assertEquals(cGroup, map.keyAt(0));
+                    assertEquals(newBuilder().add(c).build(), map.valueAt(0));
+                    if (aGroup == map.keyAt(1)) {
                         assertEquals(bGroup, map.keyAt(2));
                         assertEquals(newBuilder().add(a).build(), map.valueAt(1));
                         assertEquals(newBuilder().add(b).build(), map.valueAt(2));

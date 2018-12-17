@@ -233,7 +233,7 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
      *
      * @param function Function to be applied to each item within the list to determine its group.
      * @param <K> Type for the new key within the returned map.
-     * @return A new map where items have been grouped into different list according with the function given.
+     * @return A new map where items have been grouped into different lists according with the function given.
      */
     public <K> ImmutableMap<K, ImmutableList<T>> groupBy(Function<T, K> function) {
         MutableMap<K, ImmutableList<T>> map = MutableMap.empty();
@@ -247,6 +247,33 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
 
         return (map.size() != 1)? map.toImmutable() :
                 new ImmutableMap.Builder<K, ImmutableList<T>>().put(map.keyAt(0), this).build();
+    }
+
+    /**
+     * Composes a new map traversing this list, applying the given function to each item.
+     *
+     * This method will compose a new list for all items that the given function does
+     * return the same integer value. The resulting list will be the value within the new map,
+     * and the returned value will be the key within the map for that list.
+     *
+     * Example:
+     * List(1,2,3,4,5) grouped by func (item % 2) will create Map(0 -&gt; List(2,4), 1 -&gt; List(1,3,5))
+     *
+     * @param function Function to be applied to each item within the list to determine its group.
+     * @return A new map where items have been grouped into different lists according with the function given.
+     */
+    public ImmutableIntKeyMap<ImmutableList<T>> groupByInt(IntResultFunction<T> function) {
+        MutableIntKeyMap<ImmutableList<T>> map = MutableIntKeyMap.empty();
+        final int length = size();
+        for (int i = 0; i < length; i++) {
+            final T value = valueAt(i);
+            final int group = function.apply(value);
+            final ImmutableList<T> current = map.get(group, ImmutableList.empty());
+            map.put(group, current.append(value));
+        }
+
+        return (map.size() != 1)? map.toImmutable() :
+                new ImmutableIntKeyMap.Builder<ImmutableList<T>>().put(map.keyAt(0), this).build();
     }
 
     private class Iterator extends AbstractTransformer<T> {
