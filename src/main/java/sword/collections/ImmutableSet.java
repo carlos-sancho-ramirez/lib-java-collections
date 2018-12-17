@@ -79,6 +79,34 @@ public class ImmutableSet<T> extends AbstractImmutableIterable<T> implements Set
     }
 
     /**
+     * Creates a new {@link ImmutableSet} of the same type where the given
+     * value is included.
+     *
+     * Note that no repeated value are allowed in a Set. If the given value is already in the set,
+     * the same instance will be returned instead.
+     *
+     * @param value item to be included.
+     */
+    public ImmutableSet<T> add(T value) {
+        if (contains(value)) {
+            return this;
+        }
+
+        final int length = _keys.length;
+        final int index = SortUtils.findSuitableIndex(_sortFunction, _keys, length, value);
+        final Object[] newKeys = new Object[length + 1];
+        if (index > 0) {
+            System.arraycopy(_keys, 0, newKeys, 0, index);
+        }
+        newKeys[index] = value;
+        if (index < length) {
+            System.arraycopy(_keys, index, newKeys, index + 1, length - index);
+        }
+
+        return new ImmutableSet<>(_sortFunction, newKeys);
+    }
+
+    /**
      * Creates a new set containing all the current elements and the ones given in the iterable.
      *
      * As this is a set, duplicated elements will not be allowed.

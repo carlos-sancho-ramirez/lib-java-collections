@@ -333,6 +333,19 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
         })));
     }
 
+    public void testAdd() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
+            final ImmutableSet<String> expectedSet = newBuilder().add(a).add(b).add(c).build();
+            final ImmutableSet<String> unionSet = set.add(c);
+            assertEquals(expectedSet, unionSet);
+
+            if (expectedSet.equals(set)) {
+                assertSame(unionSet, set);
+            }
+        })));
+    }
+
     public void testAddAll() {
         withValue(a -> withValue(b -> withValue(c -> withValue(d -> {
             final ImmutableSet<String> set1 = newBuilder().add(a).add(b).build();

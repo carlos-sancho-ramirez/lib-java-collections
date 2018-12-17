@@ -75,6 +75,32 @@ public class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T> {
         return new MutableHashSet<>(keys, hashCodes, length);
     }
 
+    @Override
+    public ImmutableHashSet<T> add(T value) {
+        if (contains(value)) {
+            return this;
+        }
+
+        final int length = _keys.length;
+        final int newHash = SortUtils.hashCode(value);
+        final int index = SortUtils.findSuitableIndex(_hashCodes, length, newHash);
+
+        final int[] newHashes = new int[length + 1];
+        final Object[] newKeys = new Object[length + 1];
+        if (index > 0) {
+            System.arraycopy(_hashCodes, 0, newHashes, 0, index);
+            System.arraycopy(_keys, 0, newKeys, 0, index);
+        }
+        newHashes[index] = newHash;
+        newKeys[index] = value;
+        if (index < length) {
+            System.arraycopy(_hashCodes, index, newHashes, index + 1, length - index);
+            System.arraycopy(_keys, index, newKeys, index + 1, length - index);
+        }
+
+        return new ImmutableHashSet<>(newKeys, newHashes);
+    }
+
     static <E> ImmutableHashSet<E> fromMutableSet(MutableHashSet<E> set) {
         final int length = set.size();
         if (length == 0) {
