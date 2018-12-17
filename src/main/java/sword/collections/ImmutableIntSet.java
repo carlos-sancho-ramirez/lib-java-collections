@@ -92,6 +92,48 @@ public interface ImmutableIntSet extends IntSet, IterableImmutableIntCollection 
     ImmutableIntList toList();
 
     /**
+     * Composes a new map traversing this set, applying the given function to each item.
+     *
+     * This method will compose a new set for all items that the given function does
+     * return an equivalent value. The resulting set will be the value within the new map,
+     * and the returned value will be the key within the map for that set.
+     *
+     * Example:
+     * Set(1,2,3,4,5) grouped by func (item % 2) will create Map(0 -&gt; Set(2,4), 1 -&gt; Set(1,3,5))
+     *
+     * @param function Function to be applied to each item within the set to determine its group.
+     * @param <K> Type for the new key within the returned map.
+     * @return A new map where items have been grouped into different set according with the function given.
+     */
+    default <K> ImmutableMap<K, ImmutableIntSet> groupBy(IntFunction<K> function) {
+        final MutableMap<K, MutableIntSet> map = MutableMap.empty();
+        for (int value : this) {
+            final K group = function.apply(value);
+            MutableIntSet set = map.get(group, null);
+            if (set == null) {
+                set = MutableIntSet.empty();
+                map.put(group, set);
+            }
+
+            set.add(value);
+        }
+
+        if (map.size() == 1) {
+            return new ImmutableMap.Builder<K, ImmutableIntSet>()
+                    .put(map.keyAt(0), this)
+                    .build();
+        }
+
+        final int mapLength = map.size();
+        final ImmutableMap.Builder<K, ImmutableIntSet> builder = new ImmutableMap.Builder<>();
+        for (int i = 0; i < mapLength; i++) {
+            builder.put(map.keyAt(i), map.valueAt(i).toImmutable());
+        }
+
+        return builder.build();
+    }
+
+    /**
      * Builder to create a new instance of an {@link ImmutableIntSet}.
      */
     interface Builder extends ImmutableIntCollectionBuilder<ImmutableIntSet> {

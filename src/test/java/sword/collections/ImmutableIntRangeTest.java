@@ -47,6 +47,18 @@ public class ImmutableIntRangeTest extends TestCase {
         }
     }
 
+    private int moduleFour(int value) {
+        return value & 3;
+    }
+
+    private void withGroupingFunc(Procedure<IntFunction<String>> procedure) {
+        procedure.apply(value -> Integer.toString(moduleFour(value)));
+    }
+
+    private void withGroupingIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(this::moduleFour);
+    }
+
     public void testMinMaxAndSizeConsistency() {
         withRange(range -> {
             assertEquals(range.size(), range.max() - range.min() + 1);
@@ -146,5 +158,33 @@ public class ImmutableIntRangeTest extends TestCase {
                 }
             }
         }
+    }
+
+    public void testGroupBy() {
+        withGroupingFunc(func -> withSmallRange(range -> {
+            final ImmutableMap<String, ImmutableIntSet> map = range.groupBy(func);
+            final int mapLength = map.size();
+
+            int count = 0;
+            for (int mapIndex = 0; mapIndex < mapLength; mapIndex++) {
+                final int setLength = map.valueAt(mapIndex).size();
+                assertFalse(setLength > range.size());
+                assertFalse(setLength == 0);
+                count += setLength;
+            }
+            assertEquals(range.size(), count);
+
+            for (int value : range) {
+                final String group = func.apply(value);
+                for (int mapIndex = 0; mapIndex < mapLength; mapIndex++) {
+                    final ImmutableIntSet set = map.valueAt(mapIndex);
+                    if (SortUtils.equal(group, map.keyAt(mapIndex))) {
+                        assertTrue(set.contains(value));
+                    } else {
+                        assertFalse(set.contains(value));
+                    }
+                }
+            }
+        }));
     }
 }
