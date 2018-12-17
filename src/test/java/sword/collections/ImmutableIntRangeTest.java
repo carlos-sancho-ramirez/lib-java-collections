@@ -187,4 +187,32 @@ public class ImmutableIntRangeTest extends TestCase {
             }
         }));
     }
+
+    public void testGroupByInt() {
+        withGroupingIntFunc(func -> withSmallRange(range -> {
+            final ImmutableIntKeyMap<ImmutableIntSet> map = range.groupByInt(func);
+            final int mapLength = map.size();
+
+            int count = 0;
+            for (int mapIndex = 0; mapIndex < mapLength; mapIndex++) {
+                final int setLength = map.valueAt(mapIndex).size();
+                assertFalse(setLength > range.size());
+                assertFalse(setLength == 0);
+                count += setLength;
+            }
+            assertEquals(range.size(), count);
+
+            for (int value : range) {
+                final int group = func.apply(value);
+                for (int mapIndex = 0; mapIndex < mapLength; mapIndex++) {
+                    final ImmutableIntSet set = map.valueAt(mapIndex);
+                    if (group == map.keyAt(mapIndex)) {
+                        assertTrue(set.contains(value));
+                    } else {
+                        assertFalse(set.contains(value));
+                    }
+                }
+            }
+        }));
+    }
 }
