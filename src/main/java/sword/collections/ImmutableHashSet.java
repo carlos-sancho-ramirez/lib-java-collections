@@ -25,7 +25,7 @@ import static sword.collections.SortUtils.findKey;
  *
  * @param <T> Type for the elements within the Set
  */
-public class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T> {
+public final class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T> {
 
     private static final ImmutableHashSet<Object> EMPTY = new ImmutableHashSet<>(new Object[0], new int[0]);
 
@@ -99,6 +99,34 @@ public class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T> {
         }
 
         return new ImmutableHashSet<>(newKeys, newHashes);
+    }
+
+    /**
+     * Composes a new map traversing this set, applying the given function to each item.
+     *
+     * This method will compose a new set for all items that the given function does
+     * return an equivalent value. The resulting set will be the value within the new map,
+     * and the returned value will be the key within the map for that set.
+     *
+     * Example:
+     * Set(1,2,3,4,5) grouped by func (item % 2) will create Map(0 -&gt; Set(2,4), 1 -&gt; Set(1,3,5))
+     *
+     * @param function Function to be applied to each item within the set to determine its group.
+     * @param <K> Type for the new key within the returned map.
+     * @return A new map where items have been grouped into different set according with the function given.
+     */
+    public <K> ImmutableMap<K, ImmutableHashSet<T>> groupBy(Function<T, K> function) {
+        MutableMap<K, ImmutableHashSet<T>> map = MutableMap.empty();
+        final int length = size();
+        for (int i = 0; i < length; i++) {
+            final T value = valueAt(i);
+            final K group = function.apply(value);
+            final ImmutableHashSet<T> current = map.get(group, ImmutableHashSet.empty());
+            map.put(group, current.add(value));
+        }
+
+        return (map.size() != 1)? map.toImmutable() :
+                new ImmutableMap.Builder<K, ImmutableHashSet<T>>().put(map.keyAt(0), this).build();
     }
 
     static <E> ImmutableHashSet<E> fromMutableSet(MutableHashSet<E> set) {
