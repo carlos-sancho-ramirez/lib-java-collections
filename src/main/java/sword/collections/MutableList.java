@@ -3,7 +3,7 @@ package sword.collections;
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.equal;
 
-public final class MutableList<T> extends AbstractIterable<T> implements List<T> {
+public final class MutableList<T> extends AbstractIterable<T> implements List<T>, MutableIterableCollection<T> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -148,15 +148,8 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
         }
     }
 
-    /**
-     * Removes from this collection the item in the given position.
-     *
-     * If no exception is thrown because of a wrong index, this method will always
-     * shrink the size of this collection by 1.
-     * @param index Index within this collection for the element to be removed.
-     *              It must be between 0 (included) and the value returned by {@link #size()} (excluded)
-     */
-    public void removeAt(int index) {
+    @Override
+    public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
             throw new IndexOutOfBoundsException();
         }

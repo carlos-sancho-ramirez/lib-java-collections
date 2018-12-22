@@ -12,7 +12,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
+public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements MutableIterableCollection<T> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -88,9 +88,10 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> {
         return findKey(_keys, _size, key);
     }
 
-    public void removeAt(int index) {
+    @Override
+    public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
-            throw new IllegalArgumentException("Invalid index");
+            throw new IndexOutOfBoundsException();
         }
 
         --_size;

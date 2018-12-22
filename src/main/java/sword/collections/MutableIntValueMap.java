@@ -21,7 +21,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  *
  * @param <T> Type for the key elements within the Map
  */
-public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
+public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> implements MutableIterableIntCollection {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -236,9 +236,10 @@ public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> {
         return true;
     }
 
-    public void removeAt(int index) {
+    @Override
+    public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
-            throw new IllegalArgumentException("Invalid index");
+            throw new IndexOutOfBoundsException();
         }
 
         if (_size != 1 && (_size % GRANULARITY) == 1) {

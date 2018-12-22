@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 
-public final class MutableIntList extends AbstractIntIterable implements IntList {
+public final class MutableIntList extends AbstractIntIterable implements IntList, MutableIterableIntCollection {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -80,16 +80,8 @@ public final class MutableIntList extends AbstractIntIterable implements IntList
         }
     }
 
-    /**
-     * Removes from this collection the item in the given position.
-     *
-     * If no exception is thrown because of a wrong index, this method will always
-     * shrink the size of this collection by 1.
-     * @param index Index within this collection for the element to be removed.
-     *              It must be between 0 (included) and the value returned by {@link #size()} (excluded)
-     * @throws java.lang.IndexOutOfBoundsException if index is negative or it is equal or greater than the current size
-     */
-    public void removeAt(int index) {
+    @Override
+    public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
             throw new IndexOutOfBoundsException();
         }

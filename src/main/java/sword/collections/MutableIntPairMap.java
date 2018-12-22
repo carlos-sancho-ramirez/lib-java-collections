@@ -12,7 +12,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class MutableIntPairMap extends AbstractIntPairMap {
+public final class MutableIntPairMap extends AbstractIntPairMap implements MutableIterableIntCollection {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -122,10 +122,12 @@ public final class MutableIntPairMap extends AbstractIntPairMap {
         return new MutableIntPairMap(keys, values, _size);
     }
 
-    /**
-     * Remove the key-value pair located in the given position.
-     */
+    @Override
     public void removeAt(int index) {
+        if (index < 0 || index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         --_size;
         if (_size != 0 && (_size % GRANULARITY) == 0) {
             int[] oldKeys = _keys;

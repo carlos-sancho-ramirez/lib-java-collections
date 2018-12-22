@@ -20,7 +20,7 @@ import static sword.collections.SortUtils.findValue;
  *
  * @param <T> Type for the elements within the Set
  */
-public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
+public class MutableSet<T> extends AbstractIterable<T> implements Set<T>, MutableIterableCollection<T> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -166,7 +166,12 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T> {
         return false;
     }
 
-    void removeAt(int index) {
+    @Override
+    public void removeAt(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         if (_size != 1 && (_size % GRANULARITY) == 1) {
             Object[] oldKeys = _keys;
             _keys = new Object[--_size];

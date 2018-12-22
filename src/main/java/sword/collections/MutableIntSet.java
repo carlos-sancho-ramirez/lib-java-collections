@@ -6,7 +6,7 @@ import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 
-public final class MutableIntSet extends AbstractIntIterable implements IntSet {
+public final class MutableIntSet extends AbstractIntIterable implements IntSet, MutableIterableIntCollection {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -38,7 +38,8 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet {
         return _values[index];
     }
 
-    private void removeAt(int index) {
+    @Override
+    public void removeAt(int index) throws IndexOutOfBoundsException {
         if (_size != 1 && (_size % GRANULARITY) == 1) {
             int[] oldValues = _values;
             _values = new int[--_size];

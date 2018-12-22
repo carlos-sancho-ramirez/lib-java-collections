@@ -22,7 +22,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * @param <K> Type for the key elements within the Map
  * @param <V> Type for the value elements within the Map
  */
-public final class MutableMap<K, V> extends AbstractMap<K, V> {
+public final class MutableMap<K, V> extends AbstractMap<K, V> implements MutableIterableCollection<V> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -253,7 +253,12 @@ public final class MutableMap<K, V> extends AbstractMap<K, V> {
         return false;
     }
 
-    private void removeAt(int index) {
+    @Override
+    public void removeAt(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         if (_size != 1 && (_size % GRANULARITY) == 1) {
             Object[] oldKeys = _keys;
             int[] oldHashCodes = _hashCodes;

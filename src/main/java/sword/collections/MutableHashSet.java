@@ -102,7 +102,11 @@ public final class MutableHashSet<T> extends MutableSet<T> implements Set<T> {
     }
 
     @Override
-    void removeAt(int index) {
+    public void removeAt(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         if (_size != 1 && (_size % GRANULARITY) == 1) {
             Object[] oldKeys = _keys;
             int[] oldHashCodes = _hashCodes;
