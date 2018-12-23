@@ -93,4 +93,31 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
             assertEquals(immutable, mutable);
         })));
     }
+
+    public void testClearWhenEmpty() {
+        final MutableIntPairMap collection = newBuilder().build();
+        assertFalse(collection.clear());
+        assertTrue(collection.isEmpty());
+    }
+
+    public void testClearForSingleItem() {
+        withInt(value -> {
+            final MutableIntPairMap collection = newBuilder()
+                    .put(value, value)
+                    .build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        });
+    }
+
+    public void testClearForMultipleItems() {
+        withInt(a -> withInt(b -> {
+            final MutableIntPairMap collection = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        }));
+    }
 }

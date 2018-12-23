@@ -155,6 +155,18 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     }
 
     @Override
+    public boolean clear() {
+        final boolean somethingRemoved = _size > 0;
+        if (_size > GRANULARITY) {
+            _keys = new int[GRANULARITY];
+            _values = new int[GRANULARITY];
+        }
+
+        _size = 0;
+        return somethingRemoved;
+    }
+
+    @Override
     public IntSet keySet() {
         ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
         for (int i = 0; i < _size; i++) {
@@ -170,20 +182,6 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
         final int[] newValues = new int[length];
         System.arraycopy(_values, 0, newValues, 0, length);
         return new ImmutableIntList(newValues);
-    }
-
-    /**
-     * Remove all the content from the map, leaving it empty.
-     */
-    public boolean clear() {
-        final boolean somethingRemoved = _size > 0;
-        if (_size > GRANULARITY) {
-            _keys = new int[GRANULARITY];
-            _values = new int[GRANULARITY];
-        }
-
-        _size = 0;
-        return somethingRemoved;
     }
 
     /**

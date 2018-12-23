@@ -105,6 +105,18 @@ public final class MutableIntList extends AbstractIntIterable implements IntList
         }
     }
 
+    @Override
+    public boolean clear() {
+        final int suitableLength = suitableArrayLength(0);
+        if (_values.length != suitableLength) {
+            _values = new int[suitableLength];
+        }
+
+        final boolean changed = _size > 0;
+        _size = 0;
+        return changed;
+    }
+
     private class Iterator implements IntTraverser {
         private int _index;
 

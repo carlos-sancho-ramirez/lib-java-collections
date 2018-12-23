@@ -294,4 +294,26 @@ public final class MutableIntListTest extends AbstractIntIterableTest {
             }
         }));
     }
+
+    public void testClearWhenEmpty() {
+        final MutableIntList collection = newIntBuilder().build();
+        assertFalse(collection.clear());
+        assertTrue(collection.isEmpty());
+    }
+
+    public void testClearForSingleItem() {
+        withInt(value -> {
+            final MutableIntList collection = newIntBuilder().add(value).build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        });
+    }
+
+    public void testClearForMultipleItems() {
+        withInt(a -> withInt(b -> {
+            final MutableIntList collection = newIntBuilder().add(a).add(b).build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        }));
+    }
 }

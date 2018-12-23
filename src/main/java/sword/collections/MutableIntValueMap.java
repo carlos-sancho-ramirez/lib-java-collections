@@ -168,6 +168,7 @@ public final class MutableIntValueMap<T> extends AbstractIntValueMap<T> implemen
         return new MutableIntValueMap<>(keys, hashCodes, values, _size);
     }
 
+    @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
         if (_size > GRANULARITY) {

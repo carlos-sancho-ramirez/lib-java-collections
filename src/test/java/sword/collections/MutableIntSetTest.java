@@ -2,6 +2,8 @@ package sword.collections;
 
 import java.util.Iterator;
 
+import static sword.collections.TestUtils.withInt;
+
 public class MutableIntSetTest extends AbstractIntIterableTest {
 
     private static final int[] INT_VALUES = {
@@ -242,6 +244,28 @@ public class MutableIntSetTest extends AbstractIntIterableTest {
                     assertEquals(b, list.get(0));
                 }
             }
+        }));
+    }
+
+    public void testClearWhenEmpty() {
+        final MutableIntSet collection = newIntBuilder().build();
+        assertFalse(collection.clear());
+        assertTrue(collection.isEmpty());
+    }
+
+    public void testClearForSingleItem() {
+        withInt(value -> {
+            final MutableIntSet collection = newIntBuilder().add(value).build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        });
+    }
+
+    public void testClearForMultipleItems() {
+        withInt(a -> withInt(b -> {
+            final MutableIntSet collection = newIntBuilder().add(a).add(b).build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
         }));
     }
 }

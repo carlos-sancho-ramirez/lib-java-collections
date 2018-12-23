@@ -35,4 +35,31 @@ public final class MutableIntValueMapTest extends IntValueMapTest {
             assertEquals(immutable, mutable);
         })));
     }
+
+    public void testClearWhenEmpty() {
+        final MutableIntValueMap<String> collection = newBuilder().build().mutate();
+        assertFalse(collection.clear());
+        assertTrue(collection.isEmpty());
+    }
+
+    public void testClearForSingleItem() {
+        withInt(value -> {
+            final MutableIntValueMap<String> collection = newBuilder()
+                    .put(Integer.toString(value), value)
+                    .build().mutate();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        });
+    }
+
+    public void testClearForMultipleItems() {
+        withInt(a -> withInt(b -> {
+            final MutableIntValueMap<String> collection = newBuilder()
+                    .put(Integer.toString(a), a)
+                    .put(Integer.toString(b), b)
+                    .build().mutate();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        }));
+    }
 }

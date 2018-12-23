@@ -60,6 +60,7 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet, 
         }
     }
 
+    @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
         if (_size > GRANULARITY) {
