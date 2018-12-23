@@ -204,6 +204,7 @@ public final class MutableMap<K, V> extends AbstractMap<K, V> implements Mutable
         }
     }
 
+    @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
         if (_size > GRANULARITY) {

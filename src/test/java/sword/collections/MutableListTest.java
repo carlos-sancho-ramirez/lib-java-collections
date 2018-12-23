@@ -468,4 +468,26 @@ public final class MutableListTest extends AbstractTransformableTest<String> {
             }
         })));
     }
+
+    public void testClearWhenEmpty() {
+        final MutableList<String> collection = newBuilder().build();
+        assertFalse(collection.clear());
+        assertTrue(collection.isEmpty());
+    }
+
+    public void testClearForSingleItem() {
+        withValue(value -> {
+            final MutableList<String> collection = newBuilder().add(value).build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        });
+    }
+
+    public void testClearForMultipleItems() {
+        withValue(a -> withValue(b -> {
+            final MutableList<String> collection = newBuilder().add(a).add(b).build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        }));
+    }
 }

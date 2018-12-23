@@ -174,6 +174,24 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
         }
     }
 
+    @Override
+    public boolean clear() {
+        final int suitableLength = suitableArrayLength(0);
+        if (_values.length != suitableLength) {
+            _values = new Object[suitableLength];
+        }
+        else {
+            for (int i = 0; i < _size; i++) {
+                _values[i] = null;
+            }
+        }
+
+        final boolean changed = _size > 0;
+        _size = 0;
+
+        return changed;
+    }
+
     /**
      * Replace the value in the given index by the one provided here.
      *

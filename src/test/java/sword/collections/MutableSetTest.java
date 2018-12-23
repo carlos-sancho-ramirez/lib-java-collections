@@ -259,4 +259,26 @@ public class MutableSetTest extends AbstractTransformableTest<String> {
             assertFalse(it.hasNext());
         })));
     }
+
+    public void testClearWhenEmpty() {
+        final MutableSet<String> collection = newBuilder().build();
+        assertFalse(collection.clear());
+        assertTrue(collection.isEmpty());
+    }
+
+    public void testClearForSingleItem() {
+        withValue(value -> {
+            final MutableSet<String> collection = newBuilder().add(value).build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        });
+    }
+
+    public void testClearForMultipleItems() {
+        withValue(a -> withValue(b -> {
+            final MutableSet<String> collection = newBuilder().add(a).add(b).build();
+            assertTrue(collection.clear());
+            assertTrue(collection.isEmpty());
+        }));
+    }
 }

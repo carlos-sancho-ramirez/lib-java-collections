@@ -90,4 +90,31 @@ public class MutableMapTest extends MapTest<Integer, String> {
             assertEquals(immutable, mutable);
         })));
     }
+
+    public void testClearWhenEmpty() {
+        final MutableMap<Integer, String> map = newBuilder().build();
+        assertFalse(map.clear());
+        assertTrue(map.isEmpty());
+    }
+
+    public void testClearForSingleItem() {
+        withInt(value -> {
+            final MutableMap<Integer, String> map = newBuilder()
+                    .put(value, Integer.toString(value))
+                    .build();
+            assertTrue(map.clear());
+            assertTrue(map.isEmpty());
+        });
+    }
+
+    public void testClearForMultipleItems() {
+        withInt(a -> withInt(b -> {
+            final MutableMap<Integer, String> map = newBuilder()
+                    .put(a, Integer.toString(a))
+                    .put(b, Integer.toString(b))
+                    .build();
+            assertTrue(map.clear());
+            assertTrue(map.isEmpty());
+        }));
+    }
 }

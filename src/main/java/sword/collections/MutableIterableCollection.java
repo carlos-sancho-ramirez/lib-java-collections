@@ -13,4 +13,10 @@ public interface MutableIterableCollection<T> extends IterableCollection<T> {
      * @throws IndexOutOfBoundsException if the given index is invalid for this collection.
      */
     void removeAt(int index) throws IndexOutOfBoundsException;
+
+    /**
+     * Remove all the content of this collection.
+     * @return Whether the collection has changed, false if it was already empty.
+     */
+    boolean clear();
 }

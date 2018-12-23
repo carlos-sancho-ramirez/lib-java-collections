@@ -192,6 +192,24 @@ public class MutableSet<T> extends AbstractIterable<T> implements Set<T>, Mutabl
         }
     }
 
+    @Override
+    public boolean clear() {
+        final int suitableLength = suitableArrayLength(0);
+        if (_keys.length != suitableLength) {
+            _keys = new Object[suitableLength];
+        }
+        else {
+            for (int i = 0; i < _size; i++) {
+                _keys[i] = null;
+            }
+        }
+
+        final boolean changed = _size > 0;
+        _size = 0;
+
+        return changed;
+    }
+
     public boolean remove(T key) {
         int index = indexOf(key);
         if (index >= 0) {

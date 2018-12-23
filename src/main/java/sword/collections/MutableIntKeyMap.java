@@ -174,6 +174,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
         return new MutableIntKeyMap<>(keys, values, _size);
     }
 
+    @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
         if (_size > GRANULARITY) {
