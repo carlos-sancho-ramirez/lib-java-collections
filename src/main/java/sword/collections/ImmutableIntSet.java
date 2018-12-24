@@ -106,7 +106,7 @@ public interface ImmutableIntSet extends IntSet, IterableImmutableIntCollection 
      * @return A new map where items have been grouped into different set according with the function given.
      */
     default <K> ImmutableMap<K, ImmutableIntSet> groupBy(IntFunction<K> function) {
-        final MutableMap<K, MutableIntSet> map = MutableMap.empty();
+        final MutableMap<K, MutableIntSet> map = MutableHashMap.empty();
         for (int value : this) {
             final K group = function.apply(value);
             MutableIntSet set = map.get(group, null);
@@ -119,13 +119,13 @@ public interface ImmutableIntSet extends IntSet, IterableImmutableIntCollection 
         }
 
         if (map.size() == 1) {
-            return new ImmutableMap.Builder<K, ImmutableIntSet>()
+            return new ImmutableHashMap.Builder<K, ImmutableIntSet>()
                     .put(map.keyAt(0), this)
                     .build();
         }
 
         final int mapLength = map.size();
-        final ImmutableMap.Builder<K, ImmutableIntSet> builder = new ImmutableMap.Builder<>();
+        final ImmutableHashMap.Builder<K, ImmutableIntSet> builder = new ImmutableHashMap.Builder<>();
         for (int i = 0; i < mapLength; i++) {
             builder.put(map.keyAt(i), map.valueAt(i).toImmutable());
         }

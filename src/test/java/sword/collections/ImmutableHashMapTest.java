@@ -6,15 +6,11 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableMapTest extends MapTest<Integer, String> {
-
-    private static boolean sortInDescendantOrder(int a, int b) {
-        return b > a;
-    }
+public final class ImmutableHashMapTest extends MapTest<Integer, String> {
 
     @Override
-    ImmutableMap.Builder<Integer, String> newBuilder() {
-        return new ImmutableMap.Builder<>(ImmutableMapTest::sortInDescendantOrder);
+    ImmutableHashMap.Builder<Integer, String> newBuilder() {
+        return new ImmutableHashMap.Builder<>();
     }
 
     @Override
@@ -54,7 +50,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
 
     public void testPutMethod() {
         withKey(a -> withKey(b -> withKey(key -> withValue(value -> {
-            final ImmutableMap<Integer, String> map = newBuilder()
+            final ImmutableHashMap<Integer, String> map = newBuilder()
                     .put(a, valueFromKey(a))
                     .put(b, valueFromKey(b))
                     .build();
@@ -72,7 +68,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             else {
                 assertSame(map, map.put(key, valueFromKey(key)));
 
-                final ImmutableSet<Integer> keySet = map.keySet();
+                final ImmutableHashSet<Integer> keySet = map.keySet();
                 assertEquals(keySet, newMap.keySet());
 
                 for (Integer k : keySet) {
@@ -108,12 +104,8 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             final ImmutableMap<Integer, String> map = newBuilder().put(key, value).build();
             final ImmutableMap<Integer, String> filtered = map.filter(f);
 
-            if (f.apply(value)) {
-                assertSame(map, filtered);
-            }
-            else {
-                assertTrue(filtered.isEmpty());
-            }
+            final ImmutableMap<Integer, String> expected = f.apply(value)? map : newBuilder().build();
+            assertSame(expected, filtered);
         }));
     }
 
@@ -149,7 +141,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
                 assertFalse(iterator.hasNext());
             }
             else {
-                assertTrue(filtered.isEmpty());
+                assertSame(newBuilder().build(), filtered);
             }
         })));
     }
@@ -167,12 +159,8 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             final ImmutableMap<Integer, String> map = newBuilder().put(key, value).build();
             final ImmutableMap<Integer, String> filtered = map.filterNot(f);
 
-            if (f.apply(value)) {
-                assertTrue(filtered.isEmpty());
-            }
-            else {
-                assertSame(map, filtered);
-            }
+            final ImmutableMap<Integer, String> expected = f.apply(value)? newBuilder().build() : map;
+            assertSame(expected, filtered);
         }));
     }
 
@@ -189,7 +177,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             final boolean bRemoved = f.apply(valueB);
 
             if (aRemoved && bRemoved) {
-                assertTrue(filtered.isEmpty());
+                assertSame(newBuilder().build(), filtered);
             }
             else if (aRemoved) {
                 Iterator<Map.Entry<Integer, String>> iterator = filtered.entries().iterator();
@@ -217,7 +205,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
         withKey(ka -> withKey(kb -> {
             final String va = valueFromKey(ka);
             final String vb = valueFromKey(kb);
-            final ImmutableMap<Integer, String> map = newBuilder()
+            final ImmutableHashMap<Integer, String> map = newBuilder()
                     .put(ka, va)
                     .put(kb, vb)
                     .build();
@@ -225,7 +213,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             final IntResultFunction<String> mapFunc = str -> (str != null)? str.hashCode() : 0;
             final ImmutableIntValueMap<Integer> map2 = map.map(mapFunc);
 
-            final ImmutableSet<Integer> keySet = map.keySet();
+            final ImmutableHashSet<Integer> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());
 
             for (Integer key : keySet) {
@@ -238,7 +226,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
         withKey(ka -> withKey(kb -> {
             final String va = valueFromKey(ka);
             final String vb = valueFromKey(kb);
-            final ImmutableMap<Integer, String> map = newBuilder()
+            final ImmutableHashMap<Integer, String> map = newBuilder()
                     .put(ka, va)
                     .put(kb, vb)
                     .build();
@@ -246,7 +234,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
             final Function<String, String> mapFunc = str -> (str != null)? "_" + str : "_";
             final ImmutableMap<Integer, String> map2 = map.map(mapFunc);
 
-            final ImmutableSet<Integer> keySet = map.keySet();
+            final ImmutableHashSet<Integer> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());
 
             for (Integer key : keySet) {

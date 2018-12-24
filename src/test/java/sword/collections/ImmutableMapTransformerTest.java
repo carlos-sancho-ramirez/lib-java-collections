@@ -40,7 +40,7 @@ public final class ImmutableMapTransformerTest extends TransformerTest<String, T
     }
 
     private static final class SameKeyAndValueBuilder implements TransformableBuilder<String> {
-        private final ImmutableMap.Builder<String, String> builder = new ImmutableMap.Builder<>();
+        private final ImmutableHashMap.Builder<String, String> builder = new ImmutableHashMap.Builder<>();
 
         @Override
         public TransformableBuilder<String> add(String element) {
@@ -55,7 +55,7 @@ public final class ImmutableMapTransformerTest extends TransformerTest<String, T
     }
 
     private static final class IndexedKeyBuilder implements TransformableBuilder<String> {
-        private final ImmutableMap.Builder<Integer, String> builder = new ImmutableMap.Builder<>();
+        private final ImmutableHashMap.Builder<Integer, String> builder = new ImmutableHashMap.Builder<>();
         private int key;
 
         @Override

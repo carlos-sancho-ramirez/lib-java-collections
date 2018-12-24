@@ -235,6 +235,10 @@ public final class SortUtils {
         return aLength < bLength;
     }
 
+    static boolean compareByHashCode(Object a, Object b) {
+        return hashCode(a) < hashCode(b);
+    }
+
     private SortUtils() {
     }
 }

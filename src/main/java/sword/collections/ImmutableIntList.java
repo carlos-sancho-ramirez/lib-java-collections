@@ -218,7 +218,7 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable impleme
      * @return A new map where items have been grouped into different lists according with the function given.
      */
     public <K> ImmutableMap<K, ImmutableIntList> groupBy(IntFunction<K> function) {
-        MutableMap<K, ImmutableIntList> map = MutableMap.empty();
+        MutableMap<K, ImmutableIntList> map = MutableHashMap.empty();
         final int length = size();
         for (int i = 0; i < length; i++) {
             final int value = _values[i];
@@ -228,7 +228,7 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable impleme
         }
 
         return (map.size() != 1)? map.toImmutable() :
-                new ImmutableMap.Builder<K, ImmutableIntList>().put(map.keyAt(0), this).build();
+                new ImmutableHashMap.Builder<K, ImmutableIntList>().put(map.keyAt(0), this).build();
     }
 
     /**

@@ -201,7 +201,7 @@ public final class ImmutableIntValueMap<T> extends AbstractIntValueMap<T> implem
             newValues[i] = mapFunc.apply(valueAt(i));
         }
 
-        return new ImmutableMap<>(_keys, _hashCodes, newValues);
+        return new ImmutableHashMap<>(_keys, _hashCodes, newValues);
     }
 
     public ImmutableIntKeyMap<T> reverse() {

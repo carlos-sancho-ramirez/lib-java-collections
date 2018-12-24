@@ -5,11 +5,11 @@ import java.util.Iterator;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public class MutableMapTest extends MapTest<Integer, String> {
+public class MutableHashMapTest extends MapTest<Integer, String> {
 
     @Override
-    MutableMap.Builder<Integer, String> newBuilder() {
-        return new MutableMap.Builder<>();
+    MutableHashMap.Builder<Integer, String> newBuilder() {
+        return new MutableHashMap.Builder<>();
     }
 
     @Override

@@ -116,7 +116,7 @@ public final class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T>
      * @return A new map where items have been grouped into different set according with the function given.
      */
     public <K> ImmutableMap<K, ImmutableHashSet<T>> groupBy(Function<T, K> function) {
-        MutableMap<K, ImmutableHashSet<T>> map = MutableMap.empty();
+        MutableMap<K, ImmutableHashSet<T>> map = MutableHashMap.empty();
         final int length = size();
         for (int i = 0; i < length; i++) {
             final T value = valueAt(i);
@@ -126,7 +126,7 @@ public final class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T>
         }
 
         return (map.size() != 1)? map.toImmutable() :
-                new ImmutableMap.Builder<K, ImmutableHashSet<T>>().put(map.keyAt(0), this).build();
+                new ImmutableHashMap.Builder<K, ImmutableHashSet<T>>().put(map.keyAt(0), this).build();
     }
 
     /**
