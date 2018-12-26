@@ -25,7 +25,7 @@ import static sword.collections.SortUtils.findKey;
  *
  * @param <T> Type for the elements within the Set
  */
-public final class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T> {
+public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
 
     private static final ImmutableHashSet<Object> EMPTY = new ImmutableHashSet<>(new Object[0], new int[0]);
 
@@ -37,7 +37,7 @@ public final class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T>
     private final int[] _hashCodes;
 
     ImmutableHashSet(Object[] keys, int[] hashCodes) {
-        super(null, keys);
+        super(keys);
         _hashCodes = hashCodes;
     }
 
@@ -174,12 +174,8 @@ public final class ImmutableHashSet<T> extends ImmutableSet<T> implements Set<T>
         return new ImmutableHashSet<>(keys, hashCodes);
     }
 
-    public static class Builder<E> extends ImmutableSet.Builder<E> {
+    public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableHashSet<E> _set = MutableHashSet.empty();
-
-        public Builder() {
-            super(null);
-        }
 
         @Override
         public Builder<E> add(E key) {

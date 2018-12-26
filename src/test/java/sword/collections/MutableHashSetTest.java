@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-public final class MutableHashSetTest extends MutableSetTest {
+public final class MutableHashSetTest extends MutableSetTest<String> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"
@@ -50,6 +50,7 @@ public final class MutableHashSetTest extends MutableSetTest {
         procedure.apply(this::filterFunc);
     }
 
+    @Override
     MutableHashSet.Builder<String> newBuilder() {
         return new MutableHashSet.Builder<>();
     }
@@ -57,6 +58,21 @@ public final class MutableHashSetTest extends MutableSetTest {
     @Override
     MutableHashSet.Builder<String> newIterableBuilder() {
         return newBuilder();
+    }
+
+    @Override
+    boolean lessThan(String a, String b) {
+        return b != null && (a == null || a.hashCode() < b.hashCode());
+    }
+
+    private boolean sortByLength(String a, String b) {
+        return b != null && (a == null || a.length() < b.length());
+    }
+
+    @Override
+    void withSortFunc(Procedure<SortFunction<String>> procedure) {
+        procedure.apply(this::lessThan);
+        procedure.apply(this::sortByLength);
     }
 
     @Override

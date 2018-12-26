@@ -14,6 +14,10 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
     abstract void withMapFunc(Procedure<Function<T, String>> procedure);
     abstract void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
 
+    void assertEmptyCollection(IterableCollection<T> collection) {
+        assertSame(emptyCollection(), collection);
+    }
+
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final IterableImmutableCollection<T> list = newIterableBuilder().build();
@@ -30,7 +34,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
                 assertSame(list, filtered);
             }
             else {
-                assertSame(emptyCollection(), filtered);
+                assertEmptyCollection(filtered);
             }
         }));
     }
@@ -59,7 +63,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
                 assertFalse(iterator.hasNext());
             }
             else {
-                assertSame(emptyCollection(), filtered);
+                assertEmptyCollection(filtered);
             }
         })));
     }
@@ -77,7 +81,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
             final IterableImmutableCollection<T> filtered = collection.filterNot(f);
 
             if (f.apply(value)) {
-                assertSame(emptyCollection(), filtered);
+                assertEmptyCollection(filtered);
             }
             else {
                 assertSame(collection, filtered);
@@ -94,7 +98,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
             final boolean bRemoved = f.apply(b);
 
             if (aRemoved && bRemoved) {
-                assertSame(emptyCollection(), filtered);
+                assertEmptyCollection(filtered);
             }
             else if (aRemoved) {
                 Iterator<T> iterator = filtered.iterator();

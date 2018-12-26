@@ -4,87 +4,25 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
+abstract class ImmutableSetTest<T> extends AbstractIterableImmutableTest<T> {
 
-    private static final String[] STRING_VALUES = {
-            null, "", "_", "0", "abcd"
-    };
+    abstract boolean lessThan(T a, T b);
 
-    @Override
-    void withValue(Procedure<String> procedure) {
-        for (String str : STRING_VALUES) {
-            procedure.apply(str);
-        }
-    }
-
-    private String reduceFunc(String left, String right) {
-        return String.valueOf(left) + '-' + String.valueOf(right);
-    }
+    abstract ImmutableSet.Builder<T> newBuilder();
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
-        procedure.apply(this::reduceFunc);
-    }
-
-    private String prefixUnderscore(String value) {
-        return "_" + value;
-    }
-
-    private String charCounter(String value) {
-        final int length = (value != null)? value.length() : 0;
-        return Integer.toString(length);
-    }
-
-    @Override
-    void withMapFunc(Procedure<Function<String, String>> procedure) {
-        procedure.apply(this::prefixUnderscore);
-        procedure.apply(this::charCounter);
-    }
-
-    @Override
-    void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
-        procedure.apply(str -> (str == null)? 0 : str.hashCode());
-    }
-
-    private boolean filterFunc(String value) {
-        return value != null && !value.isEmpty();
-    }
-
-    @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
-        procedure.apply(this::filterFunc);
-    }
-
-    boolean lessThan(String a, String b) {
-        return b != null && (a == null || a.hashCode() < b.hashCode());
-    }
-
-    boolean sortByLength(String a, String b) {
-        return b != null && (a == null || a.length() < b.length());
-    }
-
-    ImmutableSet.Builder<String> newBuilder() {
-        return new ImmutableSet.Builder<>(this::lessThan);
-    }
-
-    @Override
-    ImmutableSet.Builder<String> newIterableBuilder() {
-        return newBuilder();
-    }
+    abstract ImmutableSet.Builder<T> newIterableBuilder();
 
     @Override
     ImmutableIntSetBuilder newIntIterableBuilder() {
         return new ImmutableIntSetBuilder();
     }
 
-    @Override
-    <E> ImmutableHashSet<E> emptyCollection() {
-        return ImmutableHashSet.empty();
-    }
+    abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
 
     public void testSizeForTwoElements() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> list = newBuilder().add(a).add(b).build();
+            final ImmutableSet<T> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
             if (equal(a, b)) {
                 assertEquals(1, size);
@@ -97,11 +35,11 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
 
     public void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
-            final Iterator<String> iterator = set.iterator();
+            final ImmutableSet<T> set = newBuilder().add(a).add(b).build();
+            final Iterator<T> iterator = set.iterator();
 
             assertTrue(iterator.hasNext());
-            final String first = iterator.next();
+            final T first = iterator.next();
 
             if (lessThan(b, a)) {
                 assertEquals(b, first);
@@ -123,8 +61,8 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     @Override
     public void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> {
-            final ImmutableSet<String> collection = newBuilder().add(a).add(b).build();
-            final ImmutableHashSet<String> mapped = collection.map(f);
+            final ImmutableSet<T> collection = newBuilder().add(a).add(b).build();
+            final ImmutableSet<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
 
             final String mappedA = f.apply(a);
@@ -156,7 +94,7 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     @Override
     public void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withValue(a -> withValue(b -> {
-            final ImmutableSet<String> collection = newBuilder().add(a).add(b).build();
+            final ImmutableSet<T> collection = newBuilder().add(a).add(b).build();
             final ImmutableIntSet mapped = collection.map(f);
             final Iterator<Integer> iterator = mapped.iterator();
 
@@ -192,29 +130,30 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testMutateForEmpty() {
-        final ImmutableSet<String> set1 = newBuilder().build();
-        final MutableSet<String> set2 = set1.mutate();
+        final ImmutableSet<T> set1 = newBuilder().build();
+        withValue(value -> {
+            final MutableSet<T> set2 = set1.mutate();
+            assertTrue(set2.isEmpty());
 
-        assertTrue(set2.isEmpty());
-
-        set2.add("");
-        assertFalse(set1.contains(""));
+            set2.add(value);
+            assertFalse(set1.contains(value));
+        });
     }
 
     public void testToImmutable() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
+            final ImmutableSet<T> set = newBuilder().add(a).add(b).build();
             assertSame(set, set.toImmutable());
         }));
     }
 
     public void testMutate() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set1 = newBuilder().add(a).add(b).build();
-            final MutableSet<String> set2 = set1.mutate();
+            final ImmutableSet<T> set1 = newBuilder().add(a).add(b).build();
+            final MutableSet<T> set2 = set1.mutate();
 
-            final Iterator<String> it1 = set1.iterator();
-            final Iterator<String> it2 = set2.iterator();
+            final Iterator<T> it1 = set1.iterator();
+            final Iterator<T> it2 = set2.iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
                 assertEquals(it1.next(), it2.next());
@@ -230,7 +169,7 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     @Override
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withValue(value -> {
-            final IterableCollection<String> set = newIterableBuilder().add(a).add(b).build();
+            final IterableCollection<T> set = newIterableBuilder().add(a).add(b).build();
             final int index = set.indexOf(value);
 
             final int expectedIndex;
@@ -247,9 +186,9 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     @Override
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
-            final IterableCollection<String> collection = newIterableBuilder().add(a).add(b).build();
+            final IterableCollection<T> collection = newIterableBuilder().add(a).add(b).build();
 
-            final String expected;
+            final T expected;
             if (lessThan(b, a)) {
                 expected = f.apply(b)? b : f.apply(a)? a : defaultValue;
             }
@@ -261,15 +200,15 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
     }
 
     public void testToListWhenEmpty() {
-        final ImmutableSet<String> set = newBuilder().build();
+        final ImmutableSet<T> set = newBuilder().build();
         assertTrue(set.isEmpty());
         assertTrue(set.toList().isEmpty());
     }
 
     public void testToList() {
         withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
-            final ImmutableList<String> list = set.toList();
+            final ImmutableSet<T> set = newBuilder().add(a).add(b).build();
+            final ImmutableList<T> list = set.toList();
 
             if (equal(a, b)) {
                 assertEquals(1, list.size());
@@ -290,54 +229,33 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
         }));
     }
 
-    public void testHashCodeAndEquals() {
-        withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
-            final ImmutableSet<String> set1 = new ImmutableSet.Builder<String>(this::lessThan).add(a).add(b).build();
-            final ImmutableSet<String> set2 = new ImmutableSet.Builder<String>(this::sortByLength).add(a).add(b).build();
-            final ImmutableSet<String> set3 = new ImmutableHashSet.Builder<String>().add(a).add(b).build();
-
-            assertEquals(set.hashCode(), set1.hashCode());
-            assertEquals(set.hashCode(), set2.hashCode());
-            assertEquals(set.hashCode(), set3.hashCode());
-
-            assertEquals(set, set1);
-            assertEquals(set, set2);
-            assertEquals(set, set3);
-
-            assertEquals(set.hashCode(), set1.mutate().hashCode());
-            assertEquals(set.hashCode(), set2.mutate().hashCode());
-            assertEquals(set.hashCode(), set3.mutate().hashCode());
-
-            assertEquals(set, set1.mutate());
-            assertEquals(set, set2.mutate());
-            assertEquals(set, set3.mutate());
-        }));
-    }
-
     public void testSort() {
         withValue(a -> withValue(b -> withValue(c -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).add(c).build();
-            final ImmutableSet.Builder<String> builder = new ImmutableSet.Builder<>(this::sortByLength);
-            for (String v : set) {
-                builder.add(v);
-            }
+            final ImmutableSet<T> set = newBuilder().add(a).add(b).add(c).build();
+            final int setLength = set.size();
+            withSortFunc(f -> {
+                final ImmutableSet<T> sortedSet = set.sort(f);
+                assertEquals(setLength, sortedSet.size());
 
-            final ImmutableSet<String> sortedSet = set.sort(this::sortByLength);
-            final Iterator<String> it = sortedSet.iterator();
-            for (String v : builder.build()) {
-                assertTrue(it.hasNext());
-                assertSame(v, it.next());
-            }
-            assertFalse(it.hasNext());
+                boolean firstElement = true;
+                T previousElement = null;
+
+                for (T v : sortedSet) {
+                    assertTrue(set.contains(v));
+                    if (!firstElement) {
+                        assertFalse(f.lessThan(v, previousElement));
+                    }
+                    firstElement = false;
+                }
+            });
         })));
     }
 
     public void testAdd() {
         withValue(a -> withValue(b -> withValue(c -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
-            final ImmutableSet<String> expectedSet = newBuilder().add(a).add(b).add(c).build();
-            final ImmutableSet<String> unionSet = set.add(c);
+            final ImmutableSet<T> set = newBuilder().add(a).add(b).build();
+            final ImmutableSet<T> expectedSet = newBuilder().add(a).add(b).add(c).build();
+            final ImmutableSet<T> unionSet = set.add(c);
             assertEquals(expectedSet, unionSet);
 
             if (expectedSet.equals(set)) {
@@ -348,10 +266,10 @@ public class ImmutableSetTest extends AbstractIterableImmutableTest<String> {
 
     public void testAddAll() {
         withValue(a -> withValue(b -> withValue(c -> withValue(d -> {
-            final ImmutableSet<String> set1 = newBuilder().add(a).add(b).build();
-            final ImmutableSet<String> set2 = newBuilder().add(c).add(d).build();
-            final ImmutableSet<String> expectedSet = newBuilder().add(a).add(b).add(c).add(d).build();
-            final ImmutableSet<String> unionSet = set1.addAll(set2);
+            final ImmutableSet<T> set1 = newBuilder().add(a).add(b).build();
+            final ImmutableSet<T> set2 = newBuilder().add(c).add(d).build();
+            final ImmutableSet<T> expectedSet = newBuilder().add(a).add(b).add(c).add(d).build();
+            final ImmutableSet<T> unionSet = set1.addAll(set2);
             assertEquals(expectedSet, unionSet);
 
             if (expectedSet.equals(set1)) {

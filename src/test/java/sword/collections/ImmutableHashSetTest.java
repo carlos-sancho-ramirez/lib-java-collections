@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-public final class ImmutableHashSetTest extends ImmutableSetTest {
+public final class ImmutableHashSetTest extends ImmutableSetTest<String> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"
@@ -15,6 +15,21 @@ public final class ImmutableHashSetTest extends ImmutableSetTest {
         for (String str : STRING_VALUES) {
             procedure.apply(str);
         }
+    }
+
+    @Override
+    boolean lessThan(String a, String b) {
+        return b != null && (a == null || a.hashCode() < b.hashCode());
+    }
+
+    private boolean sortByLength(String a, String b) {
+        return b != null && (a == null || a.length() < b.length());
+    }
+
+    @Override
+    void withSortFunc(Procedure<SortFunction<String>> procedure) {
+        procedure.apply(this::lessThan);
+        procedure.apply(this::sortByLength);
     }
 
     private String reduceFunc(String left, String right) {
@@ -59,11 +74,11 @@ public final class ImmutableHashSetTest extends ImmutableSetTest {
         return (str == null)? 0 : str.length();
     }
 
-    void withGroupingFunc(Procedure<Function<String, String>> procedure) {
+    private void withGroupingFunc(Procedure<Function<String, String>> procedure) {
         procedure.apply(str -> Integer.toString(takeStringLength(str)));
     }
 
-    void withGroupingIntFunc(Procedure<IntResultFunction<String>> procedure) {
+    private void withGroupingIntFunc(Procedure<IntResultFunction<String>> procedure) {
         procedure.apply(this::takeStringLength);
     }
 

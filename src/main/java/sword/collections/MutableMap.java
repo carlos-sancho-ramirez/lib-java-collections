@@ -88,7 +88,7 @@ public class MutableMap<K, V> extends AbstractMap<K, V> implements MutableIterab
     public Set<K> keySet() {
         final Object[] keys = new Object[_size];
         System.arraycopy(_keys, 0, keys, 0, _size);
-        return new ImmutableSet<>(_sortFunction, keys);
+        return new ImmutableSortedSet<>(_sortFunction, keys);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class MutableMap<K, V> extends AbstractMap<K, V> implements MutableIterab
 
         final SortFunction<Entry<K, V>> entrySortFunction = (a, b) ->
                 b != null && (a == null || _sortFunction.lessThan(a.key(), b.key()));
-        return new ImmutableSet<>(entrySortFunction, entries);
+        return new ImmutableSortedSet<>(entrySortFunction, entries);
     }
 
     private class Iterator implements Traverser<V> {

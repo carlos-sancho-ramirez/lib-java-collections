@@ -83,7 +83,7 @@ public class ImmutableMap<K, V> extends AbstractMap<K, V> implements IterableImm
 
     @Override
     public ImmutableSet<K> keySet() {
-        return new ImmutableSet<>(_sortFunction, _keys);
+        return new ImmutableSortedSet<>(_sortFunction, _keys);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class ImmutableMap<K, V> extends AbstractMap<K, V> implements IterableImm
 
         final SortFunction<Entry<K, V>> entrySortFunction = (a, b) ->
                 b != null && (a == null || _sortFunction.lessThan(a.key(), b.key()));
-        return new ImmutableSet<>(entrySortFunction, entries);
+        return new ImmutableSortedSet<>(entrySortFunction, entries);
     }
 
     @Override

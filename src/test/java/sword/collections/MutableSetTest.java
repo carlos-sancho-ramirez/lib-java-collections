@@ -4,72 +4,16 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-public class MutableSetTest extends AbstractTransformableTest<String> {
+abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
 
-    private static final String[] STRING_VALUES = {
-            null, "", "_", "0", "abcd"
-    };
-
-    @Override
-    void withValue(Procedure<String> procedure) {
-        for (String str : STRING_VALUES) {
-            procedure.apply(str);
-        }
-    }
-
-    private String reduceFunc(String left, String right) {
-        return String.valueOf(left) + '-' + String.valueOf(right);
-    }
-
-    @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
-        procedure.apply(this::reduceFunc);
-    }
-
-    private String prefixUnderscore(String value) {
-        return "_" + value;
-    }
-
-    private String charCounter(String value) {
-        final int length = (value != null)? value.length() : 0;
-        return Integer.toString(length);
-    }
-
-    @Override
-    void withMapFunc(Procedure<Function<String, String>> procedure) {
-        procedure.apply(this::prefixUnderscore);
-        procedure.apply(this::charCounter);
-    }
-
-    private boolean filterFunc(String value) {
-        return value != null && !value.isEmpty();
-    }
-
-    @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
-        procedure.apply(this::filterFunc);
-    }
-
-    private boolean lessThan(String a, String b) {
-        return b != null && (a == null || a.hashCode() < b.hashCode());
-    }
-
-    private boolean sortByLength(String a, String b) {
-        return b != null && (a == null || a.length() < b.length());
-    }
-
-    MutableSet.Builder<String> newBuilder() {
-        return new MutableSet.Builder<>(this::lessThan);
-    }
-
-    @Override
-    MutableSet.Builder<String> newIterableBuilder() {
-        return newBuilder();
-    }
+    abstract boolean lessThan(T a, T b);
+    abstract MutableSet.Builder<T> newBuilder();
+    abstract MutableSet.Builder<T> newIterableBuilder();
+    abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
 
     public void testSizeForTwoElements() {
         withValue(a -> withValue(b -> {
-            final MutableSet<String> list = newBuilder().add(a).add(b).build();
+            final MutableSet<T> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
             if (equal(a, b)) {
                 assertEquals(1, size);
@@ -82,11 +26,11 @@ public class MutableSetTest extends AbstractTransformableTest<String> {
 
     public void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
-            final MutableSet<String> set = newBuilder().add(a).add(b).build();
-            final Iterator<String> iterator = set.iterator();
+            final MutableSet<T> set = newBuilder().add(a).add(b).build();
+            final Iterator<T> iterator = set.iterator();
 
             assertTrue(iterator.hasNext());
-            final String first = iterator.next();
+            final T first = iterator.next();
 
             if (lessThan(b, a)) {
                 assertEquals(b, first);
@@ -110,23 +54,25 @@ public class MutableSetTest extends AbstractTransformableTest<String> {
     }
 
     public void testMutateForEmpty() {
-        final MutableSet<String> set1 = newBuilder().build();
-        final MutableSet<String> set2 = set1.mutate();
+        final MutableSet<T> set1 = newBuilder().build();
+        withValue(value -> {
+            final MutableSet<T> set2 = set1.mutate();
 
-        assertEquals(set1, set2);
-        assertNotSame(set1, set2);
+            assertEquals(set1, set2);
+            assertNotSame(set1, set2);
 
-        set1.add("");
-        assertFalse(set2.contains(""));
+            set1.add(value);
+            assertFalse(set2.contains(value));
+        });
     }
 
     public void testToImmutable() {
         withValue(a -> withValue(b -> {
-            final MutableSet<String> set = newBuilder().add(a).add(b).build();
-            final ImmutableSet<String> set2 = set.toImmutable();
+            final MutableSet<T> set = newBuilder().add(a).add(b).build();
+            final ImmutableSet<T> set2 = set.toImmutable();
 
-            final Iterator<String> it1 = set.iterator();
-            final Iterator<String> it2 = set2.iterator();
+            final Iterator<T> it1 = set.iterator();
+            final Iterator<T> it2 = set2.iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
                 assertEquals(it1.next(), it2.next());
@@ -137,11 +83,11 @@ public class MutableSetTest extends AbstractTransformableTest<String> {
 
     public void testMutate() {
         withValue(a -> withValue(b -> {
-            final MutableSet<String> set1 = newBuilder().add(a).add(b).build();
-            final MutableSet<String> set2 = set1.mutate();
+            final MutableSet<T> set1 = newBuilder().add(a).add(b).build();
+            final MutableSet<T> set2 = set1.mutate();
 
-            final Iterator<String> it1 = set1.iterator();
-            final Iterator<String> it2 = set2.iterator();
+            final Iterator<T> it1 = set1.iterator();
+            final Iterator<T> it2 = set2.iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
                 assertEquals(it1.next(), it2.next());
@@ -157,7 +103,7 @@ public class MutableSetTest extends AbstractTransformableTest<String> {
     @Override
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withValue(value -> {
-            final IterableCollection<String> set = newIterableBuilder().add(a).add(b).build();
+            final IterableCollection<T> set = newIterableBuilder().add(a).add(b).build();
             final int index = set.indexOf(value);
 
             final int expectedIndex;
@@ -174,9 +120,9 @@ public class MutableSetTest extends AbstractTransformableTest<String> {
     @Override
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
-            final IterableCollection<String> collection = newIterableBuilder().add(a).add(b).build();
+            final IterableCollection<T> collection = newIterableBuilder().add(a).add(b).build();
 
-            final String expected;
+            final T expected;
             if (lessThan(b, a)) {
                 expected = f.apply(b)? b : f.apply(a)? a : defaultValue;
             }
@@ -188,15 +134,15 @@ public class MutableSetTest extends AbstractTransformableTest<String> {
     }
 
     public void testToListWhenEmpty() {
-        final Set<String> set = newBuilder().build();
+        final Set<T> set = newBuilder().build();
         assertTrue(set.isEmpty());
         assertTrue(set.toList().isEmpty());
     }
 
     public void testToList() {
         withValue(a -> withValue(b -> {
-            final Set<String> set = newBuilder().add(a).add(b).build();
-            final List<String> list = set.toList();
+            final Set<T> set = newBuilder().add(a).add(b).build();
+            final List<T> list = set.toList();
 
             if (equal(a, b)) {
                 assertEquals(1, list.size());
@@ -217,58 +163,37 @@ public class MutableSetTest extends AbstractTransformableTest<String> {
         }));
     }
 
-    public void testHashCodeAndEquals() {
-        withValue(a -> withValue(b -> {
-            final MutableSet<String> set = newBuilder().add(a).add(b).build();
-            final ImmutableSet<String> set1 = new ImmutableSet.Builder<String>(this::lessThan).add(a).add(b).build();
-            final ImmutableSet<String> set2 = new ImmutableSet.Builder<String>(this::sortByLength).add(a).add(b).build();
-            final ImmutableSet<String> set3 = new ImmutableHashSet.Builder<String>().add(a).add(b).build();
-
-            assertEquals(set.hashCode(), set1.hashCode());
-            assertEquals(set.hashCode(), set2.hashCode());
-            assertEquals(set.hashCode(), set3.hashCode());
-
-            assertEquals(set, set1);
-            assertEquals(set, set2);
-            assertEquals(set, set3);
-
-            assertEquals(set.hashCode(), set1.mutate().hashCode());
-            assertEquals(set.hashCode(), set2.mutate().hashCode());
-            assertEquals(set.hashCode(), set3.mutate().hashCode());
-
-            assertEquals(set, set1.mutate());
-            assertEquals(set, set2.mutate());
-            assertEquals(set, set3.mutate());
-        }));
-    }
-
     public void testSort() {
         withValue(a -> withValue(b -> withValue(c -> {
-            final MutableSet<String> set = newBuilder().add(a).add(b).add(c).build();
-            final MutableSet.Builder<String> builder = new MutableSet.Builder<>(this::sortByLength);
-            for (String v : set) {
-                builder.add(v);
-            }
+            final MutableSet<T> set = newBuilder().add(a).add(b).add(c).build();
+            final int setLength = set.size();
+            withSortFunc(f -> {
+                final Set<T> sortedSet = set.sort(f);
+                assertEquals(setLength, sortedSet.size());
 
-            final Set<String> sortedSet = set.sort(this::sortByLength);
-            final Iterator<String> it = sortedSet.iterator();
-            for (String v : builder.build()) {
-                assertTrue(it.hasNext());
-                assertSame(v, it.next());
-            }
-            assertFalse(it.hasNext());
+                boolean firstElement = true;
+                T previousElement = null;
+
+                for (T v : sortedSet) {
+                    assertTrue(set.contains(v));
+                    if (!firstElement) {
+                        assertFalse(f.lessThan(v, previousElement));
+                    }
+                    firstElement = false;
+                }
+            });
         })));
     }
 
     public void testClearWhenEmpty() {
-        final MutableSet<String> collection = newBuilder().build();
+        final MutableSet<T> collection = newBuilder().build();
         assertFalse(collection.clear());
         assertTrue(collection.isEmpty());
     }
 
     public void testClearForSingleItem() {
         withValue(value -> {
-            final MutableSet<String> collection = newBuilder().add(value).build();
+            final MutableSet<T> collection = newBuilder().add(value).build();
             assertTrue(collection.clear());
             assertTrue(collection.isEmpty());
         });
@@ -276,7 +201,7 @@ public class MutableSetTest extends AbstractTransformableTest<String> {
 
     public void testClearForMultipleItems() {
         withValue(a -> withValue(b -> {
-            final MutableSet<String> collection = newBuilder().add(a).add(b).build();
+            final MutableSet<T> collection = newBuilder().add(a).add(b).build();
             assertTrue(collection.clear());
             assertTrue(collection.isEmpty());
         }));

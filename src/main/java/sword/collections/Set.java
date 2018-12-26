@@ -2,6 +2,15 @@ package sword.collections;
 
 /**
  * Root for both variants of Sets, immutable and mutable.
+ *
+ * 'Set' must be understood as a collection where its elements cannot be repeated.
+ * 2 elements are considered to be the same, so they would be duplicated, if both
+ * return the same hash code and calling equals returns true.
+ *
+ * This interface also extends the {@link Iterable} interface, which
+ * ensures that the for-each construction can be used. This implies that there is
+ * always a consistent order within the elements, even if it is implicit.
+ *
  * @param <T> Type of items within the set.
  */
 public interface Set<T> extends Transformable<T>, Sizable {
