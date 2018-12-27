@@ -4,7 +4,7 @@ import static sword.collections.SortUtils.*;
 
 /**
  * Efficient implementation for small mutable map where keys are internally
- * sorted according to their hash codes in ascending order.
+ * sorted using a {@link SortFunction} given in construction time.
  *
  * This implementation may not be efficient enough for big maps as insertion will
  * become slow as this increases.
@@ -22,87 +22,84 @@ import static sword.collections.SortUtils.*;
  * @param <K> Type for the key elements within the Map
  * @param <V> Type for the value elements within the Map
  */
-public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
+public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
 
-    public static <K, V> MutableHashMap<K, V> empty() {
-        return new MutableHashMap<>(new Object[GRANULARITY], new int[GRANULARITY], new Object[GRANULARITY], 0);
+    private final SortFunction<K> _sortFunction;
+
+    MutableSortedMap(SortFunction<K> sortFunction, Object[] keys, Object[] values, int size) {
+        super(keys, values, size);
+        _sortFunction = sortFunction;
     }
 
-    private int[] _hashCodes;
+    @Override
+    public int size() {
+        return _size;
+    }
 
-    MutableHashMap(Object[] keys, int[] hashCodes, Object[] values, int size) {
-        super(keys, values, size);
-        _hashCodes = hashCodes;
+    @Override
+    @SuppressWarnings("unchecked")
+    public K keyAt(int index) {
+        return (K) _keys[index];
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public V valueAt(int index) {
+        return (V) _values[index];
     }
 
     @Override
     public int indexOfKey(K key) {
-        return findKey(_hashCodes, _keys, _size, key);
+        return findValue(_sortFunction, _keys, _size, key);
     }
 
     @Override
     public Set<K> keySet() {
         final Object[] keys = new Object[_size];
-        final int[] hashCodes = new int[_size];
-
-        if (_size > 0) {
-            System.arraycopy(_keys, 0, keys, 0, _size);
-            System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
-        }
-
-        return new ImmutableHashSet<>(keys, hashCodes);
+        System.arraycopy(_keys, 0, keys, 0, _size);
+        return new ImmutableSortedSet<>(_sortFunction, keys);
     }
 
     @Override
     boolean entryLessThan(Entry<K, V> a, Entry<K, V> b) {
-        return b != null && (a == null || SortUtils.compareByHashCode(a.key(), b.key()));
+        return b != null && (a == null || _sortFunction.lessThan(a.key(), b.key()));
     }
 
     @Override
-    public ImmutableHashMap<K, V> toImmutable() {
-        if (_size == 0) {
-            return ImmutableHashMap.empty();
-        }
-        else {
-            Object[] keys = new Object[_size];
-            int[] hashCodes = new int[_size];
-            Object[] values = new Object[_size];
+    public ImmutableSortedMap<K, V> toImmutable() {
+        final Object[] keys = new Object[_size];
+        final Object[] values = new Object[_size];
 
+        if (_size > 0) {
             System.arraycopy(_keys, 0, keys, 0, _size);
-            System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
             System.arraycopy(_values, 0, values, 0, _size);
-
-            return new ImmutableHashMap<>(keys, hashCodes, values);
         }
+
+        return new ImmutableSortedMap<>(_sortFunction, keys, values);
     }
 
     @Override
-    public MutableHashMap<K, V> mutate() {
+    public MutableSortedMap<K, V> mutate() {
         Object[] keys = new Object[_keys.length];
-        int[] hashCodes = new int[_hashCodes.length];
         Object[] values = new Object[_values.length];
 
         if (_size > 0) {
             System.arraycopy(_keys, 0, keys, 0, _size);
-            System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
             System.arraycopy(_values, 0, values, 0, _size);
         }
 
-        return new MutableHashMap<>(keys, hashCodes, values, _size);
+        return new MutableSortedMap<>(_sortFunction, keys, values, _size);
     }
 
     private void enlargeArrays() {
         Object[] oldKeys = _keys;
-        int[] oldHashCodes = _hashCodes;
         Object[] oldValues = _values;
 
         _keys = new Object[_size + GRANULARITY];
-        _hashCodes = new int[_size + GRANULARITY];
         _values = new Object[_size + GRANULARITY];
 
         for (int i = 0; i < _size; i++) {
             _keys[i] = oldKeys[i];
-            _hashCodes[i] = oldHashCodes[i];
             _values[i] = oldValues[i];
         }
     }
@@ -113,7 +110,6 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
         final int suitableLength = suitableArrayLength(0);
         if (_keys.length != suitableLength) {
             _keys = new Object[suitableLength];
-            _hashCodes = new int[suitableLength];
             _values = new Object[suitableLength];
         }
         else {
@@ -129,22 +125,19 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
 
     @Override
     public boolean put(K key, V value) {
-        int index = findKey(_hashCodes, _keys, _size, key);
+        int index = findValue(_sortFunction, _keys, _size, key);
         if (index < 0) {
             if (_size != 0 && _size % GRANULARITY == 0) {
                 enlargeArrays();
             }
 
-            final int hashCode = SortUtils.hashCode(key);
-            index = findSuitableIndex(_hashCodes, _size, hashCode);
+            index = findSuitableIndex(_sortFunction, _keys, _size, key);
             for (int i = _size; i > index; i--) {
                 _keys[i] = _keys[i - 1];
-                _hashCodes[i] = _hashCodes[i - 1];
                 _values[i] = _values[i - 1];
             }
 
             _keys[index] = key;
-            _hashCodes[index] = hashCode;
             _values[index] = value;
 
             _size++;
@@ -170,22 +163,18 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
 
         if (_size != 1 && (_size % GRANULARITY) == 1) {
             Object[] oldKeys = _keys;
-            int[] oldHashCodes = _hashCodes;
             Object[] oldValues = _values;
 
             _keys = new Object[--_size];
-            _hashCodes = new int[_size];
             _values = new Object[_size];
 
             if (index > 0) {
                 System.arraycopy(oldKeys, 0, _keys, 0, index);
-                System.arraycopy(oldHashCodes, 0, _hashCodes, 0, index);
                 System.arraycopy(oldValues, 0, _values, 0, index);
             }
 
             if (_size > index) {
                 System.arraycopy(oldKeys, index + 1, _keys, index, _size - index);
-                System.arraycopy(oldHashCodes, index + 1, _hashCodes, index, _size - index);
                 System.arraycopy(oldValues, index + 1, _values, index, _size - index);
             }
         }
@@ -193,14 +182,17 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
             --_size;
             for (int i = index; i < _size; i++) {
                 _keys[i] = _keys[i + 1];
-                _hashCodes[i] = _hashCodes[i + 1];
                 _values[i] = _values[i + 1];
             }
         }
     }
 
     public static class Builder<K, V> implements MapBuilder<K, V> {
-        private final MutableHashMap<K, V> _map = MutableHashMap.empty();
+        private final MutableSortedMap<K, V> _map;
+
+        Builder(SortFunction<K> sortFunction) {
+            _map = new MutableSortedMap<>(sortFunction, new Object[GRANULARITY], new Object[GRANULARITY], 0);
+        }
 
         @Override
         public Builder<K, V> put(K key, V value) {
@@ -209,7 +201,7 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
         }
 
         @Override
-        public MutableHashMap<K, V> build() {
+        public MutableSortedMap<K, V> build() {
             return _map;
         }
     }

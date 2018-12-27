@@ -13,19 +13,31 @@ public interface Map<K, V> extends IterableCollection<V>, Sizable {
      * Check whether the given key is contained in the map
      * @param key Key to be found.
      */
-    boolean containsKey(K key);
+    default boolean containsKey(K key) {
+        return indexOfKey(key) >= 0;
+    }
 
     /**
      * Return the value assigned to the given key.
      * @throws UnmappedKeyException if the given key is not found within the map.
      */
-    V get(K key);
+    default V get(K key) throws UnmappedKeyException {
+        final int index = indexOfKey(key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return valueAt(index);
+    }
 
     /**
      * Return the value assigned to the given key.
      * Or the given defaultValue if that key is not in the map.
      */
-    V get(K key, V defaultValue);
+    default V get(K key, V defaultValue) {
+        final int index = indexOfKey(key);
+        return (index >= 0)? valueAt(index) : defaultValue;
+    }
 
     /**
      * Key in the given index position.

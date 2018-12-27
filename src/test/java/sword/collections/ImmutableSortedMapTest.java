@@ -6,7 +6,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableMapTest extends MapTest<Integer, String> {
+public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
@@ -14,7 +14,7 @@ public final class ImmutableMapTest extends MapTest<Integer, String> {
 
     @Override
     ImmutableMap.Builder<Integer, String> newBuilder() {
-        return new ImmutableMap.Builder<>(ImmutableMapTest::sortInDescendantOrder);
+        return new ImmutableSortedMap.Builder<>(ImmutableSortedMapTest::sortInDescendantOrder);
     }
 
     @Override

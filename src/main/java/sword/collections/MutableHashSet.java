@@ -7,7 +7,7 @@ import static sword.collections.SortUtils.findKey;
  * Efficient implementation for small mutable Set where elements are internally sorted by its hash code.
  *
  * This implementation may not be efficient enough for big sets as insertion will
- * became slow as this increases.
+ * become slow as this increases.
  *
  * Constructors of this class are intentionally private or package-protected.
  * Code using these collections should get a new instance through the empty method.

@@ -4,7 +4,7 @@ import static sword.collections.SortUtils.*;
 
 /**
  * Efficient implementation for map where keys are internally
- * sorted according to their hash codes in ascending order.
+ * sorted using a {@link SortFunction} given in construction time.
  *
  * Constructors of this class are intentionally private or package-protected.
  * Code using these collections should create a builder in order to obtain
@@ -19,61 +19,52 @@ import static sword.collections.SortUtils.*;
  * @param <K> Type for the key elements within the Map
  * @param <V> Type for the value elements within the Map
  */
-public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
+public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
 
-    private static final ImmutableHashMap<Object, Object> EMPTY = new ImmutableHashMap<>(new Object[0], new int[0], new Object[0]);
+    private final SortFunction<K> _sortFunction;
 
-    @SuppressWarnings("unchecked")
-    public static <K, V> ImmutableHashMap<K, V> empty() {
-        return (ImmutableHashMap<K, V>) EMPTY;
-    }
-
-    private final int[] _hashCodes;
-
-    ImmutableHashMap(Object[] keys, int[] hashCodes, Object[] values) {
+    ImmutableSortedMap(SortFunction<K> sortFunction, Object[] keys, Object[] values) {
         super(keys, values);
-        _hashCodes = hashCodes;
+        _sortFunction = sortFunction;
     }
 
     @Override
     public int indexOfKey(K key) {
-        return findKey(_hashCodes, _keys, _keys.length, key);
+        return findValue(_sortFunction, _keys, _keys.length, key);
     }
 
     @Override
-    public ImmutableHashSet<K> keySet() {
-        return new ImmutableHashSet<>(_keys, _hashCodes);
+    public ImmutableSet<K> keySet() {
+        return new ImmutableSortedSet<>(_sortFunction, _keys);
     }
 
     @Override
     boolean entryLessThan(Entry<K, V> a, Entry<K, V> b) {
-        return b != null && (a == null || SortUtils.compareByHashCode(a.key(), b.key()));
+        return b != null && (a == null || _sortFunction.lessThan(a.key(), b.key()));
     }
 
     @Override
-    public ImmutableHashMap<K, V> toImmutable() {
+    public ImmutableSortedMap<K, V> toImmutable() {
         return this;
     }
 
     @Override
-    public MutableHashMap<K, V> mutate() {
+    public MutableMap<K, V> mutate() {
         final int length = _keys.length;
-        final int newLength = MutableHashMap.suitableArrayLength(length);
+        final int newLength = MutableSortedMap.suitableArrayLength(length);
 
         Object[] keys = new Object[newLength];
-        int[] hashCodes = new int[newLength];
         Object[] values = new Object[newLength];
 
         System.arraycopy(_keys, 0, keys, 0, length);
-        System.arraycopy(_hashCodes, 0, hashCodes, 0, length);
         System.arraycopy(_values, 0, values, 0, length);
 
-        return new MutableHashMap<>(keys, hashCodes, values, length);
+        return new MutableSortedMap<>(_sortFunction, keys, values, length);
     }
 
     @Override
-    public ImmutableHashMap<K, V> put(K key, V value) {
-        int index = findKey(_hashCodes, _keys, _keys.length, key);
+    public ImmutableSortedMap<K, V> put(K key, V value) {
+        int index = findValue(_sortFunction, _keys, _keys.length, key);
         if (index >= 0) {
             if (equal(_values[index], value)) {
                 return this;
@@ -85,31 +76,28 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
                     newValues[i] = (i == index)? value : _values[i];
                 }
 
-                return new ImmutableHashMap<>(_keys, _hashCodes, newValues);
+                return new ImmutableSortedMap<>(_sortFunction, _keys, newValues);
             }
         }
         else {
-            final int hashCode = SortUtils.hashCode(key);
-            index = findSuitableIndex(_hashCodes, _hashCodes.length, hashCode);
+            index = findSuitableIndex(_sortFunction, _keys, _keys.length, key);
 
             final int newLength = _values.length + 1;
-            final int[] newHashCodes = new int[newLength];
             final Object[] newKeys = new Object[newLength];
             final Object[] newValues = new Object[newLength];
 
             for (int i = 0; i < newLength; i++) {
-                newHashCodes[i] = (i < index)? _hashCodes[i] : (i == index)? hashCode : _hashCodes[i - 1];
                 newKeys[i] = (i < index)? _keys[i] : (i == index)? key : _keys[i - 1];
                 newValues[i] = (i < index)? _values[i] : (i == index)? value : _values[i - 1];
             }
 
-            return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
+            return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
         }
     }
 
     @Override
-    public ImmutableHashMap<K, V> filter(Predicate<V> predicate) {
-        final Builder<K, V> builder = new Builder<>();
+    public ImmutableSortedMap<K, V> filter(Predicate<V> predicate) {
+        final Builder<K, V> builder = new Builder<>(_sortFunction);
         final int length = _keys.length;
         boolean changed = false;
         for (int i = 0; i < length; i++) {
@@ -126,8 +114,8 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableHashMap<K, V> filterNot(Predicate<V> predicate) {
-        final Builder<K, V> builder = new Builder<>();
+    public ImmutableSortedMap<K, V> filterNot(Predicate<V> predicate) {
+        final Builder<K, V> builder = new Builder<>(_sortFunction);
         final int length = _keys.length;
         boolean changed = false;
         for (int i = 0; i < length; i++) {
@@ -147,26 +135,34 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     public ImmutableIntValueMap<K> map(IntResultFunction<V> mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
+        final int[] hashCodes = new int[itemCount];
         for (int i = 0; i < itemCount; i++) {
             newValues[i] = mapFunc.apply(valueAt(i));
+            hashCodes[i] = SortUtils.hashCode(_keys[i]);
         }
 
-        return new ImmutableIntValueMap<>(_keys, _hashCodes, newValues);
+        // TODO: Change this whenever ImmutableIntValueMap can be sorted through a SortFunction
+        return new ImmutableIntValueMap<>(_keys, hashCodes, newValues);
     }
 
     @Override
-    public <U> ImmutableHashMap<K, U> map(Function<V, U> mapFunc) {
+    public <U> ImmutableSortedMap<K, U> map(Function<V, U> mapFunc) {
         final int itemCount = _keys.length;
         final Object[] newValues = new Object[itemCount];
         for (int i = 0; i < itemCount; i++) {
             newValues[i] = mapFunc.apply(valueAt(i));
         }
 
-        return new ImmutableHashMap<>(_keys, _hashCodes, newValues);
+        return new ImmutableSortedMap<>(_sortFunction, _keys, newValues);
     }
 
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
-        private final MutableHashMap<K, V> _map = MutableHashMap.empty();
+        private final MutableSortedMap<K, V> _map;
+
+        Builder(SortFunction<K> sortFunction) {
+            final int length = MutableSortedMap.suitableArrayLength(0);
+            _map = new MutableSortedMap<>(sortFunction, new Object[length], new Object[length], 0);
+        }
 
         @Override
         public Builder<K, V> put(K key, V value) {
@@ -175,7 +171,7 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
         }
 
         @Override
-        public ImmutableHashMap<K, V> build() {
+        public ImmutableSortedMap<K, V> build() {
             return _map.toImmutable();
         }
     }
