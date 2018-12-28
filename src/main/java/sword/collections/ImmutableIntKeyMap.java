@@ -1,8 +1,6 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.equal;
-import static sword.collections.SortUtils.findKey;
-import static sword.collections.SortUtils.findSuitableIndex;
+import static sword.collections.SortUtils.*;
 
 /**
  * Immutable small memory foot-print implementation for Map where keys are integers.
@@ -219,11 +217,41 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     /**
      * Swaps keys and values in order to search keys given a value.
      *
-     * This method do not check if its map is reversable, so if there is any duplicated values.
+     * This method do not check if its map is invertible, so if there is any duplicated values.
      */
-    @SuppressWarnings("unchecked")
-    public ImmutableIntValueMap<T> reverse() {
-        return new ImmutableIntValueMap<>(_values, _keys);
+    public ImmutableIntValueMap<T> invert() {
+        final int length = _values.length;
+        final Object[] newKeys = new Object[length];
+        final int[] newHashCodes = new int[length];
+        final int[] newValues = new int[length];
+
+        System.arraycopy(_values, 0, newKeys, 0, length);
+        System.arraycopy(_keys, 0, newValues, 0, length);
+
+        for (int i = 0; i < length; i++) {
+            newHashCodes[i] = SortUtils.hashCode(_values[i]);
+        }
+
+        if (length > 1) {
+            quickSort(newHashCodes, 0, length - 1, new SwapMethod() {
+                @Override
+                public void apply(int index1, int index2) {
+                    int temp = newValues[index1];
+                    newValues[index1] = newValues[index2];
+                    newValues[index2] = temp;
+
+                    Object aux = newKeys[index1];
+                    newKeys[index1] = newKeys[index2];
+                    newKeys[index2] = aux;
+
+                    temp = newHashCodes[index1];
+                    newHashCodes[index1] = newHashCodes[index2];
+                    newHashCodes[index2] = temp;
+                }
+            });
+        }
+
+        return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
     @Override

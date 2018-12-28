@@ -144,14 +144,14 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableIntValueMap<K> map(IntResultFunction<V> mapFunc) {
+    public ImmutableIntValueHashMap<K> map(IntResultFunction<V> mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
         for (int i = 0; i < itemCount; i++) {
             newValues[i] = mapFunc.apply(valueAt(i));
         }
 
-        return new ImmutableIntValueMap<>(_keys, _hashCodes, newValues);
+        return new ImmutableIntValueHashMap<>(_keys, _hashCodes, newValues);
     }
 
     @Override

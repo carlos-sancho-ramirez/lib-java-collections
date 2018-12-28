@@ -2,18 +2,40 @@ package sword.collections;
 
 import static sword.collections.SortUtils.equal;
 
+/**
+ * Root for both variants of Map where values are integer values, immutable and mutable.
+ * @param <T> Type of key items within the map.
+ */
 public interface IntValueMap<T> extends IterableIntCollection, Sizable {
+
+    /**
+     * Check whether the given key is contained in the map
+     * @param key Key to be found.
+     */
+    default boolean containsKey(T key) {
+        return indexOfKey(key) >= 0;
+    }
 
     /**
      * Return the value assigned to the given key.
      * @throws UnmappedKeyException if the given key is not found within the map.
      */
-    int get(T key);
+    default int get(T key) throws UnmappedKeyException {
+        final int index = indexOfKey(key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        return valueAt(index);
+    }
 
     /**
      * Return the value assigned to the given key, or the given <pre>defaultValue</pre> the given key is not mapped.
      */
-    int get(T key, int defaultValue);
+    default int get(T key, int defaultValue) {
+        final int index = indexOfKey(key);
+        return (index >= 0)? valueAt(index) : defaultValue;
+    }
 
     /**
      * Key in the given index position.
@@ -111,5 +133,10 @@ public interface IntValueMap<T> extends IterableIntCollection, Sizable {
             final Entry that = (Entry) other;
             return _value == that._value && equal(_key, that._key);
         }
+    }
+
+    interface Builder<T> {
+        Builder<T> put(T key, int value);
+        IntValueMap<T> build();
     }
 }

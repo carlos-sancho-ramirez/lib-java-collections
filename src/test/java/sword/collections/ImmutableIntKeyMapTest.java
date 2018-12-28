@@ -265,10 +265,10 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         })));
     }
 
-    public void testReverseMethod() {
+    public void testInvertMethod() {
         withImmutableIntKeyMap(array -> {
             if (array != null) {
-                // Check if the array is reversable, so no duplicated values should be found
+                // Check if the array is invertible, so no duplicated values should be found
                 final int length = array.size();
                 boolean duplicated = false;
                 for (int i = 0; i < length - 1; i++) {
@@ -285,11 +285,11 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
                 }
 
                 if (!duplicated) {
-                    final ImmutableIntValueMap<String> reversed = array.reverse();
-                    assertEquals(length, reversed.size());
+                    final ImmutableIntValueMap<String> inverted = array.invert();
+                    assertEquals(length, inverted.size());
 
                     for (int i = 0; i < length; i++) {
-                        assertEquals(reversed.keyAt(i), array.get(reversed.valueAt(i)));
+                        assertEquals(inverted.keyAt(i), array.get(inverted.valueAt(i)));
                     }
                 }
             }

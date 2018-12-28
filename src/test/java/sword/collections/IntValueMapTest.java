@@ -5,33 +5,38 @@ import junit.framework.TestCase;
 import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
+import static sword.collections.TestUtils.withInt;
+import static sword.collections.TestUtils.withString;
 
-abstract class IntValueMapTest extends TestCase {
+abstract class IntValueMapTest<T> extends TestCase {
 
-    abstract IntValueMapBuilder<String> newBuilder();
+    abstract IntValueMap.Builder<T> newBuilder();
 
-    private void withInt(IntProcedure procedure) {
-        final int[] values = {Integer.MIN_VALUE, -1, 0, 1, 5, Integer.MAX_VALUE};
-        for (int value : values) {
-            procedure.apply(value);
-        }
-    }
-
-    private void withString(Procedure<String> procedure) {
-        final String[] values = {null, "", " ", "abcd", "0"};
-        for (String value : values) {
-            procedure.apply(value);
-        }
-    }
+    abstract void withKey(Procedure<T> procedure);
+    abstract T keyFromInt(int value);
 
     public void testEmptyBuilderBuildsEmptyArray() {
-        assertEquals(0, newBuilder().build().size());
+        final IntValueMap<T> array = newBuilder().build();
+        assertEquals(0, array.size());
+        assertFalse(array.iterator().hasNext());
+    }
+
+    public void testBuilderWithSingleElementBuildsExpectedArray() {
+        withKey(key -> withInt(value -> {
+            final IntValueMap<T> array = newBuilder()
+                    .put(key, value)
+                    .build();
+
+            assertEquals(1, array.size());
+            assertSame(key, array.keyAt(0));
+            assertEquals(value, array.valueAt(0));
+        }));
     }
 
     public void testSize() {
         final int value = 4;
-        withString(a -> withString(b -> withString(c -> {
-            IntValueMap<String> map = newBuilder()
+        withKey(a -> withKey(b -> withKey(c -> {
+            IntValueMap<T> map = newBuilder()
                     .put(a, value)
                     .put(b, value)
                     .put(c, value)
@@ -53,13 +58,13 @@ abstract class IntValueMapTest extends TestCase {
     public void testGet() {
         final int value = 45;
         final int defValue = 3;
-        withString(a -> withString(b -> {
-            IntValueMap<String> array = newBuilder()
+        withKey(a -> withKey(b -> {
+            IntValueMap<T> array = newBuilder()
                     .put(a, value)
                     .put(b, value)
                     .build();
 
-            withString(other -> {
+            withKey(other -> {
                 final int expectedValue = (equal(other, a) || equal(other, b))? value : defValue;
                 assertEquals(expectedValue, array.get(other, defValue));
             });
@@ -68,35 +73,38 @@ abstract class IntValueMapTest extends TestCase {
 
     public void testKeyAtMethod() {
         final int value = 6;
-        withString(a -> withString(b -> withString(c -> {
-            IntValueMap<String> array = newBuilder()
+        withKey(a -> withKey(b -> withKey(c -> {
+            final IntValueMap<T> array = newBuilder()
                     .put(a, value)
                     .put(b, value)
                     .put(c, value)
                     .build();
 
-            MutableHashSet<String> keySet = new MutableHashSet.Builder<String>().add(a).add(b).add(c).build();
-
             final int size = array.size();
-            for (int i = 0; i < size; i++) {
-                assertTrue(keySet.remove(array.keyAt(i)));
+            boolean aFound = false;
+            boolean bFound = false;
+            boolean cFound = false;
+
+            int index;
+            for (index = 0; index < size && (!aFound || !bFound || !cFound); index++) {
+                final T item = array.keyAt(index);
+                if (item == a) aFound = true;
+                if (item == b) bFound = true;
+                if (item == c) cFound = true;
             }
 
-            assertTrue(keySet.isEmpty());
+            assertTrue(aFound && bFound && cFound);
+            assertEquals(size, index);
         })));
     }
 
-    private int valueFromKey(String str) {
+    private int valueFromKey(T str) {
         return (str != null)? str.hashCode() : 0;
     }
 
-    private String keyFromInt(int value) {
-        return Integer.toString(value);
-    }
-
     public void testValueAtMethod() {
-        withString(a -> withString(b -> withString(c -> {
-            IntValueMap<String> map = newBuilder()
+        withKey(a -> withKey(b -> withKey(c -> {
+            IntValueMap<T> map = newBuilder()
                     .put(a, valueFromKey(a))
                     .put(b, valueFromKey(b))
                     .put(c, valueFromKey(c))
@@ -104,25 +112,29 @@ abstract class IntValueMapTest extends TestCase {
 
             final int size = map.size();
             for (int i = 0; i < size; i++) {
-                final String key = map.keyAt(i);
+                final T key = map.keyAt(i);
                 assertEquals(valueFromKey(key), map.valueAt(i));
             }
         })));
     }
 
+    public void testKeySetWhenEmpty() {
+        assertTrue(newBuilder().build().isEmpty());
+    }
+
     public void testKeySet() {
         final int value = 125;
         for (int amount = 0; amount < 3; amount++) {
-            final IntValueMapBuilder<String> mapBuilder = newBuilder();
-            final ImmutableHashSet.Builder<String> setBuilder = new ImmutableHashSet.Builder<>();
+            final IntValueMap.Builder<T> mapBuilder = newBuilder();
+            final ImmutableHashSet.Builder<T> setBuilder = new ImmutableHashSet.Builder<>();
             for (int i = 0; i < amount; i++) {
-                final String key = keyFromInt(i);
+                final T key = keyFromInt(i);
                 setBuilder.add(key);
                 mapBuilder.put(key, value);
             }
 
-            final ImmutableHashSet<String> expectedKeys = setBuilder.build();
-            final ImmutableSet<String> keySet = mapBuilder.build().keySet().toImmutable();
+            final ImmutableHashSet<T> expectedKeys = setBuilder.build();
+            final ImmutableSet<T> keySet = mapBuilder.build().keySet().toImmutable();
             assertEquals(expectedKeys, keySet);
         }
     }
@@ -132,8 +144,8 @@ abstract class IntValueMapTest extends TestCase {
     }
 
     public void testValueList() {
-        withString(a -> withString(b -> withString(c -> {
-            final IntValueMap<String> map = newBuilder()
+        withKey(a -> withKey(b -> withKey(c -> {
+            final IntValueMap<T> map = newBuilder()
                     .put(a, valueFromKey(a))
                     .put(b, valueFromKey(b))
                     .put(c, valueFromKey(c))
@@ -150,8 +162,8 @@ abstract class IntValueMapTest extends TestCase {
 
     public void testIndexOfKey() {
         final int value = 37;
-        withString(a -> withString(b -> withString(c -> {
-            final IntValueMap<String> map = newBuilder()
+        withKey(a -> withKey(b -> withKey(c -> {
+            final IntValueMap<T> map = newBuilder()
                     .put(a, value)
                     .put(b, value)
                     .put(c, value)
@@ -164,19 +176,19 @@ abstract class IntValueMapTest extends TestCase {
     }
 
     public void testEntryIterator() {
-        withString(a -> withString(b -> withString(c -> {
-            IntValueMap<String> map = newBuilder()
+        withKey(a -> withKey(b -> withKey(c -> {
+            IntValueMap<T> map = newBuilder()
                     .put(a, valueFromKey(a))
                     .put(b, valueFromKey(b))
                     .put(c, valueFromKey(c))
                     .build();
 
             final int size = map.size();
-            final Iterator<IntValueMap.Entry<String>> iterator = map.entries().iterator();
+            final Iterator<IntValueMap.Entry<T>> iterator = map.entries().iterator();
             for (int i = 0; i < size; i++) {
                 assertTrue(iterator.hasNext());
 
-                final IntValueMap.Entry<String> entry = iterator.next();
+                final IntValueMap.Entry<T> entry = iterator.next();
                 assertEquals(i, entry.index());
                 assertEquals(map.keyAt(i), entry.key());
                 assertEquals(map.valueAt(i), entry.value());
@@ -187,27 +199,27 @@ abstract class IntValueMapTest extends TestCase {
     }
 
     public void testMutateMethod() {
-        withString(a -> withString(b -> {
-            IntValueMap<String> map1 = newBuilder()
+        withKey(a -> withKey(b -> {
+            IntValueMap<T> map1 = newBuilder()
                     .put(a, valueFromKey(a))
                     .put(b, valueFromKey(b))
                     .build();
-            MutableIntValueMap<String> map2 = map1.mutate();
+            MutableIntValueMap<T> map2 = map1.mutate();
 
-            final Iterator<IntValueMap.Entry<String>> it1 = map1.entries().iterator();
-            final Iterator<IntValueMap.Entry<String>> it2 = map2.entries().iterator();
+            final Iterator<IntValueMap.Entry<T>> it1 = map1.entries().iterator();
+            final Iterator<IntValueMap.Entry<T>> it2 = map2.entries().iterator();
             while (it1.hasNext()) {
                 assertTrue(it2.hasNext());
 
-                final IntValueMap.Entry<String> entry1 = it1.next();
-                final IntValueMap.Entry<String> entry2 = it2.next();
+                final IntValueMap.Entry<T> entry1 = it1.next();
+                final IntValueMap.Entry<T> entry2 = it2.next();
 
                 assertEquals(entry1.key(), entry2.key());
                 assertEquals(entry1.value(), entry2.value());
             }
             assertFalse(it2.hasNext());
 
-            final ImmutableIntValueMap<String> immutableMap1 = map1.toImmutable();
+            final ImmutableIntValueMap<T> immutableMap1 = map1.toImmutable();
             assertEquals(immutableMap1, map2.toImmutable());
             map2.removeAt(0);
             assertFalse(immutableMap1.equals(map2.toImmutable()));

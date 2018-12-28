@@ -132,17 +132,14 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableIntValueMap<K> map(IntResultFunction<V> mapFunc) {
+    public ImmutableIntValueSortedMap<K> map(IntResultFunction<V> mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
-        final int[] hashCodes = new int[itemCount];
         for (int i = 0; i < itemCount; i++) {
             newValues[i] = mapFunc.apply(valueAt(i));
-            hashCodes[i] = SortUtils.hashCode(_keys[i]);
         }
 
-        // TODO: Change this whenever ImmutableIntValueMap can be sorted through a SortFunction
-        return new ImmutableIntValueMap<>(_keys, hashCodes, newValues);
+        return new ImmutableIntValueSortedMap<>(_sortFunction, _keys, newValues);
     }
 
     @Override

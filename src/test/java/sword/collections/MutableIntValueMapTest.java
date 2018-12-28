@@ -2,50 +2,21 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntValueMapTest extends IntValueMapTest {
+abstract class MutableIntValueMapTest<T> extends IntValueMapTest<T> {
 
     @Override
-    IntValueMapBuilder<String> newBuilder() {
-        return new MutableIntValueMap.Builder<>();
-    }
-
-    public void testHashCode() {
-        withInt(a -> withInt(b -> withInt(c -> {
-            final IntValueMap<String> mutable = newBuilder()
-                    .put(Integer.toString(a), b)
-                    .put(Integer.toString(b), c)
-                    .put(Integer.toString(c), a)
-                    .build();
-            final IntValueMap<String> immutable = mutable.toImmutable();
-            assertNotSame(mutable, immutable);
-            assertEquals(mutable.hashCode(), immutable.hashCode());
-        })));
-    }
-
-    public void testEquals() {
-        withInt(a -> withInt(b -> withInt(c -> {
-            final IntValueMap<String> mutable = newBuilder()
-                    .put(Integer.toString(a), b)
-                    .put(Integer.toString(b), c)
-                    .put(Integer.toString(c), a)
-                    .build();
-            final IntValueMap<String> immutable = mutable.toImmutable();
-            assertNotSame(mutable, immutable);
-            assertEquals(mutable, immutable);
-            assertEquals(immutable, mutable);
-        })));
-    }
+    abstract MutableIntValueMap.Builder<T> newBuilder();
 
     public void testClearWhenEmpty() {
-        final MutableIntValueMap<String> collection = newBuilder().build().mutate();
+        final MutableIntValueMap<T> collection = newBuilder().build().mutate();
         assertFalse(collection.clear());
         assertTrue(collection.isEmpty());
     }
 
     public void testClearForSingleItem() {
         withInt(value -> {
-            final MutableIntValueMap<String> collection = newBuilder()
-                    .put(Integer.toString(value), value)
+            final MutableIntValueMap<T> collection = newBuilder()
+                    .put(keyFromInt(value), value)
                     .build().mutate();
             assertTrue(collection.clear());
             assertTrue(collection.isEmpty());
@@ -54,9 +25,9 @@ public final class MutableIntValueMapTest extends IntValueMapTest {
 
     public void testClearForMultipleItems() {
         withInt(a -> withInt(b -> {
-            final MutableIntValueMap<String> collection = newBuilder()
-                    .put(Integer.toString(a), a)
-                    .put(Integer.toString(b), b)
+            final MutableIntValueMap<T> collection = newBuilder()
+                    .put(keyFromInt(a), a)
+                    .put(keyFromInt(b), b)
                     .build().mutate();
             assertTrue(collection.clear());
             assertTrue(collection.isEmpty());
