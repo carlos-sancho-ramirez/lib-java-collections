@@ -12,6 +12,7 @@ abstract class MapTest<K, V> extends TestCase {
     abstract MapBuilder<K, V> newBuilder();
     abstract void withKey(Procedure<K> procedure);
     abstract void withValue(Procedure<V> procedure);
+    abstract void withSortFunc(Procedure<SortFunction<K>> procedure);
     abstract V getTestValue();
     abstract K keyFromInt(int value);
     abstract V valueFromKey(K key);
@@ -199,5 +200,43 @@ abstract class MapTest<K, V> extends TestCase {
             assertTrue(map1.containsKey(b));
             assertFalse(map2.containsKey(b));
         }));
+    }
+
+    public void testSortWhenEmpty() {
+        final SortFunction<K> func = (a, b) -> {
+            throw new AssertionError("Should not be called");
+        };
+        assertTrue(newBuilder().build().sort(func).isEmpty());
+    }
+
+    public void testSortForSingleElement() {
+        final SortFunction<K> func = (a, b) -> {
+            throw new AssertionError("Should not be called");
+        };
+        withKey(key -> {
+            final V value = valueFromKey(key);
+            final Map<K, V> map = newBuilder().put(key, value).build().sort(func);
+            assertEquals(1, map.size());
+            assertSame(key, map.keyAt(0));
+            assertSame(value, map.valueAt(0));
+        });
+    }
+
+    public void testSort() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final Map<K, V> map = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+            final int mapLength = map.size();
+            withSortFunc(f -> {
+                final Map<K, V> sortedMap = map.sort(f);
+                assertEquals(mapLength, sortedMap.size());
+                for (int i = 1; i < mapLength; i++) {
+                    assertFalse(f.lessThan(sortedMap.keyAt(i), sortedMap.keyAt(i - 1)));
+                }
+            });
+        })));
     }
 }

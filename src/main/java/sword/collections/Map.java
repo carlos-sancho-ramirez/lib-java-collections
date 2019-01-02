@@ -83,6 +83,16 @@ public interface Map<K, V> extends IterableCollection<V>, Sizable {
      */
     MutableMap<K, V> mutate();
 
+    /**
+     * Creates a new map where all current elements and future elements will be
+     * sorted following the given function.
+     *
+     * @param function Function to sort the keys within this map.
+     * @return A new map where all current elements and future newly added will
+     * be sorted following the given function.
+     */
+    Map<K, V> sort(SortFunction<K> function);
+
     final class Entry<A, B> {
         private final A _key;
         private final B _value;

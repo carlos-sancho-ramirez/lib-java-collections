@@ -46,6 +46,16 @@ abstract class AbstractMutableMap<K, V> extends AbstractMap<K, V> implements Mut
         return new ImmutableList<>(newValues);
     }
 
+    @Override
+    public Map<K, V> sort(SortFunction<K> function) {
+        final ImmutableSortedMap.Builder<K, V> builder = new ImmutableSortedMap.Builder<>(function);
+        for (int i = 0; i < _size; i++) {
+            builder.put(keyAt(i), valueAt(i));
+        }
+
+        return builder.build();
+    }
+
     abstract boolean entryLessThan(Entry<K, V> a, Entry<K, V> b);
 
     @Override

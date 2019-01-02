@@ -28,6 +28,12 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
     }
 
     @Override
+    void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
+        procedure.apply((a, b) -> a < b);
+        procedure.apply((a, b) -> a > b);
+    }
+
+    @Override
     String getTestValue() {
         return "value";
     }

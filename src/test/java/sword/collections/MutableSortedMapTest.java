@@ -5,7 +5,7 @@ import java.util.Iterator;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableHashMapTest extends MapTest<Integer, String> {
+public final class MutableSortedMapTest extends MapTest<Integer, String> {
 
     @Override
     MutableHashMap.Builder<Integer, String> newBuilder() {
