@@ -24,6 +24,11 @@ import static sword.collections.SortUtils.*;
  */
 public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
 
+    public static <K, V> MutableSortedMap<K, V> empty(SortFunction<K> sortFunction) {
+        final int length = suitableArrayLength(0);
+        return new MutableSortedMap<>(sortFunction, new Object[length], new Object[length], 0);
+    }
+
     private final SortFunction<K> _sortFunction;
 
     MutableSortedMap(SortFunction<K> sortFunction, Object[] keys, Object[] values, int size) {

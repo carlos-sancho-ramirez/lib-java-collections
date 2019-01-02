@@ -20,6 +20,10 @@ import static sword.collections.SortUtils.findValue;
  */
 public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
 
+    public static <E> MutableSortedSet<E> empty(SortFunction<E> sortFunction) {
+        return new MutableSortedSet<>(sortFunction, new Object[suitableArrayLength(0)], 0);
+    }
+
     private final SortFunction<T> _sortFunction;
 
     MutableSortedSet(SortFunction<T> sortFunction, Object[] keys, int size) {
