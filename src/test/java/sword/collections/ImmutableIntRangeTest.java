@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import java.util.Iterator;
 
+import static sword.collections.SortUtils.equal;
+
 public class ImmutableIntRangeTest extends TestCase {
 
     // This is used in some tests that iterates in a range instance as the maximum allowed size.
@@ -86,6 +88,27 @@ public class ImmutableIntRangeTest extends TestCase {
             }
 
             assertFalse(it.hasNext());
+        });
+    }
+
+    public void testIndexOfForSingleElement() {
+        withValue(a -> {
+            final IterableIntCollection list = new ImmutableIntRange(a, a);
+
+            withValue(value -> {
+                assertEquals((a == value)? 0 : -1, list.indexOf(value));
+            });
+        });
+    }
+
+    public void testIndexOfForMultipleElements() {
+        withRange(range -> {
+            final int min = range.min();
+            withValue(value -> {
+                final boolean shouldBePresent = value >= min && value <= range.max();
+                final int expectedIndex = shouldBePresent? value - min : -1;
+                assertEquals(expectedIndex, range.indexOf(value));
+            });
         });
     }
 

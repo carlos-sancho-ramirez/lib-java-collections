@@ -23,6 +23,11 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
     }
 
     @Override
+    public int indexOf(int value) {
+        return (value >= _min && value <= _max)? value - _min : -1;
+    }
+
+    @Override
     public int valueAt(int index) {
         if (index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException();

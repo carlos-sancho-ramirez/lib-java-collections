@@ -40,7 +40,12 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
 
     @Override
     public boolean contains(int value) {
-        return findKey(_values, _values.length, value) >= 0;
+        return indexOf(value) >= 0;
+    }
+
+    @Override
+    public int indexOf(int value) {
+        return findKey(_values, _values.length, value);
     }
 
     @Override
