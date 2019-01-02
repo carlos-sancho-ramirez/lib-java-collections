@@ -90,6 +90,16 @@ public interface IntValueMap<T> extends IterableIntCollection, Sizable {
      */
     MutableIntValueMap<T> mutate();
 
+    /**
+     * Creates a new map where all current elements and future elements will be
+     * sorted following the given function.
+     *
+     * @param function Function to sort the keys within this map.
+     * @return A new map where all current elements and future newly added will
+     * be sorted following the given function.
+     */
+    IntValueMap<T> sort(SortFunction<T> function);
+
     final class Entry<E> {
         private final int _index;
         private final E _key;

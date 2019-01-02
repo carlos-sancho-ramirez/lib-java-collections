@@ -1,7 +1,5 @@
 package sword.collections;
 
-import static sword.collections.TestUtils.withInt;
-
 public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTest<String> {
 
     @Override
@@ -15,6 +13,12 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
         for (String value : values) {
             procedure.apply(value);
         }
+    }
+
+    @Override
+    void withSortFunc(Procedure<SortFunction<String>> procedure) {
+        procedure.apply(SortUtils::compareCharSequenceByUnicode);
+        procedure.apply(SortUtils::compareByHashCode);
     }
 
     @Override

@@ -6,13 +6,13 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
-import static sword.collections.TestUtils.withString;
 
 abstract class IntValueMapTest<T> extends TestCase {
 
     abstract IntValueMap.Builder<T> newBuilder();
 
     abstract void withKey(Procedure<T> procedure);
+    abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
     abstract T keyFromInt(int value);
 
     public void testEmptyBuilderBuildsEmptyArray() {
@@ -224,5 +224,43 @@ abstract class IntValueMapTest<T> extends TestCase {
             map2.removeAt(0);
             assertFalse(immutableMap1.equals(map2.toImmutable()));
         }));
+    }
+
+    public void testSortWhenEmpty() {
+        final SortFunction<T> func = (a, b) -> {
+            throw new AssertionError("Should not be called");
+        };
+        assertTrue(newBuilder().build().sort(func).isEmpty());
+    }
+
+    public void testSortForSingleElement() {
+        final SortFunction<T> func = (a, b) -> {
+            throw new AssertionError("Should not be called");
+        };
+        withKey(key -> {
+            final int value = valueFromKey(key);
+            final IntValueMap<T> map = newBuilder().put(key, value).build().sort(func);
+            assertEquals(1, map.size());
+            assertSame(key, map.keyAt(0));
+            assertEquals(value, map.valueAt(0));
+        });
+    }
+
+    public void testSort() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final IntValueMap<T> map = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+            final int mapLength = map.size();
+            withSortFunc(f -> {
+                final IntValueMap<T> sortedMap = map.sort(f);
+                assertEquals(map.toString(), mapLength, sortedMap.size());
+                for (int i = 1; i < mapLength; i++) {
+                    assertFalse(f.lessThan(sortedMap.keyAt(i), sortedMap.keyAt(i - 1)));
+                }
+            });
+        })));
     }
 }

@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntValueMapHashTest extends MutableIntValueMapTest<String> {
+public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<String> {
 
     @Override
     MutableIntValueHashMap.Builder<String> newBuilder() {
@@ -15,6 +15,12 @@ public final class MutableIntValueMapHashTest extends MutableIntValueMapTest<Str
         for (String value : values) {
             procedure.apply(value);
         }
+    }
+
+    @Override
+    void withSortFunc(Procedure<SortFunction<String>> procedure) {
+        procedure.apply(SortUtils::compareCharSequenceByUnicode);
+        procedure.apply(SortUtils::compareByHashCode);
     }
 
     @Override

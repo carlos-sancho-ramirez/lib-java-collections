@@ -45,6 +45,16 @@ abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> impl
         return new ImmutableIntList(newValues);
     }
 
+    @Override
+    public IntValueMap<T> sort(SortFunction<T> function) {
+        final ImmutableIntValueSortedMap.Builder<T> builder = new ImmutableIntValueSortedMap.Builder<>(function);
+        for (int i = 0; i < _size; i++) {
+            builder.put(keyAt(i), valueAt(i));
+        }
+
+        return builder.build();
+    }
+
     abstract boolean entryLessThan(Entry<T> a, Entry<T> b);
 
     @Override

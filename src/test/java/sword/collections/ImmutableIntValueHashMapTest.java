@@ -16,6 +16,12 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
     }
 
     @Override
+    void withSortFunc(Procedure<SortFunction<String>> procedure) {
+        procedure.apply(SortUtils::compareCharSequenceByUnicode);
+        procedure.apply(SortUtils::compareByHashCode);
+    }
+
+    @Override
     String keyFromInt(int value) {
         return Integer.toString(value);
     }
