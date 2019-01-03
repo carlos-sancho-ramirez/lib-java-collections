@@ -30,13 +30,25 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableIterable<T> impl
     }
 
     @Override
-    public ImmutableIntSet map(IntResultFunction<T> func) {
-        return (ImmutableIntSet) super.map(func);
+    public ImmutableIntList mapToInt(IntResultFunction<T> func) {
+        final int length = _keys.length;
+        final int[] newValues = new int[length];
+        for (int i = 0; i < length; i++) {
+            newValues[i] = func.apply(keyAt(i));
+        }
+
+        return new ImmutableIntList(newValues);
     }
 
     @Override
-    public <E> ImmutableSet<E> map(Function<T, E> func) {
-        return (ImmutableSet<E>) super.map(func);
+    public <E> ImmutableList<E> map(Function<T, E> func) {
+        final int length = _keys.length;
+        final Object[] newValues = new Object[length];
+        for (int i = 0; i < length; i++) {
+            newValues[i] = func.apply(keyAt(i));
+        }
+
+        return new ImmutableList<>(newValues);
     }
 
     /**

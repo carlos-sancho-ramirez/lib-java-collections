@@ -231,7 +231,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
                     .put(b, Integer.toString(b))
                     .build();
 
-            final ImmutableIntPairMap map2 = map.map(this::mapValueIntResultFunction);
+            final ImmutableIntPairMap map2 = map.mapToInt(this::mapValueIntResultFunction);
             assertEquals(map.size(), map2.size());
             assertEquals(map.keySet(), map2.keySet());
 

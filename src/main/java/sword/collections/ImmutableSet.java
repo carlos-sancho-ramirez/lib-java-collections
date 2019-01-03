@@ -22,10 +22,10 @@ public interface ImmutableSet<T> extends Set<T>, IterableImmutableCollection<T> 
     ImmutableSet<T> filterNot(Predicate<T> predicate);
 
     @Override
-    ImmutableIntSet map(IntResultFunction<T> func);
+    ImmutableIntList mapToInt(IntResultFunction<T> func);
 
     @Override
-    <E> ImmutableSet<E> map(Function<T, E> func);
+    <E> ImmutableList<E> map(Function<T, E> func);
 
     /**
      * Creates a new {@link ImmutableSet} of the same type where the given

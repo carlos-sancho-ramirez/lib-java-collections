@@ -27,7 +27,7 @@ public interface IterableImmutableCollection<T> extends Transformable<T> {
      *
      * @param func Function to be applied to each element in the list
      */
-    IterableImmutableIntCollection map(IntResultFunction<T> func);
+    IterableImmutableIntCollection mapToInt(IntResultFunction<T> func);
 
     /**
      * Applies the given function to each element on the collection and composes a

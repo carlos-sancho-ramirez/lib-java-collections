@@ -143,13 +143,25 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
     }
 
     @Override
-    public ImmutableIntList map(IntResultFunction<T> mapFunc) {
-        return (ImmutableIntList) super.map(mapFunc);
+    public ImmutableIntList mapToInt(IntResultFunction<T> func) {
+        final int length = _values.length;
+        final int[] newValues = new int[length];
+        for (int i = 0; i < length; i++) {
+            newValues[i] = func.apply(valueAt(i));
+        }
+
+        return new ImmutableIntList(newValues);
     }
 
     @Override
     public <U> ImmutableList<U> map(Function<T, U> func) {
-        return (ImmutableList<U>) super.map(func);
+        final int length = _values.length;
+        final Object[] newValues = new Object[length];
+        for (int i = 0; i < length; i++) {
+            newValues[i] = func.apply(valueAt(i));
+        }
+
+        return new ImmutableList<>(newValues);
     }
 
     @Override
@@ -160,11 +172,6 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
     @Override
     <U> Builder<U> newBuilder() {
         return new Builder<U>();
-    }
-
-    @Override
-    ImmutableIntList.Builder newIntBuilder() {
-        return new ImmutableIntList.Builder();
     }
 
     @Override

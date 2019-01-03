@@ -142,7 +142,8 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
      * Return a new map instance where value has been transformed following the given function. Keys remain the same.
      * @param mapFunc Function the must be applied to values in order to modify them.
      */
-    public ImmutableIntPairMap map(IntResultFunction<T> mapFunc) {
+    @Override
+    public ImmutableIntPairMap mapToInt(IntResultFunction<T> mapFunc) {
         final int size = _keys.length;
         final int[] newValues = new int[size];
         for (int i = 0; i < size; i++) {

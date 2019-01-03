@@ -36,11 +36,6 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    ImmutableIntSetBuilder newIntBuilder() {
-        return new ImmutableIntSetBuilder();
-    }
-
-    @Override
     <U> ImmutableCollectionBuilder<U> newBuilder() {
         return new ImmutableHashSet.Builder<>();
     }
@@ -80,11 +75,6 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
         }
 
         return somethingRemoved? builder.build() : this;
-    }
-
-    @Override
-    public <E> ImmutableHashSet<E> map(Function<T, E> func) {
-        return (ImmutableHashSet<E>) super.map(func);
     }
 
     @Override

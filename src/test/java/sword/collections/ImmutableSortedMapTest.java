@@ -229,7 +229,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
                     .build();
 
             final IntResultFunction<String> mapFunc = str -> (str != null)? str.hashCode() : 0;
-            final ImmutableIntValueMap<Integer> map2 = map.map(mapFunc);
+            final ImmutableIntValueMap<Integer> map2 = map.mapToInt(mapFunc);
 
             final ImmutableSet<Integer> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());

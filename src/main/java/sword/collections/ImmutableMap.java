@@ -31,7 +31,7 @@ public interface ImmutableMap<K, V> extends Map<K, V>, IterableImmutableCollecti
     ImmutableMap<K, V> filterNot(Predicate<V> predicate);
 
     @Override
-    ImmutableIntValueMap<K> map(IntResultFunction<V> mapFunc);
+    ImmutableIntValueMap<K> mapToInt(IntResultFunction<V> mapFunc);
 
     @Override
     <U> ImmutableMap<K, U> map(Function<V, U> mapFunc);

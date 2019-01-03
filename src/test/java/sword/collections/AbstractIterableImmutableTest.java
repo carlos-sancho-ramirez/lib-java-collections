@@ -2,13 +2,10 @@ package sword.collections;
 
 import java.util.Iterator;
 
-import static sword.collections.SortUtils.equal;
-
 abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTest<T> {
 
     abstract <E> AbstractIterable<E> emptyCollection();
     abstract ImmutableCollectionBuilder<T> newIterableBuilder();
-    abstract ImmutableIntCollectionBuilder newIntIterableBuilder();
     abstract void withValue(Procedure<T> procedure);
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
     abstract void withMapFunc(Procedure<Function<T, String>> procedure);
@@ -120,8 +117,7 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
 
     public void testMapWhenEmpty() {
         withMapFunc(f -> {
-            final IterableImmutableCollection<T> collection = newIterableBuilder().build();
-            assertSame(emptyCollection(), collection.map(f));
+            assertFalse(newIterableBuilder().build().map(f).iterator().hasNext());
         });
     }
 
@@ -140,46 +136,28 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
         withMapFunc(f -> withValue(a -> withValue(b -> {
             final IterableImmutableCollection<T> collection = newIterableBuilder().add(a).add(b).build();
             final IterableImmutableCollection<String> mapped = collection.map(f);
-            final Iterator<String> iterator = mapped.iterator();
 
-            final String mappedA = f.apply(a);
-            final String mappedB = f.apply(b);
-
-            assertTrue(iterator.hasNext());
-            final boolean sameMappedValue = equal(mappedA, mappedB);
-            final String first = iterator.next();
-
-            if (sameMappedValue) {
-                assertEquals(mappedA, first);
-            }
-            else if (equal(a, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(b, iterator.hasNext());
-            }
-            else if (equal(b, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(a, iterator.hasNext());
-            }
-            else {
-                fail("Expected either " + mappedA + " or " + mappedB + " but found " + first);
+            final Iterator<T> collectionIterator = collection.iterator();
+            final Iterator<String> mappedIterator = mapped.iterator();
+            while (collectionIterator.hasNext()) {
+                assertTrue(mappedIterator.hasNext());
+                assertEquals(f.apply(collectionIterator.next()), mappedIterator.next());
             }
 
-            assertFalse(iterator.hasNext());
+            assertFalse(mappedIterator.hasNext());
         })));
     }
 
     public void testMapToIntWhenEmpty() {
         withMapToIntFunc(f -> {
-            final IterableIntCollection intCollection = newIntIterableBuilder().build();
-            final IterableImmutableCollection<T> collection = newIterableBuilder().build();
-            assertSame(intCollection, collection.map(f));
+            assertFalse(newIterableBuilder().build().mapToInt(f).iterator().hasNext());
         });
     }
 
     public void testMapToIntForSingleElement() {
         withMapToIntFunc(f -> withValue(value -> {
             final IterableImmutableCollection<T> collection = newIterableBuilder().add(value).build();
-            final IterableImmutableIntCollection mapped = collection.map(f);
+            final IterableImmutableIntCollection mapped = collection.mapToInt(f);
             final Iterator<Integer> iterator = mapped.iterator();
             assertTrue(iterator.hasNext());
             assertEquals(f.apply(value), (int) iterator.next());
@@ -190,32 +168,15 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
     public void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withValue(a -> withValue(b -> {
             final IterableImmutableCollection<T> collection = newIterableBuilder().add(a).add(b).build();
-            final IterableImmutableIntCollection mapped = collection.map(f);
-            final Iterator<Integer> iterator = mapped.iterator();
+            final IterableImmutableIntCollection mapped = collection.mapToInt(f);
 
-            final int mappedA = f.apply(a);
-            final int mappedB = f.apply(b);
-
-            assertTrue(iterator.hasNext());
-            final boolean sameMappedValue = mappedA == mappedB;
-            final int first = iterator.next();
-
-            if (sameMappedValue) {
-                assertEquals(mappedA, first);
+            final Iterator<T> collectionIterator = collection.iterator();
+            final Iterator<Integer> mappedIterator = mapped.iterator();
+            while (collectionIterator.hasNext()) {
+                assertTrue(mappedIterator.hasNext());
+                assertEquals(f.apply(collectionIterator.next()), (int) mappedIterator.next());
             }
-            else if (equal(a, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(b, iterator.hasNext());
-            }
-            else if (equal(b, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(a, iterator.hasNext());
-            }
-            else {
-                fail("Expected either " + mappedA + " or " + mappedB + " but found " + first);
-            }
-
-            assertFalse(iterator.hasNext());
+            assertFalse(mappedIterator.hasNext());
         })));
     }
 }

@@ -117,11 +117,6 @@ public final class ImmutableListTest extends AbstractIterableImmutableTest<Strin
         return newBuilder();
     }
 
-    @Override
-    ImmutableIntList.Builder newIntIterableBuilder() {
-        return new ImmutableIntList.Builder();
-    }
-
     public void testSizeForTwoElements() {
         withValue(a -> withValue(b -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).build();
@@ -146,36 +141,6 @@ public final class ImmutableListTest extends AbstractIterableImmutableTest<Strin
 
             assertFalse(iterator.hasNext());
         }));
-    }
-
-    @Override
-    public void testMapForMultipleElements() {
-        withMapFunc(f -> withValue(a -> withValue(b -> {
-            final ImmutableList<String> collection = newBuilder().add(a).add(b).build();
-            final ImmutableList<String> mapped = collection.map(f);
-            final Iterator<String> iterator = mapped.iterator();
-
-            for (String item : collection) {
-                assertTrue(iterator.hasNext());
-                assertEquals(f.apply(item), iterator.next());
-            }
-            assertFalse(iterator.hasNext());
-        })));
-    }
-
-    @Override
-    public void testMapToIntForMultipleElements() {
-        withMapToIntFunc(f -> withValue(a -> withValue(b -> {
-            final ImmutableList<String> collection = newBuilder().add(a).add(b).build();
-            final ImmutableIntList mapped = collection.map(f);
-            final Iterator<Integer> iterator = mapped.iterator();
-
-            for (String item : collection) {
-                assertTrue(iterator.hasNext());
-                assertEquals(f.apply(item), (int) iterator.next());
-            }
-            assertFalse(iterator.hasNext());
-        })));
     }
 
     public void testSkip() {

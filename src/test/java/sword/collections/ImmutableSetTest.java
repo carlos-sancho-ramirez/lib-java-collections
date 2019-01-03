@@ -13,11 +13,6 @@ abstract class ImmutableSetTest<T> extends AbstractIterableImmutableTest<T> {
     @Override
     abstract ImmutableSet.Builder<T> newIterableBuilder();
 
-    @Override
-    ImmutableIntSetBuilder newIntIterableBuilder() {
-        return new ImmutableIntSetBuilder();
-    }
-
     abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
 
     public void testSizeForTwoElements() {
@@ -56,72 +51,6 @@ abstract class ImmutableSetTest<T> extends AbstractIterableImmutableTest<T> {
 
             assertFalse(iterator.hasNext());
         }));
-    }
-
-    @Override
-    public void testMapForMultipleElements() {
-        withMapFunc(f -> withValue(a -> withValue(b -> {
-            final ImmutableSet<T> collection = newBuilder().add(a).add(b).build();
-            final ImmutableSet<String> mapped = collection.map(f);
-            final Iterator<String> iterator = mapped.iterator();
-
-            final String mappedA = f.apply(a);
-            final String mappedB = f.apply(b);
-
-            assertTrue(iterator.hasNext());
-            final boolean sameMappedValue = equal(mappedA, mappedB);
-            final String first = iterator.next();
-
-            if (sameMappedValue) {
-                assertEquals(mappedA, first);
-            }
-            else if (equal(mappedA, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedB, iterator.next());
-            }
-            else if (equal(mappedB, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedA, iterator.next());
-            }
-            else {
-                fail("Expected either " + mappedA + " or " + mappedB + " but found " + first);
-            }
-
-            assertFalse(iterator.hasNext());
-        })));
-    }
-
-    @Override
-    public void testMapToIntForMultipleElements() {
-        withMapToIntFunc(f -> withValue(a -> withValue(b -> {
-            final ImmutableSet<T> collection = newBuilder().add(a).add(b).build();
-            final ImmutableIntSet mapped = collection.map(f);
-            final Iterator<Integer> iterator = mapped.iterator();
-
-            final int mappedA = f.apply(a);
-            final int mappedB = f.apply(b);
-
-            assertTrue(iterator.hasNext());
-            final boolean sameMappedValue = equal(mappedA, mappedB);
-            final int first = iterator.next();
-
-            if (sameMappedValue) {
-                assertEquals(mappedA, first);
-            }
-            else if (equal(mappedA, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedB, (int) iterator.next());
-            }
-            else if (equal(mappedB, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedA, (int) iterator.next());
-            }
-            else {
-                fail("Expected either " + mappedA + " or " + mappedB + " but found " + first);
-            }
-
-            assertFalse(iterator.hasNext());
-        })));
     }
 
     public void testToImmutableForEmpty() {

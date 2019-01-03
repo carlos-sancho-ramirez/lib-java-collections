@@ -92,11 +92,6 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String> {
     }
 
     @Override
-    ImmutableIntSetBuilder newIntIterableBuilder() {
-        return new ImmutableIntSetBuilder();
-    }
-
-    @Override
     <E> ImmutableHashSet<E> emptyCollection() {
         return ImmutableHashSet.empty();
     }

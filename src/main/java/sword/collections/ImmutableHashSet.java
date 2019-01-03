@@ -42,11 +42,6 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    ImmutableIntSetBuilder newIntBuilder() {
-        return new ImmutableIntSetBuilder();
-    }
-
-    @Override
     <U> Builder<U> newBuilder() {
         return new Builder<>();
     }
