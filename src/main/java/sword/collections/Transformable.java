@@ -10,4 +10,12 @@ public interface Transformable<T> extends IterableCollection<T> {
     default IntSet indexes() {
         return iterator().indexes().toSet();
     }
+
+    default IterableIntCollection mapToInt(IntResultFunction<T> func) {
+        return iterator().mapToInt(func).toList();
+    }
+
+    default <E> IterableCollection<E> map(Function<T, E> func) {
+        return iterator().map(func).toList();
+    }
 }
