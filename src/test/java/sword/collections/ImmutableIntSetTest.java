@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-abstract class ImmutableIntSetTest extends AbstractImmutableIntIterableTest {
+abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest {
 
     abstract ImmutableIntSet.Builder newIntBuilder();
 

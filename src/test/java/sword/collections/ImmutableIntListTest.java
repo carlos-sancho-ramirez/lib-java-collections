@@ -2,7 +2,7 @@ package sword.collections;
 
 import java.util.Iterator;
 
-public final class ImmutableIntListTest extends AbstractImmutableIntIterableTest {
+public final class ImmutableIntListTest extends AbstractImmutableIntTransformableTest {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE

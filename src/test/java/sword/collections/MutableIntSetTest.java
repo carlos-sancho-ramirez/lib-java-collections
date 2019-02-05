@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.TestUtils.withInt;
 
-public class MutableIntSetTest extends AbstractIntIterableTest {
+public final class MutableIntSetTest extends AbstractIntTransformableTest {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -500, -2, -1, 0, 1, 3, 127, 128, Integer.MAX_VALUE
@@ -13,6 +13,16 @@ public class MutableIntSetTest extends AbstractIntIterableTest {
     @Override
     MutableIntSet.Builder newIntBuilder() {
         return new MutableIntSet.Builder();
+    }
+
+    @Override
+    void assertEmptyCollection(IntTransformable transformable) {
+        assertFalse(transformable.iterator().hasNext());
+    }
+
+    @Override
+    void assertNotChanged(Object expected, Object given) {
+        assertEquals(expected, given);
     }
 
     @Override

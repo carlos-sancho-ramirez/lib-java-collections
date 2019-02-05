@@ -1,6 +1,28 @@
 package sword.collections;
 
-public interface IntSet extends IterableIntCollection, Sizable {
+public interface IntSet extends IntTransformable, Sizable {
+
+    /**
+     * Applies the given predicate to each of the values within the set and
+     * composes a new set including only the values whose predicate returned
+     * true.
+     *
+     * @param predicate To be applied to each element in order to filter.
+     */
+    default IntSet filter(IntPredicate predicate) {
+        return iterator().filter(predicate).toSet();
+    }
+
+    /**
+     * Applies the given predicate to each of the values within the set and
+     * composes a new set including only the values whose predicate returned
+     * false.
+     *
+     * @param predicate To be applied to each element in order to filter.
+     */
+    default IntSet filterNot(IntPredicate predicate) {
+        return iterator().filterNot(predicate).toSet();
+    }
 
     /**
      * Value in the given index position.

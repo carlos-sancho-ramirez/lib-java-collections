@@ -17,4 +17,9 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
     ImmutableBitSetImpl.Builder newIntBuilder() {
         return new ImmutableBitSetImpl.Builder();
     }
+
+    @Override
+    void assertEmptyCollection(IntTransformable transformable) {
+        assertFalse(transformable.iterator().hasNext());
+    }
 }

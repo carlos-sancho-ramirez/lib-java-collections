@@ -129,7 +129,7 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet, 
     }
 
     @Override
-    public IntTraverser iterator() {
+    public IntTransformer iterator() {
         return new Iterator();
     }
 
@@ -171,7 +171,7 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet, 
         return fromIntSet(this);
     }
 
-    private class Iterator implements IntTraverser {
+    private class Iterator extends AbstractIntTransformer {
 
         private int _index;
 
@@ -212,7 +212,7 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet, 
         return new MutableIntSet(values, size);
     }
 
-    public static class Builder implements IntCollectionBuilder<MutableIntSet> {
+    public static class Builder implements IntTransformableBuilder<MutableIntSet> {
         private final MutableIntSet _set = MutableIntSet.empty();
 
         @Override
