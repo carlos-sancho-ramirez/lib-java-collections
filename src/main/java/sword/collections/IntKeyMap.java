@@ -4,6 +4,12 @@ import static sword.collections.SortUtils.equal;
 
 public interface IntKeyMap<T> extends Transformable<T>, Sizable {
 
+    @Override
+    IntKeyMap<T> filter(Predicate<T> predicate);
+
+    @Override
+    IntKeyMap<T> filterNot(Predicate<T> predicate);
+
     /**
      * Return the value assigned to the given key.
      * @throws UnmappedKeyException if the given key is not found within the map.
@@ -96,7 +102,7 @@ public interface IntKeyMap<T> extends Transformable<T>, Sizable {
 
         @Override
         public boolean equals(Object other) {
-            if (other == null || !(other instanceof Entry)) {
+            if (!(other instanceof Entry)) {
                 return false;
             }
 

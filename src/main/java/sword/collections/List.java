@@ -6,6 +6,16 @@ package sword.collections;
  */
 public interface List<T> extends Transformable<T>, Sizable {
 
+    @Override
+    default List<T> filter(Predicate<T> predicate) {
+        return iterator().filter(predicate).toList();
+    }
+
+    @Override
+    default List<T> filterNot(Predicate<T> predicate) {
+        return iterator().filterNot(predicate).toList();
+    }
+
     /**
      * Return the item in the given position
      * @param index Position within the list, starting from 0.

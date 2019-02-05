@@ -432,8 +432,8 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof ImmutableList)) {
-            return false;
+        if (!(object instanceof ImmutableList)) {
+            return super.equals(object);
         }
         else if (this == object) {
             return true;

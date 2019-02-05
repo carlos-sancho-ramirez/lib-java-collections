@@ -30,7 +30,7 @@ abstract class AbstractIterable<T> implements IterableCollection<T>, Sizable {
 
     @Override
     public boolean equals(Object other) {
-        if (other == null || !(other instanceof AbstractIterable)) {
+        if (!(other instanceof AbstractIterable)) {
             return false;
         }
 

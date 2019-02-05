@@ -15,6 +15,16 @@ package sword.collections;
  */
 public interface Set<T> extends Transformable<T>, Sizable {
 
+    @Override
+    default Set<T> filter(Predicate<T> predicate) {
+        return iterator().filter(predicate).toSet();
+    }
+
+    @Override
+    default Set<T> filterNot(Predicate<T> predicate) {
+        return iterator().filterNot(predicate).toSet();
+    }
+
     /**
      * Converts this set to a list.
      *

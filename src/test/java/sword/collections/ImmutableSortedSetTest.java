@@ -82,7 +82,7 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String> {
     }
 
     @Override
-    void assertEmptyCollection(IterableCollection<String> collection) {
+    void assertEmptyCollection(Transformable<String> collection) {
         assertFalse(collection.iterator().hasNext());
     }
 

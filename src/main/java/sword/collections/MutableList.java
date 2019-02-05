@@ -285,8 +285,8 @@ public final class MutableList<T> extends AbstractIterable<T> implements List<T>
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof MutableList)) {
-            return false;
+        if (!(object instanceof MutableList)) {
+            return super.equals(object);
         }
         else if (this == object) {
             return true;

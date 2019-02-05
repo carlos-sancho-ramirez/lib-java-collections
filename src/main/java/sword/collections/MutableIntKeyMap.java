@@ -49,6 +49,32 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
+    public IntKeyMap<T> filter(Predicate<T> predicate) {
+        final ImmutableIntKeyMap.Builder<T> builder = new ImmutableIntKeyMap.Builder<>();
+        for (int i = 0; i < _size; i++) {
+            T value = valueAt(i);
+            if (predicate.apply(value)) {
+                builder.put(_keys[i], value);
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public IntKeyMap<T> filterNot(Predicate<T> predicate) {
+        final ImmutableIntKeyMap.Builder<T> builder = new ImmutableIntKeyMap.Builder<>();
+        for (int i = 0; i < _size; i++) {
+            T value = valueAt(i);
+            if (!predicate.apply(value)) {
+                builder.put(_keys[i], value);
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public T get(int key) {
         final int index = findKey(_keys, _size, key);

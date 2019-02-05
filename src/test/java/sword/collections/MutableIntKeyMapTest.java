@@ -51,6 +51,16 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
     }
 
     @Override
+    void assertEmptyCollection(Transformable<String> collection) {
+        assertFalse(collection.iterator().hasNext());
+    }
+
+    @Override
+    void assertNotChanged(Object expected, Object given) {
+        assertEquals(expected, given);
+    }
+
+    @Override
     String getTestValue() {
         return "value";
     }

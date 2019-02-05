@@ -57,6 +57,16 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
     }
 
     @Override
+    void assertEmptyCollection(Transformable<String> collection) {
+        assertSame(ImmutableIntKeyMap.empty(), collection);
+    }
+
+    @Override
+    void assertNotChanged(Object expected, Object given) {
+        assertSame(expected, given);
+    }
+
+    @Override
     String getTestValue() {
         return "value";
     }
