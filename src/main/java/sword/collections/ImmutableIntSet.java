@@ -25,10 +25,10 @@ public interface ImmutableIntSet extends IntSet, IterableImmutableIntCollection 
     ImmutableIntSet filterNot(IntPredicate predicate);
 
     @Override
-    ImmutableIntSet map(IntToIntFunction func);
+    ImmutableIntList mapToInt(IntToIntFunction func);
 
     @Override
-    <U> ImmutableHashSet<U> map(IntFunction<U> func);
+    <U> ImmutableList<U> map(IntFunction<U> func);
 
     /**
      * Add the given value to the values of the current set if not

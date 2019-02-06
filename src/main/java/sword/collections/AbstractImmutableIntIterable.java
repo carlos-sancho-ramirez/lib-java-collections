@@ -38,7 +38,7 @@ abstract class AbstractImmutableIntIterable extends AbstractIntIterable implemen
     }
 
     @Override
-    public IterableImmutableIntCollection map(IntToIntFunction func) {
+    public IterableImmutableIntCollection mapToInt(IntToIntFunction func) {
         final ImmutableIntCollectionBuilder builder = newIntBuilder();
 
         for (int item : this) {

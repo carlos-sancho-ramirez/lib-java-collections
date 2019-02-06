@@ -4,8 +4,6 @@ import junit.framework.TestCase;
 
 import java.util.Iterator;
 
-import static sword.collections.SortUtils.equal;
-
 public class ImmutableIntRangeTest extends TestCase {
 
     // This is used in some tests that iterates in a range instance as the maximum allowed size.
@@ -47,6 +45,15 @@ public class ImmutableIntRangeTest extends TestCase {
                 }
             }
         }
+    }
+
+    private void withMapFunc(Procedure<IntFunction<String>> procedure) {
+        procedure.apply(Integer::toString);
+    }
+
+    private void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
     }
 
     private int moduleFour(int value) {
@@ -236,6 +243,32 @@ public class ImmutableIntRangeTest extends TestCase {
                     }
                 }
             }
+        }));
+    }
+
+    public void testMap() {
+        withSmallRange(range -> withMapFunc(func -> {
+            final Iterator<Integer> it = range.iterator();
+            final Iterator<String> mappedIt = range.map(func).iterator();
+
+            while (it.hasNext()) {
+                assertTrue(mappedIt.hasNext());
+                assertEquals(func.apply(it.next()), mappedIt.next());
+            }
+            assertFalse(mappedIt.hasNext());
+        }));
+    }
+
+    public void testMapToInt() {
+        withSmallRange(range -> withMapToIntFunc(func -> {
+            final Iterator<Integer> it = range.iterator();
+            final Iterator<Integer> mappedIt = range.mapToInt(func).iterator();
+
+            while (it.hasNext()) {
+                assertTrue(mappedIt.hasNext());
+                assertEquals(func.apply(it.next()), mappedIt.next().intValue());
+            }
+            assertFalse(mappedIt.hasNext());
         }));
     }
 }

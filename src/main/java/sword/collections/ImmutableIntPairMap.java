@@ -147,7 +147,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     @Override
-    public ImmutableIntPairMap map(IntToIntFunction mapFunc) {
+    public ImmutableIntPairMap mapToInt(IntToIntFunction mapFunc) {
         final int size = _keys.length;
         final int[] newValues = new int[size];
         for (int i = 0; i < size; i++) {

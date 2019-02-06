@@ -185,14 +185,14 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
-    public void testMapValuesForIntResultMethod() {
+    public void testMapToIntMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntPairMap map = new ImmutableIntPairMap.Builder()
                     .put(a, a)
                     .put(b, b)
                     .build();
 
-            final ImmutableIntPairMap map2 = map.map(this::mapValueIntResultFunction);
+            final ImmutableIntPairMap map2 = map.mapToInt(this::mapValueIntResultFunction);
             assertEquals(map.size(), map2.size());
             assertEquals(map.keySet(), map2.keySet());
 

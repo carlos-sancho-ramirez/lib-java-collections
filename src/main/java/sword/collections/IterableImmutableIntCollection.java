@@ -26,7 +26,7 @@ interface IterableImmutableIntCollection extends IntTransformable {
      *
      * @param func Function to be applied to each value in the collection.
      */
-    IterableImmutableIntCollection map(IntToIntFunction func);
+    IterableImmutableIntCollection mapToInt(IntToIntFunction func);
 
     /**
      * Applies the given function to each element on the collection and composes a

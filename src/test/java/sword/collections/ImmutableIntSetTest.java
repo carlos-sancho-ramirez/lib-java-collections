@@ -2,8 +2,6 @@ package sword.collections;
 
 import java.util.Iterator;
 
-import static sword.collections.SortUtils.equal;
-
 abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest {
 
     abstract ImmutableIntSet.Builder newIntBuilder();
@@ -27,6 +25,12 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         procedure.apply(Integer::toString);
     }
 
+    @Override
+    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
+    }
+
     private int moduleFour(int value) {
         return value & 3;
     }
@@ -37,11 +41,6 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
 
     private void withGroupingIntFunc(Procedure<IntToIntFunction> procedure) {
         procedure.apply(this::moduleFour);
-    }
-
-    @Override
-    ImmutableHashSet<String> mapTargetEmptyCollection() {
-        return ImmutableHashSet.empty();
     }
 
     public void testSizeForMultipleElements() {
@@ -83,38 +82,6 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
                 }
             }
         }));
-    }
-
-    public void testMapForMultipleElements() {
-        withMapFunc(f -> withItem(a -> withItem(b -> {
-            final ImmutableIntSet collection = newIntBuilder().add(a).add(b).build();
-            final ImmutableHashSet<String> mapped = collection.map(f);
-            final Iterator<String> iterator = mapped.iterator();
-
-            final String mappedA = f.apply(a);
-            final String mappedB = f.apply(b);
-
-            assertTrue(iterator.hasNext());
-            final boolean sameMappedValue = equal(mappedA, mappedB);
-            final String first = iterator.next();
-
-            if (sameMappedValue) {
-                assertEquals(mappedA, first);
-            }
-            else if (equal(mappedA, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedB, iterator.next());
-            }
-            else if (equal(mappedB, first)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(mappedA, iterator.next());
-            }
-            else {
-                fail("Expected either " + mappedA + " or " + mappedB + " but found " + first);
-            }
-
-            assertFalse(iterator.hasNext());
-        })));
     }
 
     public void testAdd() {

@@ -99,7 +99,7 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
     }
 
     @Override
-    public ImmutableIntValueSortedMap<T> map(IntToIntFunction mapFunc) {
+    public ImmutableIntValueSortedMap<T> mapToInt(IntToIntFunction mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
         for (int i = 0; i < itemCount; i++) {

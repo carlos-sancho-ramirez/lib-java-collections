@@ -54,6 +54,36 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
+    public <U> ImmutableList<U> map(IntFunction<U> func) {
+        final int size = _values.length;
+        if (size == 0) {
+            return ImmutableList.empty();
+        }
+
+        final Object[] newValues = new Object[size];
+        for (int i = 0; i < size; i++) {
+            newValues[i] = func.apply(_values[i]);
+        }
+
+        return new ImmutableList<>(newValues);
+    }
+
+    @Override
+    public ImmutableIntList mapToInt(IntToIntFunction func) {
+        final int size = _values.length;
+        if (size == 0) {
+            return ImmutableIntList.empty();
+        }
+
+        final int[] newValues = new int[size];
+        for (int i = 0; i < size; i++) {
+            newValues[i] = func.apply(_values[i]);
+        }
+
+        return new ImmutableIntList(newValues);
+    }
+
+    @Override
     public ImmutableIntSet add(int value) {
         final int length = _values.length;
         if (findKey(_values, length, value) >= 0) {
@@ -193,7 +223,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
 
     @Override
     public boolean equals(Object other) {
-        if (other == null || !(other instanceof ImmutableIntSetImpl)) {
+        if (!(other instanceof ImmutableIntSetImpl)) {
             return super.equals(other);
         }
 

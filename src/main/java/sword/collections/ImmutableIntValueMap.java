@@ -31,7 +31,7 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, IterableImmutab
     ImmutableIntValueMap<T> filterNot(IntPredicate predicate);
 
     @Override
-    ImmutableIntValueMap<T> map(IntToIntFunction mapFunc);
+    ImmutableIntValueMap<T> mapToInt(IntToIntFunction mapFunc);
 
     @Override
     <U> ImmutableMap<T, U> map(IntFunction<U> mapFunc);

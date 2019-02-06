@@ -79,6 +79,24 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
+    public <U> ImmutableList<U> map(IntFunction<U> func) {
+        final ImmutableList.Builder<U> builder = new ImmutableList.Builder<>();
+        for (int value : this) {
+            builder.append(func.apply(value));
+        }
+        return builder.build();
+    }
+
+    @Override
+    public ImmutableIntList mapToInt(IntToIntFunction func) {
+        final ImmutableIntList.Builder builder = new ImmutableIntList.Builder();
+        for (int value : this) {
+            builder.append(func.apply(value));
+        }
+        return builder.build();
+    }
+
+    @Override
     public ImmutableIntSet add(int value) {
         if (contains(value)) {
             return this;

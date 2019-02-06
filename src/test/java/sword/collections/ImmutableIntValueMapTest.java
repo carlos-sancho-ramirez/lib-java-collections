@@ -176,7 +176,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
         })));
     }
 
-    public void testMapValuesForIntResult() {
+    public void testMapToIntMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntValueMap<T> map = newBuilder()
                     .put(keyFromInt(a), a)
@@ -184,7 +184,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
                     .build();
 
             final IntToIntFunction mapFunc = value -> value + 3;
-            final ImmutableIntValueMap<T> map2 = map.map(mapFunc);
+            final ImmutableIntValueMap<T> map2 = map.mapToInt(mapFunc);
 
             final ImmutableSet<T> keySet = map.keySet();
             assertEquals(keySet, map2.keySet());

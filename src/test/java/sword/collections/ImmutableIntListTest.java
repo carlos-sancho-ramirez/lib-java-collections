@@ -20,6 +20,12 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         procedure.apply(Integer::toString);
     }
 
+    @Override
+    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
+    }
+
     private boolean isPositiveValue(int value) {
         return value >= 0;
     }
@@ -44,11 +50,6 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
     @Override
     ImmutableIntList emptyCollection() {
         return ImmutableIntList.empty();
-    }
-
-    @Override
-    ImmutableList<String> mapTargetEmptyCollection() {
-        return ImmutableList.empty();
     }
 
     @Override
