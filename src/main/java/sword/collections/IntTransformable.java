@@ -20,4 +20,8 @@ public interface IntTransformable extends IterableIntCollection {
      * @param predicate To be applied to each element in order to filter.
      */
     IntTransformable filterNot(IntPredicate predicate);
+
+    IntTransformable mapToInt(IntToIntFunction func);
+
+    <U> Transformable<U> map(IntFunction<U> func);
 }

@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntSetTest extends AbstractIntTransformableTest {
+public final class MutableIntSetTest extends AbstractMutableIntTransformableTest {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -500, -2, -1, 0, 1, 3, 127, 128, Integer.MAX_VALUE
@@ -46,11 +46,13 @@ public final class MutableIntSetTest extends AbstractIntTransformableTest {
         procedure.apply(this::isPositiveValue);
     }
 
-    private void withMapFunc(Procedure<IntFunction<String>> procedure) {
+    @Override
+    void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);
     }
 
-    private void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+    @Override
+    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
         procedure.apply(v -> v * v);
         procedure.apply(v -> v + 1);
     }
@@ -230,69 +232,6 @@ public final class MutableIntSetTest extends AbstractIntTransformableTest {
                 assertEquals(defaultValue, first);
             }
         }))));
-    }
-
-    public void testMapWhenEmpty() {
-        final IntFunction func = unused -> {
-            throw new AssertionError("This function should not be called");
-        };
-
-        assertSame(ImmutableList.empty(), newIntBuilder().build().map(func));
-    }
-
-    public void testMapForSingleElement() {
-        withMapFunc(f -> withItem(value -> {
-            final MutableIntSet set = newIntBuilder().add(value).build();
-            final Iterator<String> iterator = set.map(f).iterator();
-            assertTrue(iterator.hasNext());
-            assertEquals(f.apply(value), iterator.next());
-            assertFalse(iterator.hasNext());
-        }));
-    }
-
-    public void testMapForMultipleElements() {
-        withMapFunc(f -> withItem(a -> withItem(b -> {
-            final MutableIntSet set = newIntBuilder().add(a).add(b).build();
-            final Iterator<Integer> iterator = set.iterator();
-            final Iterator<String> mappedIterator = set.map(f).iterator();
-            while (iterator.hasNext()) {
-                assertTrue(mappedIterator.hasNext());
-                assertEquals(f.apply(iterator.next()), mappedIterator.next());
-            }
-
-            assertFalse(mappedIterator.hasNext());
-        })));
-    }
-
-    public void testMapToIntWhenEmpty() {
-        final IntToIntFunction func = unused -> {
-            throw new AssertionError("This function should not be called");
-        };
-
-        assertSame(ImmutableIntList.empty(), newIntBuilder().build().mapToInt(func));
-    }
-
-    public void testMapToIntForSingleElement() {
-        withMapToIntFunc(f -> withItem(value -> {
-            final Iterator<Integer> iterator = newIntBuilder().add(value).build().mapToInt(f).iterator();
-            assertTrue(iterator.hasNext());
-            assertEquals(f.apply(value), iterator.next().intValue());
-            assertFalse(iterator.hasNext());
-        }));
-    }
-
-    public void testMapToIntForMultipleElements() {
-        withMapToIntFunc(f -> withItem(a -> withItem(b -> {
-            final MutableIntSet set = newIntBuilder().add(a).add(b).build();
-            final Iterator<Integer> iterator = set.iterator();
-            final Iterator<Integer> mappedIterator = set.mapToInt(f).iterator();
-            while (iterator.hasNext()) {
-                assertTrue(mappedIterator.hasNext());
-                assertEquals(f.apply(iterator.next()), mappedIterator.next().intValue());
-            }
-
-            assertFalse(mappedIterator.hasNext());
-        })));
     }
 
     public void testToListWhenEmpty() {

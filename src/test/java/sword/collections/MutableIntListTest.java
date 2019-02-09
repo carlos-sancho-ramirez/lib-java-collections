@@ -4,11 +4,21 @@ import java.util.Iterator;
 
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntListTest extends AbstractIntIterableTest {
+public final class MutableIntListTest extends AbstractMutableIntTransformableTest {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE
     };
+
+    @Override
+    void assertEmptyCollection(IntTransformable collection) {
+        assertFalse(collection.iterator().hasNext());
+    }
+
+    @Override
+    void assertNotChanged(Object expected, Object given) {
+        assertEquals(expected, given);
+    }
 
     @Override
     void withItem(IntProcedure procedure) {
@@ -19,6 +29,12 @@ public final class MutableIntListTest extends AbstractIntIterableTest {
 
     void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);
+    }
+
+    @Override
+    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
     }
 
     private boolean isPositiveValue(int value) {

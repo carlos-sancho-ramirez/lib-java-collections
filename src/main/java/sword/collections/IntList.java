@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface IntList extends IterableIntCollection, Sizable {
+public interface IntList extends IntTransformable, Sizable {
 
     /**
      * Return the value assigned to the given key.
@@ -13,6 +13,26 @@ public interface IntList extends IterableIntCollection, Sizable {
      * Or the given defaultValue if that key is not in the map.
      */
     int get(int key, int defaultValue);
+
+    @Override
+    default IntList filter(IntPredicate predicate) {
+        return iterator().filter(predicate).toList();
+    }
+
+    @Override
+    default IntList filterNot(IntPredicate predicate) {
+        return iterator().filterNot(predicate).toList();
+    }
+
+    @Override
+    default IntList mapToInt(IntToIntFunction func) {
+        return iterator().mapToInt(func).toList();
+    }
+
+    @Override
+    default <U> List<U> map(IntFunction<U> func) {
+        return iterator().map(func).toList();
+    }
 
     /**
      * Converts this list into a set.

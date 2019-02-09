@@ -117,7 +117,7 @@ public final class MutableIntList extends AbstractIntIterable implements IntList
         return changed;
     }
 
-    private class Iterator implements IntTraverser {
+    private class Iterator extends AbstractIntTransformer {
         private int _index;
 
         @Override
@@ -137,11 +137,11 @@ public final class MutableIntList extends AbstractIntIterable implements IntList
     }
 
     @Override
-    public IntTraverser iterator() {
+    public IntTransformer iterator() {
         return new Iterator();
     }
 
-    public static final class Builder implements IntCollectionBuilder<MutableIntList> {
+    public static final class Builder implements IntTransformableBuilder<MutableIntList> {
 
         private final MutableIntList _list = MutableIntList.empty();
 

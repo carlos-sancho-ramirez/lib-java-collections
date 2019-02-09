@@ -84,6 +84,11 @@ public final class ImmutableIntList extends AbstractImmutableIntIterable impleme
     }
 
     @Override
+    public ImmutableIntList mapToInt(IntToIntFunction func) {
+        return (ImmutableIntList) super.mapToInt(func);
+    }
+
+    @Override
     public int reduce(IntReduceFunction func) {
         final int size = _values.length;
         if (size == 0) {
