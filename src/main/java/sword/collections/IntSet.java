@@ -24,6 +24,14 @@ public interface IntSet extends IntTransformable, Sizable {
         return iterator().filterNot(predicate).toSet();
     }
 
+    default IntList mapToInt(IntToIntFunction func) {
+        return iterator().mapToInt(func).toList();
+    }
+
+    default <U> List<U> map(IntFunction<U> func) {
+        return iterator().map(func).toList();
+    }
+
     /**
      * Value in the given index position.
      *

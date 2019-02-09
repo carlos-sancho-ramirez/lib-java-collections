@@ -61,6 +61,34 @@ public final class MutableIntSet extends AbstractIntIterable implements IntSet, 
     }
 
     @Override
+    public IntList mapToInt(IntToIntFunction func) {
+        if (_size == 0) {
+            return ImmutableIntList.empty();
+        }
+
+        final int[] newValues = new int[_size];
+        for (int i = 0; i < _size; i++) {
+            newValues[i] = func.apply(_values[i]);
+        }
+
+        return new ImmutableIntList(newValues);
+    }
+
+    @Override
+    public <U> List<U> map(IntFunction<U> func) {
+        if (_size == 0) {
+            return ImmutableList.empty();
+        }
+
+        final Object[] newValues = new Object[_size];
+        for (int i = 0; i < _size; i++) {
+            newValues[i] = func.apply(_values[i]);
+        }
+
+        return new ImmutableList<>(newValues);
+    }
+
+    @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
         if (_size > GRANULARITY) {
