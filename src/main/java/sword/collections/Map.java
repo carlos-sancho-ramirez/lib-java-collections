@@ -9,6 +9,8 @@ import static sword.collections.SortUtils.equal;
  */
 public interface Map<K, V> extends IterableCollection<V>, Sizable {
 
+    TransformerWithKey<K, V> iterator();
+
     /**
      * Check whether the given key is contained in the map
      * @param key Key to be found.

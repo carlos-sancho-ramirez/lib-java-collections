@@ -70,7 +70,7 @@ abstract class AbstractMutableMap<K, V> extends AbstractMap<K, V> implements Mut
         return new ImmutableSortedSet<>(this::entryLessThan, entries);
     }
 
-    private class Iterator implements Traverser<V> {
+    private class Iterator extends AbstractTransformerWithKey<K, V> {
 
         private int _index;
 
@@ -89,10 +89,16 @@ abstract class AbstractMutableMap<K, V> extends AbstractMap<K, V> implements Mut
         public void remove() {
             removeAt(--_index);
         }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public K key() {
+            return (K) _keys[_index - 1];
+        }
     }
 
     @Override
-    public Traverser<V> iterator() {
+    public TransformerWithKey<K, V> iterator() {
         return new Iterator();
     }
 

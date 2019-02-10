@@ -55,7 +55,7 @@ abstract class AbstractImmutableMap<K, V> extends AbstractMap<K, V> implements I
         return new ImmutableSortedSet<>(this::entryLessThan, entries);
     }
 
-    private class Iterator extends AbstractTransformer<V> {
+    private class Iterator extends AbstractTransformerWithKey<K, V> {
 
         private int _index;
 
@@ -68,6 +68,12 @@ abstract class AbstractImmutableMap<K, V> extends AbstractMap<K, V> implements I
         @SuppressWarnings("unchecked")
         public V next() {
             return (V) _values[_index++];
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public K key() {
+            return (K) _keys[_index - 1];
         }
     }
 

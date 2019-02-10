@@ -39,6 +39,14 @@ public final class ImmutableMapTransformerTest extends TransformerTest<String, T
         procedure.apply(SortUtils::hashCode);
     }
 
+    private void withMapBuilder(Procedure<MapBuilder<String, String>> procedure) {
+        procedure.apply(new ImmutableHashMap.Builder<>());
+    }
+
+    private String keyFromValue(String value) {
+        return "_" + value;
+    }
+
     private static final class SameKeyAndValueBuilder implements TransformableBuilder<String> {
         private final ImmutableHashMap.Builder<String, String> builder = new ImmutableHashMap.Builder<>();
 
@@ -68,5 +76,21 @@ public final class ImmutableMapTransformerTest extends TransformerTest<String, T
         public Transformable<String> build() {
             return builder.build();
         }
+    }
+
+    public void testToMapWhenEmpty() {
+        withMapBuilder(builder -> assertTrue(builder.build().iterator().toMap().isEmpty()));
+    }
+
+    public void testToMap() {
+        withValue(a -> withValue(b -> withValue(c -> withMapBuilder(builder -> {
+            final Map<String, String> map = builder
+                    .put(keyFromValue(a), a)
+                    .put(keyFromValue(b), b)
+                    .put(keyFromValue(c), c)
+                    .build();
+
+            assertEquals(map, map.iterator().toMap());
+        }))));
     }
 }
