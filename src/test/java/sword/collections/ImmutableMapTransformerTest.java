@@ -93,4 +93,43 @@ public final class ImmutableMapTransformerTest extends TransformerTest<String, T
             assertEquals(map, map.iterator().toMap());
         }))));
     }
+
+    @Override
+    public void testMapForSingleValue() {
+        withMapFunc(func -> withValue(a -> withMapBuilder(builder -> {
+            final String keyA = keyFromValue(a);
+            final Map<String, String> map = builder
+                    .put(keyA, a)
+                    .build();
+
+            final TransformerWithKey<String, Object> transformer = map.iterator().map(func);
+            assertTrue(transformer.hasNext());
+            assertEquals(func.apply(a), transformer.next());
+            assertSame(keyA, transformer.key());
+            assertFalse(transformer.hasNext());
+        })));
+    }
+
+    @Override
+    public void testMapForMultipleValues() {
+        withMapFunc(func -> withValue(a -> withValue(b -> withValue(c -> withMapBuilder(builder -> {
+            final Map<String, String> transformable = builder
+                    .put(keyFromValue(a), a)
+                    .put(keyFromValue(b), b)
+                    .put(keyFromValue(c), c)
+                    .build();
+            final TransformerWithKey<String, Object> transformer = transformable.iterator().map(func);
+            final int length = transformable.size();
+            for (int i = 0; i < length; i++) {
+                final String key = transformable.keyAt(i);
+                final String value = transformable.valueAt(i);
+
+                assertTrue(transformer.hasNext());
+                assertEquals(func.apply(value), transformer.next());
+                assertSame(key, transformer.key());
+            }
+
+            assertFalse(transformer.hasNext());
+        })))));
+    }
 }
