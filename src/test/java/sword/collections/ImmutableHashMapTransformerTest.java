@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableMapTransformerTest extends TransformerTest<String, TransformableBuilder<String>> {
+public final class ImmutableHashMapTransformerTest extends TransformerTest<String, TransformableBuilder<String>> {
 
     @Override
     void withBuilder(Procedure<TransformableBuilder<String>> procedure) {
@@ -26,7 +26,7 @@ public final class ImmutableMapTransformerTest extends TransformerTest<String, T
 
     @Override
     void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
-        procedure.apply(ImmutableMapTransformerTest::reduceFunc);
+        procedure.apply(ImmutableHashMapTransformerTest::reduceFunc);
     }
 
     @Override
