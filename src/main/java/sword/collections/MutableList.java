@@ -3,7 +3,7 @@ package sword.collections;
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.equal;
 
-public final class MutableList<T> extends AbstractIterable<T> implements List<T>, MutableIterableCollection<T> {
+public final class MutableList<T> extends AbstractTraversable<T> implements List<T>, MutableTraversable<T> {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 

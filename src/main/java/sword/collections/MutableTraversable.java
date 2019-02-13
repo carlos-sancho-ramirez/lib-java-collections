@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface MutableIterableIntCollection extends IterableIntCollection {
+public interface MutableTraversable<T> extends Traversable<T> {
 
     /**
      * Removes from this collection the item in the given position.

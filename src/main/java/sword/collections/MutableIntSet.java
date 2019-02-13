@@ -6,7 +6,7 @@ import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 
-public final class MutableIntSet extends AbstractIntIterable implements IntSet, MutableIterableIntCollection {
+public final class MutableIntSet extends AbstractIntTraversable implements IntSet, MutableIntTraversable {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 

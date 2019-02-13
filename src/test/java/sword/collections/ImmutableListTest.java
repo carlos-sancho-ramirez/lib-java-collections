@@ -5,7 +5,7 @@ import java.util.Iterator;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableListTest extends AbstractIterableImmutableTest<String> {
+public final class ImmutableListTest extends AbstractImmutableTransformableTest<String> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"

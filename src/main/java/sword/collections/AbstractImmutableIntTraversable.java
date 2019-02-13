@@ -1,12 +1,12 @@
 package sword.collections;
 
-abstract class AbstractImmutableIntIterable extends AbstractIntIterable implements IterableImmutableIntCollection {
+abstract class AbstractImmutableIntTraversable extends AbstractIntTraversable implements ImmutableIntTraversable {
 
     abstract ImmutableIntCollectionBuilder newIntBuilder();
-    abstract <U> ImmutableCollectionBuilder<U> newBuilder();
+    abstract <U> ImmutableTransformableBuilder<U> newBuilder();
 
     @Override
-    public IterableImmutableIntCollection filter(IntPredicate predicate) {
+    public ImmutableIntTraversable filter(IntPredicate predicate) {
         boolean somethingRemoved = false;
         ImmutableIntCollectionBuilder builder = newIntBuilder();
         for (int item : this) {
@@ -22,7 +22,7 @@ abstract class AbstractImmutableIntIterable extends AbstractIntIterable implemen
     }
 
     @Override
-    public IterableImmutableIntCollection filterNot(IntPredicate predicate) {
+    public ImmutableIntTraversable filterNot(IntPredicate predicate) {
         boolean somethingRemoved = false;
         ImmutableIntCollectionBuilder builder = newIntBuilder();
         for (int item : this) {
@@ -38,7 +38,7 @@ abstract class AbstractImmutableIntIterable extends AbstractIntIterable implemen
     }
 
     @Override
-    public IterableImmutableIntCollection mapToInt(IntToIntFunction func) {
+    public ImmutableIntTraversable mapToInt(IntToIntFunction func) {
         final ImmutableIntCollectionBuilder builder = newIntBuilder();
 
         for (int item : this) {
@@ -49,8 +49,8 @@ abstract class AbstractImmutableIntIterable extends AbstractIntIterable implemen
     }
 
     @Override
-    public <U> IterableImmutableCollection<U> map(IntFunction<U> func) {
-        final ImmutableCollectionBuilder<U> builder = newBuilder();
+    public <U> ImmutableTransformable<U> map(IntFunction<U> func) {
+        final ImmutableTransformableBuilder<U> builder = newBuilder();
 
         for (int item : this) {
             builder.add(func.apply(item));

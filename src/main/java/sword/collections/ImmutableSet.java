@@ -10,7 +10,7 @@ package sword.collections;
  *
  * @param <T> Type for the elements within the Set
  */
-public interface ImmutableSet<T> extends Set<T>, IterableImmutableCollection<T> {
+public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
 
     @SuppressWarnings("unchecked")
     T keyAt(int index);
@@ -55,7 +55,7 @@ public interface ImmutableSet<T> extends Set<T>, IterableImmutableCollection<T> 
     @Override
     ImmutableSet<T> sort(SortFunction<T> function);
 
-    interface Builder<E> extends ImmutableCollectionBuilder<E> {
+    interface Builder<E> extends ImmutableTransformableBuilder<E> {
 
         @Override
         Builder<E> add(E element);

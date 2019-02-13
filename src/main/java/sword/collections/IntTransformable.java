@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface IntTransformable extends IterableIntCollection {
+public interface IntTransformable extends IntTraversable {
     IntTransformer iterator();
 
     /**

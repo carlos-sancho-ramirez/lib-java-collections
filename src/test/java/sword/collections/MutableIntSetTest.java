@@ -218,7 +218,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
     @Override
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
-            final IterableIntCollection collection = newIntBuilder().add(a).add(b).build();
+            final IntTraversable collection = newIntBuilder().add(a).add(b).build();
             final boolean reversed = b < a;
             final int first = collection.findFirst(f, defaultValue);
 

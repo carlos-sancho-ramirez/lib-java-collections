@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface Transformable<T> extends IterableCollection<T> {
+public interface Transformable<T> extends Traversable<T> {
 
     Transformer<T> iterator();
 
@@ -27,11 +27,11 @@ public interface Transformable<T> extends IterableCollection<T> {
      */
     Transformable<T> filterNot(Predicate<T> predicate);
 
-    default IterableIntCollection mapToInt(IntResultFunction<T> func) {
+    default IntTraversable mapToInt(IntResultFunction<T> func) {
         return iterator().mapToInt(func).toList();
     }
 
-    default <E> IterableCollection<E> map(Function<T, E> func) {
+    default <E> Traversable<E> map(Function<T, E> func) {
         return iterator().map(func).toList();
     }
 }

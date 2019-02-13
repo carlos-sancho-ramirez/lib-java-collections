@@ -2,10 +2,10 @@ package sword.collections;
 
 import java.util.Iterator;
 
-abstract class AbstractImmutableIntSet extends AbstractImmutableIntIterable implements ImmutableIntSet {
+abstract class AbstractImmutableIntSet extends AbstractImmutableIntTraversable implements ImmutableIntSet {
 
     @Override
-    <U> ImmutableCollectionBuilder<U> newBuilder() {
+    <U> ImmutableTransformableBuilder<U> newBuilder() {
         return new ImmutableHashSet.Builder<>();
     }
 

@@ -15,7 +15,7 @@ package sword.collections;
  *
  * @param <T> Type for the key elements within the Map
  */
-public interface MutableIntValueMap<T> extends IntValueMap<T>, MutableIterableIntCollection {
+public interface MutableIntValueMap<T> extends IntValueMap<T>, MutableIntTraversable {
 
     boolean put(T key, int value);
 

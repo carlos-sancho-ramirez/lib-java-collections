@@ -7,7 +7,7 @@ import static sword.collections.SortUtils.equal;
  * @param <K> Type of key items within the map.
  * @param <V> Type of value items within the map.
  */
-public interface Map<K, V> extends IterableCollection<V> {
+public interface Map<K, V> extends Traversable<V> {
 
     TransformerWithKey<K, V> iterator();
 

@@ -2,10 +2,10 @@ package sword.collections;
 
 import java.util.Iterator;
 
-abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTest<T> {
+abstract class AbstractImmutableTransformableTest<T> extends AbstractTransformableTest<T> {
 
-    abstract <E> AbstractIterable<E> emptyCollection();
-    abstract ImmutableCollectionBuilder<T> newIterableBuilder();
+    abstract <E> AbstractTraversable<E> emptyCollection();
+    abstract ImmutableTransformableBuilder<T> newIterableBuilder();
     abstract void withValue(Procedure<T> procedure);
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
     abstract void withMapFunc(Procedure<Function<T, String>> procedure);
@@ -29,8 +29,8 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
 
     public void testMapForSingleElement() {
         withMapFunc(f -> withValue(value -> {
-            final IterableImmutableCollection<T> collection = newIterableBuilder().add(value).build();
-            final IterableImmutableCollection<String> mapped = collection.map(f);
+            final ImmutableTransformable<T> collection = newIterableBuilder().add(value).build();
+            final ImmutableTransformable<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
             assertTrue(iterator.hasNext());
             assertEquals(f.apply(value), iterator.next());
@@ -40,8 +40,8 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
 
     public void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> {
-            final IterableImmutableCollection<T> collection = newIterableBuilder().add(a).add(b).build();
-            final IterableImmutableCollection<String> mapped = collection.map(f);
+            final ImmutableTransformable<T> collection = newIterableBuilder().add(a).add(b).build();
+            final ImmutableTransformable<String> mapped = collection.map(f);
 
             final Iterator<T> collectionIterator = collection.iterator();
             final Iterator<String> mappedIterator = mapped.iterator();
@@ -62,8 +62,8 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
 
     public void testMapToIntForSingleElement() {
         withMapToIntFunc(f -> withValue(value -> {
-            final IterableImmutableCollection<T> collection = newIterableBuilder().add(value).build();
-            final IterableImmutableIntCollection mapped = collection.mapToInt(f);
+            final ImmutableTransformable<T> collection = newIterableBuilder().add(value).build();
+            final ImmutableIntTraversable mapped = collection.mapToInt(f);
             final Iterator<Integer> iterator = mapped.iterator();
             assertTrue(iterator.hasNext());
             assertEquals(f.apply(value), (int) iterator.next());
@@ -73,8 +73,8 @@ abstract class AbstractIterableImmutableTest<T> extends AbstractTransformableTes
 
     public void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withValue(a -> withValue(b -> {
-            final IterableImmutableCollection<T> collection = newIterableBuilder().add(a).add(b).build();
-            final IterableImmutableIntCollection mapped = collection.mapToInt(f);
+            final ImmutableTransformable<T> collection = newIterableBuilder().add(a).add(b).build();
+            final ImmutableIntTraversable mapped = collection.mapToInt(f);
 
             final Iterator<T> collectionIterator = collection.iterator();
             final Iterator<Integer> mappedIterator = mapped.iterator();

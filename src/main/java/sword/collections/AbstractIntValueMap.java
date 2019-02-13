@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.SortUtils.equal;
 
-abstract class AbstractIntValueMap<T> extends AbstractIntIterable implements IntValueMap<T> {
+abstract class AbstractIntValueMap<T> extends AbstractIntTraversable implements IntValueMap<T> {
 
     @Override
     public int hashCode() {

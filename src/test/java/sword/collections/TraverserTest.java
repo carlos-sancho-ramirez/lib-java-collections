@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase {
+abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCase {
 
     abstract void withBuilder(Procedure<B> procedure);
     abstract void withValue(Procedure<T> value);
@@ -24,7 +24,7 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testContainsWhenContainingASingleElement() {
         withValue(valueIncluded -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(valueIncluded).build();
+            final Traversable<T> iterable = builder.add(valueIncluded).build();
             withValue(otherValue -> {
                 final Traverser<T> traverser = iterable.iterator();
                 if (equal(valueIncluded, otherValue) && !traverser.contains(otherValue)) {
@@ -39,7 +39,7 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testContainsWhenContainingMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(a).add(b).build();
+            final Traversable<T> iterable = builder.add(a).add(b).build();
             final Traverser<T> it = iterable.iterator();
             final T first = it.next();
             final boolean hasSecond = it.hasNext();
@@ -60,14 +60,14 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testAnyMatchWhenEmpty() {
         withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.build();
+            final Traversable<T> iterable = builder.build();
             withFilterFunc(f -> assertFalse(iterable.iterator().anyMatch(f)));
         });
     }
 
     public void testAnyMatchForSingleElement() {
         withValue(value -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(value).build();
+            final Traversable<T> iterable = builder.add(value).build();
             withFilterFunc(f -> {
                 final Traverser<T> traverser = iterable.iterator();
                 if (f.apply(value)) {
@@ -82,7 +82,7 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testAnyMatchForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(a).add(b).build();
+            final Traversable<T> iterable = builder.add(a).add(b).build();
             withFilterFunc(f -> {
                 final Traverser<T> traverser = iterable.iterator();
                 if (f.apply(a) || f.apply(b)) {
@@ -97,14 +97,14 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testIndexOfWhenEmpty() {
         withBuilder(builder -> {
-            IterableCollection<T> iterable = builder.build();
+            Traversable<T> iterable = builder.build();
             withValue(value -> assertEquals(-1, iterable.iterator().indexOf(value)));
         });
     }
 
     public void testIndexOfForSingleElement() {
         withValue(a -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(a).build();
+            final Traversable<T> iterable = builder.add(a).build();
             withValue(value -> {
                 final int expected = equal(a, value)? 0 : -1;
                 assertEquals(expected, iterable.iterator().indexOf(value));
@@ -114,7 +114,7 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(a).add(b).build();
+            final Traversable<T> iterable = builder.add(a).add(b).build();
             withValue(value -> {
                 final Traverser<T> it = iterable.iterator();
                 final T first = it.next();
@@ -138,7 +138,7 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testValueAtForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(a).add(b).build();
+            final Traversable<T> iterable = builder.add(a).add(b).build();
             final Traverser<T> it = iterable.iterator();
             final T first = it.next();
             final boolean hasSecond = it.hasNext();
@@ -154,7 +154,7 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testFindFirstWhenEmpty() {
         withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.build();
+            final Traversable<T> iterable = builder.build();
             final Predicate<T> predicate = value -> {
                 throw new AssertionError("This should not be called");
             };
@@ -167,7 +167,7 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testFindFirstForSingleElement() {
         withValue(value -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(value).build();
+            final Traversable<T> iterable = builder.add(value).build();
             withValue(defaultValue -> withFilterFunc(f -> {
                 final T expected = f.apply(value)? value : defaultValue;
                 assertSame(expected, iterable.iterator().findFirst(f, defaultValue));
@@ -177,7 +177,7 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testFindFirstForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(a).add(b).build();
+            final Traversable<T> iterable = builder.add(a).add(b).build();
             final Traverser<T> it = iterable.iterator();
             final T first = it.next();
             final boolean hasSecond = it.hasNext();
@@ -198,14 +198,14 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
     public void testReduceForSingleElement() {
         final ReduceFunction<T> func = TraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(value).build();
+            final Traversable<T> iterable = builder.add(value).build();
             assertSame(value, iterable.iterator().reduce(func));
         }));
     }
 
     public void testReduceForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(a).add(b).add(c).build();
+            final Traversable<T> iterable = builder.add(a).add(b).add(c).build();
             withReduceFunction(func -> {
                 final Iterator<T> it = iterable.iterator();
                 T expectedValue = it.next();
@@ -220,7 +220,7 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
 
     public void testReduceWithValueWhenEmpty() {
         withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.build();
+            final Traversable<T> iterable = builder.build();
             final ReduceFunction<T> func = TraverserTest::unexpectedReduceFunction;
             withValue(value -> assertSame(value, iterable.iterator().reduce(func, value)));
         });
@@ -229,14 +229,14 @@ abstract class TraverserTest<T, B extends CollectionBuilder<T>> extends TestCase
     public void testReduceWithValueForSingleElement() {
         final ReduceFunction<T> func = TraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(value).build();
+            final Traversable<T> iterable = builder.add(value).build();
             withValue(defValue -> assertSame(value, iterable.iterator().reduce(func, defValue)));
         }));
     }
 
     public void testReduceWithValueForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final IterableCollection<T> iterable = builder.add(a).add(b).add(c).build();
+            final Traversable<T> iterable = builder.add(a).add(b).add(c).build();
             withReduceFunction(func -> {
                 final Iterator<T> it = iterable.iterator();
                 T v = it.next();

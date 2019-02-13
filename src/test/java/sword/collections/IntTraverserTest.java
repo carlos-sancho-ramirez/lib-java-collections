@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntTraverserTest<C extends IterableIntCollection, B extends IntCollectionBuilder<C>> extends TestCase {
+abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversableBuilder<C>> extends TestCase {
 
     abstract void withBuilder(Procedure<B> procedure);
 
@@ -221,7 +221,7 @@ abstract class IntTraverserTest<C extends IterableIntCollection, B extends IntCo
 
     public void testReduceForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final IterableIntCollection iterable = builder.add(a).add(b).add(c).build();
+            final IntTraversable iterable = builder.add(a).add(b).add(c).build();
             withReduceFunction(func -> {
                 final IntTraverser it = iterable.iterator();
                 int expectedValue = it.next();

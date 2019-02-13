@@ -1,15 +1,17 @@
 package sword.collections;
 
-interface IterableIntCollection extends Iterable<Integer>, Sizable {
+public interface Traversable<T> extends Iterable<T>, Sizable {
 
-    @Override
-    IntTraverser iterator();
+    Traverser<T> iterator();
 
     /**
-     * Return true if the given value is found in the collection.
+     * Return true if an equivalent item is found in the collection, this means
+     * that it will be true if calling {@link Object#equals(Object)} with
+     * this value returns true on any of the elements.
+     *
      * @param value Value to check
      */
-    default boolean contains(int value) {
+    default boolean contains(T value) {
         return iterator().contains(value);
     }
 
@@ -19,16 +21,16 @@ interface IterableIntCollection extends Iterable<Integer>, Sizable {
      *
      * @param predicate Predicate to be evaluated.
      */
-    default boolean anyMatch(IntPredicate predicate) {
+    default boolean anyMatch(Predicate<T> predicate) {
         return iterator().anyMatch(predicate);
     }
 
     /**
      * Returns the index within the collection for the first element matching the given value.
      * Or -1 if none matches.
-     * @param value Value to be matched.
+     * @param value Value to be matched. {@link java.lang.Object#equals(Object)} will be called for this purpose.
      */
-    default int indexOf(int value) {
+    default int indexOf(T value) {
         return iterator().indexOf(value);
     }
 
@@ -41,14 +43,14 @@ interface IterableIntCollection extends Iterable<Integer>, Sizable {
      * @return The value in the given position.
      * @throws IndexOutOfBoundsException if the given index is invalid for this collection.
      */
-    default int valueAt(int index) {
+    default T valueAt(int index) {
         return iterator().valueAt(index);
     }
 
     /**
      * Returns the first item matching the predicate or the default value if none matches.
      */
-    default int findFirst(IntPredicate predicate, int defaultValue) {
+    default T findFirst(Predicate<T> predicate, T defaultValue) {
         return iterator().findFirst(predicate, defaultValue);
     }
 
@@ -58,40 +60,24 @@ interface IterableIntCollection extends Iterable<Integer>, Sizable {
      * @return The resulting value of applying the given function to each value pair.
      * @throws EmptyCollectionException in case the collection is empty.
      */
-    default int reduce(IntReduceFunction func) {
+    default T reduce(ReduceFunction<T> func) {
         return iterator().reduce(func);
     }
 
     /**
      * Reduces the collection to a single element by applying the given function on each pair of values,
-     * or return the defaultValue if the collection is empty.
+     * or return the default value if the collection is empty.
      * @param func Associate function to be applied on each pair of elements.
-     * @return The resulting value of applying the given function to each value pair, or the defaultValue if empty.
+     * @return The resulting value of applying the given function to each value pair, or the default value if empty.
      */
-    default int reduce(IntReduceFunction func, int defaultValue) {
+    default T reduce(ReduceFunction<T> func, T defaultValue) {
         return iterator().reduce(func, defaultValue);
-    }
-
-    /**
-     * Returns the minimum value within the collection.
-     * @throws EmptyCollectionException if the collection is empty.
-     */
-    default int min() throws EmptyCollectionException {
-        return iterator().min();
-    }
-
-    /**
-     * Returns the maximum value within the collection.
-     * @throws EmptyCollectionException if the collection is empty.
-     */
-    default int max() throws EmptyCollectionException {
-        return iterator().max();
     }
 
     @Override
     default int size() {
         int count = 0;
-        final IntTraverser it = iterator();
+        final Traverser<T> it = iterator();
         while (it.hasNext()) {
             it.next();
             count++;

@@ -36,7 +36,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    <U> ImmutableCollectionBuilder<U> newBuilder() {
+    <U> ImmutableTransformableBuilder<U> newBuilder() {
         return new ImmutableHashSet.Builder<>();
     }
 

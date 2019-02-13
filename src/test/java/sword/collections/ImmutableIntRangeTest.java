@@ -100,7 +100,7 @@ public class ImmutableIntRangeTest extends TestCase {
 
     public void testIndexOfForSingleElement() {
         withValue(a -> {
-            final IterableIntCollection list = new ImmutableIntRange(a, a);
+            final IntTraversable list = new ImmutableIntRange(a, a);
 
             withValue(value -> {
                 assertEquals((a == value)? 0 : -1, list.indexOf(value));

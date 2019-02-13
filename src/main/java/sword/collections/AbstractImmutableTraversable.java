@@ -1,13 +1,13 @@
 package sword.collections;
 
-abstract class AbstractImmutableIterable<T> extends AbstractIterable<T> implements IterableImmutableCollection<T> {
+abstract class AbstractImmutableTraversable<T> extends AbstractTraversable<T> implements ImmutableTransformable<T> {
 
-    abstract <U> ImmutableCollectionBuilder<U> newBuilder();
+    abstract <U> ImmutableTransformableBuilder<U> newBuilder();
 
     @Override
-    public IterableImmutableCollection<T> filter(Predicate<T> predicate) {
+    public ImmutableTransformable<T> filter(Predicate<T> predicate) {
         boolean somethingRemoved = false;
-        ImmutableCollectionBuilder<T> builder = newBuilder();
+        ImmutableTransformableBuilder<T> builder = newBuilder();
         for (T item : this) {
             if (predicate.apply(item)) {
                 builder.add(item);
@@ -21,9 +21,9 @@ abstract class AbstractImmutableIterable<T> extends AbstractIterable<T> implemen
     }
 
     @Override
-    public IterableImmutableCollection<T> filterNot(Predicate<T> predicate) {
+    public ImmutableTransformable<T> filterNot(Predicate<T> predicate) {
         boolean somethingRemoved = false;
-        ImmutableCollectionBuilder<T> builder = newBuilder();
+        ImmutableTransformableBuilder<T> builder = newBuilder();
         for (T item : this) {
             if (predicate.apply(item)) {
                 somethingRemoved = true;

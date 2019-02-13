@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransformableTest {
 
-    abstract AbstractIntIterable emptyCollection();
+    abstract AbstractIntTraversable emptyCollection();
 
     abstract ImmutableIntCollectionBuilder newIntBuilder();
     abstract void withItem(IntProcedure procedure);
@@ -27,14 +27,14 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
             throw new AssertionError("This function should not be called");
         };
 
-        final IterableImmutableIntCollection collection = newIntBuilder().build();
+        final ImmutableIntTraversable collection = newIntBuilder().build();
         assertSame(ImmutableList.empty(), collection.map(func));
     }
 
     public void testMapForSingleElement() {
         withMapFunc(f -> withItem(value -> {
-            final IterableImmutableIntCollection collection = newIntBuilder().add(value).build();
-            final IterableImmutableCollection<String> mapped = collection.map(f);
+            final ImmutableIntTraversable collection = newIntBuilder().add(value).build();
+            final ImmutableTransformable<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
             assertTrue(iterator.hasNext());
             assertEquals(f.apply(value), iterator.next());
@@ -44,8 +44,8 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
 
     public void testMapForMultipleElements() {
         withMapFunc(f -> withItem(a -> withItem(b -> {
-            final IterableImmutableIntCollection collection = newIntBuilder().add(a).add(b).build();
-            final IterableImmutableCollection<String> mapped = collection.map(f);
+            final ImmutableIntTraversable collection = newIntBuilder().add(a).add(b).build();
+            final ImmutableTransformable<String> mapped = collection.map(f);
 
             final Iterator<Integer> iterator = collection.iterator();
             final Iterator<String> mappedIterator = mapped.iterator();
@@ -63,7 +63,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
             throw new AssertionError("This function should not be called");
         };
 
-        final IterableImmutableIntCollection collection = newIntBuilder().build();
+        final ImmutableIntTraversable collection = newIntBuilder().build();
         assertSame(ImmutableIntList.empty(), collection.mapToInt(func));
     }
 
@@ -78,8 +78,8 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
 
     public void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withItem(a -> withItem(b -> {
-            final IterableImmutableIntCollection collection = newIntBuilder().add(a).add(b).build();
-            final IterableImmutableIntCollection mapped = collection.mapToInt(f);
+            final ImmutableIntTraversable collection = newIntBuilder().add(a).add(b).build();
+            final ImmutableIntTraversable mapped = collection.mapToInt(f);
 
             final Iterator<Integer> iterator = collection.iterator();
             final Iterator<Integer> mappedIterator = mapped.iterator();

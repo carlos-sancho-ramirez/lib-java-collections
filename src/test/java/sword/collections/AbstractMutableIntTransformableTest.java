@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 abstract class AbstractMutableIntTransformableTest extends AbstractIntTransformableTest {
 
-    abstract AbstractIntIterable emptyCollection();
+    abstract AbstractIntTraversable emptyCollection();
 
     abstract IntTransformableBuilder newIntBuilder();
     abstract void withItem(IntProcedure procedure);

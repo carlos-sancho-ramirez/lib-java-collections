@@ -2,7 +2,7 @@ package sword.collections;
 
 import java.util.Collection;
 
-public final class ImmutableList<T> extends AbstractImmutableIterable<T> implements List<T> {
+public final class ImmutableList<T> extends AbstractImmutableTraversable<T> implements List<T> {
 
     private static final ImmutableList<Object> EMPTY = new ImmutableList<>(new Object[0]);
 
@@ -298,7 +298,7 @@ public final class ImmutableList<T> extends AbstractImmutableIterable<T> impleme
         }
     }
 
-    public static class Builder<E> implements ImmutableCollectionBuilder<E> {
+    public static class Builder<E> implements ImmutableTransformableBuilder<E> {
         private static final int DEFAULT_GRANULARITY = 12;
         private final int _granularity;
         private int _size;

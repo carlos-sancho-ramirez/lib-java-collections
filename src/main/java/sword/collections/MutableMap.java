@@ -16,7 +16,7 @@ package sword.collections;
  * @param <K> Type for the key elements within the Map
  * @param <V> Type for the value elements within the Map
  */
-public interface MutableMap<K, V> extends Map<K, V>, MutableIterableCollection<V> {
+public interface MutableMap<K, V> extends Map<K, V>, MutableTraversable<V> {
 
     boolean put(K key, V value);
     boolean remove(K key);

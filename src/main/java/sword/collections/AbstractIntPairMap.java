@@ -1,6 +1,6 @@
 package sword.collections;
 
-abstract class AbstractIntPairMap extends AbstractIntIterable implements IntPairMap {
+abstract class AbstractIntPairMap extends AbstractIntTraversable implements IntPairMap {
 
     @Override
     public int hashCode() {

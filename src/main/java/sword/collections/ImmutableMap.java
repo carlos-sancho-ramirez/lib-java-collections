@@ -11,7 +11,7 @@ package sword.collections;
  * @param <K> Type for the key elements within the Map
  * @param <V> Type for the value elements within the Map
  */
-public interface ImmutableMap<K, V> extends Map<K, V>, IterableImmutableCollection<V> {
+public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V> {
 
     @Override
     ImmutableSet<K> keySet();

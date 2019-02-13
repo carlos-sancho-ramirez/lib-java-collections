@@ -1,6 +1,6 @@
 package sword.collections;
 
-abstract class AbstractImmutableSet<T> extends AbstractImmutableIterable<T> implements ImmutableSet<T> {
+abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> implements ImmutableSet<T> {
 
     final Object[] _keys;
 

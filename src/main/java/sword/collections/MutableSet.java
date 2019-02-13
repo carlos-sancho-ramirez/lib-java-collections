@@ -13,7 +13,7 @@ package sword.collections;
  *
  * @param <T> Type for the elements within the Set
  */
-public interface MutableSet<T> extends Set<T>, MutableIterableCollection<T> {
+public interface MutableSet<T> extends Set<T>, MutableTraversable<T> {
 
     @SuppressWarnings("unchecked")
     T keyAt(int index);

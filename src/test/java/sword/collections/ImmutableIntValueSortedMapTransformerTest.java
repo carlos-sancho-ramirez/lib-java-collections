@@ -1,9 +1,9 @@
 package sword.collections;
 
-public final class ImmutableIntValueSortedMapTransformerTest extends IntTransformerTest<ImmutableIntValueSortedMap, IntCollectionBuilder<ImmutableIntValueSortedMap>> {
+public final class ImmutableIntValueSortedMapTransformerTest extends IntTransformerTest<ImmutableIntValueSortedMap, IntTraversableBuilder<ImmutableIntValueSortedMap>> {
 
     @Override
-    void withBuilder(Procedure<IntCollectionBuilder<ImmutableIntValueSortedMap>> procedure) {
+    void withBuilder(Procedure<IntTraversableBuilder<ImmutableIntValueSortedMap>> procedure) {
         procedure.apply(new SameKeyAndValueBuilder());
         procedure.apply(new IndexedKeyBuilder());
     }
@@ -20,7 +20,7 @@ public final class ImmutableIntValueSortedMapTransformerTest extends IntTransfor
         procedure.apply(Integer::toString);
     }
 
-    private static final class SameKeyAndValueBuilder implements IntCollectionBuilder<ImmutableIntValueSortedMap> {
+    private static final class SameKeyAndValueBuilder implements IntTraversableBuilder<ImmutableIntValueSortedMap> {
         private final ImmutableIntValueSortedMap.Builder<String> builder = new ImmutableIntValueSortedMap.Builder<>(SortUtils::compareCharSequenceByUnicode);
 
         @Override
@@ -35,7 +35,7 @@ public final class ImmutableIntValueSortedMapTransformerTest extends IntTransfor
         }
     }
 
-    private static final class IndexedKeyBuilder implements IntCollectionBuilder<ImmutableIntValueSortedMap> {
+    private static final class IndexedKeyBuilder implements IntTraversableBuilder<ImmutableIntValueSortedMap> {
         private final ImmutableIntValueSortedMap.Builder<Integer> builder = new ImmutableIntValueSortedMap.Builder<>((a, b) -> a > b);
         private int key;
 

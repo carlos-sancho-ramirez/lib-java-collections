@@ -2,7 +2,7 @@ package sword.collections;
 
 import java.util.Iterator;
 
-abstract class IntTransformerTest<C extends IntTransformable, B extends IntCollectionBuilder<C>> extends IntTraverserTest<C, B> {
+abstract class IntTransformerTest<C extends IntTransformable, B extends IntTraversableBuilder<C>> extends IntTraverserTest<C, B> {
 
     abstract void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
     abstract void withMapFunc(Procedure<IntFunction<Object>> procedure);

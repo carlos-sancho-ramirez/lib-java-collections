@@ -12,7 +12,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class MutableIntPairMap extends AbstractIntPairMap implements MutableIterableIntCollection {
+public final class MutableIntPairMap extends AbstractIntPairMap implements MutableIntTraversable {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 

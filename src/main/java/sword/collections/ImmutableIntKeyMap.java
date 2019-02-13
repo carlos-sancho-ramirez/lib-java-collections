@@ -10,7 +10,7 @@ import static sword.collections.SortUtils.*;
  * This version implements Iterable as well, which means that it can be used in foreach expressions.
  * When iterating, the order is guaranteed to be in the key ascendant order of the elements.
  */
-public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements IterableImmutableCollection<T> {
+public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements ImmutableTransformable<T> {
 
     private static final ImmutableIntKeyMap<Object> EMPTY = new ImmutableIntKeyMap<>(new int[0], new Object[0]);
 

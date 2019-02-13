@@ -1,6 +1,6 @@
 package sword.collections;
 
-interface IterableImmutableIntCollection extends IntTransformable {
+interface ImmutableIntTraversable extends IntTransformable {
 
     /**
      * Applies the given predicate to each of the values within the collection and
@@ -9,7 +9,7 @@ interface IterableImmutableIntCollection extends IntTransformable {
      *
      * @param predicate To be applied to each element in order to filter.
      */
-    IterableImmutableIntCollection filter(IntPredicate predicate);
+    ImmutableIntTraversable filter(IntPredicate predicate);
 
     /**
      * Applies the given predicate to each of the values within the collection and
@@ -18,7 +18,7 @@ interface IterableImmutableIntCollection extends IntTransformable {
      *
      * @param predicate To be applied to each element in order to filter.
      */
-    IterableImmutableIntCollection filterNot(IntPredicate predicate);
+    ImmutableIntTraversable filterNot(IntPredicate predicate);
 
     /**
      * Applies the given function to each element on the collection and composes a
@@ -26,15 +26,15 @@ interface IterableImmutableIntCollection extends IntTransformable {
      *
      * @param func Function to be applied to each value in the collection.
      */
-    IterableImmutableIntCollection mapToInt(IntToIntFunction func);
+    ImmutableIntTraversable mapToInt(IntToIntFunction func);
 
     /**
      * Applies the given function to each element on the collection and composes a
-     * new {@link IterableCollection} of the same size with the results of each
+     * new {@link Traversable} of the same size with the results of each
      * function execution in the same iteration order.
      *
      * @param func Function to be applied to each value in the collection.
      * @param <U> New type for the elements in the new created collection.
      */
-    <U> IterableImmutableCollection<U> map(IntFunction<U> func);
+    <U> ImmutableTransformable<U> map(IntFunction<U> func);
 }

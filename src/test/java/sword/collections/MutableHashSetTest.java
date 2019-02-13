@@ -110,7 +110,7 @@ public final class MutableHashSetTest extends MutableSetTest<String> {
             final int aHash = SortUtils.hashCode(a);
             final int bHash = SortUtils.hashCode(b);
             final boolean reversedOrder = bHash < aHash;
-            final IterableCollection<String> set = newIterableBuilder().add(a).add(b).build();
+            final Traversable<String> set = newIterableBuilder().add(a).add(b).build();
             final int index = set.indexOf(value);
 
             if (aHash == bHash) {
@@ -135,7 +135,7 @@ public final class MutableHashSetTest extends MutableSetTest<String> {
             final int aHash = SortUtils.hashCode(a);
             final int bHash = SortUtils.hashCode(b);
             final boolean reversedOrder = bHash < aHash;
-            final IterableCollection<String> collection = newIterableBuilder().add(a).add(b).build();
+            final Traversable<String> collection = newIterableBuilder().add(a).add(b).build();
             final String first = collection.findFirst(f, defaultValue);
 
             if (aHash == bHash) {

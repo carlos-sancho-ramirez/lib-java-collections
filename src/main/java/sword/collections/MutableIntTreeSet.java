@@ -1,6 +1,6 @@
 package sword.collections;
 
-public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
+public final class MutableIntTreeSet implements IntTraversable, Sizable {
     private Node _root;
 
     public boolean contains(int value) {
@@ -201,7 +201,7 @@ public final class MutableIntTreeSet implements IterableIntCollection, Sizable {
         }
     }
 
-    public static final class Builder implements IntCollectionBuilder<MutableIntTreeSet> {
+    public static final class Builder implements IntTraversableBuilder<MutableIntTreeSet> {
         private final MutableIntTreeSet _set = new MutableIntTreeSet();
 
         @Override

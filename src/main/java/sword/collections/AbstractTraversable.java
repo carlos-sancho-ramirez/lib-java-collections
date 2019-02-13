@@ -4,19 +4,7 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-abstract class AbstractIntIterable implements IterableIntCollection, Sizable {
-
-    @Override
-    public int size() {
-        final Iterator<Integer> it = iterator();
-        int size = 0;
-        while (it.hasNext()) {
-            it.next();
-            ++size;
-        }
-
-        return size;
-    }
+abstract class AbstractTraversable<T> implements Traversable<T> {
 
     @Override
     public int hashCode() {
@@ -28,12 +16,12 @@ abstract class AbstractIntIterable implements IterableIntCollection, Sizable {
         final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('(');
         boolean itemAdded = false;
 
-        for (int value : this) {
+        for (T value : this) {
             if (itemAdded) {
                 sb.append(',');
             }
 
-            sb.append(value);
+            sb.append(String.valueOf(value));
             itemAdded = true;
         }
 
@@ -42,11 +30,11 @@ abstract class AbstractIntIterable implements IterableIntCollection, Sizable {
 
     @Override
     public boolean equals(Object other) {
-        if (other == null || !(other instanceof AbstractIntIterable)) {
+        if (!(other instanceof AbstractTraversable)) {
             return false;
         }
 
-        final AbstractIntIterable that = (AbstractIntIterable) other;
+        final AbstractTraversable that = (AbstractTraversable) other;
         final Iterator thisIt = iterator();
         final Iterator thatIt = that.iterator();
 

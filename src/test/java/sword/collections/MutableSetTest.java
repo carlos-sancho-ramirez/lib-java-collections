@@ -113,7 +113,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
     @Override
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withValue(value -> {
-            final IterableCollection<T> set = newIterableBuilder().add(a).add(b).build();
+            final Traversable<T> set = newIterableBuilder().add(a).add(b).build();
             final int index = set.indexOf(value);
 
             final int expectedIndex;
@@ -130,7 +130,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
     @Override
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
-            final IterableCollection<T> collection = newIterableBuilder().add(a).add(b).build();
+            final Traversable<T> collection = newIterableBuilder().add(a).add(b).build();
 
             final T expected;
             if (lessThan(b, a)) {

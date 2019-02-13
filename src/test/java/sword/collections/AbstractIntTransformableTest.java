@@ -2,7 +2,7 @@ package sword.collections;
 
 import java.util.Iterator;
 
-abstract class AbstractIntTransformableTest extends AbstractIntIterableTest {
+abstract class AbstractIntTransformableTest extends AbstractIntTraversableTest {
 
     abstract IntTransformableBuilder newIntBuilder();
     abstract void assertEmptyCollection(IntTransformable transformable);

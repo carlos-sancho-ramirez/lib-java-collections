@@ -1,9 +1,8 @@
 package sword.collections;
 
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
-import static sword.collections.SortUtils.findValue;
 
-abstract class AbstractMutableSet<T> extends AbstractIterable<T> implements MutableSet<T> {
+abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements MutableSet<T> {
 
     static final int GRANULARITY = DEFAULT_GRANULARITY;
 

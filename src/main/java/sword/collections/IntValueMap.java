@@ -6,7 +6,7 @@ import static sword.collections.SortUtils.equal;
  * Root for both variants of Map where values are integer values, immutable and mutable.
  * @param <T> Type of key items within the map.
  */
-public interface IntValueMap<T> extends IterableIntCollection {
+public interface IntValueMap<T> extends IntTraversable {
 
     /**
      * Check whether the given key is contained in the map

@@ -1,18 +1,18 @@
 package sword.collections;
 
-public final class MutableIntTreeSetTest extends AbstractIntIterableTest {
+public final class MutableIntTreeSetTest extends AbstractIntTraversableTest {
 
     private final int[] intValues = {
             Integer.MIN_VALUE, -100, -2, -1, 0, 1, 2, 5, Integer.MAX_VALUE
     };
 
     @Override
-    AbstractIntIterable emptyCollection() {
+    AbstractIntTraversable emptyCollection() {
         return ImmutableIntSetImpl.empty();
     }
 
     @Override
-    IntCollectionBuilder newIntBuilder() {
+    IntTraversableBuilder newIntBuilder() {
         return new MutableIntTreeSet.Builder();
     }
 

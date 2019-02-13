@@ -1,9 +1,9 @@
 package sword.collections;
 
-public final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<ImmutableIntValueHashMap, IntCollectionBuilder<ImmutableIntValueHashMap>> {
+public final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<ImmutableIntValueHashMap, IntTraversableBuilder<ImmutableIntValueHashMap>> {
 
     @Override
-    void withBuilder(Procedure<IntCollectionBuilder<ImmutableIntValueHashMap>> procedure) {
+    void withBuilder(Procedure<IntTraversableBuilder<ImmutableIntValueHashMap>> procedure) {
         procedure.apply(new SameKeyAndValueBuilder());
         procedure.apply(new IndexedKeyBuilder());
     }
@@ -20,7 +20,7 @@ public final class ImmutableIntValueHashMapTransformerTest extends IntTransforme
         procedure.apply(Integer::toString);
     }
 
-    private static final class SameKeyAndValueBuilder implements IntCollectionBuilder<ImmutableIntValueHashMap> {
+    private static final class SameKeyAndValueBuilder implements IntTraversableBuilder<ImmutableIntValueHashMap> {
         private final ImmutableIntValueHashMap.Builder<String> builder = new ImmutableIntValueHashMap.Builder<>();
 
         @Override
@@ -35,7 +35,7 @@ public final class ImmutableIntValueHashMapTransformerTest extends IntTransforme
         }
     }
 
-    private static final class IndexedKeyBuilder implements IntCollectionBuilder<ImmutableIntValueHashMap> {
+    private static final class IndexedKeyBuilder implements IntTraversableBuilder<ImmutableIntValueHashMap> {
         private final ImmutableIntValueHashMap.Builder<Integer> builder = new ImmutableIntValueHashMap.Builder<>();
         private int key;
 
