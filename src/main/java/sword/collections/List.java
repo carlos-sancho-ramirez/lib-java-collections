@@ -22,7 +22,9 @@ public interface List<T> extends Transformable<T> {
      * @return the item in the given position.
      * @throws java.lang.IndexOutOfBoundsException if index is negative or index is not lower than the size of this collection.
      */
-    T get(int index);
+    default T get(int index) {
+        return valueAt(index);
+    }
 
     /**
      * Converts this list into a set.
@@ -34,7 +36,9 @@ public interface List<T> extends Transformable<T> {
      * The iteration order of elements in the resulting set is not guaranteed
      * to be the same that was in the list even if no elements are removed for duplication.
      */
-    Set<T> toSet();
+    default Set<T> toSet() {
+        return iterator().toSet();
+    }
 
     /**
      * Return an immutable list from the values contained in this collection.

@@ -82,16 +82,6 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
     }
 
     @Override
-    public Set<T> toSet() {
-        final ImmutableHashSet.Builder<T> builder = new ImmutableHashSet.Builder<>();
-        for (int i = 0; i < _size; i++) {
-            builder.add(valueAt(i));
-        }
-
-        return builder.build();
-    }
-
-    @Override
     public ImmutableList<T> toImmutable() {
         final Object[] newValues = new Object[_size];
         System.arraycopy(_values, 0, newValues, 0, _size);
