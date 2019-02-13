@@ -500,4 +500,53 @@ public final class MutableListTest extends AbstractTransformableTest<String> {
             assertTrue(collection.isEmpty());
         }));
     }
+
+    public void testMapWhenEmpty() {
+        withMapFunc(f -> {
+            final MutableList<String> list = newBuilder().build();
+            final List<String> mapped = list.map(f);
+            assertTrue(mapped.isEmpty());
+
+            withValue(value -> {
+                list.clear();
+                list.append(value);
+
+                assertEquals(1, mapped.size());
+                assertEquals(f.apply(value), mapped.valueAt(0));
+            });
+
+            list.clear();
+            assertTrue(mapped.isEmpty());
+        });
+    }
+
+    public void testMapForSingleElement() {
+        withMapFunc(f -> withValue(value -> {
+            final MutableList<String> collection = newBuilder().add(value).build();
+            final List<String> mapped = collection.map(f);
+            final Iterator<String> iterator = mapped.iterator();
+            assertTrue(iterator.hasNext());
+            assertEquals(f.apply(value), iterator.next());
+            assertFalse(iterator.hasNext());
+
+            collection.removeAt(0);
+            assertTrue(mapped.isEmpty());
+        }));
+    }
+
+    public void testMapForMultipleElements() {
+        withMapFunc(f -> withValue(a -> withValue(b -> {
+            final MutableList<String> collection = newIterableBuilder().add(a).add(b).build();
+            final List<String> mapped = collection.map(f);
+
+            final Iterator<String> collectionIterator = collection.iterator();
+            final Iterator<String> mappedIterator = mapped.iterator();
+            while (collectionIterator.hasNext()) {
+                assertTrue(mappedIterator.hasNext());
+                assertEquals(f.apply(collectionIterator.next()), mappedIterator.next());
+            }
+
+            assertFalse(mappedIterator.hasNext());
+        })));
+    }
 }

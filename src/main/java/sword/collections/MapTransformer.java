@@ -1,6 +1,6 @@
 package sword.collections;
 
-final class MapTransformer<T, R> extends AbstractTransformer {
+final class MapTransformer<T, R> extends AbstractTransformer<R> {
 
     private final Transformer<T> _source;
     private final Function<T, R> _func;

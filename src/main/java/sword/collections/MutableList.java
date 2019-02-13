@@ -82,6 +82,11 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
     }
 
     @Override
+    public <E> List<E> map(Function<T, E> func) {
+        return new MapResultList<>(this, func);
+    }
+
+    @Override
     public ImmutableList<T> toImmutable() {
         final Object[] newValues = new Object[_size];
         System.arraycopy(_values, 0, newValues, 0, _size);

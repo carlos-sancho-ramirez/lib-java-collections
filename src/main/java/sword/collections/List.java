@@ -16,6 +16,11 @@ public interface List<T> extends Transformable<T> {
         return iterator().filterNot(predicate).toList();
     }
 
+    @Override
+    default <E> List<E> map(Function<T, E> func) {
+        return iterator().map(func).toList();
+    }
+
     /**
      * Return the item in the given position
      * @param index Position within the list, starting from 0.
