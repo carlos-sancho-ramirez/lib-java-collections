@@ -4,7 +4,7 @@ package sword.collections;
  * Root for both variants of List, immutable and mutable.
  * @param <T> Type of items within the collection.
  */
-public interface List<T> extends Transformable<T>, Sizable {
+public interface List<T> extends Transformable<T> {
 
     @Override
     default List<T> filter(Predicate<T> predicate) {

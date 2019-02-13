@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface IntList extends IntTransformable, Sizable {
+public interface IntList extends IntTransformable {
 
     /**
      * Return the value assigned to the given key.

@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.SortUtils.equal;
 
-public interface IntPairMap extends IterableIntCollection, Sizable {
+public interface IntPairMap extends IterableIntCollection {
 
     /**
      * Return the value assigned to the given key.

@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface IterableCollection<T> extends Iterable<T> {
+public interface IterableCollection<T> extends Iterable<T>, Sizable {
 
     Traverser<T> iterator();
 
@@ -72,5 +72,17 @@ public interface IterableCollection<T> extends Iterable<T> {
      */
     default T reduce(ReduceFunction<T> func, T defaultValue) {
         return iterator().reduce(func, defaultValue);
+    }
+
+    @Override
+    default int size() {
+        int count = 0;
+        final Traverser<T> it = iterator();
+        while (it.hasNext()) {
+            it.next();
+            count++;
+        }
+
+        return count;
     }
 }

@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface IntSet extends IntTransformable, Sizable {
+public interface IntSet extends IntTransformable {
 
     /**
      * Applies the given predicate to each of the values within the set and

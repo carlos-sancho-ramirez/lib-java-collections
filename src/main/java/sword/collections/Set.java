@@ -13,7 +13,7 @@ package sword.collections;
  *
  * @param <T> Type of items within the set.
  */
-public interface Set<T> extends Transformable<T>, Sizable {
+public interface Set<T> extends Transformable<T> {
 
     @Override
     default Set<T> filter(Predicate<T> predicate) {

@@ -1,6 +1,6 @@
 package sword.collections;
 
-interface IterableIntCollection extends Iterable<Integer> {
+interface IterableIntCollection extends Iterable<Integer>, Sizable {
 
     @Override
     IntTraverser iterator();
@@ -86,5 +86,17 @@ interface IterableIntCollection extends Iterable<Integer> {
      */
     default int max() throws EmptyCollectionException {
         return iterator().max();
+    }
+
+    @Override
+    default int size() {
+        int count = 0;
+        final IntTraverser it = iterator();
+        while (it.hasNext()) {
+            it.next();
+            count++;
+        }
+
+        return count;
     }
 }

@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.SortUtils.equal;
 
-public interface IntKeyMap<T> extends Transformable<T>, Sizable {
+public interface IntKeyMap<T> extends Transformable<T> {
 
     @Override
     IntKeyMap<T> filter(Predicate<T> predicate);
