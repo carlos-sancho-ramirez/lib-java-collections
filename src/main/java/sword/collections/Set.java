@@ -25,6 +25,14 @@ public interface Set<T> extends Transformable<T> {
         return iterator().filterNot(predicate).toSet();
     }
 
+    @Override
+    default IntList mapToInt(IntResultFunction<T> func) {
+        return iterator().mapToInt(func).toList();
+    }
+
+    @Override
+    <E> List<E> map(Function<T, E> func);
+
     /**
      * Converts this set to a list.
      *

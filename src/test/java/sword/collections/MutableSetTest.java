@@ -143,6 +143,55 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         }))));
     }
 
+    public void testMapWhenEmpty() {
+        withMapFunc(f -> {
+            final MutableSet<T> set = newBuilder().build();
+            final List<String> mapped = set.map(f);
+            assertTrue(mapped.isEmpty());
+
+            withValue(value -> {
+                set.clear();
+                set.add(value);
+
+                assertEquals(1, mapped.size());
+                assertEquals(f.apply(value), mapped.valueAt(0));
+            });
+
+            set.clear();
+            assertTrue(mapped.isEmpty());
+        });
+    }
+
+    public void testMapForSingleElement() {
+        withMapFunc(f -> withValue(value -> {
+            final MutableSet<T> set = newBuilder().add(value).build();
+            final List<String> mapped = set.map(f);
+            final Iterator<String> iterator = mapped.iterator();
+            assertTrue(iterator.hasNext());
+            assertEquals(f.apply(value), iterator.next());
+            assertFalse(iterator.hasNext());
+
+            set.removeAt(0);
+            assertTrue(mapped.isEmpty());
+        }));
+    }
+
+    public void testMapForMultipleElements() {
+        withMapFunc(f -> withValue(a -> withValue(b -> {
+            final MutableSet<T> set = newIterableBuilder().add(a).add(b).build();
+            final List<String> mapped = set.map(f);
+
+            final Iterator<T> setIterator = set.iterator();
+            final Iterator<String> mappedIterator = mapped.iterator();
+            while (setIterator.hasNext()) {
+                assertTrue(mappedIterator.hasNext());
+                assertEquals(f.apply(setIterator.next()), mappedIterator.next());
+            }
+
+            assertFalse(mappedIterator.hasNext());
+        })));
+    }
+
     public void testToListWhenEmpty() {
         final Set<T> set = newBuilder().build();
         assertTrue(set.isEmpty());

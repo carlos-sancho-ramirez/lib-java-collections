@@ -79,6 +79,11 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         return builder.build();
     }
 
+    @Override
+    public <E> List<E> map(Function<T, E> func) {
+        return new MapResultList<>(this, func);
+    }
+
     abstract int findSuitableIndex(T key);
     abstract void insertAt(int index, T value);
 
