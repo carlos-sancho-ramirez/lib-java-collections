@@ -97,10 +97,12 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
         return value == null || (value.hashCode() & 1) == 0;
     }
 
+    @Override
     void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::hashCodeIsEven);
     }
 
+    @Override
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableMap<Integer, String> map = newBuilder().build();
@@ -108,6 +110,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
         });
     }
 
+    @Override
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final String value = Integer.toString(key);
@@ -123,6 +126,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
         }));
     }
 
+    @Override
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(a -> withInt(b -> {
             final Integer keyA = a;
@@ -160,6 +164,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
         })));
     }
 
+    @Override
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableMap<Integer, String> map = newBuilder().build();
@@ -167,6 +172,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
         });
     }
 
+    @Override
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final String value = Integer.toString(key);
@@ -182,6 +188,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
         }));
     }
 
+    @Override
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(a -> withInt(b -> {
             final Integer keyA = a;

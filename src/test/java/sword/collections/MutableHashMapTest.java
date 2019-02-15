@@ -28,6 +28,15 @@ public final class MutableHashMapTest extends MapTest<Integer, String> {
         procedure.apply((a, b) -> a > b);
     }
 
+    private boolean hashCodeIsEven(String value) {
+        return value == null || (value.hashCode() & 1) == 0;
+    }
+
+    @Override
+    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+        procedure.apply(this::hashCodeIsEven);
+    }
+
     @Override
     String getTestValue() {
         return "value";

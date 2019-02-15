@@ -192,6 +192,32 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
         }
     }
 
+    @Override
+    public Map<K, V> filter(Predicate<V> predicate) {
+        final ImmutableSortedMap.Builder<K, V> builder = new ImmutableSortedMap.Builder<>(_sortFunction);
+        for (int i = 0; i < _size; i++) {
+            final V value = valueAt(i);
+            if (predicate.apply(value)) {
+                builder.put(keyAt(i), value);
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public Map<K, V> filterNot(Predicate<V> predicate) {
+        final ImmutableSortedMap.Builder<K, V> builder = new ImmutableSortedMap.Builder<>(_sortFunction);
+        for (int i = 0; i < _size; i++) {
+            final V value = valueAt(i);
+            if (!predicate.apply(value)) {
+                builder.put(keyAt(i), value);
+            }
+        }
+
+        return builder.build();
+    }
+
     public static class Builder<K, V> implements MapBuilder<K, V> {
         private final MutableSortedMap<K, V> _map;
 

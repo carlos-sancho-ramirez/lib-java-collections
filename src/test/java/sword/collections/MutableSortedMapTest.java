@@ -7,9 +7,13 @@ import static sword.collections.TestUtils.withString;
 
 public final class MutableSortedMapTest extends MapTest<Integer, String> {
 
+    private static boolean sortInDescendantOrder(int a, int b) {
+        return b > a;
+    }
+
     @Override
-    MutableHashMap.Builder<Integer, String> newBuilder() {
-        return new MutableHashMap.Builder<>();
+    MutableSortedMap.Builder<Integer, String> newBuilder() {
+        return new MutableSortedMap.Builder<>(MutableSortedMapTest::sortInDescendantOrder);
     }
 
     @Override
@@ -26,6 +30,15 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> {
     void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
         procedure.apply((a, b) -> a < b);
         procedure.apply((a, b) -> a > b);
+    }
+
+    private boolean hashCodeIsEven(String value) {
+        return value == null || (value.hashCode() & 1) == 0;
+    }
+
+    @Override
+    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+        procedure.apply(this::hashCodeIsEven);
     }
 
     @Override

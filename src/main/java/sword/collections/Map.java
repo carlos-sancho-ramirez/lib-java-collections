@@ -7,7 +7,7 @@ import static sword.collections.SortUtils.equal;
  * @param <K> Type of key items within the map.
  * @param <V> Type of value items within the map.
  */
-public interface Map<K, V> extends Traversable<V> {
+public interface Map<K, V> extends Transformable<V> {
 
     TransformerWithKey<K, V> iterator();
 
@@ -72,6 +72,12 @@ public interface Map<K, V> extends Traversable<V> {
      * Resulting set is guaranteed to keep the same item order when it is iterated.
      */
     Set<Entry<K, V>> entries();
+
+    @Override
+    Map<K, V> filter(Predicate<V> predicate);
+
+    @Override
+    Map<K, V> filterNot(Predicate<V> predicate);
 
     /**
      * Return an immutable map from the values contained in this map.

@@ -5,13 +5,13 @@ import junit.framework.TestCase;
 import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
-import static sword.collections.TestUtils.withInt;
 
 abstract class MapTest<K, V> extends TestCase {
 
     abstract MapBuilder<K, V> newBuilder();
     abstract void withKey(Procedure<K> procedure);
     abstract void withValue(Procedure<V> procedure);
+    abstract void withFilterFunc(Procedure<Predicate<V>> procedure);
     abstract void withSortFunc(Procedure<SortFunction<K>> procedure);
     abstract V getTestValue();
     abstract K keyFromInt(int value);
@@ -237,6 +237,124 @@ abstract class MapTest<K, V> extends TestCase {
                     assertFalse(f.lessThan(sortedMap.keyAt(i), sortedMap.keyAt(i - 1)));
                 }
             });
+        })));
+    }
+
+    public void testFilterWhenEmpty() {
+        withFilterFunc(f -> {
+            final Map<K, V> map = newBuilder().build();
+            assertTrue(map.filter(f).isEmpty());
+        });
+    }
+
+    public void testFilterForSingleElement() {
+        withFilterFunc(f -> withKey(key -> {
+            final V value = valueFromKey(key);
+            final Map<K, V> map = newBuilder().put(key, value).build();
+            final Map<K, V> filtered = map.filter(f);
+
+            if (f.apply(value)) {
+                assertEquals(map, filtered);
+            }
+            else {
+                assertTrue(filtered.isEmpty());
+            }
+        }));
+    }
+
+    public void testFilterForMultipleElements() {
+        withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
+            final V valueA = valueFromKey(keyA);
+            final V valueB = valueFromKey(keyB);
+            final Map<K, V> map = newBuilder().put(keyA, valueA).put(keyB, valueB).build();
+            final Map<K, V> filtered = map.filter(f);
+
+            final boolean aPassed = f.apply(valueA);
+            final boolean bPassed = f.apply(valueB);
+
+            if (aPassed && bPassed) {
+                assertEquals(map, filtered);
+            }
+            else if (aPassed) {
+                Iterator<Map.Entry<K, V>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+
+                final Map.Entry<K, V> entry = iterator.next();
+                assertSame(keyA, entry.key());
+                assertSame(valueA, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else if (bPassed) {
+                Iterator<Map.Entry<K, V>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+
+                final Map.Entry<K, V> entry = iterator.next();
+                assertSame(keyB, entry.key());
+                assertSame(valueB, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else {
+                assertTrue(filtered.isEmpty());
+            }
+        })));
+    }
+
+    public void testFilterNotWhenEmpty() {
+        withFilterFunc(f -> {
+            final Map<K, V> map = newBuilder().build();
+            assertTrue(map.filterNot(f).isEmpty());
+        });
+    }
+
+    public void testFilterNotForSingleElement() {
+        withFilterFunc(f -> withKey(key -> {
+            final V value = valueFromKey(key);
+            final Map<K, V> map = newBuilder().put(key, value).build();
+            final Map<K, V> filtered = map.filterNot(f);
+
+            if (f.apply(value)) {
+                assertTrue(filtered.isEmpty());
+            }
+            else {
+                assertEquals(map, filtered);
+            }
+        }));
+    }
+
+    public void testFilterNotForMultipleElements() {
+        withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
+            final V valueA = valueFromKey(keyA);
+            final V valueB = valueFromKey(keyB);
+            final Map<K, V> map = newBuilder().put(keyA, valueA).put(keyB, valueB).build();
+            final Map<K, V> filtered = map.filterNot(f);
+
+            final boolean aPassed = f.apply(valueA);
+            final boolean bPassed = f.apply(valueB);
+
+            if (aPassed && bPassed) {
+                assertTrue(filtered.isEmpty());
+            }
+            else if (aPassed) {
+                Iterator<Map.Entry<K, V>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+
+                final Map.Entry<K, V> entry = iterator.next();
+                assertSame(keyB, entry.key());
+                assertSame(valueB, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else if (bPassed) {
+                Iterator<Map.Entry<K, V>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+
+                final Map.Entry<K, V> entry = iterator.next();
+                assertSame(keyA, entry.key());
+                assertSame(valueA, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else {
+                assertEquals(map, filtered);
+            }
         })));
     }
 }

@@ -199,6 +199,32 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
         }
     }
 
+    @Override
+    public Map<K, V> filter(Predicate<V> predicate) {
+        final ImmutableHashMap.Builder<K, V> builder = new ImmutableHashMap.Builder<>();
+        for (int i = 0; i < _size; i++) {
+            final V value = valueAt(i);
+            if (predicate.apply(value)) {
+                builder.put(keyAt(i), value);
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public Map<K, V> filterNot(Predicate<V> predicate) {
+        final ImmutableHashMap.Builder<K, V> builder = new ImmutableHashMap.Builder<>();
+        for (int i = 0; i < _size; i++) {
+            final V value = valueAt(i);
+            if (!predicate.apply(value)) {
+                builder.put(keyAt(i), value);
+            }
+        }
+
+        return builder.build();
+    }
+
     public static class Builder<K, V> implements MapBuilder<K, V> {
         private final MutableHashMap<K, V> _map = MutableHashMap.empty();
 
