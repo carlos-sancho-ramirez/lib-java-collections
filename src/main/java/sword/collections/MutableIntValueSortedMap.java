@@ -36,6 +36,32 @@ public final class MutableIntValueSortedMap<T> extends AbstractMutableIntValueMa
     }
 
     @Override
+    public IntValueMap<T> filter(IntPredicate predicate) {
+        final ImmutableIntValueSortedMap.Builder<T> builder = new ImmutableIntValueSortedMap.Builder<>(_sortFunction);
+        for (int i = 0; i < _size; i++) {
+            final int value = _values[i];
+            if (predicate.apply(value)) {
+                builder.put(keyAt(i), value);
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public IntValueMap<T> filterNot(IntPredicate predicate) {
+        final ImmutableIntValueSortedMap.Builder<T> builder = new ImmutableIntValueSortedMap.Builder<>(_sortFunction);
+        for (int i = 0; i < _size; i++) {
+            final int value = _values[i];
+            if (!predicate.apply(value)) {
+                builder.put(keyAt(i), value);
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
     public int indexOfKey(T key) {
         return findValue(_sortFunction, _keys, _size, key);
     }

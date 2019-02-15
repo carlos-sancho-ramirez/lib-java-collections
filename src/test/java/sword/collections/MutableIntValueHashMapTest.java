@@ -28,6 +28,11 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
         return Integer.toString(value);
     }
 
+    @Override
+    void withFilterFunc(Procedure<IntPredicate> procedure) {
+        procedure.apply(v -> (v & 1) == 0);
+    }
+
     public void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntValueMap<String> mutable = newBuilder()

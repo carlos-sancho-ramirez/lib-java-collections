@@ -6,7 +6,7 @@ import static sword.collections.SortUtils.equal;
  * Root for both variants of Map where values are integer values, immutable and mutable.
  * @param <T> Type of key items within the map.
  */
-public interface IntValueMap<T> extends IntTraversable {
+public interface IntValueMap<T> extends IntTransformable {
 
     /**
      * Check whether the given key is contained in the map
@@ -53,6 +53,12 @@ public interface IntValueMap<T> extends IntTraversable {
      * @return The value in the given position.
      */
     int valueAt(int index);
+
+    @Override
+    IntValueMap<T> filter(IntPredicate predicate);
+
+    @Override
+    IntValueMap<T> filterNot(IntPredicate predicate);
 
     /**
      * Returns the index for which {@link #keyAt(int)} would return the specified key,

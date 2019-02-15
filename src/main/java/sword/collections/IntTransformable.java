@@ -21,7 +21,11 @@ public interface IntTransformable extends IntTraversable {
      */
     IntTransformable filterNot(IntPredicate predicate);
 
-    IntTransformable mapToInt(IntToIntFunction func);
+    default IntTransformable mapToInt(IntToIntFunction func) {
+        return iterator().mapToInt(func).toList();
+    }
 
-    <U> Transformable<U> map(IntFunction<U> func);
+    default <U> Transformable<U> map(IntFunction<U> func) {
+        return iterator().map(func).toList();
+    }
 }

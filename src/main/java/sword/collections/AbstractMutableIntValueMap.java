@@ -69,7 +69,7 @@ abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> impl
         return new ImmutableSortedSet<>(this::entryLessThan, entries);
     }
 
-    private class Iterator implements IntTraverser {
+    private class Iterator extends AbstractIntTransformer {
 
         private int _index;
 
@@ -90,7 +90,7 @@ abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> impl
     }
 
     @Override
-    public IntTraverser iterator() {
+    public IntTransformer iterator() {
         return new Iterator();
     }
 }

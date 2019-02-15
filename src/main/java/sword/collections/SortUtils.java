@@ -163,7 +163,7 @@ public final class SortUtils {
             int middle = min + (max - min) / 2;
             int keyInMiddle = keys[middle];
 
-            if (keyInMiddle < key) {
+            if (keyInMiddle <= key) {
                 min = middle + 1;
             }
             else {

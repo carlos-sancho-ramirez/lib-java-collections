@@ -98,7 +98,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         })));
     }
 
-    private int valueFromKey(T str) {
+    int valueFromKey(T str) {
         return (str != null)? str.hashCode() : 0;
     }
 
