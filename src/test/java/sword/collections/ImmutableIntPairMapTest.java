@@ -42,10 +42,12 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         return (value & 1) == 0;
     }
 
+    @Override
     void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::valueIsEven);
     }
 
+    @Override
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntPairMap map = newBuilder().build();
@@ -53,6 +55,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         });
     }
 
+    @Override
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final int value = key * key;
@@ -68,6 +71,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
+    @Override
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
             final int valueA = keyA * keyA;
@@ -103,6 +107,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         })));
     }
 
+    @Override
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntPairMap map = newBuilder().build();
@@ -110,6 +115,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         });
     }
 
+    @Override
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final int value = key * key;
@@ -125,6 +131,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
+    @Override
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
             final int valueA = keyA * keyA;

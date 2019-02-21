@@ -9,6 +9,7 @@ import static sword.collections.TestUtils.withInt;
 abstract class IntPairMapTest extends TestCase {
 
     abstract IntPairMapBuilder newBuilder();
+    abstract void withFilterFunc(Procedure<IntPredicate> procedure);
 
     public void testEmptyBuilderBuildsEmptyArray() {
         IntPairMap array = newBuilder().build();
@@ -167,6 +168,120 @@ abstract class IntPairMapTest extends TestCase {
             }
 
             assertFalse(iterator.hasNext());
+        })));
+    }
+
+    public void testFilterWhenEmpty() {
+        withFilterFunc(f -> {
+            final IntPairMap map = newBuilder().build();
+            assertTrue(map.filter(f).isEmpty());
+        });
+    }
+
+    public void testFilterForSingleElement() {
+        withFilterFunc(f -> withInt(key -> {
+            final int value = key * key;
+            final IntPairMap map = newBuilder().put(key, value).build();
+            final IntPairMap filtered = map.filter(f);
+
+            if (f.apply(value)) {
+                assertEquals(map, filtered);
+            }
+            else {
+                assertTrue(filtered.isEmpty());
+            }
+        }));
+    }
+
+    public void testFilterForMultipleElements() {
+        withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
+            final int valueA = keyA * keyA;
+            final int valueB = keyB * keyB;
+            final IntPairMap map = newBuilder().put(keyA, valueA).put(keyB, valueB).build();
+            final IntPairMap filtered = map.filter(f);
+
+            final boolean aPassed = f.apply(valueA);
+            final boolean bPassed = f.apply(valueB);
+
+            if (aPassed && bPassed) {
+                assertEquals(map, filtered);
+            }
+            else if (aPassed) {
+                Iterator<IntPairMap.Entry> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+                final IntPairMap.Entry entry = iterator.next();
+                assertEquals(keyA, entry.key());
+                assertEquals(valueA, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else if (bPassed) {
+                Iterator<IntPairMap.Entry> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+                final IntPairMap.Entry entry = iterator.next();
+                assertEquals(keyB, entry.key());
+                assertEquals(valueB, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else {
+                assertTrue(filtered.isEmpty());
+            }
+        })));
+    }
+
+    public void testFilterNotWhenEmpty() {
+        withFilterFunc(f -> {
+            final IntPairMap map = newBuilder().build();
+            assertTrue(map.filterNot(f).isEmpty());
+        });
+    }
+
+    public void testFilterNotForSingleElement() {
+        withFilterFunc(f -> withInt(key -> {
+            final int value = key * key;
+            final IntPairMap map = newBuilder().put(key, value).build();
+            final IntPairMap filtered = map.filterNot(f);
+
+            if (f.apply(value)) {
+                assertTrue(filtered.isEmpty());
+            }
+            else {
+                assertEquals(map, filtered);
+            }
+        }));
+    }
+
+    public void testFilterNotForMultipleElements() {
+        withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
+            final int valueA = keyA * keyA;
+            final int valueB = keyB * keyB;
+            final IntPairMap map = newBuilder().put(keyA, valueA).put(keyB, valueB).build();
+            final IntPairMap filtered = map.filterNot(f);
+
+            final boolean aRemoved = f.apply(valueA);
+            final boolean bRemoved = f.apply(valueB);
+
+            if (aRemoved && bRemoved) {
+                assertTrue(filtered.isEmpty());
+            }
+            else if (aRemoved) {
+                Iterator<IntPairMap.Entry> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+                final IntPairMap.Entry entry = iterator.next();
+                assertEquals(keyB, entry.key());
+                assertEquals(valueB, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else if (bRemoved) {
+                Iterator<IntPairMap.Entry> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+                final IntPairMap.Entry entry = iterator.next();
+                assertEquals(keyA, entry.key());
+                assertEquals(valueA, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else {
+                assertEquals(map, filtered);
+            }
         })));
     }
 }

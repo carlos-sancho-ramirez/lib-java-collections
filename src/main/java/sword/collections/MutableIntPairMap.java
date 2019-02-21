@@ -237,8 +237,36 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     }
 
     @Override
-    public IntTraverser iterator() {
+    public IntTransformer iterator() {
         return new Iterator();
+    }
+
+    @Override
+    public IntPairMap filter(IntPredicate predicate) {
+        final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
+        final int length = _size;
+        for (int i = 0; i < length; i++) {
+            final int value = _values[i];
+            if (predicate.apply(value)) {
+                builder.put(_keys[i], value);
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public IntPairMap filterNot(IntPredicate predicate) {
+        final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
+        final int length = _size;
+        for (int i = 0; i < length; i++) {
+            final int value = _values[i];
+            if (!predicate.apply(value)) {
+                builder.put(_keys[i], value);
+            }
+        }
+
+        return builder.build();
     }
 
     public static class Builder implements IntPairMapBuilder {
@@ -256,7 +284,7 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
         }
     }
 
-    private class Iterator implements IntTraverser {
+    private class Iterator extends AbstractIntTransformer {
 
         private int _index;
 

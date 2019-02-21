@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.SortUtils.equal;
 
-public interface IntPairMap extends IntTraversable {
+public interface IntPairMap extends IntTransformable {
 
     /**
      * Return the value assigned to the given key.
@@ -47,6 +47,12 @@ public interface IntPairMap extends IntTraversable {
      * Resulting set is guaranteed to keep the same item order when it is iterated.
      */
     Set<Entry> entries();
+
+    @Override
+    IntPairMap filter(IntPredicate predicate);
+
+    @Override
+    IntPairMap filterNot(IntPredicate predicate);
 
     /**
      * Return an immutable map from the values contained in this map.

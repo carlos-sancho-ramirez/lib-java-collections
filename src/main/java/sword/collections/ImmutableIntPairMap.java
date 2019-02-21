@@ -26,11 +26,6 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     /**
-     * Value returned when key is not found
-     */
-    private static final int DEFAULT_VALUE = 0;
-
-    /**
      * Sorted set of integers
      */
     private final int[] _keys;

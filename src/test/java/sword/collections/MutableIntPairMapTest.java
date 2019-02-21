@@ -11,6 +11,15 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
         return new MutableIntPairMap.Builder();
     }
 
+    private boolean valueIsEven(int value) {
+        return (value & 1) == 0;
+    }
+
+    @Override
+    void withFilterFunc(Procedure<IntPredicate> procedure) {
+        procedure.apply(this::valueIsEven);
+    }
+
     public void testToImmutableForEmpty() {
         assertTrue(newBuilder().build().toImmutable().isEmpty());
     }
