@@ -1,6 +1,6 @@
 package sword.collections;
 
-public final class ImmutableSortedSetTest extends ImmutableSetTest<String> {
+public final class ImmutableSortedSetTest extends ImmutableSetTest<String, ImmutableSortedSet.Builder<String>> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"
@@ -57,13 +57,13 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String> {
     }
 
     @Override
-    ImmutableSortedSet.Builder<String> newBuilder() {
-        return new ImmutableSortedSet.Builder<>(this::lessThan);
+    void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableSortedSet.Builder<String>>> procedure) {
+        withSortFunc(sortFunc -> procedure.apply(() -> new ImmutableSortedSet.Builder<>(sortFunc)));
     }
 
     @Override
     ImmutableSortedSet.Builder<String> newIterableBuilder() {
-        return newBuilder();
+        return new ImmutableSortedSet.Builder<>(this::lessThan);
     }
 
     private boolean sortByLength(String a, String b) {
@@ -84,30 +84,5 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String> {
     @Override
     void assertEmptyCollection(Transformable<String> collection) {
         assertFalse(collection.iterator().hasNext());
-    }
-
-    public void testHashCodeAndEquals() {
-        withValue(a -> withValue(b -> {
-            final ImmutableSet<String> set = newBuilder().add(a).add(b).build();
-            final ImmutableSet<String> set1 = new ImmutableSortedSet.Builder<>(this::lessThan).add(a).add(b).build();
-            final ImmutableSet<String> set2 = new ImmutableSortedSet.Builder<>(this::sortByLength).add(a).add(b).build();
-            final ImmutableSet<String> set3 = new ImmutableHashSet.Builder<String>().add(a).add(b).build();
-
-            assertEquals(set.hashCode(), set1.hashCode());
-            assertEquals(set.hashCode(), set2.hashCode());
-            assertEquals(set.hashCode(), set3.hashCode());
-
-            assertEquals(set, set1);
-            assertEquals(set, set2);
-            assertEquals(set, set3);
-
-            assertEquals(set.hashCode(), set1.mutate().hashCode());
-            assertEquals(set.hashCode(), set2.mutate().hashCode());
-            assertEquals(set.hashCode(), set3.mutate().hashCode());
-
-            assertEquals(set, set1.mutate());
-            assertEquals(set, set2.mutate());
-            assertEquals(set, set3.mutate());
-        }));
     }
 }

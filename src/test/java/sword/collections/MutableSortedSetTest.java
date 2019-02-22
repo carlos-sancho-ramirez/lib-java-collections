@@ -70,29 +70,4 @@ public final class MutableSortedSetTest extends MutableSetTest<String> {
         procedure.apply(this::lessThan);
         procedure.apply(this::sortByLength);
     }
-
-    public void testHashCodeAndEquals() {
-        withValue(a -> withValue(b -> {
-            final MutableSet<String> set = newBuilder().add(a).add(b).build();
-            final MutableSet<String> set1 = new MutableSortedSet.Builder<>(this::lessThan).add(a).add(b).build();
-            final MutableSet<String> set2 = new MutableSortedSet.Builder<>(this::sortByLength).add(a).add(b).build();
-            final MutableSet<String> set3 = new MutableHashSet.Builder<String>().add(a).add(b).build();
-
-            assertEquals(set.hashCode(), set1.hashCode());
-            assertEquals(set.hashCode(), set2.hashCode());
-            assertEquals(set.hashCode(), set3.hashCode());
-
-            assertEquals(set, set1);
-            assertEquals(set, set2);
-            assertEquals(set, set3);
-
-            assertEquals(set.hashCode(), set1.mutate().hashCode());
-            assertEquals(set.hashCode(), set2.mutate().hashCode());
-            assertEquals(set.hashCode(), set3.mutate().hashCode());
-
-            assertEquals(set, set1.mutate());
-            assertEquals(set, set2.mutate());
-            assertEquals(set, set3.mutate());
-        }));
-    }
 }

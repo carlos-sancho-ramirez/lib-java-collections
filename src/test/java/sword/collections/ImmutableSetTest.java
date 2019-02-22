@@ -4,11 +4,15 @@ import java.util.Iterator;
 
 import static sword.collections.SortUtils.equal;
 
-abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T> {
+abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends AbstractImmutableTransformableTest<T> {
 
     abstract boolean lessThan(T a, T b);
 
-    abstract ImmutableSet.Builder<T> newBuilder();
+    interface BuilderSupplier<E, B extends TraversableBuilder<E>> {
+        B newBuilder();
+    }
+
+    abstract void withBuilderSupplier(Procedure<BuilderSupplier<T, B>> procedure);
 
     @Override
     abstract ImmutableSet.Builder<T> newIterableBuilder();
@@ -16,69 +20,75 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
     abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
 
     public void testSizeForTwoElements() {
-        withValue(a -> withValue(b -> {
-            final ImmutableSet<T> list = newBuilder().add(a).add(b).build();
-            final int size = list.size();
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
+            final int size = set.size();
             if (equal(a, b)) {
                 assertEquals(1, size);
             }
             else {
                 assertEquals(2, size);
             }
-        }));
+        })));
     }
 
     public void testIteratingForMultipleElements() {
-        withValue(a -> withValue(b -> {
-            final ImmutableSet<T> set = newBuilder().add(a).add(b).build();
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
             final Iterator<T> iterator = set.iterator();
 
             assertTrue(iterator.hasNext());
             final T first = iterator.next();
 
-            if (lessThan(b, a)) {
-                assertEquals(b, first);
-                assertTrue(iterator.hasNext());
-                assertEquals(a, iterator.next());
-            }
-            else {
-                assertEquals(a, first);
-                if (!equal(a, b)) {
+            if (!equal(a, b)) {
+                if (equal(b, first)) {
+                    assertTrue(iterator.hasNext());
+                    assertEquals(a, iterator.next());
+                }
+                else {
+                    assertEquals(a, first);
                     assertTrue(iterator.hasNext());
                     assertEquals(b, iterator.next());
                 }
             }
+            else {
+                assertEquals(a, first);
+            }
 
             assertFalse(iterator.hasNext());
-        }));
+        })));
     }
 
     public void testToImmutableForEmpty() {
-        final ImmutableSet set = newBuilder().build();
-        assertSame(set, set.toImmutable());
+        withBuilderSupplier(supplier -> {
+            final ImmutableSet set = supplier.newBuilder().build();
+            assertSame(set, set.toImmutable());
+        });
     }
 
     public void testMutateForEmpty() {
-        final ImmutableSet<T> set1 = newBuilder().build();
-        withValue(value -> {
-            final MutableSet<T> set2 = set1.mutate();
-            assertTrue(set2.isEmpty());
+        withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set1 = supplier.newBuilder().build();
+            withValue(value -> {
+                final MutableSet<T> set2 = set1.mutate();
+                assertTrue(set2.isEmpty());
 
-            set2.add(value);
-            assertFalse(set1.contains(value));
+                set2.add(value);
+                assertFalse(set1.contains(value));
+            });
         });
     }
 
     public void testToImmutable() {
-        withValue(a -> withValue(b -> {
-            final ImmutableSet<T> set = newBuilder().add(a).add(b).build();
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
             assertSame(set, set.toImmutable());
-        }));
+        })));
     }
 
     public void testMutate() {
-        withValue(a -> withValue(b -> {
-            final ImmutableSet<T> set1 = newBuilder().add(a).add(b).build();
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set1 = supplier.newBuilder().add(a).add(b).build();
             final MutableSet<T> set2 = set1.mutate();
 
             final Iterator<T> it1 = set1.iterator();
@@ -92,7 +102,7 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
             set2.remove(b);
             assertTrue(set1.contains(b));
             assertFalse(set2.contains(b));
-        }));
+        })));
     }
 
     @Override
@@ -129,14 +139,16 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
     }
 
     public void testToListWhenEmpty() {
-        final ImmutableSet<T> set = newBuilder().build();
-        assertTrue(set.isEmpty());
-        assertTrue(set.toList().isEmpty());
+        withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().build();
+            assertTrue(set.isEmpty());
+            assertTrue(set.toList().isEmpty());
+        });
     }
 
     public void testToList() {
-        withValue(a -> withValue(b -> {
-            final ImmutableSet<T> set = newBuilder().add(a).add(b).build();
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
             final ImmutableList<T> list = set.toList();
 
             if (equal(a, b)) {
@@ -145,8 +157,9 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
             }
             else {
                 assertEquals(2, list.size());
+                T first = set.valueAt(0);
 
-                if (lessThan(b, a)) {
+                if (equal(b, first)) {
                     assertEquals(b, list.get(0));
                     assertEquals(a, list.get(1));
                 }
@@ -155,12 +168,12 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
                     assertEquals(b, list.get(1));
                 }
             }
-        }));
+        })));
     }
 
     public void testSort() {
-        withValue(a -> withValue(b -> withValue(c -> {
-            final ImmutableSet<T> set = newBuilder().add(a).add(b).add(c).build();
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int setLength = set.size();
             withSortFunc(f -> {
                 final ImmutableSet<T> sortedSet = set.sort(f);
@@ -177,39 +190,76 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
                     firstElement = false;
                 }
             });
-        })));
+        }))));
     }
 
     public void testAdd() {
-        withValue(a -> withValue(b -> withValue(c -> {
-            final ImmutableSet<T> set = newBuilder().add(a).add(b).build();
-            final ImmutableSet<T> expectedSet = newBuilder().add(a).add(b).add(c).build();
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
+            final ImmutableSet<T> expectedSet = supplier.newBuilder().add(a).add(b).add(c).build();
             final ImmutableSet<T> unionSet = set.add(c);
             assertEquals(expectedSet, unionSet);
 
             if (expectedSet.equals(set)) {
                 assertSame(unionSet, set);
             }
-        })));
+        }))));
     }
 
     public void testAddAll() {
-        withValue(a -> withValue(b -> withValue(c -> withValue(d -> {
-            final ImmutableSet<T> set1 = newBuilder().add(a).add(b).build();
-            final ImmutableSet<T> set2 = newBuilder().add(c).add(d).build();
-            final ImmutableSet<T> expectedSet = newBuilder().add(a).add(b).add(c).add(d).build();
+        withValue(a -> withValue(b -> withValue(c -> withValue(d -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set1 = supplier.newBuilder().add(a).add(b).build();
+            final ImmutableSet<T> set2 = supplier.newBuilder().add(c).add(d).build();
+            final ImmutableSet<T> expectedSet = supplier.newBuilder().add(a).add(b).add(c).add(d).build();
             final ImmutableSet<T> unionSet = set1.addAll(set2);
             assertEquals(expectedSet, unionSet);
 
             if (expectedSet.equals(set1)) {
                 assertSame(unionSet, set1);
             }
-        }))));
+        })))));
+    }
+
+    private void withTraversableBuilderSupplier(Procedure<BuilderSupplier<T, TraversableBuilder<T>>> procedure) {
+        procedure.apply(ImmutableHashSet.Builder::new);
+        procedure.apply(MutableHashSet.Builder::new);
+        withSortFunc(sortFunc -> {
+            procedure.apply(() -> new ImmutableSortedSet.Builder<>(sortFunc));
+            procedure.apply(() -> new MutableSortedSet.Builder<>(sortFunc));
+        });
+        procedure.apply(ImmutableList.Builder::new);
+        procedure.apply(MutableList.Builder::new);
+        // TODO: Include maps
+    }
+
+    public void testEquals() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(setSupplier -> withTraversableBuilderSupplier(trSupplier -> {
+            final ImmutableSet<T> set = setSupplier.newBuilder().add(a).add(b).add(c).build();
+            final TraversableBuilder<T> builder = trSupplier.newBuilder();
+            for (T item : set) {
+                builder.add(item);
+            }
+            final Traversable<T> traversable = builder.build();
+            final Traverser<T> traverser = traversable.iterator();
+            boolean sameOrderAndSize = true;
+            for (T item : set) {
+                if (!traverser.hasNext() || !equal(item, traverser.next())) {
+                    sameOrderAndSize = false;
+                    break;
+                }
+            }
+
+            if (traverser.hasNext()) {
+                sameOrderAndSize = false;
+            }
+
+            assertEquals(sameOrderAndSize, set.equals(traversable));
+        })))));
     }
 
     public void testEqualsInItems() {
-        withValue(a -> withValue(b -> withValue(c -> {
-            final Set<T> set = newBuilder().add(a).add(b).add(c).build();
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             assertTrue(set.equalsInItems(set));
             withSortFunc(sortFunction -> {
                 final Set<T> sortedSet = set.sort(sortFunction);
@@ -217,7 +267,7 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
                 assertTrue(sortedSet.equalsInItems(set));
             });
 
-            final ImmutableSet.Builder<T> setBuilder = newBuilder();
+            final ImmutableSet.Builder<T> setBuilder = supplier.newBuilder();
             final Iterator<T> it = set.iterator();
             it.next();
             while (it.hasNext()) {
@@ -243,6 +293,6 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
                 assertFalse(set.equalsInItems(sortedSet));
                 assertFalse(sortedSet.equalsInItems(set));
             });
-        })));
+        }))));
     }
 }
