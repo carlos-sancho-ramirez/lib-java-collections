@@ -244,6 +244,45 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    public void testEqualsInItems() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final Set<T> set = newBuilder().add(a).add(b).add(c).build();
+            assertTrue(set.equalsInItems(set));
+            withSortFunc(sortFunction -> {
+                final Set<T> sortedSet = set.sort(sortFunction);
+                assertTrue(set.equalsInItems(sortedSet));
+                assertTrue(sortedSet.equalsInItems(set));
+            });
+
+            final MutableSet.Builder<T> setBuilder = newBuilder();
+            final Iterator<T> it = set.iterator();
+            it.next();
+            while (it.hasNext()) {
+                setBuilder.add(it.next());
+            }
+            final Set<T> set2 = setBuilder.build();
+
+            assertFalse(set.equalsInItems(set2));
+            assertFalse(set2.equalsInItems(set));
+
+            withSortFunc(sortFunction -> {
+                final Set<T> sortedSet = set.sort(sortFunction);
+                assertTrue(set.equalsInItems(sortedSet));
+                assertTrue(sortedSet.equalsInItems(set));
+                assertFalse(set2.equalsInItems(sortedSet));
+                assertFalse(sortedSet.equalsInItems(set2));
+            });
+
+            withSortFunc(sortFunction -> {
+                final Set<T> sortedSet = set2.sort(sortFunction);
+                assertTrue(set2.equalsInItems(sortedSet));
+                assertTrue(sortedSet.equalsInItems(set2));
+                assertFalse(set.equalsInItems(sortedSet));
+                assertFalse(sortedSet.equalsInItems(set));
+            });
+        })));
+    }
+
     public void testClearWhenEmpty() {
         final MutableSet<T> collection = newBuilder().build();
         assertFalse(collection.clear());

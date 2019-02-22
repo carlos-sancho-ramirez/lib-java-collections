@@ -70,4 +70,19 @@ public interface Set<T> extends Transformable<T> {
      */
     @Override
     int hashCode();
+
+    /**
+     * Check if 2 set instances contain equivalent elements.
+     *
+     * This method will call {@link Object#equals(Object)} on the elements
+     * within the sets in order to check if they are equivalent.
+     *
+     * Note that this method will return true even if the elements within the 2
+     * sets are not sorted in the same way. In contrast with {@link Object#equals(Object)},
+     * that will return true only if all items are sorted in the same way.
+     *
+     * @param set set to be compared with this instance.
+     * @return whether the given set contains equivalent values to this one.
+     */
+    boolean equalsInItems(Set set);
 }

@@ -209,10 +209,10 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
 
     public void testEqualsInItems() {
         withValue(a -> withValue(b -> withValue(c -> {
-            final ImmutableSet<T> set = newBuilder().add(a).add(b).add(c).build();
+            final Set<T> set = newBuilder().add(a).add(b).add(c).build();
             assertTrue(set.equalsInItems(set));
             withSortFunc(sortFunction -> {
-                final ImmutableSet<T> sortedSet = set.sort(sortFunction);
+                final Set<T> sortedSet = set.sort(sortFunction);
                 assertTrue(set.equalsInItems(sortedSet));
                 assertTrue(sortedSet.equalsInItems(set));
             });
@@ -223,13 +223,13 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
             while (it.hasNext()) {
                 setBuilder.add(it.next());
             }
-            final ImmutableSet<T> set2 = setBuilder.build();
+            final Set<T> set2 = setBuilder.build();
 
             assertFalse(set.equalsInItems(set2));
             assertFalse(set2.equalsInItems(set));
 
             withSortFunc(sortFunction -> {
-                final ImmutableSet<T> sortedSet = set.sort(sortFunction);
+                final Set<T> sortedSet = set.sort(sortFunction);
                 assertTrue(set.equalsInItems(sortedSet));
                 assertTrue(sortedSet.equalsInItems(set));
                 assertFalse(set2.equalsInItems(sortedSet));
@@ -237,7 +237,7 @@ abstract class ImmutableSetTest<T> extends AbstractImmutableTransformableTest<T>
             });
 
             withSortFunc(sortFunction -> {
-                final ImmutableSet<T> sortedSet = set2.sort(sortFunction);
+                final Set<T> sortedSet = set2.sort(sortFunction);
                 assertTrue(set2.equalsInItems(sortedSet));
                 assertTrue(sortedSet.equalsInItems(set2));
                 assertFalse(set.equalsInItems(sortedSet));

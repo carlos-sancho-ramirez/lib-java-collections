@@ -125,7 +125,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof Set)) {
+        if (!(object instanceof Set)) {
             return false;
         }
         else if (this == object) {
@@ -133,6 +133,21 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         }
 
         final Set that = (Set) object;
+        if (_size != that.size()) {
+            return false;
+        }
+
+        for (int index = 0; index < _size; index++) {
+            if (!that.contains(_keys[index])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean equalsInItems(Set that) {
         if (_size != that.size()) {
             return false;
         }
