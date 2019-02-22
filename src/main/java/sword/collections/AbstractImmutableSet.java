@@ -123,7 +123,7 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> i
 
     @Override
     public boolean equals(Object object) {
-        if (object == null || !(object instanceof Set)) {
+        if (!(object instanceof Set)) {
             return false;
         }
         else if (this == object) {
@@ -131,6 +131,21 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> i
         }
 
         final Set that = (Set) object;
+        if (_keys.length != that.size()) {
+            return false;
+        }
+
+        for (int index = 0; index < _keys.length; index++) {
+            if (!that.contains(_keys[index])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean equalsInItems(Set that) {
         if (_keys.length != that.size()) {
             return false;
         }
