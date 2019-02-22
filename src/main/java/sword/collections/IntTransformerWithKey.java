@@ -2,17 +2,10 @@ package sword.collections;
 
 public interface IntTransformerWithKey<K> extends IntTransformer {
 
-    @Override
-    IntTransformerWithKey<K> filter(IntPredicate predicate);
-
-    @Override
-    IntTransformerWithKey<K> filterNot(IntPredicate predicate);
-
-    @Override
-    IntTransformerWithKey<K> mapToInt(IntToIntFunction mapFunc);
-
-    @Override
-    <U> TransformerWithKey<K, U> map(IntFunction<U> mapFunc);
+    /**
+     * Key attached to the last value returned in {@link #next()}
+     */
+    K key();
 
     /**
      * Build a new map containing all elements given on traversing this collection

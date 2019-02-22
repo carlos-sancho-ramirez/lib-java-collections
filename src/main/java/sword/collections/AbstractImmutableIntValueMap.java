@@ -90,7 +90,7 @@ abstract class AbstractImmutableIntValueMap<T> extends AbstractIntValueMap<T> im
         }
     }
 
-    private class Iterator extends AbstractIntTransformer {
+    private class Iterator extends AbstractIntTransformerWithKey<T> {
         private int _index;
 
         @Override
@@ -102,10 +102,15 @@ abstract class AbstractImmutableIntValueMap<T> extends AbstractIntValueMap<T> im
         public Integer next() {
             return _values[_index++];
         }
+
+        @Override
+        public T key() {
+            return keyAt(_index - 1);
+        }
     }
 
     @Override
-    public IntTransformer iterator() {
+    public IntTransformerWithKey<T> iterator() {
         return new Iterator();
     }
 }
