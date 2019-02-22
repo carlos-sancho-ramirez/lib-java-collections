@@ -53,7 +53,9 @@ public interface Map<K, V> extends Transformable<V> {
      * Returns the index for which {@link #keyAt(int)} would return the specified key,
      * or -1 if the specified key is not mapped.
      */
-    int indexOfKey(K key);
+    default int indexOfKey(K key) {
+        return keySet().indexOf(key);
+    }
 
     /**
      * Return the set of all keys
@@ -136,7 +138,7 @@ public interface Map<K, V> extends Transformable<V> {
 
         @Override
         public boolean equals(Object other) {
-            if (other == null || !(other instanceof Entry)) {
+            if (!(other instanceof Entry)) {
                 return false;
             }
 
