@@ -456,4 +456,24 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
             }
         }))));
     }
+
+    public void testEqualSet() {
+        withItem(a -> withItem(b -> withItem(c -> {
+            final IntSet set = newIntBuilder().add(a).add(b).add(c).build();
+            assertTrue(set.equalSet(set));
+
+            final ImmutableIntSet.Builder setBuilder = newIntBuilder();
+            final IntTransformer it = set.iterator();
+            it.next();
+            while (it.hasNext()) {
+                setBuilder.add(it.next());
+            }
+            final IntSet reducedSet = setBuilder.build();
+
+            assertFalse(set.equalSet(reducedSet));
+            assertFalse(reducedSet.equalSet(set));
+
+            assertTrue(set.equalSet(set.mutate()));
+        })));
+    }
 }

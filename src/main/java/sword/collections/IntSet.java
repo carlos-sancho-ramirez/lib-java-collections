@@ -58,4 +58,24 @@ public interface IntSet extends IntTransformable {
      * This method will always generate a new instance in order to avoid affecting the state of its original set.
      */
     MutableIntSet mutate();
+
+    /**
+     * Check if 2 set instances contain equivalent elements.
+     *
+     * @param set set to be compared with this instance.
+     * @return whether the given set contains equivalent values to this one.
+     */
+    default boolean equalSet(IntSet set) {
+        if (size() != set.size()) {
+            return false;
+        }
+
+        for (int key : this) {
+            if (!set.contains(key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

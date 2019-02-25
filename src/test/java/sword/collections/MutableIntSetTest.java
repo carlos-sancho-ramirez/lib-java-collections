@@ -285,4 +285,19 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
             assertTrue(collection.isEmpty());
         }));
     }
+
+    public void testEqualSet() {
+        withItem(a -> withItem(b -> withItem(c -> {
+            final IntSet set = newIntBuilder().add(a).add(b).add(c).build();
+            assertTrue(set.equalSet(set));
+
+            final MutableIntSet reducedSet = set.mutate();
+            reducedSet.removeAt(0);
+
+            assertFalse(set.equalSet(reducedSet));
+            assertFalse(reducedSet.equalSet(set));
+
+            assertTrue(set.equalSet(set.toImmutable()));
+        })));
+    }
 }

@@ -80,13 +80,12 @@ public interface IntKeyMap<T> extends Transformable<T> {
         }
 
         final IntSet keySet = keySet();
-        final IntSet thatKeySet = that.keySet();
-        if (keySet.size() != thatKeySet.size()) {
+        if (!keySet.equalSet(that.keySet())) {
             return false;
         }
 
         for (int key : keySet) {
-            if (!thatKeySet.contains(key) || !equal(get(key), that.get(key))) {
+            if (!equal(get(key), that.get(key))) {
                 return false;
             }
         }
