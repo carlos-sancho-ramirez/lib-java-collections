@@ -48,6 +48,11 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
         return (key == null)? null : Integer.toString(key);
     }
 
+    @Override
+    void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+        withSortFunc(sortFunc -> procedure.apply(() -> new ImmutableSortedMap.Builder<>(sortFunc)));
+    }
+
     public void testToImmutableMethod() {
         withKey(a -> withKey(b -> {
             final ImmutableMap<Integer, String> map = newBuilder()

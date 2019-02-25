@@ -103,6 +103,32 @@ public interface Map<K, V> extends Transformable<V> {
      */
     Map<K, V> sort(SortFunction<K> function);
 
+    /**
+     * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
+     *
+     * Note that the order of the key-value pair within the map and the collection mutability is irrelevant.
+     *
+     * @param that Map to be contrasted to.
+     */
+    default boolean equalMap(Map that) {
+        if (that == null) {
+            return false;
+        }
+
+        final Set<K> keySet = keySet();
+        if (!keySet.equalsInItems(that.keySet())) {
+            return false;
+        }
+
+        for (K key : keySet) {
+            if (!equal(get(key), that.get(key))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     final class Entry<A, B> {
         private final A _key;
         private final B _value;

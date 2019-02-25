@@ -8,10 +8,6 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Ab
 
     abstract boolean lessThan(T a, T b);
 
-    interface BuilderSupplier<E, B extends TraversableBuilder<E>> {
-        B newBuilder();
-    }
-
     abstract void withBuilderSupplier(Procedure<BuilderSupplier<T, B>> procedure);
 
     @Override

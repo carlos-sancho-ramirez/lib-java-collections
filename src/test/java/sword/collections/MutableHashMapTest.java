@@ -38,6 +38,11 @@ public final class MutableHashMapTest extends MapTest<Integer, String> {
     }
 
     @Override
+    void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+        procedure.apply(MutableHashMap.Builder::new);
+    }
+
+    @Override
     String getTestValue() {
         return "value";
     }

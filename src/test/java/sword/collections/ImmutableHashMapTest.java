@@ -44,6 +44,11 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         return (key == null)? null : Integer.toString(key);
     }
 
+    @Override
+    void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+        procedure.apply(ImmutableHashMap.Builder::new);
+    }
+
     public void testToImmutableMethod() {
         withKey(a -> withKey(b -> {
             final ImmutableMap<Integer, String> map = newBuilder()

@@ -16,6 +16,16 @@ abstract class MapTest<K, V> extends TestCase {
     abstract V getTestValue();
     abstract K keyFromInt(int value);
     abstract V valueFromKey(K key);
+    abstract void withMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure);
+
+    private void withArbitraryMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure) {
+        procedure.apply(ImmutableHashMap.Builder::new);
+        procedure.apply(MutableHashMap.Builder::new);
+        withSortFunc(sortFunc -> {
+            procedure.apply(() -> new ImmutableSortedMap.Builder<>(sortFunc));
+            procedure.apply(() -> new MutableSortedMap.Builder<>(sortFunc));
+        });
+    }
 
     public void testEmptyBuilderBuildsEmptyArray() {
         Map<K, V> array = newBuilder().build();
@@ -356,5 +366,68 @@ abstract class MapTest<K, V> extends TestCase {
                 assertEquals(map, filtered);
             }
         })));
+    }
+
+    public void testEqualMapReturnsFalseWhenAPairIsMissing() {
+        withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            final int mapSize = map.size();
+            final MapBuilder<K, V> mapBuilder = supplier.newBuilder();
+            for (int i = 1; i < mapSize; i++) {
+                mapBuilder.put(map.keyAt(i), map.valueAt(i));
+            }
+            final Map<K, V> reducedMap = mapBuilder.build();
+
+            assertFalse(map.equalMap(reducedMap));
+            assertFalse(reducedMap.equalMap(map));
+        }))));
+    }
+
+    public void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
+        withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            final int mapSize = map.size();
+            for (int j = 0; j < mapSize; j++) {
+                final MapBuilder<K, V> mapBuilder = supplier.newBuilder();
+                for (int i = 0; i < mapSize; i++) {
+                    V value = (i == j) ? null : map.valueAt(i);
+                    mapBuilder.put(map.keyAt(i), value);
+                }
+                final Map<K, V> modifiedMap = mapBuilder.build();
+
+                assertFalse("map=" + map + "; mod=" + modifiedMap, map.equalMap(modifiedMap));
+                assertFalse("mod=" + modifiedMap + "; map=" + map, modifiedMap.equalMap(map));
+            }
+        }))));
+    }
+
+    public void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
+        withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            withArbitraryMapBuilderSupplier(mapSupplier -> {
+                final Map<K, V> arbitraryMap = mapSupplier.newBuilder()
+                        .put(a, valueFromKey(a))
+                        .put(b, valueFromKey(b))
+                        .put(c, valueFromKey(c))
+                        .build();
+
+                assertTrue(map.equalMap(arbitraryMap));
+            });
+        }))));
     }
 }
