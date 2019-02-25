@@ -57,6 +57,11 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
     }
 
     @Override
+    void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, IntKeyMapBuilder<String>>> procedure) {
+        procedure.apply(ImmutableIntKeyMap.Builder::new);
+    }
+
+    @Override
     void assertEmptyCollection(Transformable<String> collection) {
         assertSame(ImmutableIntKeyMap.empty(), collection);
     }
@@ -77,7 +82,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
     }
 
     @Override
-    String valueForKey(int key) {
+    String valueFromKey(int key) {
         return Integer.toString(key);
     }
 

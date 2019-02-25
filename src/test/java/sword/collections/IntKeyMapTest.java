@@ -9,7 +9,13 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
     abstract IntKeyMapBuilder<T> newMapBuilder();
     abstract T getTestValue();
     abstract T getTestValue2();
-    abstract T valueForKey(int key);
+    abstract T valueFromKey(int key);
+    abstract void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure);
+
+    private void withArbitraryMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure) {
+        procedure.apply(ImmutableIntKeyMap.Builder::new);
+        procedure.apply(MutableIntKeyMap.Builder::new);
+    }
 
     private final class IterableBuilderAdapter implements TransformableBuilder<T> {
 
@@ -112,9 +118,9 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         withInt(a -> withInt(b -> withInt(c -> {
             IntKeyMapBuilder<T> builder = newMapBuilder();
             IntKeyMap<T> array = builder
-                    .put(a, valueForKey(a))
-                    .put(b, valueForKey(b))
-                    .put(c, valueForKey(c))
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
                     .build();
 
             final int size = array.size();
@@ -135,9 +141,9 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntKeyMapBuilder<T> builder = newMapBuilder();
             final IntKeyMap<T> map = builder
-                    .put(a, valueForKey(a))
-                    .put(b, valueForKey(b))
-                    .put(c, valueForKey(c))
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
                     .build();
 
             final ImmutableIntSet set = new ImmutableIntSetBuilder()
@@ -156,9 +162,9 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntKeyMapBuilder<T> builder = newMapBuilder();
             final IntKeyMap<T> map = builder
-                    .put(a, valueForKey(a))
-                    .put(b, valueForKey(b))
-                    .put(c, valueForKey(c))
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
                     .build();
 
             final ImmutableList.Builder<T> listBuilder = new ImmutableList.Builder<>();
@@ -190,9 +196,9 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         withInt(a -> withInt(b -> withInt(c -> {
             IntKeyMapBuilder<T> builder = newMapBuilder();
             IntKeyMap<T> array = builder
-                    .put(a, valueForKey(a))
-                    .put(b, valueForKey(b))
-                    .put(c, valueForKey(c))
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
                     .build();
 
             final int size = array.size();
@@ -208,5 +214,68 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
 
             assertFalse(iterator.hasNext());
         })));
+    }
+
+    public void testEqualMapReturnsFalseWhenAPairIsMissing() {
+        withInt(a -> withInt(b -> withInt(c -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap<T> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            final int mapSize = map.size();
+            final IntKeyMapBuilder<T> mapBuilder = supplier.newBuilder();
+            for (int i = 1; i < mapSize; i++) {
+                mapBuilder.put(map.keyAt(i), map.valueAt(i));
+            }
+            final IntKeyMap<T> reducedMap = mapBuilder.build();
+
+            assertFalse(map.equalMap(reducedMap));
+            assertFalse(reducedMap.equalMap(map));
+        }))));
+    }
+
+    public void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
+        withInt(a -> withInt(b -> withInt(c -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap<T> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            final int mapSize = map.size();
+            for (int j = 0; j < mapSize; j++) {
+                final IntKeyMapBuilder<T> mapBuilder = supplier.newBuilder();
+                for (int i = 0; i < mapSize; i++) {
+                    T value = (i == j) ? null : map.valueAt(i);
+                    mapBuilder.put(map.keyAt(i), value);
+                }
+                final IntKeyMap<T> modifiedMap = mapBuilder.build();
+
+                assertFalse(map.equalMap(modifiedMap));
+                assertFalse(modifiedMap.equalMap(map));
+            }
+        }))));
+    }
+
+    public void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
+        withInt(a -> withInt(b -> withInt(c -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap<T> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            withArbitraryMapBuilderSupplier(mapSupplier -> {
+                final IntKeyMap<T> arbitraryMap = mapSupplier.newBuilder()
+                        .put(a, valueFromKey(a))
+                        .put(b, valueFromKey(b))
+                        .put(c, valueFromKey(c))
+                        .build();
+
+                assertTrue(map.equalMap(arbitraryMap));
+            });
+        }))));
     }
 }

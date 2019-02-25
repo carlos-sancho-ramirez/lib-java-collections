@@ -67,6 +67,33 @@ public interface IntKeyMap<T> extends Transformable<T> {
      */
     MutableIntKeyMap<T> mutate();
 
+    /**
+     * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
+     *
+     * Note that the order of the key-value pair within the map and the collection mutability is irrelevant.
+     *
+     * @param that Map to be contrasted to.
+     */
+    default boolean equalMap(IntKeyMap that) {
+        if (that == null) {
+            return false;
+        }
+
+        final IntSet keySet = keySet();
+        final IntSet thatKeySet = that.keySet();
+        if (keySet.size() != thatKeySet.size()) {
+            return false;
+        }
+
+        for (int key : keySet) {
+            if (!thatKeySet.contains(key) || !equal(get(key), that.get(key))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     final class Entry<E> {
         private final int _key;
         private final E _value;

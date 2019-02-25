@@ -405,8 +405,8 @@ abstract class MapTest<K, V> extends TestCase {
                 }
                 final Map<K, V> modifiedMap = mapBuilder.build();
 
-                assertFalse("map=" + map + "; mod=" + modifiedMap, map.equalMap(modifiedMap));
-                assertFalse("mod=" + modifiedMap + "; map=" + map, modifiedMap.equalMap(map));
+                assertFalse(map.equalMap(modifiedMap));
+                assertFalse(modifiedMap.equalMap(map));
             }
         }))));
     }
