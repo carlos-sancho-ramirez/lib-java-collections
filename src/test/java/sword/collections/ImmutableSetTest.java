@@ -253,14 +253,14 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Ab
         })))));
     }
 
-    public void testEqualsInItems() {
+    public void testEqualSet() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
-            assertTrue(set.equalsInItems(set));
+            assertTrue(set.equalSet(set));
             withSortFunc(sortFunction -> {
                 final Set<T> sortedSet = set.sort(sortFunction);
-                assertTrue(set.equalsInItems(sortedSet));
-                assertTrue(sortedSet.equalsInItems(set));
+                assertTrue(set.equalSet(sortedSet));
+                assertTrue(sortedSet.equalSet(set));
             });
 
             final ImmutableSet.Builder<T> setBuilder = supplier.newBuilder();
@@ -271,23 +271,23 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Ab
             }
             final Set<T> set2 = setBuilder.build();
 
-            assertFalse(set.equalsInItems(set2));
-            assertFalse(set2.equalsInItems(set));
+            assertFalse(set.equalSet(set2));
+            assertFalse(set2.equalSet(set));
 
             withSortFunc(sortFunction -> {
                 final Set<T> sortedSet = set.sort(sortFunction);
-                assertTrue(set.equalsInItems(sortedSet));
-                assertTrue(sortedSet.equalsInItems(set));
-                assertFalse(set2.equalsInItems(sortedSet));
-                assertFalse(sortedSet.equalsInItems(set2));
+                assertTrue(set.equalSet(sortedSet));
+                assertTrue(sortedSet.equalSet(set));
+                assertFalse(set2.equalSet(sortedSet));
+                assertFalse(sortedSet.equalSet(set2));
             });
 
             withSortFunc(sortFunction -> {
                 final Set<T> sortedSet = set2.sort(sortFunction);
-                assertTrue(set2.equalsInItems(sortedSet));
-                assertTrue(sortedSet.equalsInItems(set2));
-                assertFalse(set.equalsInItems(sortedSet));
-                assertFalse(sortedSet.equalsInItems(set));
+                assertTrue(set2.equalSet(sortedSet));
+                assertTrue(sortedSet.equalSet(set2));
+                assertFalse(set.equalSet(sortedSet));
+                assertFalse(sortedSet.equalSet(set));
             });
         }))));
     }

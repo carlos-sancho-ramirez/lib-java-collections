@@ -122,7 +122,7 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> i
     }
 
     @Override
-    public boolean equalsInItems(Set that) {
+    public boolean equalSet(Set that) {
         if (_keys.length != that.size()) {
             return false;
         }

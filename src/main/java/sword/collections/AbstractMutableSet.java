@@ -124,7 +124,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     }
 
     @Override
-    public boolean equalsInItems(Set that) {
+    public boolean equalSet(Set that) {
         if (_size != that.size()) {
             return false;
         }

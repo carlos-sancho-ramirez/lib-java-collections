@@ -84,5 +84,5 @@ public interface Set<T> extends Transformable<T> {
      * @param set set to be compared with this instance.
      * @return whether the given set contains equivalent values to this one.
      */
-    boolean equalsInItems(Set set);
+    boolean equalSet(Set set);
 }

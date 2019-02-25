@@ -116,7 +116,7 @@ public interface Map<K, V> extends Transformable<V> {
         }
 
         final Set<K> keySet = keySet();
-        if (!keySet.equalsInItems(that.keySet())) {
+        if (!keySet.equalSet(that.keySet())) {
             return false;
         }
 
