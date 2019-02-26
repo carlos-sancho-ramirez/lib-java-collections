@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableSortedMapTest extends MapTest<Integer, String> {
+public final class MutableSortedMapTest extends MapTest<Integer, String> implements MutableTraversableTest<String> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
@@ -25,7 +25,12 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> {
     }
 
     @Override
-    void withValue(Procedure<String> procedure) {
+    public MutableTraversableBuilder<String> newTraversableBuilder() {
+        return new HashCodeKeyTraversableBuilder();
+    }
+
+    @Override
+    public void withValue(Procedure<String> procedure) {
         withString(procedure);
     }
 
@@ -121,33 +126,18 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> {
         })));
     }
 
-    @Test
-    public void testClearWhenEmpty() {
-        final MutableMap<Integer, String> map = newBuilder().build();
-        assertFalse(map.clear());
-        assertTrue(map.isEmpty());
-    }
+    private static final class HashCodeKeyTraversableBuilder implements MutableTraversableBuilder<String> {
+        private final MutableSortedMap<Integer, String> map = new MutableSortedMap.Builder<Integer, String>((a, b) -> a < b).build();
 
-    @Test
-    public void testClearForSingleItem() {
-        withInt(value -> {
-            final MutableMap<Integer, String> map = newBuilder()
-                    .put(value, Integer.toString(value))
-                    .build();
-            assertTrue(map.clear());
-            assertTrue(map.isEmpty());
-        });
-    }
+        @Override
+        public HashCodeKeyTraversableBuilder add(String element) {
+            map.put(SortUtils.hashCode(element), element);
+            return this;
+        }
 
-    @Test
-    public void testClearForMultipleItems() {
-        withInt(a -> withInt(b -> {
-            final MutableMap<Integer, String> map = newBuilder()
-                    .put(a, Integer.toString(a))
-                    .put(b, Integer.toString(b))
-                    .build();
-            assertTrue(map.clear());
-            assertTrue(map.isEmpty());
-        }));
+        @Override
+        public MutableTraversable<String> build() {
+            return map;
+        }
     }
 }
