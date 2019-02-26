@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
 public final class MutableIntPairMapTest extends IntPairMapTest {
@@ -20,10 +23,12 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
         procedure.apply(this::valueIsEven);
     }
 
+    @Test
     public void testToImmutableForEmpty() {
         assertTrue(newBuilder().build().toImmutable().isEmpty());
     }
 
+    @Test
     public void testMutateForEmpty() {
         final MutableIntPairMap map1 = newBuilder().build();
         final MutableIntPairMap map2 = map1.mutate();
@@ -35,6 +40,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
         assertEquals(0, map2.get(1, 0));
     }
 
+    @Test
     public void testToImmutable() {
         withInt(a -> withInt(b -> {
             final MutableIntPairMap map1 = newBuilder().put(a, 1).put(b, 2).build();
@@ -53,6 +59,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
+    @Test
     public void testMutate() {
         final int defValue = -2;
         withInt(a -> withInt(b -> {
@@ -76,6 +83,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
+    @Test
     public void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntPairMap mutable = newBuilder()
@@ -89,6 +97,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
         })));
     }
 
+    @Test
     public void testEquals() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntPairMap mutable = newBuilder()
@@ -103,12 +112,14 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
         })));
     }
 
+    @Test
     public void testClearWhenEmpty() {
         final MutableIntPairMap collection = newBuilder().build();
         assertFalse(collection.clear());
         assertTrue(collection.isEmpty());
     }
 
+    @Test
     public void testClearForSingleItem() {
         withInt(value -> {
             final MutableIntPairMap collection = newBuilder()
@@ -119,6 +130,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
         });
     }
 
+    @Test
     public void testClearForMultipleItems() {
         withInt(a -> withInt(b -> {
             final MutableIntPairMap collection = newBuilder()

@@ -1,5 +1,7 @@
 package sword.collections;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
 
     private static final int[] INT_VALUES = {

@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
 abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
@@ -21,6 +24,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         assertEquals(expected, given);
     }
 
+    @Test
     public void testSizeForTwoElements() {
         withValue(a -> withValue(b -> {
             final MutableSet<T> list = newBuilder().add(a).add(b).build();
@@ -34,6 +38,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         }));
     }
 
+    @Test
     public void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final MutableSet<T> set = newBuilder().add(a).add(b).build();
@@ -59,10 +64,12 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         }));
     }
 
+    @Test
     public void testToImmutableForEmpty() {
         assertTrue(newBuilder().build().toImmutable().isEmpty());
     }
 
+    @Test
     public void testMutateForEmpty() {
         final MutableSet<T> set1 = newBuilder().build();
         withValue(value -> {
@@ -76,6 +83,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         });
     }
 
+    @Test
     public void testToImmutable() {
         withValue(a -> withValue(b -> {
             final MutableSet<T> set = newBuilder().add(a).add(b).build();
@@ -91,6 +99,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         }));
     }
 
+    @Test
     public void testMutate() {
         withValue(a -> withValue(b -> {
             final MutableSet<T> set1 = newBuilder().add(a).add(b).build();
@@ -110,6 +119,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         }));
     }
 
+    @Test
     @Override
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withValue(value -> {
@@ -127,6 +137,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     @Override
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
@@ -143,6 +154,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         }))));
     }
 
+    @Test
     public void testMapWhenEmpty() {
         withMapFunc(f -> {
             final MutableSet<T> set = newBuilder().build();
@@ -162,6 +174,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         });
     }
 
+    @Test
     public void testMapForSingleElement() {
         withMapFunc(f -> withValue(value -> {
             final MutableSet<T> set = newBuilder().add(value).build();
@@ -176,6 +189,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         }));
     }
 
+    @Test
     public void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> {
             final MutableSet<T> set = newIterableBuilder().add(a).add(b).build();
@@ -192,12 +206,14 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     public void testToListWhenEmpty() {
         final Set<T> set = newBuilder().build();
         assertTrue(set.isEmpty());
         assertTrue(set.toList().isEmpty());
     }
 
+    @Test
     public void testToList() {
         withValue(a -> withValue(b -> {
             final Set<T> set = newBuilder().add(a).add(b).build();
@@ -222,6 +238,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         }));
     }
 
+    @Test
     public void testSort() {
         withValue(a -> withValue(b -> withValue(c -> {
             final MutableSet<T> set = newBuilder().add(a).add(b).add(c).build();
@@ -244,6 +261,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     public void testEqualsInItems() {
         withValue(a -> withValue(b -> withValue(c -> {
             final Set<T> set = newBuilder().add(a).add(b).add(c).build();
@@ -283,12 +301,14 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     public void testClearWhenEmpty() {
         final MutableSet<T> collection = newBuilder().build();
         assertFalse(collection.clear());
         assertTrue(collection.isEmpty());
     }
 
+    @Test
     public void testClearForSingleItem() {
         withValue(value -> {
             final MutableSet<T> collection = newBuilder().add(value).build();
@@ -297,6 +317,7 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
         });
     }
 
+    @Test
     public void testClearForMultipleItems() {
         withValue(a -> withValue(b -> {
             final MutableSet<T> collection = newBuilder().add(a).add(b).build();

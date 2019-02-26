@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
 public final class MutableIntListTest extends AbstractMutableIntTransformableTest {
@@ -56,6 +59,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         return new MutableIntList.Builder();
     }
 
+    @Test
     public void testSizeForTwoElements() {
         withItem(a -> withItem(b -> {
             final MutableIntList list = newIntBuilder().add(a).add(b).build();
@@ -67,6 +71,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }));
     }
 
+    @Test
     public void testIteratingForMultipleElements() {
         withItem(a -> withItem(b -> {
             final MutableIntList list = newIntBuilder().add(a).add(b).build();
@@ -82,6 +87,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }));
     }
 
+    @Test
     public void testFindFirstWhenEmpty() {
         withFilterFunc(f -> withItem(defaultValue -> {
             final MutableIntList list = newIntBuilder().build();
@@ -89,6 +95,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }));
     }
 
+    @Test
     public void testFindFirstForSingleElement() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(value -> {
             final MutableIntList list = newIntBuilder().append(value).build();
@@ -103,6 +110,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         })));
     }
 
+    @Test
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
             final MutableIntList list = newIntBuilder().append(a).append(b).build();
@@ -120,6 +128,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }))));
     }
 
+    @Test
     public void testAppendWhenEmpty() {
         withItem(value -> {
             final ImmutableIntList empty = ImmutableIntList.empty();
@@ -130,6 +139,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         });
     }
 
+    @Test
     public void testAppendForASingleElement() {
         withItem(a -> withItem(value -> {
             final ImmutableIntList initList = new ImmutableIntList.Builder().append(a).build();
@@ -140,12 +150,14 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }));
     }
 
+    @Test
     public void testAppendAllWhenBothEmpty() {
         final ImmutableList<String> empty = ImmutableList.empty();
         final ImmutableList<String> result = empty.appendAll(empty);
         assertSame(empty, result);
     }
 
+    @Test
     public void testAppendANonEmptyListWhenEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withItem(value -> {
@@ -155,6 +167,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         });
     }
 
+    @Test
     public void testAppendAnEmptyListWhenNoEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withItem(value -> {
@@ -164,6 +177,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         });
     }
 
+    @Test
     public void testAppendAll() {
         withItem(a -> withItem(b -> withItem(c -> {
             final ImmutableIntList list1 = new ImmutableIntList.Builder().append(a).append(b).build();
@@ -183,10 +197,12 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         })));
     }
 
+    @Test
     public void testToImmutableForEmpty() {
         assertTrue(newIntBuilder().build().toImmutable().isEmpty());
     }
 
+    @Test
     public void testToImmutable() {
         withInt(a -> withInt(b -> {
             final MutableIntList list1 = newIntBuilder().add(a).add(b).build();
@@ -204,6 +220,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }));
     }
 
+    @Test
     public void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
             final MutableIntList mutable = newIntBuilder()
@@ -217,6 +234,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         })));
     }
 
+    @Test
     public void testEquals() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntList mutable = newIntBuilder()
@@ -231,6 +249,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         })));
     }
 
+    @Test
     public void testRemoveAtForSingleElementList() {
         withInt(a -> {
             final MutableIntList list = newIntBuilder().add(a).build();
@@ -239,6 +258,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         });
     }
 
+    @Test
     public void testRemoveFirstFor2ElementsList() {
         withInt(a -> withInt(b -> {
             final MutableIntList list = newIntBuilder().add(a).add(b).build();
@@ -248,6 +268,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }));
     }
 
+    @Test
     public void testRemoveLastFor2ElementsList() {
         withInt(a -> withInt(b -> {
             final MutableIntList list = newIntBuilder().add(a).add(b).build();
@@ -257,6 +278,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }));
     }
 
+    @Test
     public void testRemoveAt() {
         withInt(a -> withInt(b -> {
             for (int i = 0; i <= 4; i++) {
@@ -275,11 +297,13 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }));
     }
 
+    @Test
     public void testToSetWhenEmpty() {
         final IntList list = newIntBuilder().build();
         assertTrue(list.toSet().isEmpty());
     }
 
+    @Test
     public void testToSetWithSingleElement() {
         withItem(a -> {
             final IntList list = newIntBuilder().add(a).build();
@@ -289,6 +313,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         });
     }
 
+    @Test
     public void testToSetWithTwoElements() {
         withItem(a -> withItem(b -> {
             final IntList list = newIntBuilder().add(a).add(b).build();
@@ -311,12 +336,14 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         }));
     }
 
+    @Test
     public void testClearWhenEmpty() {
         final MutableIntList collection = newIntBuilder().build();
         assertFalse(collection.clear());
         assertTrue(collection.isEmpty());
     }
 
+    @Test
     public void testClearForSingleItem() {
         withInt(value -> {
             final MutableIntList collection = newIntBuilder().add(value).build();
@@ -325,6 +352,7 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
         });
     }
 
+    @Test
     public void testClearForMultipleItems() {
         withInt(a -> withInt(b -> {
             final MutableIntList collection = newIntBuilder().add(a).add(b).build();

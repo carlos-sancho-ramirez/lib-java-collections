@@ -1,9 +1,12 @@
 package sword.collections;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public final class SortUtilsTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+public final class SortUtilsTest {
+
+    @Test
     public void testCompareCharSequenceByUnicode() {
         final CharSequence[] values = {
                 null, "", "0", "00", "1", "9", "@", "A", "Z", "a", "abc", "bcd", "z", "あ"

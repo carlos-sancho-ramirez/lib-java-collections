@@ -1,21 +1,24 @@
 package sword.collections;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntPairMapTest extends TestCase {
+abstract class IntPairMapTest {
 
     abstract IntPairMapBuilder newBuilder();
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);
 
+    @Test
     public void testEmptyBuilderBuildsEmptyArray() {
         IntPairMap array = newBuilder().build();
         assertEquals(0, array.size());
     }
 
+    @Test
     public void testSize() {
         final int value = 14;
         withInt(a -> withInt(b -> withInt(c -> withInt(d -> {
@@ -43,6 +46,7 @@ abstract class IntPairMapTest extends TestCase {
         }))));
     }
 
+    @Test
     public void testGet() {
         final int defValue = -3;
         final int value = 21;
@@ -59,6 +63,7 @@ abstract class IntPairMapTest extends TestCase {
         }));
     }
 
+    @Test
     public void testKeyAtMethod() {
         withInt(value -> withInt(a -> withInt(b -> withInt(c -> {
             IntPairMap array = newBuilder()
@@ -81,6 +86,7 @@ abstract class IntPairMapTest extends TestCase {
         }))));
     }
 
+    @Test
     public void testValueAtMethod() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntPairMap array = newBuilder()
@@ -97,6 +103,7 @@ abstract class IntPairMapTest extends TestCase {
         })));
     }
 
+    @Test
     public void testKeySet() {
         for (int amount = 0; amount < 3; amount++) {
             final IntPairMapBuilder mapBuilder = newBuilder();
@@ -112,10 +119,12 @@ abstract class IntPairMapTest extends TestCase {
         }
     }
 
+    @Test
     public void testValueListWhenEmpty() {
         assertTrue(newBuilder().build().valueList().isEmpty());
     }
 
+    @Test
     public void testValueList() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntPairMap map = newBuilder()
@@ -133,6 +142,7 @@ abstract class IntPairMapTest extends TestCase {
         })));
     }
 
+    @Test
     public void testIndexOfKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final int value = 34;
@@ -148,6 +158,7 @@ abstract class IntPairMapTest extends TestCase {
         })));
     }
 
+    @Test
     public void testEntryIterator() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntPairMap array = newBuilder()
@@ -171,6 +182,7 @@ abstract class IntPairMapTest extends TestCase {
         })));
     }
 
+    @Test
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final IntPairMap map = newBuilder().build();
@@ -178,6 +190,7 @@ abstract class IntPairMapTest extends TestCase {
         });
     }
 
+    @Test
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final int value = key * key;
@@ -193,6 +206,7 @@ abstract class IntPairMapTest extends TestCase {
         }));
     }
 
+    @Test
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
             final int valueA = keyA * keyA;
@@ -228,6 +242,7 @@ abstract class IntPairMapTest extends TestCase {
         })));
     }
 
+    @Test
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final IntPairMap map = newBuilder().build();
@@ -235,6 +250,7 @@ abstract class IntPairMapTest extends TestCase {
         });
     }
 
+    @Test
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final int value = key * key;
@@ -250,6 +266,7 @@ abstract class IntPairMapTest extends TestCase {
         }));
     }
 
+    @Test
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
             final int valueA = keyA * keyA;

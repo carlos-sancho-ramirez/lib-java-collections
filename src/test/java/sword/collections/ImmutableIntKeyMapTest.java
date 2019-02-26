@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
@@ -104,6 +107,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         }
     }
 
+    @Test
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntKeyMap<String> map = newMapBuilder().build();
@@ -111,6 +115,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         });
     }
 
+    @Test
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final String value = Integer.toString(key);
@@ -122,6 +127,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         }));
     }
 
+    @Test
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
             final String valueA = Integer.toString(keyA);
@@ -157,6 +163,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         })));
     }
 
+    @Test
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntKeyMap<String> map = newMapBuilder().build();
@@ -164,6 +171,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         });
     }
 
+    @Test
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final String value = Integer.toString(key);
@@ -179,6 +187,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         }));
     }
 
+    @Test
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
             final String valueA = Integer.toString(keyA);
@@ -222,6 +231,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         return (str != null)? str.hashCode() : 0;
     }
 
+    @Test
     public void testMapValuesMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntKeyMap<String> map = new ImmutableIntKeyMap.Builder<String>()
@@ -239,6 +249,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         }));
     }
 
+    @Test
     public void testMapValuesForIntResultMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntKeyMap<String> map = new ImmutableIntKeyMap.Builder<String>()
@@ -256,6 +267,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         }));
     }
 
+    @Test
     public void testPutMethod() {
         withImmutableIntKeyMap(array -> withInt(key -> withString(value -> {
             if (array != null) {
@@ -280,6 +292,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         })));
     }
 
+    @Test
     public void testInvertMethod() {
         withImmutableIntKeyMap(array -> {
             if (array != null) {
@@ -311,17 +324,20 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         });
     }
 
+    @Test
     public void testKeySetWhenEmpty() {
         final ImmutableIntKeyMap<String> empty = ImmutableIntKeyMap.empty();
         assertSame(ImmutableIntSetImpl.empty(), empty.keySet());
     }
 
+    @Test
     public void testToImmutableForEmpty() {
         final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
         final ImmutableIntKeyMap<String> map = builder.build();
         assertSame(map, map.toImmutable());
     }
 
+    @Test
     public void testMutateForEmpty() {
         final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
         final ImmutableIntKeyMap<String> map1 = builder.build();
@@ -333,6 +349,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         assertEquals(null, map1.get(1, null));
     }
 
+    @Test
     public void testToImmutable() {
         withInt(a -> withInt(b -> {
             final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
@@ -342,6 +359,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         }));
     }
 
+    @Test
     public void testMutate() {
         withInt(a -> withInt(b -> {
             final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();

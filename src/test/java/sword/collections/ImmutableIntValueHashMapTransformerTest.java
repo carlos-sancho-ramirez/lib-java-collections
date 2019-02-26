@@ -1,5 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<ImmutableIntValueHashMap, IntTraversableBuilder<ImmutableIntValueHashMap>> {
 
     @Override
@@ -20,11 +25,13 @@ public final class ImmutableIntValueHashMapTransformerTest extends IntTransforme
         procedure.apply(Integer::toString);
     }
 
+    @Test
     public void testToMapWhenEmpty() {
         final ImmutableIntValueHashMap map = new ImmutableIntValueHashMap.Builder().build();
         assertTrue(map.iterator().toMap().isEmpty());
     }
 
+    @Test
     public void testToMapForSingleElement() {
         withValue(value -> {
             final ImmutableIntValueHashMap<String> transformable = new ImmutableIntValueHashMap.Builder<String>()
@@ -35,6 +42,7 @@ public final class ImmutableIntValueHashMapTransformerTest extends IntTransforme
         });
     }
 
+    @Test
     public void testToMapForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntValueHashMap<String> transformable = new ImmutableIntValueHashMap.Builder<String>()

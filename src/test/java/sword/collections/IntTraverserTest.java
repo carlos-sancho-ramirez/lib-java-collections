@@ -1,11 +1,12 @@
 package sword.collections;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversableBuilder<C>> extends TestCase {
+abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversableBuilder<C>> {
 
     abstract void withBuilder(Procedure<B> procedure);
 
@@ -29,6 +30,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         procedure.apply(IntTraverserTest::substract);
     }
 
+    @Test
     public void testContainsWhenEmpty() {
         withValue(value -> withBuilder(builder -> {
             if (builder.build().iterator().contains(value)) {
@@ -38,6 +40,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testContainsWhenContainingASingleElement() {
         withValue(valueIncluded -> withBuilder(builder -> {
             final C iterable = builder.add(valueIncluded).build();
@@ -53,6 +56,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testContainsWhenContainingMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final C iterable = builder.add(a).add(b).build();
@@ -74,6 +78,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         })));
     }
 
+    @Test
     public void testAnyMatchWhenEmpty() {
         withBuilder(builder -> {
             final C iterable = builder.build();
@@ -81,6 +86,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         });
     }
 
+    @Test
     public void testAnyMatchForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final C iterable = builder.add(value).build();
@@ -96,6 +102,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testAnyMatchForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final C iterable = builder.add(a).add(b).build();
@@ -111,6 +118,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         })));
     }
 
+    @Test
     public void testIndexOfWhenEmpty() {
         withBuilder(builder -> {
             C iterable = builder.build();
@@ -118,6 +126,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         });
     }
 
+    @Test
     public void testIndexOfForSingleElement() {
         withValue(a -> withBuilder(builder -> {
             final C iterable = builder.add(a).build();
@@ -128,6 +137,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final C iterable = builder.add(a).add(b).build();
@@ -145,6 +155,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         })));
     }
 
+    @Test
     public void testValueAtForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final IntTraverser traverser = builder.add(value).build().iterator();
@@ -152,6 +163,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testValueAtForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final C iterable = builder.add(a).add(b).build();
@@ -168,6 +180,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         })));
     }
 
+    @Test
     public void testFindFirstWhenEmpty() {
         withBuilder(builder -> {
             final C iterable = builder.build();
@@ -181,6 +194,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         });
     }
 
+    @Test
     public void testFindFirstForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final C iterable = builder.add(value).build();
@@ -191,6 +205,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testFindFirstForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final C iterable = builder.add(a).add(b).build();
@@ -211,6 +226,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         throw new AssertionError("This should not be called");
     }
 
+    @Test
     public void testReduceForSingleElement() {
         final IntReduceFunction func = IntTraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
@@ -219,6 +235,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testReduceForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).add(c).build();
@@ -234,6 +251,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }))));
     }
 
+    @Test
     public void testReduceWithValueWhenEmpty() {
         withBuilder(builder -> {
             final C iterable = builder.build();
@@ -242,6 +260,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         });
     }
 
+    @Test
     public void testReduceWithValueForSingleElement() {
         final IntReduceFunction func = IntTraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
@@ -250,6 +269,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testReduceWithValueForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final C iterable = builder.add(a).add(b).add(c).build();
@@ -266,6 +286,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }))));
     }
 
+    @Test
     public void testMinForSingleValue() {
         withValue(a -> withBuilder(builder -> {
             final C iterable = builder.add(a).build();
@@ -273,6 +294,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testMinForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final C iterable = builder.add(a).add(b).add(c).build();
@@ -282,6 +304,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }))));
     }
 
+    @Test
     public void testMaxForSingleValue() {
         withValue(a -> withBuilder(builder -> {
             final C iterable = builder.add(a).build();
@@ -289,6 +312,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
         }));
     }
 
+    @Test
     public void testMaxForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final C iterable = builder.add(a).add(b).add(c).build();

@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
@@ -80,10 +83,12 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
         return Integer.toString(key);
     }
 
+    @Test
     public void testToImmutableForEmpty() {
         assertTrue(newMapBuilder().build().toImmutable().isEmpty());
     }
 
+    @Test
     public void testMutateForEmpty() {
         final MutableIntKeyMap<String> map1 = new MutableIntKeyMap.Builder<String>().build();
         final MutableIntKeyMap<String> map2 = map1.mutate();
@@ -92,9 +97,10 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
         assertNotSame(map1, map2);
 
         map1.put(1, "");
-        assertEquals(null, map2.get(1, null));
+        assertNull(map2.get(1, null));
     }
 
+    @Test
     public void testToImmutable() {
         withInt(a -> withInt(b -> {
             final MutableIntKeyMap.Builder<String> builder = newMapBuilder();
@@ -114,6 +120,7 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
         }));
     }
 
+    @Test
     public void testMutate() {
         final String defValue = "notFound!";
         withInt(a -> withInt(b -> {
@@ -138,6 +145,7 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
         }));
     }
 
+    @Test
     public void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntKeyMap<String> mutable = newMapBuilder()
@@ -151,6 +159,7 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
         })));
     }
 
+    @Test
     public void testEquals() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntKeyMap<String> mutable = newMapBuilder()
@@ -165,12 +174,14 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
         })));
     }
 
+    @Test
     public void testClearWhenEmpty() {
         final MutableIntKeyMap<String> map = newMapBuilder().build();
         assertFalse(map.clear());
         assertTrue(map.isEmpty());
     }
 
+    @Test
     public void testClearForSingleItem() {
         withInt(value -> {
             final MutableIntKeyMap<String> map = newMapBuilder()
@@ -181,6 +192,7 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
         });
     }
 
+    @Test
     public void testClearForMultipleItems() {
         withInt(a -> withInt(b -> {
             final MutableIntKeyMap<String> map = newMapBuilder()

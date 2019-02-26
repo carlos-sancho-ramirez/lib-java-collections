@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
 public final class MutableIntSetTest extends AbstractMutableIntTransformableTest {
@@ -57,18 +60,20 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         procedure.apply(v -> v + 1);
     }
 
+    @Test
     public void testSizeForMultipleElements() {
         withItem(a -> withItem(b -> {
             final MutableIntSet set = newIntBuilder().add(a).add(b).build();
             if (a == b) {
-                assertEquals("Expected size 1 after building it adding twice value " + a, 1, set.size());
+                assertEquals(1, set.size(), "Expected size 1 after building it adding twice value " + a);
             }
             else {
-                assertEquals("Expected size 2 after building it adding two different values " + a + " and " + b, 2, set.size());
+                assertEquals(2, set.size(), "Expected size 2 after building it adding two different values " + a + " and " + b);
             }
         }));
     }
 
+    @Test
     public void testIteratingForMultipleElements() {
         withItem(a -> withItem(b -> {
             final MutableIntSet set = newIntBuilder().add(a).add(b).build();
@@ -98,6 +103,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testAdd() {
         withItem(a -> withItem(b -> {
             final MutableIntSet set = MutableIntSet.empty();
@@ -118,6 +124,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testAddAll() {
         withItem(a -> withItem(b -> {
             final ImmutableIntSet values = new ImmutableIntSetBuilder().add(a).add(b).build();
@@ -146,6 +153,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testRemoveForEmptySet() {
         final MutableIntSet set = newIntBuilder().build();
         withItem(value -> {
@@ -154,6 +162,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         });
     }
 
+    @Test
     public void testRemoveForASingleElement() {
         withItem(included -> {
             withItem(value -> {
@@ -170,6 +179,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         });
     }
 
+    @Test
     public void testValueAt() {
         withItem(a -> withItem(b -> withItem(c -> {
             final MutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
@@ -181,6 +191,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         })));
     }
 
+    @Test
     public void testToImmutableMethodReturnSameInstance() {
         withItem(a -> withItem(b -> {
             final MutableIntSet set = new MutableIntSet.Builder().add(a).add(b).build();
@@ -192,6 +203,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testMutate() {
         withItem(a -> withItem(b -> {
             final MutableIntSet set = new MutableIntSet.Builder().add(a).add(b).build();
@@ -215,6 +227,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         }));
     }
 
+    @Test
     @Override
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
@@ -234,12 +247,14 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         }))));
     }
 
+    @Test
     public void testToListWhenEmpty() {
         final IntSet set = newIntBuilder().build();
         assertTrue(set.isEmpty());
         assertTrue(set.toList().isEmpty());
     }
 
+    @Test
     public void testToList() {
         withItem(a -> withItem(b -> {
             final IntSet set = newIntBuilder().add(a).add(b).build();
@@ -264,12 +279,14 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testClearWhenEmpty() {
         final MutableIntSet collection = newIntBuilder().build();
         assertFalse(collection.clear());
         assertTrue(collection.isEmpty());
     }
 
+    @Test
     public void testClearForSingleItem() {
         withInt(value -> {
             final MutableIntSet collection = newIntBuilder().add(value).build();
@@ -278,6 +295,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         });
     }
 
+    @Test
     public void testClearForMultipleItems() {
         withInt(a -> withInt(b -> {
             final MutableIntSet collection = newIntBuilder().add(a).add(b).build();
@@ -286,6 +304,7 @@ public final class MutableIntSetTest extends AbstractMutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testEqualSet() {
         withItem(a -> withItem(b -> withItem(c -> {
             final IntSet set = newIntBuilder().add(a).add(b).add(c).build();

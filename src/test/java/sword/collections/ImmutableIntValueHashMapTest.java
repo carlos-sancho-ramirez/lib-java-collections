@@ -1,5 +1,7 @@
 package sword.collections;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest<String> {
 
     @Override

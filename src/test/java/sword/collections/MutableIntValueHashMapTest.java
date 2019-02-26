@@ -1,5 +1,9 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static sword.collections.TestUtils.withInt;
 
 public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<String> {
@@ -33,6 +37,7 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
         procedure.apply(v -> (v & 1) == 0);
     }
 
+    @Test
     public void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntValueMap<String> mutable = newBuilder()
@@ -46,6 +51,7 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
         })));
     }
 
+    @Test
     public void testEquals() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntValueMap<String> mutable = newBuilder()

@@ -1,5 +1,7 @@
 package sword.collections;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTest<String> {
 
     @Override

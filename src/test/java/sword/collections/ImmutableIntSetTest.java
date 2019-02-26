@@ -1,6 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest {
 
@@ -43,18 +47,20 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         procedure.apply(this::moduleFour);
     }
 
+    @Test
     public void testSizeForMultipleElements() {
         withItem(a -> withItem(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
             if (a == b) {
-                assertEquals("Expected size 1 after building it adding twice value " + a, 1, set.size());
+                assertEquals(1, set.size(), "Expected size 1 after building it adding twice value " + a);
             }
             else {
-                assertEquals("Expected size 2 after building it adding two different values " + a + " and " + b, 2, set.size());
+                assertEquals(2, set.size(), "Expected size 2 after building it adding two different values " + a + " and " + b);
             }
         }));
     }
 
+    @Test
     public void testIteratingForMultipleElements() {
         withItem(a -> withItem(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
@@ -84,6 +90,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testAdd() {
         withItem(a -> withItem(b -> {
             ImmutableIntSet set = newIntBuilder().build();
@@ -103,11 +110,13 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testAddAllForBothEmpty() {
         ImmutableIntSet set = newIntBuilder().build();
         assertSame(set, set.addAll(set));
     }
 
+    @Test
     public void testAddAllForEmptyGiven() {
         final ImmutableIntSet empty = newIntBuilder().build();
         withItem(a -> {
@@ -116,6 +125,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         });
     }
 
+    @Test
     public void testAddAll() {
         withItem(a -> withItem(b -> withItem(c -> withItem(d -> {
             ImmutableIntSet set1 = newIntBuilder().add(a).add(b).build();
@@ -125,13 +135,13 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         }))));
     }
 
+    @Test
     public void testRemoveForEmptySet() {
         final ImmutableIntSet set = newIntBuilder().build();
-        withItem(value -> {
-            assertSame("Removing on an empty set should always return the same set", set, set.remove(value));
-        });
+        withItem(value -> assertSame(set, set.remove(value), "Removing on an empty set should always return the same set"));
     }
 
+    @Test
     public void testRemoveForASingleElement() {
         withItem(included -> {
             final ImmutableIntSet set = newIntBuilder().add(included).build();
@@ -139,17 +149,17 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
                 if (included == value) {
                     final ImmutableIntSet emptySet = set.remove(value);
                     final String msg = "Removing value " + value + " from set containing only that value should return an empty set";
-                    assertNotSame(msg, set, emptySet);
-                    assertTrue(msg, emptySet.isEmpty());
+                    assertNotSame(set, emptySet, msg);
+                    assertTrue(emptySet.isEmpty(), msg);
                 }
                 else {
-                    assertSame("Removing an element that is not included in the set should always return the same set",
-                            set, set.remove(value));
+                    assertSame(set, set.remove(value), "Removing an element that is not included in the set should always return the same set");
                 }
             });
         });
     }
 
+    @Test
     public void testValueAt() {
         withItem(a -> withItem(b -> withItem(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
@@ -161,6 +171,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         })));
     }
 
+    @Test
     public void testToImmutableMethodReturnSameInstance() {
         withItem(a -> withItem(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
@@ -168,6 +179,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testMutate() {
         withItem(a -> withItem(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
@@ -180,6 +192,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         }));
     }
 
+    @Test
     @Override
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
@@ -199,12 +212,14 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         }))));
     }
 
+    @Test
     public void testToListWhenEmpty() {
         final ImmutableIntSet set = newIntBuilder().build();
         assertTrue(set.isEmpty());
         assertTrue(set.toList().isEmpty());
     }
 
+    @Test
     public void testToList() {
         withItem(a -> withItem(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
@@ -229,6 +244,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         }));
     }
 
+    @Test
     public void testGroupByWhenEmpty() {
         final IntFunction<Integer> func = str -> {
             throw new AssertionError("This function should not be executed");
@@ -237,6 +253,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         assertTrue(list.groupBy(func).isEmpty());
     }
 
+    @Test
     public void testGroupBy() {
         withGroupingFunc(func -> withItem(a -> withItem(b -> withItem(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
@@ -343,6 +360,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         }))));
     }
 
+    @Test
     public void testGroupByIntWhenEmpty() {
         final IntToIntFunction func = str -> {
             throw new AssertionError("This function should not be executed");
@@ -351,6 +369,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         assertTrue(list.groupByInt(func).isEmpty());
     }
 
+    @Test
     public void testGroupByInt() {
         withGroupingIntFunc(func -> withItem(a -> withItem(b -> withItem(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
@@ -457,6 +476,7 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
         }))));
     }
 
+    @Test
     public void testEqualSet() {
         withItem(a -> withItem(b -> withItem(c -> {
             final IntSet set = newIntBuilder().add(a).add(b).add(c).build();

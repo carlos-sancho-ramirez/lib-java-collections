@@ -1,6 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransformableTest {
 
@@ -22,6 +26,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
         assertSame(expected, given);
     }
 
+    @Test
     public void testMapWhenEmpty() {
         final IntFunction func = unused -> {
             throw new AssertionError("This function should not be called");
@@ -31,6 +36,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
         assertSame(ImmutableList.empty(), collection.map(func));
     }
 
+    @Test
     public void testMapForSingleElement() {
         withMapFunc(f -> withItem(value -> {
             final ImmutableIntTraversable collection = newIntBuilder().add(value).build();
@@ -42,6 +48,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
         }));
     }
 
+    @Test
     public void testMapForMultipleElements() {
         withMapFunc(f -> withItem(a -> withItem(b -> {
             final ImmutableIntTraversable collection = newIntBuilder().add(a).add(b).build();
@@ -58,6 +65,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
         })));
     }
 
+    @Test
     public void testMapToIntWhenEmpty() {
         final IntToIntFunction func = unused -> {
             throw new AssertionError("This function should not be called");
@@ -67,6 +75,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
         assertSame(ImmutableIntList.empty(), collection.mapToInt(func));
     }
 
+    @Test
     public void testMapToIntForSingleElement() {
         withMapToIntFunc(f -> withItem(value -> {
             final Iterator<Integer> iterator = newIntBuilder().add(value).build().mapToInt(f).iterator();
@@ -76,6 +85,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
         }));
     }
 
+    @Test
     public void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withItem(a -> withItem(b -> {
             final ImmutableIntTraversable collection = newIntBuilder().add(a).add(b).build();

@@ -1,12 +1,13 @@
 package sword.collections;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class AbstractIntTraversableTest extends TestCase {
+abstract class AbstractIntTraversableTest {
 
     abstract AbstractIntTraversable emptyCollection();
 
@@ -22,45 +23,52 @@ abstract class AbstractIntTraversableTest extends TestCase {
         procedure.apply(this::hashReduceFunction);
     }
 
+    @Test
     public void testSizeForNoElements() {
-        final Sizable iterable = (Sizable) newIntBuilder().build();
-        assertEquals("Expected size 0 after building an empty list", 0, iterable.size());
+        final Sizable iterable = newIntBuilder().build();
+        assertEquals(0, iterable.size(), "Expected size 0 after building an empty list");
     }
 
+    @Test
     public void testSizeForOneElement() {
         withItem(value -> {
-            final Sizable iterable = (Sizable) newIntBuilder().add(value).build();
-            assertEquals("Expected size 1 after building it adding a single value " + value, 1, iterable.size());
+            final Sizable iterable = newIntBuilder().add(value).build();
+            assertEquals(1, iterable.size(), "Expected size 1 after building it adding a single value " + value);
         });
     }
 
+    @Test
     public void testIsEmptyForNoElements() {
-        final Sizable list = (Sizable) newIntBuilder().build();
+        final Sizable list = newIntBuilder().build();
         assertTrue(list.isEmpty());
     }
 
+    @Test
     public void testIsEmptyForASingleElement() {
         withItem(value -> {
-            final Sizable iterable = (Sizable) newIntBuilder().add(value).build();
-            assertFalse("isEmpty is expected to return false when iterable includes " + value, iterable.isEmpty());
+            final Sizable iterable = newIntBuilder().add(value).build();
+            assertFalse(iterable.isEmpty(), "isEmpty is expected to return false when iterable includes " + value);
         });
     }
 
+    @Test
     public void testIteratingForEmptyList() {
         final IntTraversable collection = newIntBuilder().build();
-        assertFalse("Expected an empty iterator for an empty collection", collection.iterator().hasNext());
+        assertFalse(collection.iterator().hasNext(), "Expected an empty iterator for an empty collection");
     }
 
+    @Test
     public void testIteratingForASingleElement() {
         withItem(value -> {
             final IntTraversable list = newIntBuilder().add(value).build();
             final Iterator<Integer> iterator = list.iterator();
-            assertTrue("Expected true in hasNext for no empty iterators", iterator.hasNext());
+            assertTrue(iterator.hasNext(), "Expected true in hasNext for no empty iterators");
             assertEquals(value, iterator.next().intValue());
-            assertFalse("Expected false in hasNext while all elements loaded. Failing for value " + value, iterator.hasNext());
+            assertFalse(iterator.hasNext(), "Expected false in hasNext while all elements loaded. Failing for value " + value);
         });
     }
 
+    @Test
     public void testContainsWhenEmpty() {
         withItem(value -> {
             final IntTraversable list = newIntBuilder().build();
@@ -71,6 +79,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         });
     }
 
+    @Test
     public void testContainsWhenContainingASingleElement() {
         withItem(valueIncluded -> {
             final IntTraversable list = newIntBuilder().add(valueIncluded).build();
@@ -85,6 +94,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         });
     }
 
+    @Test
     public void testContainsWhenContainingMultipleElements() {
         withItem(a -> withItem(b -> {
             final IntTraversable list = newIntBuilder().add(a).add(b).build();
@@ -99,11 +109,13 @@ abstract class AbstractIntTraversableTest extends TestCase {
         }));
     }
 
+    @Test
     public void testAnyMatchWhenEmpty() {
         final IntTraversable iterable = newIntBuilder().build();
         withFilterFunc(f -> assertFalse(iterable.anyMatch(f)));
     }
 
+    @Test
     public void testAnyMatchForSingleElement() {
         withItem(value -> {
             final IntTraversable iterable = newIntBuilder().add(value).build();
@@ -118,6 +130,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         });
     }
 
+    @Test
     public void testAnyMatchForMultipleElements() {
         withItem(a -> withItem(b -> {
             final IntTraversable iterable = newIntBuilder().add(a).add(b).build();
@@ -132,12 +145,14 @@ abstract class AbstractIntTraversableTest extends TestCase {
         }));
     }
 
+    @Test
     public void testIndexOfWhenEmpty() {
         withItem(value -> {
             assertEquals(-1, newIntBuilder().build().indexOf(value));
         });
     }
 
+    @Test
     public void testIndexOfForSingleElement() {
         withItem(a -> withItem(value -> {
             final IntTraversable list = newIntBuilder().add(a).build();
@@ -152,6 +167,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         }));
     }
 
+    @Test
     public void testIndexOfForMultipleElements() {
         withItem(a -> withItem(b -> withItem(value -> {
             final IntTraversable list = newIntBuilder().add(a).add(b).build();
@@ -174,6 +190,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         })));
     }
 
+    @Test
     public void testFindFirstWhenEmpty() {
         withFilterFunc(f -> withItem(defaultValue -> {
             final IntTraversable collection = newIntBuilder().build();
@@ -181,6 +198,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         }));
     }
 
+    @Test
     public void testFindFirstForSingleElement() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(value -> {
             final IntTraversable collection = newIntBuilder().add(value).build();
@@ -195,6 +213,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         })));
     }
 
+    @Test
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
             final IntTraversable collection = newIntBuilder().add(a).add(b).build();
@@ -214,6 +233,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         return 0;
     }
 
+    @Test
     public void testReduceForSingleElement() {
         withItem(value -> {
             final IntTraversable iterable = newIntBuilder().add(value).build();
@@ -221,6 +241,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         });
     }
 
+    @Test
     public void testReduceForMultipleElements() {
         withReduceFunction(func -> withItem(a -> withItem(b -> withItem(c -> {
             final IntTraversable iterable = newIntBuilder().add(a).add(b).add(c).build();
@@ -234,6 +255,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         }))));
     }
 
+    @Test
     public void testReduceWithValueWhenEmpty() {
         withItem(value -> {
             final IntTraversable iterable = newIntBuilder().build();
@@ -241,6 +263,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         });
     }
 
+    @Test
     public void testReduceWithValueForSingleElement() {
         withItem(value -> {
             final IntTraversable iterable = newIntBuilder().add(value).build();
@@ -248,6 +271,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         });
     }
 
+    @Test
     public void testReduceWithValueForMultipleElements() {
         withReduceFunction(func -> withItem(a -> withItem(b -> withItem(c -> {
             final IntTraversable iterable = newIntBuilder().add(a).add(b).add(c).build();
@@ -261,6 +285,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         }))));
     }
 
+    @Test
     public void testMinForSingleValue() {
         withItem(a -> {
             final IntTraversable iterable = newIntBuilder().add(a).build();
@@ -268,6 +293,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         });
     }
 
+    @Test
     public void testMinForMultipleValues() {
         withItem(a -> withItem(b -> withItem(c -> {
             final IntTraversable iterable = newIntBuilder().add(a).add(b).add(c).build();
@@ -277,6 +303,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         })));
     }
 
+    @Test
     public void testMaxForSingleValue() {
         withItem(a -> {
             final IntTraversable iterable = newIntBuilder().add(a).build();
@@ -284,6 +311,7 @@ abstract class AbstractIntTraversableTest extends TestCase {
         });
     }
 
+    @Test
     public void testMaxForMultipleValues() {
         withItem(a -> withItem(b -> withItem(c -> {
             final IntTraversable iterable = newIntBuilder().add(a).add(b).add(c).build();

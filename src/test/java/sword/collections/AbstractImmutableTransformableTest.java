@@ -1,6 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract class AbstractImmutableTransformableTest<T> extends AbstractTransformableTest<T> {
 
@@ -21,12 +25,14 @@ abstract class AbstractImmutableTransformableTest<T> extends AbstractTransformab
         assertSame(expected, given);
     }
 
+    @Test
     public void testMapWhenEmpty() {
         withMapFunc(f -> {
             assertFalse(newIterableBuilder().build().map(f).iterator().hasNext());
         });
     }
 
+    @Test
     public void testMapForSingleElement() {
         withMapFunc(f -> withValue(value -> {
             final ImmutableTransformable<T> collection = newIterableBuilder().add(value).build();
@@ -38,6 +44,7 @@ abstract class AbstractImmutableTransformableTest<T> extends AbstractTransformab
         }));
     }
 
+    @Test
     public void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> {
             final ImmutableTransformable<T> collection = newIterableBuilder().add(a).add(b).build();
@@ -54,12 +61,14 @@ abstract class AbstractImmutableTransformableTest<T> extends AbstractTransformab
         })));
     }
 
+    @Test
     public void testMapToIntWhenEmpty() {
         withMapToIntFunc(f -> {
             assertFalse(newIterableBuilder().build().mapToInt(f).iterator().hasNext());
         });
     }
 
+    @Test
     public void testMapToIntForSingleElement() {
         withMapToIntFunc(f -> withValue(value -> {
             final ImmutableTransformable<T> collection = newIterableBuilder().add(value).build();
@@ -71,6 +80,7 @@ abstract class AbstractImmutableTransformableTest<T> extends AbstractTransformab
         }));
     }
 
+    @Test
     public void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withValue(a -> withValue(b -> {
             final ImmutableTransformable<T> collection = newIterableBuilder().add(a).add(b).build();

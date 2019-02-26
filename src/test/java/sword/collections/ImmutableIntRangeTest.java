@@ -1,10 +1,12 @@
 package sword.collections;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-public class ImmutableIntRangeTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ImmutableIntRangeTest {
 
     // This is used in some tests that iterates in a range instance as the maximum allowed size.
     // If the size is exceeded, then that range instance is not tested.
@@ -68,12 +70,12 @@ public class ImmutableIntRangeTest extends TestCase {
         procedure.apply(this::moduleFour);
     }
 
+    @Test
     public void testMinMaxAndSizeConsistency() {
-        withRange(range -> {
-            assertEquals(range.size(), range.max() - range.min() + 1);
-        });
+        withRange(range -> assertEquals(range.size(), range.max() - range.min() + 1));
     }
 
+    @Test
     public void testContains() {
         withRange(range -> withValue(value -> {
             if (value >= range.min() && value <= range.max()) {
@@ -85,6 +87,7 @@ public class ImmutableIntRangeTest extends TestCase {
         }));
     }
 
+    @Test
     public void testIteration() {
         withSmallRange(range -> {
             final int max = range.max();
@@ -98,6 +101,7 @@ public class ImmutableIntRangeTest extends TestCase {
         });
     }
 
+    @Test
     public void testIndexOfForSingleElement() {
         withValue(a -> {
             final IntTraversable list = new ImmutableIntRange(a, a);
@@ -108,6 +112,7 @@ public class ImmutableIntRangeTest extends TestCase {
         });
     }
 
+    @Test
     public void testIndexOfForMultipleElements() {
         withRange(range -> {
             final int min = range.min();
@@ -119,12 +124,14 @@ public class ImmutableIntRangeTest extends TestCase {
         });
     }
 
+    @Test
     public void testToImmutable() {
         withRange(range -> {
             assertSame(range, range.toImmutable());
         });
     }
 
+    @Test
     public void testMutable() {
         withSmallRange(range -> {
             final MutableIntSet set = range.mutate();
@@ -134,6 +141,7 @@ public class ImmutableIntRangeTest extends TestCase {
         });
     }
 
+    @Test
     public void testAdd() {
         withSmallRange(range -> withValue(value -> {
             final ImmutableIntSet set = range.add(value);
@@ -151,6 +159,7 @@ public class ImmutableIntRangeTest extends TestCase {
         }));
     }
 
+    @Test
     public void testRemove() {
         withSmallRange(range -> withValue(value -> {
             final ImmutableIntSet set = range.remove(value);
@@ -172,6 +181,7 @@ public class ImmutableIntRangeTest extends TestCase {
         }));
     }
 
+    @Test
     public void testToList() {
         for (int min : INT_VALUES) {
             for (int i = 0; i < 3; i++) {
@@ -190,6 +200,7 @@ public class ImmutableIntRangeTest extends TestCase {
         }
     }
 
+    @Test
     public void testGroupBy() {
         withGroupingFunc(func -> withSmallRange(range -> {
             final ImmutableMap<String, ImmutableIntSet> map = range.groupBy(func);
@@ -218,6 +229,7 @@ public class ImmutableIntRangeTest extends TestCase {
         }));
     }
 
+    @Test
     public void testGroupByInt() {
         withGroupingIntFunc(func -> withSmallRange(range -> {
             final ImmutableIntKeyMap<ImmutableIntSet> map = range.groupByInt(func);
@@ -246,6 +258,7 @@ public class ImmutableIntRangeTest extends TestCase {
         }));
     }
 
+    @Test
     public void testMap() {
         withSmallRange(range -> withMapFunc(func -> {
             final Iterator<Integer> it = range.iterator();
@@ -259,6 +272,7 @@ public class ImmutableIntRangeTest extends TestCase {
         }));
     }
 
+    @Test
     public void testMapToInt() {
         withSmallRange(range -> withMapToIntFunc(func -> {
             final Iterator<Integer> it = range.iterator();

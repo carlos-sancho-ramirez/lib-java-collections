@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
@@ -49,6 +52,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         procedure.apply(ImmutableHashMap.Builder::new);
     }
 
+    @Test
     public void testToImmutableMethod() {
         withKey(a -> withKey(b -> {
             final ImmutableMap<Integer, String> map = newBuilder()
@@ -59,6 +63,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         }));
     }
 
+    @Test
     public void testPutMethod() {
         withKey(a -> withKey(b -> withKey(key -> withValue(value -> {
             final ImmutableHashMap<Integer, String> map = newBuilder()
@@ -103,6 +108,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         procedure.apply(this::hashCodeIsEven);
     }
 
+    @Test
     @Override
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
@@ -111,6 +117,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         });
     }
 
+    @Test
     @Override
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
@@ -123,6 +130,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         }));
     }
 
+    @Test
     @Override
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(a -> withInt(b -> {
@@ -161,6 +169,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         })));
     }
 
+    @Test
     @Override
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
@@ -169,6 +178,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         });
     }
 
+    @Test
     @Override
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
@@ -181,6 +191,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         }));
     }
 
+    @Test
     @Override
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(a -> withInt(b -> {
@@ -219,6 +230,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         })));
     }
 
+    @Test
     public void testMapValuesForIntResult() {
         withKey(ka -> withKey(kb -> {
             final String va = valueFromKey(ka);
@@ -240,6 +252,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> {
         }));
     }
 
+    @Test
     public void testMapValues() {
         withKey(ka -> withKey(kb -> {
             final String va = valueFromKey(ka);

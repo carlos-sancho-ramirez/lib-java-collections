@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
 abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
@@ -39,12 +42,14 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         return new IterableBuilderAdapter();
     }
 
+    @Test
     public void testEmptyBuilderBuildsEmptyArray() {
         IntKeyMapBuilder<T> builder = newMapBuilder();
         IntKeyMap<T> array = builder.build();
         assertEquals(0, array.size());
     }
 
+    @Test
     public void testSize() {
         final T value = getTestValue();
         withInt(a -> withInt(b -> withInt(c -> withInt(d -> {
@@ -73,6 +78,7 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         }))));
     }
 
+    @Test
     public void testGet() {
         final T value = getTestValue();
         final T defValue = getTestValue2();
@@ -90,6 +96,7 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         }));
     }
 
+    @Test
     public void testKeyAtMethod() {
         final T value = getTestValue();
         withInt(a -> withInt(b -> withInt(c -> {
@@ -114,6 +121,7 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     public void testValueAtMethod() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntKeyMapBuilder<T> builder = newMapBuilder();
@@ -131,12 +139,14 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     public void testKeySetWhenEmpty() {
         final IntKeyMapBuilder<T> builder = newMapBuilder();
         final IntKeyMap<T> map = builder.build();
         assertTrue(map.keySet().isEmpty());
     }
 
+    @Test
     public void testKeySet() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntKeyMapBuilder<T> builder = newMapBuilder();
@@ -152,12 +162,14 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     public void testValueListWhenEmpty() {
         final IntKeyMapBuilder<T> builder = newMapBuilder();
         final IntKeyMap<T> map = builder.build();
         assertTrue(map.valueList().isEmpty());
     }
 
+    @Test
     public void testValueList() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntKeyMapBuilder<T> builder = newMapBuilder();
@@ -176,6 +188,7 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     public void testIndexOfKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final T value = getTestValue();
@@ -192,6 +205,7 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     public void testEntryIterator() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntKeyMapBuilder<T> builder = newMapBuilder();
@@ -216,6 +230,7 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         })));
     }
 
+    @Test
     public void testEqualMapReturnsFalseWhenAPairIsMissing() {
         withInt(a -> withInt(b -> withInt(c -> withMapBuilderSupplier(supplier -> {
             final IntKeyMap<T> map = supplier.newBuilder()
@@ -236,6 +251,7 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         }))));
     }
 
+    @Test
     public void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
         withInt(a -> withInt(b -> withInt(c -> withMapBuilderSupplier(supplier -> {
             final IntKeyMap<T> map = supplier.newBuilder()
@@ -259,6 +275,7 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
         }))));
     }
 
+    @Test
     public void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
         withInt(a -> withInt(b -> withInt(c -> withMapBuilderSupplier(supplier -> {
             final IntKeyMap<T> map = supplier.newBuilder()

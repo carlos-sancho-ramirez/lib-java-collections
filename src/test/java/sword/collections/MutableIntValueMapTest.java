@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
@@ -11,12 +14,14 @@ abstract class MutableIntValueMapTest<T> extends IntValueMapTest<T> {
     abstract MutableIntValueMap.Builder<T> newBuilder();
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);
 
+    @Test
     public void testClearWhenEmpty() {
         final MutableIntValueMap<T> collection = newBuilder().build().mutate();
         assertFalse(collection.clear());
         assertTrue(collection.isEmpty());
     }
 
+    @Test
     public void testClearForSingleItem() {
         withInt(value -> {
             final MutableIntValueMap<T> collection = newBuilder()
@@ -27,6 +32,7 @@ abstract class MutableIntValueMapTest<T> extends IntValueMapTest<T> {
         });
     }
 
+    @Test
     public void testClearForMultipleItems() {
         withInt(a -> withInt(b -> {
             final MutableIntValueMap<T> collection = newBuilder()
@@ -38,6 +44,7 @@ abstract class MutableIntValueMapTest<T> extends IntValueMapTest<T> {
         }));
     }
 
+    @Test
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final IntValueMap<T> map = newBuilder().build();
@@ -45,6 +52,7 @@ abstract class MutableIntValueMapTest<T> extends IntValueMapTest<T> {
         });
     }
 
+    @Test
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withKey(key -> {
             final int value = valueFromKey(key);
@@ -60,6 +68,7 @@ abstract class MutableIntValueMapTest<T> extends IntValueMapTest<T> {
         }));
     }
 
+    @Test
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final int valueA = valueFromKey(keyA);
@@ -100,6 +109,7 @@ abstract class MutableIntValueMapTest<T> extends IntValueMapTest<T> {
         })));
     }
 
+    @Test
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final IntValueMap<T> map = newBuilder().build();
@@ -107,6 +117,7 @@ abstract class MutableIntValueMapTest<T> extends IntValueMapTest<T> {
         });
     }
 
+    @Test
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withKey(key -> {
             final int value = valueFromKey(key);
@@ -122,6 +133,7 @@ abstract class MutableIntValueMapTest<T> extends IntValueMapTest<T> {
         }));
     }
 
+    @Test
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final int valueA = valueFromKey(keyA);

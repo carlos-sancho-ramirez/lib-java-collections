@@ -1,13 +1,14 @@
 package sword.collections;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntValueMapTest<T> extends TestCase {
+abstract class IntValueMapTest<T> {
 
     abstract IntValueMap.Builder<T> newBuilder();
 
@@ -15,12 +16,14 @@ abstract class IntValueMapTest<T> extends TestCase {
     abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
     abstract T keyFromInt(int value);
 
+    @Test
     public void testEmptyBuilderBuildsEmptyArray() {
         final IntValueMap<T> array = newBuilder().build();
         assertEquals(0, array.size());
         assertFalse(array.iterator().hasNext());
     }
 
+    @Test
     public void testBuilderWithSingleElementBuildsExpectedArray() {
         withKey(key -> withInt(value -> {
             final IntValueMap<T> array = newBuilder()
@@ -33,6 +36,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         }));
     }
 
+    @Test
     public void testSize() {
         final int value = 4;
         withKey(a -> withKey(b -> withKey(c -> {
@@ -55,6 +59,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         })));
     }
 
+    @Test
     public void testGet() {
         final int value = 45;
         final int defValue = 3;
@@ -71,6 +76,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         }));
     }
 
+    @Test
     public void testKeyAtMethod() {
         final int value = 6;
         withKey(a -> withKey(b -> withKey(c -> {
@@ -102,6 +108,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         return (str != null)? str.hashCode() : 0;
     }
 
+    @Test
     public void testValueAtMethod() {
         withKey(a -> withKey(b -> withKey(c -> {
             IntValueMap<T> map = newBuilder()
@@ -118,10 +125,12 @@ abstract class IntValueMapTest<T> extends TestCase {
         })));
     }
 
+    @Test
     public void testKeySetWhenEmpty() {
         assertTrue(newBuilder().build().isEmpty());
     }
 
+    @Test
     public void testKeySet() {
         final int value = 125;
         for (int amount = 0; amount < 3; amount++) {
@@ -139,10 +148,12 @@ abstract class IntValueMapTest<T> extends TestCase {
         }
     }
 
+    @Test
     public void testValueListWhenEmpty() {
         assertTrue(newBuilder().build().valueList().isEmpty());
     }
 
+    @Test
     public void testValueList() {
         withKey(a -> withKey(b -> withKey(c -> {
             final IntValueMap<T> map = newBuilder()
@@ -160,6 +171,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         })));
     }
 
+    @Test
     public void testIndexOfKey() {
         final int value = 37;
         withKey(a -> withKey(b -> withKey(c -> {
@@ -175,6 +187,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         })));
     }
 
+    @Test
     public void testEntryIterator() {
         withKey(a -> withKey(b -> withKey(c -> {
             IntValueMap<T> map = newBuilder()
@@ -198,6 +211,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         })));
     }
 
+    @Test
     public void testMutateMethod() {
         withKey(a -> withKey(b -> {
             IntValueMap<T> map1 = newBuilder()
@@ -226,6 +240,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         }));
     }
 
+    @Test
     public void testSortWhenEmpty() {
         final SortFunction<T> func = (a, b) -> {
             throw new AssertionError("Should not be called");
@@ -233,6 +248,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         assertTrue(newBuilder().build().sort(func).isEmpty());
     }
 
+    @Test
     public void testSortForSingleElement() {
         final SortFunction<T> func = (a, b) -> {
             throw new AssertionError("Should not be called");
@@ -246,6 +262,7 @@ abstract class IntValueMapTest<T> extends TestCase {
         });
     }
 
+    @Test
     public void testSort() {
         withKey(a -> withKey(b -> withKey(c -> {
             final IntValueMap<T> map = newBuilder()
@@ -256,7 +273,7 @@ abstract class IntValueMapTest<T> extends TestCase {
             final int mapLength = map.size();
             withSortFunc(f -> {
                 final IntValueMap<T> sortedMap = map.sort(f);
-                assertEquals(map.toString(), mapLength, sortedMap.size());
+                assertEquals(mapLength, sortedMap.size(), map.toString());
                 for (int i = 1; i < mapLength; i++) {
                     assertFalse(f.lessThan(sortedMap.keyAt(i), sortedMap.keyAt(i - 1)));
                 }

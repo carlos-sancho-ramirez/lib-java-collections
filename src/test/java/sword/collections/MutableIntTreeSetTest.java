@@ -1,5 +1,9 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 public final class MutableIntTreeSetTest extends AbstractIntTraversableTest {
 
     private final int[] intValues = {
@@ -32,6 +36,7 @@ public final class MutableIntTreeSetTest extends AbstractIntTraversableTest {
         procedure.apply(MutableIntTreeSetTest::evenIntFilter);
     }
 
+    @Test
     public void testIteratorOrderForAscending() {
         final int amount = 10;
         final MutableIntTreeSet set = new MutableIntTreeSet();
@@ -48,6 +53,7 @@ public final class MutableIntTreeSetTest extends AbstractIntTraversableTest {
         assertFalse(traverser.hasNext());
     }
 
+    @Test
     public void testIteratorOrderForDescending() {
         final int amount = 10;
         final MutableIntTreeSet set = new MutableIntTreeSet();

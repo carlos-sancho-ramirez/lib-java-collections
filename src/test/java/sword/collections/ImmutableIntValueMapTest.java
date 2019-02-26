@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
@@ -28,6 +31,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
     @Override
     abstract ImmutableIntValueMap.Builder<T> newBuilder();
 
+    @Test
     public void testInverted() {
         withInvertibleArray(invertedArray -> {
             final ImmutableIntKeyMap<T> array = invertedArray.invert();
@@ -39,6 +43,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
         });
     }
 
+    @Test
     public void testKeySet() {
         withInvertibleArray(array -> {
             final ImmutableSet<T> result = array.keySet();
@@ -60,6 +65,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
         procedure.apply(this::valueIsEven);
     }
 
+    @Test
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntValueMap<T> map = newBuilder().build();
@@ -69,6 +75,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
 
     abstract void assertEmpty(ImmutableIntValueMap<T> map);
 
+    @Test
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(value -> {
             final T key = keyFromInt(value);
@@ -84,6 +91,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
         }));
     }
 
+    @Test
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(valueA -> withInt(valueB -> {
             final T keyA = keyFromInt(valueA);
@@ -119,6 +127,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
         })));
     }
 
+    @Test
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntValueMap<T> map = newBuilder().build();
@@ -126,6 +135,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
         });
     }
 
+    @Test
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(value -> {
             final T key = keyFromInt(value);
@@ -141,6 +151,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
         }));
     }
 
+    @Test
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(valueA -> withInt(valueB -> {
             final T keyA = keyFromInt(valueA);
@@ -176,6 +187,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
         })));
     }
 
+    @Test
     public void testMapToIntMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntValueMap<T> map = newBuilder()
@@ -195,6 +207,7 @@ abstract class ImmutableIntValueMapTest<T> extends IntValueMapTest<T> {
         }));
     }
 
+    @Test
     public void testMapValues() {
         withInt(a -> withInt(b -> {
             final ImmutableIntValueMap<T> map = newBuilder()

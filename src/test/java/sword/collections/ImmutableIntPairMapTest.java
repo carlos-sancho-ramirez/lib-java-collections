@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
 public final class ImmutableIntPairMapTest extends IntPairMapTest {
@@ -47,6 +50,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         procedure.apply(this::valueIsEven);
     }
 
+    @Test
     @Override
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
@@ -55,6 +59,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         });
     }
 
+    @Test
     @Override
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
@@ -71,6 +76,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
+    @Test
     @Override
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
@@ -107,6 +113,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         })));
     }
 
+    @Test
     @Override
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
@@ -115,6 +122,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         });
     }
 
+    @Test
     @Override
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
@@ -131,6 +139,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
+    @Test
     @Override
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
@@ -175,6 +184,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         return value + 1;
     }
 
+    @Test
     public void testMapValuesMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntPairMap map = new ImmutableIntPairMap.Builder()
@@ -192,6 +202,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
+    @Test
     public void testMapToIntMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntPairMap map = new ImmutableIntPairMap.Builder()
@@ -209,6 +220,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
+    @Test
     public void testPutMethod() {
         withImmutableSparseIntArray(array -> withInt(key -> withInt(value -> {
             if (array != null) {
@@ -233,6 +245,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         })));
     }
 
+    @Test
     public void testReverseMethod() {
         withImmutableSparseIntArray(array -> {
             if (array != null) {
@@ -264,16 +277,19 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         });
     }
 
+    @Test
     public void testKeySetWhenEmpty() {
         final ImmutableIntPairMap empty = ImmutableIntPairMap.empty();
         assertSame(ImmutableIntSetImpl.empty(), empty.keySet());
     }
 
+    @Test
     public void testToImmutableForEmpty() {
         final ImmutableIntPairMap map = newBuilder().build();
         assertSame(map, map.toImmutable());
     }
 
+    @Test
     public void testMutateForEmpty() {
         final ImmutableIntPairMap map1 = newBuilder().build();
         final MutableIntPairMap map2 = map1.mutate();
@@ -284,6 +300,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         assertEquals(0, map1.get(1, 0));
     }
 
+    @Test
     public void testToImmutable() {
         withInt(a -> withInt(b -> {
             final ImmutableIntPairMap map1 = newBuilder().put(a, 1).put(b, 2).build();
@@ -292,6 +309,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         }));
     }
 
+    @Test
     public void testMutate() {
         final int defValue = -4;
         withInt(a -> withInt(b -> {

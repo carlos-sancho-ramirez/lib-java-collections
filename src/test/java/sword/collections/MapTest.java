@@ -1,12 +1,13 @@
 package sword.collections;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class MapTest<K, V> extends TestCase {
+abstract class MapTest<K, V> {
 
     abstract MapBuilder<K, V> newBuilder();
     abstract void withKey(Procedure<K> procedure);
@@ -27,11 +28,13 @@ abstract class MapTest<K, V> extends TestCase {
         });
     }
 
+    @Test
     public void testEmptyBuilderBuildsEmptyArray() {
         Map<K, V> array = newBuilder().build();
         assertEquals(0, array.size());
     }
 
+    @Test
     public void testSize() {
         final V value = getTestValue();
         withKey(a -> withKey(b -> withKey(c -> withKey(d -> {
@@ -59,6 +62,7 @@ abstract class MapTest<K, V> extends TestCase {
         }))));
     }
 
+    @Test
     public void testGet() {
         final V value = getTestValue();
         withKey(a -> withKey(b -> {
@@ -74,6 +78,7 @@ abstract class MapTest<K, V> extends TestCase {
         }));
     }
 
+    @Test
     public void testKeyAtMethod() {
         withValue(value -> withKey(a -> withKey(b -> withKey(c -> {
             Map<K, V> array = newBuilder()
@@ -93,6 +98,7 @@ abstract class MapTest<K, V> extends TestCase {
         }))));
     }
 
+    @Test
     public void testValueAtMethod() {
         withKey(a -> withKey(b -> withKey(c -> {
             Map<K, V> map = newBuilder()
@@ -109,6 +115,7 @@ abstract class MapTest<K, V> extends TestCase {
         })));
     }
 
+    @Test
     public void testKeySet() {
         final V value = getTestValue();
         for (int amount = 0; amount < 3; amount++) {
@@ -126,10 +133,12 @@ abstract class MapTest<K, V> extends TestCase {
         }
     }
 
+    @Test
     public void testValueListWhenEmpty() {
         assertTrue(newBuilder().build().valueList().isEmpty());
     }
 
+    @Test
     public void testValueList() {
         withKey(a -> withKey(b -> withKey(c -> {
             final Map<K, V> map = newBuilder()
@@ -147,6 +156,7 @@ abstract class MapTest<K, V> extends TestCase {
         })));
     }
 
+    @Test
     public void testIndexOfKey() {
         final V value = getTestValue();
         withKey(a -> withKey(b -> withKey(c -> {
@@ -162,6 +172,7 @@ abstract class MapTest<K, V> extends TestCase {
         })));
     }
 
+    @Test
     public void testEntryIterator() {
         withKey(a -> withKey(b -> withKey(c -> {
             Map<K, V> map = newBuilder()
@@ -185,6 +196,7 @@ abstract class MapTest<K, V> extends TestCase {
         })));
     }
 
+    @Test
     public void testMutateMethod() {
         withKey(a -> withKey(b -> {
             Map<K, V> map1 = newBuilder()
@@ -212,6 +224,7 @@ abstract class MapTest<K, V> extends TestCase {
         }));
     }
 
+    @Test
     public void testSortWhenEmpty() {
         final SortFunction<K> func = (a, b) -> {
             throw new AssertionError("Should not be called");
@@ -219,6 +232,7 @@ abstract class MapTest<K, V> extends TestCase {
         assertTrue(newBuilder().build().sort(func).isEmpty());
     }
 
+    @Test
     public void testSortForSingleElement() {
         final SortFunction<K> func = (a, b) -> {
             throw new AssertionError("Should not be called");
@@ -232,6 +246,7 @@ abstract class MapTest<K, V> extends TestCase {
         });
     }
 
+    @Test
     public void testSort() {
         withKey(a -> withKey(b -> withKey(c -> {
             final Map<K, V> map = newBuilder()
@@ -250,6 +265,7 @@ abstract class MapTest<K, V> extends TestCase {
         })));
     }
 
+    @Test
     public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final Map<K, V> map = newBuilder().build();
@@ -257,6 +273,7 @@ abstract class MapTest<K, V> extends TestCase {
         });
     }
 
+    @Test
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withKey(key -> {
             final V value = valueFromKey(key);
@@ -272,6 +289,7 @@ abstract class MapTest<K, V> extends TestCase {
         }));
     }
 
+    @Test
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final V valueA = valueFromKey(keyA);
@@ -309,6 +327,7 @@ abstract class MapTest<K, V> extends TestCase {
         })));
     }
 
+    @Test
     public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final Map<K, V> map = newBuilder().build();
@@ -316,6 +335,7 @@ abstract class MapTest<K, V> extends TestCase {
         });
     }
 
+    @Test
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withKey(key -> {
             final V value = valueFromKey(key);
@@ -331,6 +351,7 @@ abstract class MapTest<K, V> extends TestCase {
         }));
     }
 
+    @Test
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final V valueA = valueFromKey(keyA);
@@ -368,6 +389,7 @@ abstract class MapTest<K, V> extends TestCase {
         })));
     }
 
+    @Test
     public void testEqualMapReturnsFalseWhenAPairIsMissing() {
         withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
             final Map<K, V> map = supplier.newBuilder()
@@ -388,6 +410,7 @@ abstract class MapTest<K, V> extends TestCase {
         }))));
     }
 
+    @Test
     public void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
         withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
             final Map<K, V> map = supplier.newBuilder()
@@ -411,6 +434,7 @@ abstract class MapTest<K, V> extends TestCase {
         }))));
     }
 
+    @Test
     public void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
         withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
             final Map<K, V> map = supplier.newBuilder()

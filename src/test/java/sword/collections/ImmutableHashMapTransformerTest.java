@@ -1,5 +1,8 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withString;
 
 public final class ImmutableHashMapTransformerTest extends TransformerTest<String, TransformableBuilder<String>> {
@@ -78,10 +81,12 @@ public final class ImmutableHashMapTransformerTest extends TransformerTest<Strin
         }
     }
 
+    @Test
     public void testToMapWhenEmpty() {
         withMapBuilder(builder -> assertTrue(builder.build().iterator().toMap().isEmpty()));
     }
 
+    @Test
     public void testToMap() {
         withValue(a -> withValue(b -> withValue(c -> withMapBuilder(builder -> {
             final Map<String, String> map = builder
@@ -94,6 +99,7 @@ public final class ImmutableHashMapTransformerTest extends TransformerTest<Strin
         }))));
     }
 
+    @Test
     @Override
     public void testMapForSingleValue() {
         withMapFunc(func -> withValue(a -> withMapBuilder(builder -> {
@@ -110,6 +116,7 @@ public final class ImmutableHashMapTransformerTest extends TransformerTest<Strin
         })));
     }
 
+    @Test
     @Override
     public void testMapForMultipleValues() {
         withMapFunc(func -> withValue(a -> withValue(b -> withValue(c -> withMapBuilder(builder -> {

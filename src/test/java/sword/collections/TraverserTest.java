@@ -1,18 +1,20 @@
 package sword.collections;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCase {
+abstract class TraverserTest<T, B extends TraversableBuilder<T>> {
 
     abstract void withBuilder(Procedure<B> procedure);
     abstract void withValue(Procedure<T> value);
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
     abstract void withReduceFunction(Procedure<ReduceFunction<T>> procedure);
 
+    @Test
     public void testContainsWhenEmpty() {
         withValue(value -> withBuilder(builder -> {
             if (builder.build().iterator().contains(value)) {
@@ -22,6 +24,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         }));
     }
 
+    @Test
     public void testContainsWhenContainingASingleElement() {
         withValue(valueIncluded -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(valueIncluded).build();
@@ -37,6 +40,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         }));
     }
 
+    @Test
     public void testContainsWhenContainingMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(a).add(b).build();
@@ -58,6 +62,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         })));
     }
 
+    @Test
     public void testAnyMatchWhenEmpty() {
         withBuilder(builder -> {
             final Traversable<T> iterable = builder.build();
@@ -65,6 +70,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         });
     }
 
+    @Test
     public void testAnyMatchForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(value).build();
@@ -80,6 +86,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         }));
     }
 
+    @Test
     public void testAnyMatchForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(a).add(b).build();
@@ -95,6 +102,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         })));
     }
 
+    @Test
     public void testIndexOfWhenEmpty() {
         withBuilder(builder -> {
             Traversable<T> iterable = builder.build();
@@ -102,6 +110,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         });
     }
 
+    @Test
     public void testIndexOfForSingleElement() {
         withValue(a -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(a).build();
@@ -112,6 +121,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         }));
     }
 
+    @Test
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(a).add(b).build();
@@ -129,6 +139,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         })));
     }
 
+    @Test
     public void testValueAtForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final Traverser<T> traverser = builder.add(value).build().iterator();
@@ -136,6 +147,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         }));
     }
 
+    @Test
     public void testValueAtForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(a).add(b).build();
@@ -152,6 +164,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         })));
     }
 
+    @Test
     public void testFindFirstWhenEmpty() {
         withBuilder(builder -> {
             final Traversable<T> iterable = builder.build();
@@ -165,6 +178,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         });
     }
 
+    @Test
     public void testFindFirstForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(value).build();
@@ -175,6 +189,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         }));
     }
 
+    @Test
     public void testFindFirstForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(a).add(b).build();
@@ -195,6 +210,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         throw new AssertionError("This should not be called");
     }
 
+    @Test
     public void testReduceForSingleElement() {
         final ReduceFunction<T> func = TraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
@@ -203,6 +219,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         }));
     }
 
+    @Test
     public void testReduceForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(a).add(b).add(c).build();
@@ -218,6 +235,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         }))));
     }
 
+    @Test
     public void testReduceWithValueWhenEmpty() {
         withBuilder(builder -> {
             final Traversable<T> iterable = builder.build();
@@ -226,6 +244,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         });
     }
 
+    @Test
     public void testReduceWithValueForSingleElement() {
         final ReduceFunction<T> func = TraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
@@ -234,6 +253,7 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> extends TestCas
         }));
     }
 
+    @Test
     public void testReduceWithValueForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Traversable<T> iterable = builder.add(a).add(b).add(c).build();

@@ -1,6 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public final class ImmutableIntListTest extends AbstractImmutableIntTransformableTest {
 
@@ -57,6 +61,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         return new ImmutableIntList.Builder();
     }
 
+    @Test
     public void testSizeForTwoElements() {
         withItem(a -> withItem(b -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).build();
@@ -68,6 +73,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         }));
     }
 
+    @Test
     public void testIteratingForMultipleElements() {
         withItem(a -> withItem(b -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).build();
@@ -83,6 +89,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         }));
     }
 
+    @Test
     public void testMapForMultipleElements() {
         withMapFunc(f -> withItem(a -> withItem(b -> {
             final ImmutableIntList collection = newIntBuilder().add(a).add(b).build();
@@ -97,6 +104,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         })));
     }
 
+    @Test
     public void testFindFirstWhenEmpty() {
         withFilterFunc(f -> withItem(defaultValue -> {
             final ImmutableIntList list = newIntBuilder().build();
@@ -104,6 +112,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         }));
     }
 
+    @Test
     public void testFindFirstForSingleElement() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(value -> {
             final ImmutableIntList list = newIntBuilder().append(value).build();
@@ -118,6 +127,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         })));
     }
 
+    @Test
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
             final ImmutableIntList list = newIntBuilder().append(a).append(b).build();
@@ -135,6 +145,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         }))));
     }
 
+    @Test
     public void testAppendWhenEmpty() {
         withItem(value -> {
             final ImmutableIntList empty = ImmutableIntList.empty();
@@ -145,6 +156,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         });
     }
 
+    @Test
     public void testAppendForASingleElement() {
         withItem(a -> withItem(value -> {
             final ImmutableIntList initList = new ImmutableIntList.Builder().append(a).build();
@@ -155,12 +167,14 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         }));
     }
 
+    @Test
     public void testAppendAllWhenBothEmpty() {
         final ImmutableList<String> empty = ImmutableList.empty();
         final ImmutableList<String> result = empty.appendAll(empty);
         assertSame(empty, result);
     }
 
+    @Test
     public void testAppendANonEmptyListWhenEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withItem(value -> {
@@ -170,6 +184,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         });
     }
 
+    @Test
     public void testAppendAnEmptyListWhenNoEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withItem(value -> {
@@ -179,6 +194,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         });
     }
 
+    @Test
     public void testAppendAll() {
         withItem(a -> withItem(b -> withItem(c -> {
             final ImmutableIntList list1 = new ImmutableIntList.Builder().append(a).append(b).build();
@@ -198,15 +214,18 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         })));
     }
 
+    @Test
     public void testFilterForSingleElement() {
         super.testFilterForSingleElement();
     }
 
+    @Test
     public void testToSetWhenEmpty() {
         final ImmutableIntList list = newIntBuilder().build();
         assertTrue(list.toSet().isEmpty());
     }
 
+    @Test
     public void testToSetWithSingleElement() {
         withItem(a -> {
             final ImmutableIntList list = newIntBuilder().add(a).build();
@@ -216,6 +235,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         });
     }
 
+    @Test
     public void testToSetWithTwoElements() {
         withItem(a -> withItem(b -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).build();
@@ -238,6 +258,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         }));
     }
 
+    @Test
     public void testGroupByWhenEmpty() {
         final IntFunction<Integer> func = str -> {
             throw new AssertionError("This function should not be executed");
@@ -246,6 +267,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         assertTrue(list.groupBy(func).isEmpty());
     }
 
+    @Test
     public void testGroupBy() {
         withGroupingFunc(func -> withItem(a -> withItem(b -> withItem(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
@@ -352,6 +374,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         }))));
     }
 
+    @Test
     public void testGroupByIntWhenEmpty() {
         final IntToIntFunction func = str -> {
             throw new AssertionError("This function should not be executed");
@@ -360,6 +383,7 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
         assertTrue(list.groupByInt(func).isEmpty());
     }
 
+    @Test
     public void testGroupByInt() {
         withGroupingIntFunc(func -> withItem(a -> withItem(b -> withItem(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();

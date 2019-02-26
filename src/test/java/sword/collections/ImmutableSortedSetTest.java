@@ -1,5 +1,7 @@
 package sword.collections;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 public final class ImmutableSortedSetTest extends ImmutableSetTest<String, ImmutableSortedSet.Builder<String>> {
 
     private static final String[] STRING_VALUES = {

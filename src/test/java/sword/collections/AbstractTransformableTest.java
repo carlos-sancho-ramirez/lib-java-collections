@@ -1,6 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
 
@@ -8,10 +12,12 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
     abstract void assertEmptyCollection(Transformable<T> collection);
     abstract void assertNotChanged(Object expected, Object given);
 
+    @Test
     public void testIndexesWhenEmpty() {
         assertTrue(newIterableBuilder().build().indexes().isEmpty());
     }
 
+    @Test
     public void testIndexesForSingleValue() {
         withValue(value -> {
             final Iterator<Integer> indexIterator = newIterableBuilder().add(value).build().indexes().iterator();
@@ -21,6 +27,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
         });
     }
 
+    @Test
     public void testIndexesForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> {
             final Transformable<T> transformable = newIterableBuilder().add(a).add(b).add(c).build();
@@ -40,6 +47,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
         })));
     }
 
+    @Test
     public void testFilterWhenEmpty() {
         final Predicate<T> f = unused -> {
             throw new AssertionError("This function should not be called");
@@ -48,6 +56,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
         assertEmptyCollection(newIterableBuilder().build().filter(f));
     }
 
+    @Test
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withValue(value -> {
             final Transformable<T> transformable = newIterableBuilder().add(value).build();
@@ -62,6 +71,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
         }));
     }
 
+    @Test
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withValue(a -> withValue(b -> {
             final Transformable<T> iterable = newIterableBuilder().add(a).add(b).build();
@@ -91,6 +101,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
         })));
     }
 
+    @Test
     public void testFilterNotWhenEmpty() {
         final Predicate<T> f = unused -> {
             throw new AssertionError("This function should not be called");
@@ -99,6 +110,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
         assertEmptyCollection(newIterableBuilder().build().filterNot(f));
     }
 
+    @Test
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withValue(value -> {
             final Transformable<T> collection = newIterableBuilder().add(value).build();
@@ -113,6 +125,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
         }));
     }
 
+    @Test
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withValue(a -> withValue(b -> {
             final Transformable<T> iterable = newIterableBuilder().add(a).add(b).build();

@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
@@ -57,6 +60,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String> {
         return (key == null)? null : Integer.toString(key);
     }
 
+    @Test
     public void testToImmutableMethod() {
         withKey(a -> withKey(b -> {
             MutableMap<Integer, String> map1 = newBuilder()
@@ -84,6 +88,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String> {
         }));
     }
 
+    @Test
     public void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
             final Map<Integer, String> mutable = newBuilder()
@@ -97,6 +102,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String> {
         })));
     }
 
+    @Test
     public void testEquals() {
         withInt(a -> withInt(b -> withInt(c -> {
             final Map<Integer, String> mutable = newBuilder()
@@ -111,12 +117,14 @@ public final class MutableHashMapTest extends MapTest<Integer, String> {
         })));
     }
 
+    @Test
     public void testClearWhenEmpty() {
         final MutableMap<Integer, String> map = newBuilder().build();
         assertFalse(map.clear());
         assertTrue(map.isEmpty());
     }
 
+    @Test
     public void testClearForSingleItem() {
         withInt(value -> {
             final MutableMap<Integer, String> map = newBuilder()
@@ -127,6 +135,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String> {
         });
     }
 
+    @Test
     public void testClearForMultipleItems() {
         withInt(a -> withInt(b -> {
             final MutableMap<Integer, String> map = newBuilder()

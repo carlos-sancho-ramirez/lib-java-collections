@@ -1,7 +1,10 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
 public final class MutableHashSetTest extends MutableSetTest<String> {
@@ -75,6 +78,7 @@ public final class MutableHashSetTest extends MutableSetTest<String> {
         procedure.apply(this::sortByLength);
     }
 
+    @Test
     @Override
     public void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
@@ -104,6 +108,7 @@ public final class MutableHashSetTest extends MutableSetTest<String> {
         }));
     }
 
+    @Test
     @Override
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withValue(value -> {
@@ -129,6 +134,7 @@ public final class MutableHashSetTest extends MutableSetTest<String> {
         })));
     }
 
+    @Test
     @Override
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
@@ -154,6 +160,7 @@ public final class MutableHashSetTest extends MutableSetTest<String> {
         }))));
     }
 
+    @Test
     @Override
     public void testToList() {
         withValue(a -> withValue(b -> {
