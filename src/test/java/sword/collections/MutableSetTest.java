@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
+abstract class MutableSetTest<T> extends AbstractTransformableTest<T> implements MutableTraversableTest<T> {
 
     abstract boolean lessThan(T a, T b);
     abstract MutableSet.Builder<T> newBuilder();
@@ -299,30 +299,5 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> {
                 assertFalse(sortedSet.equalSet(set));
             });
         })));
-    }
-
-    @Test
-    public void testClearWhenEmpty() {
-        final MutableSet<T> collection = newBuilder().build();
-        assertFalse(collection.clear());
-        assertTrue(collection.isEmpty());
-    }
-
-    @Test
-    public void testClearForSingleItem() {
-        withValue(value -> {
-            final MutableSet<T> collection = newBuilder().add(value).build();
-            assertTrue(collection.clear());
-            assertTrue(collection.isEmpty());
-        });
-    }
-
-    @Test
-    public void testClearForMultipleItems() {
-        withValue(a -> withValue(b -> {
-            final MutableSet<T> collection = newBuilder().add(a).add(b).build();
-            assertTrue(collection.clear());
-            assertTrue(collection.isEmpty());
-        }));
     }
 }

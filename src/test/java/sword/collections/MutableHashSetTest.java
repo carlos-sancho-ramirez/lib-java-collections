@@ -14,7 +14,12 @@ public final class MutableHashSetTest extends MutableSetTest<String> {
     };
 
     @Override
-    void withValue(Procedure<String> procedure) {
+    public MutableHashSet.Builder<String> newTraversableBuilder() {
+        return new MutableHashSet.Builder<>();
+    }
+
+    @Override
+    public void withValue(Procedure<String> procedure) {
         for (String str : STRING_VALUES) {
             procedure.apply(str);
         }
