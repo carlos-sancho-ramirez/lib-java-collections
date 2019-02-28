@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-public final class MutableListTest extends AbstractTransformableTest<String> {
+public final class MutableListTest extends AbstractTransformableTest<String> implements MutableTraversableTest<String> {
 
     private static final String[] stringValues = {
             null, "", "_", "0", "abcd"
@@ -20,7 +20,12 @@ public final class MutableListTest extends AbstractTransformableTest<String> {
     }
 
     @Override
-    void withValue(Procedure<String> procedure) {
+    public MutableTraversableBuilder<String> newTraversableBuilder() {
+        return new MutableList.Builder<>();
+    }
+
+    @Override
+    public void withValue(Procedure<String> procedure) {
         for (String str : stringValues) {
             procedure.apply(str);
         }
@@ -508,31 +513,6 @@ public final class MutableListTest extends AbstractTransformableTest<String> {
                 }
             }
         })));
-    }
-
-    @Test
-    public void testClearWhenEmpty() {
-        final MutableList<String> collection = newBuilder().build();
-        assertFalse(collection.clear());
-        assertTrue(collection.isEmpty());
-    }
-
-    @Test
-    public void testClearForSingleItem() {
-        withValue(value -> {
-            final MutableList<String> collection = newBuilder().add(value).build();
-            assertTrue(collection.clear());
-            assertTrue(collection.isEmpty());
-        });
-    }
-
-    @Test
-    public void testClearForMultipleItems() {
-        withValue(a -> withValue(b -> {
-            final MutableList<String> collection = newBuilder().add(a).add(b).build();
-            assertTrue(collection.clear());
-            assertTrue(collection.isEmpty());
-        }));
     }
 
     @Test
