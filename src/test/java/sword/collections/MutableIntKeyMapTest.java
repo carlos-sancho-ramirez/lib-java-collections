@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
+public final class MutableIntKeyMapTest extends IntKeyMapTest<String> implements MutableTraversableTest<String> {
 
     @Override
     MutableIntKeyMap.Builder<String> newMapBuilder() {
@@ -16,7 +16,12 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
     }
 
     @Override
-    void withValue(Procedure<String> procedure) {
+    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+        procedure.apply(HashCodeKeyTraversableBuilder::new);
+    }
+
+    @Override
+    public void withValue(Procedure<String> procedure) {
         withString(procedure);
     }
 
@@ -174,33 +179,18 @@ public class MutableIntKeyMapTest extends IntKeyMapTest<String> {
         })));
     }
 
-    @Test
-    public void testClearWhenEmpty() {
-        final MutableIntKeyMap<String> map = newMapBuilder().build();
-        assertFalse(map.clear());
-        assertTrue(map.isEmpty());
-    }
+    private static final class HashCodeKeyTraversableBuilder implements MutableTraversableBuilder<String> {
+        private final MutableIntKeyMap<String> map = MutableIntKeyMap.empty();
 
-    @Test
-    public void testClearForSingleItem() {
-        withInt(value -> {
-            final MutableIntKeyMap<String> map = newMapBuilder()
-                    .put(value, Integer.toString(value))
-                    .build();
-            assertTrue(map.clear());
-            assertTrue(map.isEmpty());
-        });
-    }
+        @Override
+        public HashCodeKeyTraversableBuilder add(String element) {
+            map.put(SortUtils.hashCode(element), element);
+            return this;
+        }
 
-    @Test
-    public void testClearForMultipleItems() {
-        withInt(a -> withInt(b -> {
-            final MutableIntKeyMap<String> map = newMapBuilder()
-                    .put(a, Integer.toString(a))
-                    .put(b, Integer.toString(b))
-                    .build();
-            assertTrue(map.clear());
-            assertTrue(map.isEmpty());
-        }));
+        @Override
+        public MutableTraversable<String> build() {
+            return map;
+        }
     }
 }
