@@ -20,8 +20,8 @@ public final class MutableListTest extends AbstractTransformableTest<String> imp
     }
 
     @Override
-    public MutableTraversableBuilder<String> newTraversableBuilder() {
-        return new MutableList.Builder<>();
+    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+        procedure.apply(MutableList.Builder::new);
     }
 
     @Override

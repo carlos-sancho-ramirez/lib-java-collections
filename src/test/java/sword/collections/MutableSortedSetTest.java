@@ -7,10 +7,8 @@ public final class MutableSortedSetTest extends MutableSetTest<String> {
     };
 
     @Override
-    public MutableSortedSet.Builder<String> newTraversableBuilder() {
-        // This should include different sort functions
-        // TODO: Change this call to provide a builder supplier
-        return new MutableSortedSet.Builder<>(this::lessThan);
+    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+        withSortFunc(sortFunc -> procedure.apply(() -> new MutableSortedSet.Builder<>(sortFunc)));
     }
 
     @Override

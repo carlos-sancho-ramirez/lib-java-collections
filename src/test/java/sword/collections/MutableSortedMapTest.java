@@ -25,8 +25,8 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> impleme
     }
 
     @Override
-    public MutableTraversableBuilder<String> newTraversableBuilder() {
-        return new HashCodeKeyTraversableBuilder();
+    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+        procedure.apply(HashCodeKeyTraversableBuilder::new);
     }
 
     @Override

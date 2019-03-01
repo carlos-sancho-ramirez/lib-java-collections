@@ -14,8 +14,8 @@ public final class MutableHashSetTest extends MutableSetTest<String> {
     };
 
     @Override
-    public MutableHashSet.Builder<String> newTraversableBuilder() {
-        return new MutableHashSet.Builder<>();
+    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+        procedure.apply(MutableHashSet.Builder::new);
     }
 
     @Override

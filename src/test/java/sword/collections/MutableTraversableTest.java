@@ -7,31 +7,33 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface MutableTraversableTest<T> {
 
-    MutableTraversableBuilder<T> newTraversableBuilder();
+    void withTraversableBuilderSupplier(Procedure<BuilderSupplier<T, MutableTraversableBuilder<T>>> procedure);
     void withValue(Procedure<T> procedure);
 
     @Test
     default void testClearWhenEmpty() {
-        final MutableTraversable<T> traversable = newTraversableBuilder().build();
-        assertFalse(traversable.clear());
-        assertTrue(traversable.isEmpty());
-    }
-
-    @Test
-    default void testClearForSingleItem() {
-        withValue(value -> {
-            final MutableTraversable<T> traversable = newTraversableBuilder().add(value).build();
-            assertTrue(traversable.clear());
+        withTraversableBuilderSupplier(supplier -> {
+            final MutableTraversable<T> traversable = supplier.newBuilder().build();
+            assertFalse(traversable.clear());
             assertTrue(traversable.isEmpty());
         });
     }
 
     @Test
-    default void testClearForMultipleItems() {
-        withValue(a -> withValue(b -> {
-            final MutableTraversable<T> traversable = newTraversableBuilder().add(a).add(b).build();
+    default void testClearForSingleItem() {
+        withValue(value -> withTraversableBuilderSupplier(supplier -> {
+            final MutableTraversable<T> traversable = supplier.newBuilder().add(value).build();
             assertTrue(traversable.clear());
             assertTrue(traversable.isEmpty());
         }));
+    }
+
+    @Test
+    default void testClearForMultipleItems() {
+        withValue(a -> withValue(b -> withTraversableBuilderSupplier(supplier -> {
+            final MutableTraversable<T> traversable = supplier.newBuilder().add(a).add(b).build();
+            assertTrue(traversable.clear());
+            assertTrue(traversable.isEmpty());
+        })));
     }
 }
