@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class AbstractMutableIntTransformableTest extends AbstractIntTransformableTest {
+abstract class AbstractMutableIntTransformableTest<C extends MutableIntTraversable> extends AbstractIntTransformableTest implements MutableIntTraversableTest<C> {
 
     abstract AbstractIntTraversable emptyCollection();
 

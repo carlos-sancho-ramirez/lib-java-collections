@@ -6,7 +6,7 @@ import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 
-public final class MutableIntSet extends AbstractIntTraversable implements IntSet, MutableIntTraversable {
+public final class MutableIntSet extends AbstractIntTraversable implements IntSet, MutableIntTransformable {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -240,7 +240,7 @@ public final class MutableIntSet extends AbstractIntTraversable implements IntSe
         return new MutableIntSet(values, size);
     }
 
-    public static class Builder implements IntTransformableBuilder<MutableIntSet> {
+    public static class Builder implements MutableIntTransformableBuilder<MutableIntSet> {
         private final MutableIntSet _set = MutableIntSet.empty();
 
         @Override
@@ -257,7 +257,7 @@ public final class MutableIntSet extends AbstractIntTraversable implements IntSe
 
     @Override
     public boolean equals(Object other) {
-        if (other == null || !(other instanceof MutableIntSet)) {
+        if (!(other instanceof MutableIntSet)) {
             return super.equals(other);
         }
 

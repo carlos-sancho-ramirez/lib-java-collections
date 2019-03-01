@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntListTest extends AbstractMutableIntTransformableTest {
+public final class MutableIntListTest extends AbstractMutableIntTransformableTest<MutableIntList> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE
@@ -57,6 +57,16 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
     @Override
     MutableIntList.Builder newIntBuilder() {
         return new MutableIntList.Builder();
+    }
+
+    @Override
+    public void withIntTraversableBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntList, MutableIntTraversableBuilder<MutableIntList>>> procedure) {
+        procedure.apply(MutableIntList.Builder::new);
+    }
+
+    @Override
+    public void withValue(IntProcedure procedure) {
+        withItem(procedure);
     }
 
     @Test
@@ -333,31 +343,6 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
                     assertEquals(b, set.valueAt(0));
                 }
             }
-        }));
-    }
-
-    @Test
-    public void testClearWhenEmpty() {
-        final MutableIntList collection = newIntBuilder().build();
-        assertFalse(collection.clear());
-        assertTrue(collection.isEmpty());
-    }
-
-    @Test
-    public void testClearForSingleItem() {
-        withInt(value -> {
-            final MutableIntList collection = newIntBuilder().add(value).build();
-            assertTrue(collection.clear());
-            assertTrue(collection.isEmpty());
-        });
-    }
-
-    @Test
-    public void testClearForMultipleItems() {
-        withInt(a -> withInt(b -> {
-            final MutableIntList collection = newIntBuilder().add(a).add(b).build();
-            assertTrue(collection.clear());
-            assertTrue(collection.isEmpty());
         }));
     }
 }

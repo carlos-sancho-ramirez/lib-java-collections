@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 
-public final class MutableIntList extends AbstractIntTraversable implements IntList, MutableIntTraversable {
+public final class MutableIntList extends AbstractIntTraversable implements IntList, MutableIntTransformable {
 
     private static final int GRANULARITY = DEFAULT_GRANULARITY;
 
@@ -169,7 +169,7 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         return new Iterator();
     }
 
-    public static final class Builder implements IntTransformableBuilder<MutableIntList> {
+    public static final class Builder implements MutableIntTransformableBuilder<MutableIntList> {
 
         private final MutableIntList _list = MutableIntList.empty();
 
