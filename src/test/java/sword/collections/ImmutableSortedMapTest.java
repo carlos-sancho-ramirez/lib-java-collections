@@ -9,7 +9,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
+public final class ImmutableSortedMapTest extends MapTest<Integer, String> implements ImmutableTransformableTest<String> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
@@ -26,8 +26,35 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
     }
 
     @Override
-    void withValue(Procedure<String> procedure) {
+    public void withTransformableBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
+        withSortFunc(sortFunc -> {
+            procedure.apply(() -> new HashCodeKeyTransformableBuilder(sortFunc));
+        });
+    }
+
+    @Override
+    public void withValue(Procedure<String> procedure) {
         withString(procedure);
+    }
+
+    private String prefixUnderscore(String value) {
+        return "_" + value;
+    }
+
+    private String charCounter(String value) {
+        final int length = (value != null)? value.length() : 0;
+        return Integer.toString(length);
+    }
+
+    @Override
+    public void withMapFunc(Procedure<Function<String, String>> procedure) {
+        procedure.apply(this::prefixUnderscore);
+        procedure.apply(this::charCounter);
+    }
+
+    @Override
+    public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(str -> (str == null)? 0 : str.hashCode());
     }
 
     @Override
@@ -242,47 +269,22 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> {
         })));
     }
 
-    @Test
-    public void testMapValuesForIntResult() {
-        withKey(ka -> withKey(kb -> {
-            final String va = valueFromKey(ka);
-            final String vb = valueFromKey(kb);
-            final ImmutableMap<Integer, String> map = newBuilder()
-                    .put(ka, va)
-                    .put(kb, vb)
-                    .build();
+    private static final class HashCodeKeyTransformableBuilder implements ImmutableTransformableBuilder<String> {
+        private final ImmutableSortedMap.Builder<Integer, String> builder;
 
-            final IntResultFunction<String> mapFunc = str -> (str != null)? str.hashCode() : 0;
-            final ImmutableIntValueMap<Integer> map2 = map.mapToInt(mapFunc);
+        HashCodeKeyTransformableBuilder(SortFunction<Integer> sortFunc) {
+            builder = new ImmutableSortedMap.Builder<>(sortFunc);
+        }
 
-            final ImmutableSet<Integer> keySet = map.keySet();
-            assertEquals(keySet, map2.keySet());
+        @Override
+        public HashCodeKeyTransformableBuilder add(String element) {
+            builder.put(SortUtils.hashCode(element), element);
+            return this;
+        }
 
-            for (Integer key : keySet) {
-                assertEquals(mapFunc.apply(map.get(key)), map2.get(key));
-            }
-        }));
-    }
-
-    @Test
-    public void testMapValues() {
-        withKey(ka -> withKey(kb -> {
-            final String va = valueFromKey(ka);
-            final String vb = valueFromKey(kb);
-            final ImmutableMap<Integer, String> map = newBuilder()
-                    .put(ka, va)
-                    .put(kb, vb)
-                    .build();
-
-            final Function<String, String> mapFunc = str -> (str != null)? "_" + str : "_";
-            final ImmutableMap<Integer, String> map2 = map.map(mapFunc);
-
-            final ImmutableSet<Integer> keySet = map.keySet();
-            assertEquals(keySet, map2.keySet());
-
-            for (Integer key : keySet) {
-                assertEquals(mapFunc.apply(map.get(key)), map2.get(key));
-            }
-        }));
+        @Override
+        public ImmutableSortedMap<Integer, String> build() {
+            return builder.build();
+        }
     }
 }
