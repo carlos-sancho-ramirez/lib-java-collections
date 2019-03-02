@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<String> {
+public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<String, MutableIntValueSortedMap<String>> {
 
     @Override
     MutableIntValueSortedMap.Builder<String> newBuilder() {
@@ -37,6 +37,16 @@ public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<S
         procedure.apply(v -> (v & 1) == 0);
     }
 
+    @Override
+    public void withIntTraversableBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntValueSortedMap<String>, MutableIntTraversableBuilder<MutableIntValueSortedMap<String>>>> procedure) {
+        withSortFunc(sortFunc -> procedure.apply(() -> new SameKeyAndValueTraversableBuilder(sortFunc)));
+    }
+
+    @Override
+    public void withValue(IntProcedure procedure) {
+        withInt(procedure);
+    }
+
     @Test
     public void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
@@ -64,5 +74,24 @@ public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<S
             assertEquals(mutable, immutable);
             assertEquals(immutable, mutable);
         })));
+    }
+
+    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTraversableBuilder<MutableIntValueSortedMap<String>> {
+        private final MutableIntValueSortedMap<String> map;
+
+        SameKeyAndValueTraversableBuilder(SortFunction<String> sortFunc) {
+            map = new MutableIntValueSortedMap.Builder<>(sortFunc).build();
+        }
+
+        @Override
+        public SameKeyAndValueTraversableBuilder add(int value) {
+            map.put(Integer.toString(value), value);
+            return this;
+        }
+
+        @Override
+        public MutableIntValueSortedMap<String> build() {
+            return map;
+        }
     }
 }

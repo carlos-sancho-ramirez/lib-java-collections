@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<String> {
+public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<String, MutableIntValueHashMap<String>> {
 
     @Override
     MutableIntValueHashMap.Builder<String> newBuilder() {
@@ -37,6 +37,16 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
         procedure.apply(v -> (v & 1) == 0);
     }
 
+    @Override
+    public void withIntTraversableBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntValueHashMap<String>, MutableIntTraversableBuilder<MutableIntValueHashMap<String>>>> procedure) {
+        procedure.apply(SameKeyAndValueTraversableBuilder::new);
+    }
+
+    @Override
+    public void withValue(IntProcedure procedure) {
+        withInt(procedure);
+    }
+
     @Test
     public void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
@@ -64,5 +74,20 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
             assertEquals(mutable, immutable);
             assertEquals(immutable, mutable);
         })));
+    }
+
+    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTraversableBuilder<MutableIntValueHashMap<String>> {
+        private final MutableIntValueHashMap<String> map = MutableIntValueHashMap.empty();
+
+        @Override
+        public SameKeyAndValueTraversableBuilder add(int value) {
+            map.put(Integer.toString(value), value);
+            return this;
+        }
+
+        @Override
+        public MutableIntValueHashMap<String> build() {
+            return map;
+        }
     }
 }
