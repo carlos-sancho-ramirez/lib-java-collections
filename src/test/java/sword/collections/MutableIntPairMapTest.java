@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntPairMapTest extends IntPairMapTest {
+public final class MutableIntPairMapTest extends IntPairMapTest implements MutableIntTraversableTest<MutableIntPairMap> {
 
     @Override
     MutableIntPairMap.Builder newBuilder() {
@@ -21,6 +21,16 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
     @Override
     void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::valueIsEven);
+    }
+
+    @Override
+    public void withIntTraversableBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntPairMap, MutableIntTraversableBuilder<MutableIntPairMap>>> procedure) {
+        procedure.apply(SameKeyAndValueTraversableBuilder::new);
+    }
+
+    @Override
+    public void withValue(IntProcedure procedure) {
+        withInt(procedure);
     }
 
     @Test
@@ -112,33 +122,18 @@ public final class MutableIntPairMapTest extends IntPairMapTest {
         })));
     }
 
-    @Test
-    public void testClearWhenEmpty() {
-        final MutableIntPairMap collection = newBuilder().build();
-        assertFalse(collection.clear());
-        assertTrue(collection.isEmpty());
-    }
+    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTraversableBuilder<MutableIntPairMap> {
+        private final MutableIntPairMap map = MutableIntPairMap.empty();
 
-    @Test
-    public void testClearForSingleItem() {
-        withInt(value -> {
-            final MutableIntPairMap collection = newBuilder()
-                    .put(value, value)
-                    .build();
-            assertTrue(collection.clear());
-            assertTrue(collection.isEmpty());
-        });
-    }
+        @Override
+        public SameKeyAndValueTraversableBuilder add(int value) {
+            map.put(value, value);
+            return this;
+        }
 
-    @Test
-    public void testClearForMultipleItems() {
-        withInt(a -> withInt(b -> {
-            final MutableIntPairMap collection = newBuilder()
-                    .put(a, a)
-                    .put(b, b)
-                    .build();
-            assertTrue(collection.clear());
-            assertTrue(collection.isEmpty());
-        }));
+        @Override
+        public MutableIntPairMap build() {
+            return map;
+        }
     }
 }
