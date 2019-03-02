@@ -21,7 +21,12 @@ public final class ImmutableListTest extends AbstractImmutableTransformableTest<
     }
 
     @Override
-    void withValue(Procedure<String> procedure) {
+    public void withTransformableBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
+        procedure.apply(ImmutableList.Builder::new);
+    }
+
+    @Override
+    public void withValue(Procedure<String> procedure) {
         for (String str : STRING_VALUES) {
             procedure.apply(str);
         }
@@ -46,13 +51,13 @@ public final class ImmutableListTest extends AbstractImmutableTransformableTest<
     }
 
     @Override
-    void withMapFunc(Procedure<Function<String, String>> procedure) {
+    public void withMapFunc(Procedure<Function<String, String>> procedure) {
         procedure.apply(this::prefixUnderscore);
         procedure.apply(this::charCounter);
     }
 
     @Override
-    void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+    public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
         procedure.apply(str -> (str == null)? 0 : str.hashCode());
     }
 
