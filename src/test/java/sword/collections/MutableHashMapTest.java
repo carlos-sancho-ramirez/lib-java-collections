@@ -61,6 +61,11 @@ public final class MutableHashMapTest extends MapTest<Integer, String> implement
     }
 
     @Override
+    public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(str -> (str == null)? 0 : str.hashCode());
+    }
+
+    @Override
     void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
         procedure.apply(MutableHashMap.Builder::new);
     }

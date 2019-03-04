@@ -84,6 +84,9 @@ public interface Map<K, V> extends Transformable<V> {
     @Override
     <E> Map<K, E> map(Function<V, E> func);
 
+    @Override
+    IntValueMap<K> mapToInt(IntResultFunction<V> func);
+
     /**
      * Return an immutable map from the values contained in this map.
      * The same instance will be returned in case of being already immutable.

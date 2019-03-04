@@ -19,6 +19,7 @@ abstract class MapTest<K, V> {
     abstract V valueFromKey(K key);
     abstract void withMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure);
     abstract void withMapFunc(Procedure<Function<V, String>> procedure);
+    abstract void withMapToIntFunc(Procedure<IntResultFunction<V>> procedure);
 
     private void withArbitraryMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure) {
         procedure.apply(ImmutableHashMap.Builder::new);
@@ -464,6 +465,24 @@ abstract class MapTest<K, V> {
                     .put(keyB, valueFromKey(keyB))
                     .build();
             final Map<K, String> mapped = map.map(f);
+
+            final int size = map.size();
+            assertEquals(size, mapped.size());
+
+            for (int i = 0; i < size; i++) {
+                assertSame(map.keyAt(i), mapped.keyAt(i));
+            }
+        }))));
+    }
+
+    @Test
+    public void testMapToIntForMultipleElements() {
+        withMapToIntFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final IntValueMap<K> mapped = map.mapToInt(f);
 
             final int size = map.size();
             assertEquals(size, mapped.size());

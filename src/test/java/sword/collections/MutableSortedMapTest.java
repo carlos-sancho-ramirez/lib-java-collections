@@ -65,6 +65,11 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> impleme
     }
 
     @Override
+    public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(str -> (str == null)? 0 : str.hashCode());
+    }
+
+    @Override
     String getTestValue() {
         return "value";
     }

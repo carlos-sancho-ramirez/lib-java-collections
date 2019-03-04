@@ -231,6 +231,19 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
         return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
+    @Override
+    public IntValueMap<K> mapToInt(IntResultFunction<V> func) {
+        final Object[] newKeys = new Object[_size];
+        final int[] newValues = new int[_size];
+
+        for (int i = 0; i < _size; i++) {
+            newKeys[i] = _keys[i];
+            newValues[i] = func.apply(valueAt(i));
+        }
+
+        return new ImmutableIntValueSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
     public static class Builder<K, V> implements MapBuilder<K, V> {
         private final MutableSortedMap<K, V> _map;
 
