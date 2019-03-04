@@ -75,6 +75,32 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
+    public <E> IntKeyMap<E> map(Function<T, E> func) {
+        final int[] newKeys = new int[_size];
+        final Object[] newValues = new Object[_size];
+
+        for (int i = 0; i < _size; i++) {
+            newKeys[i] = _keys[i];
+            newValues[i] = func.apply(valueAt(i));
+        }
+
+        return new ImmutableIntKeyMap<>(newKeys, newValues);
+    }
+
+    @Override
+    public IntPairMap mapToInt(IntResultFunction<T> func) {
+        final int[] newKeys = new int[_size];
+        final int[] newValues = new int[_size];
+
+        for (int i = 0; i < _size; i++) {
+            newKeys[i] = _keys[i];
+            newValues[i] = func.apply(valueAt(i));
+        }
+
+        return new ImmutableIntPairMap(newKeys, newValues);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public T get(int key) {
         final int index = findKey(_keys, _size, key);

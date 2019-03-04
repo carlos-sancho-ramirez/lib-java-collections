@@ -14,6 +14,7 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
     abstract T getTestValue2();
     abstract T valueFromKey(int key);
     abstract void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure);
+    abstract void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
 
     private void withArbitraryMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure) {
         procedure.apply(ImmutableIntKeyMap.Builder::new);
@@ -293,6 +294,42 @@ abstract class IntKeyMapTest<T> extends AbstractTransformableTest<T> {
 
                 assertTrue(map.equalMap(arbitraryMap));
             });
+        }))));
+    }
+
+    @Test
+    public void testMapResultingKeysForMultipleElements() {
+        withMapFunc(f -> withInt(keyA -> withInt(keyB -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap<T> map = supplier.newBuilder()
+                    .put(keyA, valueFromKey(keyA))
+                    .put(keyB, valueFromKey(keyB))
+                    .build();
+            final IntKeyMap<String> mapped = map.map(f);
+
+            final int size = map.size();
+            assertEquals(size, mapped.size());
+
+            for (int i = 0; i < size; i++) {
+                assertEquals(map.keyAt(i), mapped.keyAt(i));
+            }
+        }))));
+    }
+
+    @Test
+    public void testMapToIntForMultipleElements() {
+        withMapToIntFunc(f -> withInt(a -> withInt(b -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap<T> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final IntPairMap mapped = map.mapToInt(f);
+
+            final int size = map.size();
+            assertEquals(size, mapped.size());
+
+            for (int i = 0; i < size; i++) {
+                assertEquals(map.keyAt(i), mapped.keyAt(i));
+            }
         }))));
     }
 }

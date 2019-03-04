@@ -10,6 +10,12 @@ public interface IntKeyMap<T> extends Transformable<T> {
     @Override
     IntKeyMap<T> filterNot(Predicate<T> predicate);
 
+    @Override
+    <E> IntKeyMap<E> map(Function<T, E> func);
+
+    @Override
+    IntPairMap mapToInt(IntResultFunction<T> func);
+
     /**
      * Return the value assigned to the given key.
      * @throws UnmappedKeyException if the given key is not found within the map.

@@ -59,6 +59,11 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String> implements
     }
 
     @Override
+    void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(SortUtils::hashCode);
+    }
+
+    @Override
     void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, IntKeyMapBuilder<String>>> procedure) {
         procedure.apply(MutableIntKeyMap.Builder::new);
     }
