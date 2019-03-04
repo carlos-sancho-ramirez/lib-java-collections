@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static sword.collections.SortUtils.equal;
+import static sword.collections.TestUtils.withInt;
 
 public interface ImmutableTransformableTest<T> {
 
@@ -13,6 +15,24 @@ public interface ImmutableTransformableTest<T> {
     void withValue(Procedure<T> procedure);
     void withMapFunc(Procedure<Function<T, String>> procedure);
     void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
+
+    @Test
+    default void testSameInstanceWhenFilteringAllValues() {
+        withValue(a -> withValue(b -> withTransformableBuilderSupplier(supplier -> {
+            final ImmutableTransformable<T> transformable = supplier.newBuilder().add(a).add(b).build();
+            final Predicate<T> predicate = value -> equal(a, value) || equal(b, value);
+            assertSame(transformable, transformable.filter(predicate));
+        })));
+    }
+
+    @Test
+    default void testSameInstanceWhenNonFilteringAnyValue() {
+        withValue(a -> withValue(b -> withTransformableBuilderSupplier(supplier -> {
+            final ImmutableTransformable<T> transformable = supplier.newBuilder().add(a).add(b).build();
+            final Predicate<T> predicate = value -> !equal(a, value) && !equal(b, value);
+            assertSame(transformable, transformable.filterNot(predicate));
+        })));
+    }
 
     @Test
     default void testMapWhenEmpty() {
