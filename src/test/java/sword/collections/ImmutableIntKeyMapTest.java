@@ -9,7 +9,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
+public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> implements ImmutableTransformableTest<String> {
 
     @Override
     ImmutableIntKeyMap.Builder<String> newMapBuilder() {
@@ -17,7 +17,12 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
     }
 
     @Override
-    void withValue(Procedure<String> procedure) {
+    public void withTransformableBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
+        procedure.apply(HashCodeKeyTraversableBuilder::new);
+    }
+
+    @Override
+    public void withValue(Procedure<String> procedure) {
         withString(procedure);
     }
 
@@ -54,9 +59,14 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
     }
 
     @Override
-    void withMapFunc(Procedure<Function<String, String>> procedure) {
+    public void withMapFunc(Procedure<Function<String, String>> procedure) {
         procedure.apply(this::prefixUnderscore);
         procedure.apply(this::charCounter);
+    }
+
+    @Override
+    public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(SortUtils::hashCode);
     }
 
     @Override
@@ -223,50 +233,6 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
         })));
     }
 
-    private String mapValueFunction(String str) {
-        return (str != null)? "_" + str : null;
-    }
-
-    private int mapValueIntResultFunction(String str) {
-        return (str != null)? str.hashCode() : 0;
-    }
-
-    @Test
-    public void testMapValuesMethod() {
-        withInt(a -> withInt(b -> {
-            final ImmutableIntKeyMap<String> map = new ImmutableIntKeyMap.Builder<String>()
-                    .put(a, Integer.toString(a))
-                    .put(b, Integer.toString(b))
-                    .build();
-
-            final ImmutableIntKeyMap<String> map2 = map.map(this::mapValueFunction);
-            assertEquals(map.size(), map2.size());
-            assertEquals(map.keySet(), map2.keySet());
-
-            for (int key : map.keySet()) {
-                assertEquals(mapValueFunction(map.get(key)), map2.get(key));
-            }
-        }));
-    }
-
-    @Test
-    public void testMapValuesForIntResultMethod() {
-        withInt(a -> withInt(b -> {
-            final ImmutableIntKeyMap<String> map = new ImmutableIntKeyMap.Builder<String>()
-                    .put(a, Integer.toString(a))
-                    .put(b, Integer.toString(b))
-                    .build();
-
-            final ImmutableIntPairMap map2 = map.mapToInt(this::mapValueIntResultFunction);
-            assertEquals(map.size(), map2.size());
-            assertEquals(map.keySet(), map2.keySet());
-
-            for (int key : map.keySet()) {
-                assertEquals(mapValueIntResultFunction(map.get(key)), map2.get(key));
-            }
-        }));
-    }
-
     @Test
     public void testPutMethod() {
         withImmutableIntKeyMap(array -> withInt(key -> withString(value -> {
@@ -381,5 +347,20 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> {
             assertEquals("", map1.get(b, null));
             assertEquals(null, map2.get(b, null));
         }));
+    }
+
+    private static final class HashCodeKeyTraversableBuilder implements ImmutableTransformableBuilder<String> {
+        private final ImmutableIntKeyMap.Builder<String> builder = new ImmutableIntKeyMap.Builder<>();
+
+        @Override
+        public HashCodeKeyTraversableBuilder add(String element) {
+            builder.put(SortUtils.hashCode(element), element);
+            return this;
+        }
+
+        @Override
+        public ImmutableTransformable<String> build() {
+            return builder.build();
+        }
     }
 }
