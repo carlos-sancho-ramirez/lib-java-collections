@@ -218,6 +218,19 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
         return builder.build();
     }
 
+    @Override
+    public <E> Map<K, E> map(Function<V, E> func) {
+        final Object[] newKeys = new Object[_size];
+        final Object[] newValues = new Object[_size];
+
+        for (int i = 0; i < _size; i++) {
+            newKeys[i] = _keys[i];
+            newValues[i] = func.apply(valueAt(i));
+        }
+
+        return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
     public static class Builder<K, V> implements MapBuilder<K, V> {
         private final MutableSortedMap<K, V> _map;
 

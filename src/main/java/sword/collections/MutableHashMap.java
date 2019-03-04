@@ -225,6 +225,21 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
         return builder.build();
     }
 
+    @Override
+    public <E> Map<K, E> map(Function<V, E> func) {
+        final Object[] newKeys = new Object[_size];
+        final int[] newHashCodes = new int[_size];
+        final Object[] newValues = new Object[_size];
+
+        for (int i = 0; i < _size; i++) {
+            newKeys[i] = _keys[i];
+            newHashCodes[i] = _hashCodes[i];
+            newValues[i] = func.apply(valueAt(i));
+        }
+
+        return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
     public static class Builder<K, V> implements MapBuilder<K, V> {
         private final MutableHashMap<K, V> _map = MutableHashMap.empty();
 

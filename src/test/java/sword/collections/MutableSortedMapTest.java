@@ -49,6 +49,21 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> impleme
         procedure.apply(this::hashCodeIsEven);
     }
 
+    private String prefixUnderscore(String value) {
+        return "_" + value;
+    }
+
+    private String charCounter(String value) {
+        final int length = (value != null)? value.length() : 0;
+        return Integer.toString(length);
+    }
+
+    @Override
+    public void withMapFunc(Procedure<Function<String, String>> procedure) {
+        procedure.apply(this::prefixUnderscore);
+        procedure.apply(this::charCounter);
+    }
+
     @Override
     String getTestValue() {
         return "value";

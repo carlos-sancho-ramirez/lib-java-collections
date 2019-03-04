@@ -81,6 +81,9 @@ public interface Map<K, V> extends Transformable<V> {
     @Override
     Map<K, V> filterNot(Predicate<V> predicate);
 
+    @Override
+    <E> Map<K, E> map(Function<V, E> func);
+
     /**
      * Return an immutable map from the values contained in this map.
      * The same instance will be returned in case of being already immutable.

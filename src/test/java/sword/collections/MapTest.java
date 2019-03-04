@@ -18,6 +18,7 @@ abstract class MapTest<K, V> {
     abstract K keyFromInt(int value);
     abstract V valueFromKey(K key);
     abstract void withMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure);
+    abstract void withMapFunc(Procedure<Function<V, String>> procedure);
 
     private void withArbitraryMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure) {
         procedure.apply(ImmutableHashMap.Builder::new);
@@ -452,6 +453,24 @@ abstract class MapTest<K, V> {
 
                 assertTrue(map.equalMap(arbitraryMap));
             });
+        }))));
+    }
+
+    @Test
+    public void testMapResultingKeysForMultipleElements() {
+        withMapFunc(f -> withKey(keyA -> withKey(keyB -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder()
+                    .put(keyA, valueFromKey(keyA))
+                    .put(keyB, valueFromKey(keyB))
+                    .build();
+            final Map<K, String> mapped = map.map(f);
+
+            final int size = map.size();
+            assertEquals(size, mapped.size());
+
+            for (int i = 0; i < size; i++) {
+                assertSame(map.keyAt(i), mapped.keyAt(i));
+            }
         }))));
     }
 }
