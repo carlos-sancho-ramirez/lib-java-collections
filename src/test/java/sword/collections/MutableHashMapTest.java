@@ -71,6 +71,16 @@ public final class MutableHashMapTest extends MapTest<Integer, String> implement
     }
 
     @Override
+    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+        procedure.apply((a, b) -> a + b);
+    }
+
+    @Override
+    TransformableBuilder<String> newIterableBuilder() {
+        return new HashCodeKeyTraversableBuilder();
+    }
+
+    @Override
     String getTestValue() {
         return "value";
     }
@@ -142,7 +152,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String> implement
         })));
     }
 
-    private static final class HashCodeKeyTraversableBuilder implements MutableTraversableBuilder<String> {
+    private static final class HashCodeKeyTraversableBuilder implements MutableTransformableBuilder<String> {
         private final MutableHashMap<Integer, String> map = MutableHashMap.empty();
 
         @Override
@@ -152,7 +162,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String> implement
         }
 
         @Override
-        public MutableTraversable<String> build() {
+        public MutableHashMap<Integer, String> build() {
             return map;
         }
     }

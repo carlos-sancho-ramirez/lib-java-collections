@@ -72,7 +72,7 @@ abstract class AbstractTraversableTest<T> {
     }
 
     @Test
-    public void testContainsForListContainingASingleElement() {
+    public void testContainsForASingleElement() {
         withValue(valueIncluded -> {
             final Traversable<T> list = newIterableBuilder().add(valueIncluded).build();
             withValue(otherValue -> {
@@ -87,16 +87,21 @@ abstract class AbstractTraversableTest<T> {
     }
 
     @Test
-    public void testContainsForListContainingMultipleElements() {
+    public void testContainsForMultipleElements() {
         withValue(a -> withValue(b -> {
-            final Traversable<T> list = newIterableBuilder().add(a).add(b).build();
+            final Traversable<T> traversable = newIterableBuilder().add(a).add(b).build();
+            boolean aIncluded = false;
+            boolean bIncluded = false;
+            for (T value : traversable) {
+                if (value == a) aIncluded = true;
+                if (value == b) bIncluded = true;
+            }
+            final boolean aIn = aIncluded;
+            final boolean bIn = bIncluded;
+
             withValue(value -> {
-                if ((equal(a, value) || equal(b, value)) && !list.contains(value)) {
-                    fail("contains method is expected to return true when containing the value. But failing for value " + value + " while containing " + a + " and " + b);
-                }
-                else if (!equal(a, value) && !equal(b, value) && list.contains(value)) {
-                    fail("contains method is expected to return false when no containing the value. But failing for value " + value + " while containing " + a + " and " + b);
-                }
+                final boolean expected = aIn && equal(a, value) || bIn && equal(b, value);
+                assertEquals(expected, traversable.contains(value));
             });
         }));
     }
@@ -163,17 +168,16 @@ abstract class AbstractTraversableTest<T> {
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withValue(value -> {
             final Traversable<T> list = newIterableBuilder().add(a).add(b).build();
-            final int index = list.indexOf(value);
 
-            if (equal(a, value)) {
-                assertEquals(0, index);
+            final Iterator<T> it = list.iterator();
+            int expectedIndex = -1;
+            for (int i = 0; it.hasNext() && expectedIndex == -1; i++) {
+                if (equal(it.next(), value)) {
+                    expectedIndex = i;
+                }
             }
-            else if (equal(b, value)) {
-                assertEquals(1, index);
-            }
-            else {
-                assertEquals(-1, index);
-            }
+
+            assertEquals(expectedIndex, list.indexOf(value));
         })));
     }
 
@@ -204,17 +208,19 @@ abstract class AbstractTraversableTest<T> {
     public void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
             final Traversable<T> collection = newIterableBuilder().add(a).add(b).build();
-            final T first = collection.findFirst(f, defaultValue);
 
-            if (f.apply(a)) {
-                assertSame(a, first);
+            T expected = defaultValue;
+            boolean found = false;
+            final Iterator<T> it = collection.iterator();
+            while (it.hasNext() && !found) {
+                final T value = it.next();
+                if (f.apply(value)) {
+                    expected = value;
+                    found = true;
+                }
             }
-            else if (f.apply(b)) {
-                assertSame(b, first);
-            }
-            else {
-                assertSame(defaultValue, first);
-            }
+
+            assertSame(expected, collection.findFirst(f, defaultValue));
         }))));
     }
 

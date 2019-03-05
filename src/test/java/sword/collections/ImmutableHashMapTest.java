@@ -133,6 +133,16 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> impleme
         procedure.apply(this::hashCodeIsEven);
     }
 
+    @Override
+    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+        procedure.apply((a, b) -> a + b);
+    }
+
+    @Override
+    TransformableBuilder<String> newIterableBuilder() {
+        return new HashCodeKeyTraversableBuilder();
+    }
+
     private static final class HashCodeKeyTraversableBuilder implements ImmutableTransformableBuilder<String> {
         private final ImmutableHashMap.Builder<Integer, String> builder = new ImmutableHashMap.Builder<>();
 

@@ -64,6 +64,16 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> imple
     }
 
     @Override
+    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+        procedure.apply((a, b) -> a + b);
+    }
+
+    @Override
+    ImmutableTransformableBuilder<String> newIterableBuilder() {
+        return new HashCodeKeyTransformableBuilder((a, b) -> a < b);
+    }
+
+    @Override
     String getTestValue() {
         return "value";
     }

@@ -26,7 +26,7 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> impleme
 
     @Override
     public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
-        procedure.apply(HashCodeKeyTraversableBuilder::new);
+        procedure.apply(HashCodeKeyTransformableBuilder::new);
     }
 
     @Override
@@ -67,6 +67,16 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> impleme
     @Override
     public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
         procedure.apply(str -> (str == null)? 0 : str.hashCode());
+    }
+
+    @Override
+    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+        procedure.apply((a, b) -> a + b);
+    }
+
+    @Override
+    MutableTransformableBuilder<String> newIterableBuilder() {
+        return new HashCodeKeyTransformableBuilder();
     }
 
     @Override
@@ -146,17 +156,17 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> impleme
         })));
     }
 
-    private static final class HashCodeKeyTraversableBuilder implements MutableTraversableBuilder<String> {
+    private static final class HashCodeKeyTransformableBuilder implements MutableTransformableBuilder<String> {
         private final MutableSortedMap<Integer, String> map = new MutableSortedMap.Builder<Integer, String>((a, b) -> a < b).build();
 
         @Override
-        public HashCodeKeyTraversableBuilder add(String element) {
+        public HashCodeKeyTransformableBuilder add(String element) {
             map.put(SortUtils.hashCode(element), element);
             return this;
         }
 
         @Override
-        public MutableTraversable<String> build() {
+        public MutableSortedMap<Integer, String> build() {
             return map;
         }
     }
