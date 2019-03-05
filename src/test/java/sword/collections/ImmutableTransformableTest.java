@@ -17,6 +17,32 @@ public interface ImmutableTransformableTest<T> {
     void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
 
     @Test
+    default void testFilterWhenEmpty() {
+        final Predicate<T> func = v -> {
+            throw new AssertionError("Should not be called for empty collections");
+        };
+
+        withTransformableBuilderSupplier(supplier -> {
+            final ImmutableTransformable<T> transformable = supplier.newBuilder().build();
+            assertSame(transformable, transformable.filter(func));
+            assertTrue(transformable.isEmpty());
+        });
+    }
+
+    @Test
+    default void testFilterNotWhenEmpty() {
+        final Predicate<T> func = v -> {
+            throw new AssertionError("Should not be called for empty collections");
+        };
+
+        withTransformableBuilderSupplier(supplier -> {
+            final ImmutableTransformable<T> transformable = supplier.newBuilder().build();
+            assertSame(transformable, transformable.filterNot(func));
+            assertTrue(transformable.isEmpty());
+        });
+    }
+
+    @Test
     default void testSameInstanceWhenFilteringAllValues() {
         withValue(a -> withValue(b -> withTransformableBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> transformable = supplier.newBuilder().add(a).add(b).build();

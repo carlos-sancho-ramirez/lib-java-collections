@@ -141,15 +141,6 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> imple
 
     @Test
     @Override
-    public void testFilterWhenEmpty() {
-        withFilterFunc(f -> {
-            final ImmutableMap<Integer, String> map = newBuilder().build();
-            assertSame(map, map.filter(f));
-        });
-    }
-
-    @Test
-    @Override
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final String value = Integer.toString(key);
@@ -202,15 +193,6 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> imple
                 assertTrue(filtered.isEmpty());
             }
         })));
-    }
-
-    @Test
-    @Override
-    public void testFilterNotWhenEmpty() {
-        withFilterFunc(f -> {
-            final ImmutableMap<Integer, String> map = newBuilder().build();
-            assertSame(map, map.filterNot(f));
-        });
     }
 
     @Test

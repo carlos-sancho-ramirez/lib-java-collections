@@ -135,15 +135,6 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> impleme
 
     @Test
     @Override
-    public void testFilterWhenEmpty() {
-        withFilterFunc(f -> {
-            final ImmutableMap<Integer, String> map = newBuilder().build();
-            assertSame(map, map.filter(f));
-        });
-    }
-
-    @Test
-    @Override
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final String value = Integer.toString(key);
@@ -192,15 +183,6 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> impleme
                 assertSame(newBuilder().build(), filtered);
             }
         })));
-    }
-
-    @Test
-    @Override
-    public void testFilterNotWhenEmpty() {
-        withFilterFunc(f -> {
-            final ImmutableMap<Integer, String> map = newBuilder().build();
-            assertSame(map, map.filterNot(f));
-        });
     }
 
     @Test

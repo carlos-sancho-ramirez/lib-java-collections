@@ -118,14 +118,6 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> implemen
     }
 
     @Test
-    public void testFilterWhenEmpty() {
-        withFilterFunc(f -> {
-            final ImmutableIntKeyMap<String> map = newMapBuilder().build();
-            assertSame(map, map.filter(f));
-        });
-    }
-
-    @Test
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final String value = Integer.toString(key);
@@ -171,14 +163,6 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> implemen
                 assertSame(newMapBuilder().build(), filtered);
             }
         })));
-    }
-
-    @Test
-    public void testFilterNotWhenEmpty() {
-        withFilterFunc(f -> {
-            final ImmutableIntKeyMap<String> map = newMapBuilder().build();
-            assertSame(map, map.filterNot(f));
-        });
     }
 
     @Test
