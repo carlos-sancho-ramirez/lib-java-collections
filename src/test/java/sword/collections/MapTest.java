@@ -268,14 +268,6 @@ abstract class MapTest<K, V> {
     }
 
     @Test
-    public void testFilterWhenEmpty() {
-        withFilterFunc(f -> {
-            final Map<K, V> map = newBuilder().build();
-            assertTrue(map.filter(f).isEmpty());
-        });
-    }
-
-    @Test
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withKey(key -> {
             final V value = valueFromKey(key);
@@ -327,14 +319,6 @@ abstract class MapTest<K, V> {
                 assertTrue(filtered.isEmpty());
             }
         })));
-    }
-
-    @Test
-    public void testFilterNotWhenEmpty() {
-        withFilterFunc(f -> {
-            final Map<K, V> map = newBuilder().build();
-            assertTrue(map.filterNot(f).isEmpty());
-        });
     }
 
     @Test
