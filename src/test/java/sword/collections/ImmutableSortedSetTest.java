@@ -1,7 +1,5 @@
 package sword.collections;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 public final class ImmutableSortedSetTest extends ImmutableSetTest<String, ImmutableSortedSet.Builder<String>> {
 
     private static final String[] STRING_VALUES = {
@@ -83,15 +81,5 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
     void withSortFunc(Procedure<SortFunction<String>> procedure) {
         procedure.apply(this::lessThan);
         procedure.apply(this::sortByLength);
-    }
-
-    @Override
-    <E> ImmutableHashSet<E> emptyCollection() {
-        return ImmutableHashSet.empty();
-    }
-
-    @Override
-    void assertEmptyCollection(Transformable<String> collection) {
-        assertFalse(collection.iterator().hasNext());
     }
 }

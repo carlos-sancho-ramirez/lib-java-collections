@@ -64,16 +64,6 @@ public final class MutableListTest extends AbstractTransformableTest<String> imp
         procedure.apply(this::filterFunc);
     }
 
-    @Override
-    void assertEmptyCollection(Transformable<String> collection) {
-        assertFalse(collection.iterator().hasNext());
-    }
-
-    @Override
-    void assertNotChanged(Object expected, Object given) {
-        assertEquals(expected, given);
-    }
-
     private boolean sortAlphabetically(String a, String b) {
         if (b == null) {
             return false;

@@ -100,11 +100,6 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
         return new ImmutableHashSet.Builder<>();
     }
 
-    @Override
-    <E> ImmutableHashSet<E> emptyCollection() {
-        return ImmutableHashSet.empty();
-    }
-
     @Test
     public void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {

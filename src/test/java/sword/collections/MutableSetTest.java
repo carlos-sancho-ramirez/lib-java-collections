@@ -14,16 +14,6 @@ abstract class MutableSetTest<T> extends AbstractTransformableTest<T> implements
     abstract MutableSet.Builder<T> newIterableBuilder();
     abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
 
-    @Override
-    void assertEmptyCollection(Transformable<T> collection) {
-        assertFalse(collection.iterator().hasNext());
-    }
-
-    @Override
-    void assertNotChanged(Object expected, Object given) {
-        assertEquals(expected, given);
-    }
-
     @Test
     public void testSizeForTwoElements() {
         withValue(a -> withValue(b -> {

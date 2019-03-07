@@ -9,8 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
 
     abstract TransformableBuilder<T> newIterableBuilder();
-    abstract void assertEmptyCollection(Transformable<T> collection);
-    abstract void assertNotChanged(Object expected, Object given);
 
     @Test
     public void testIndexesWhenEmpty() {
@@ -53,7 +51,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
             throw new AssertionError("This function should not be called");
         };
 
-        assertEmptyCollection(newIterableBuilder().build().filter(f));
+        assertFalse(newIterableBuilder().build().filter(f).iterator().hasNext());
     }
 
     @Test
@@ -63,10 +61,10 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
             final Transformable<T> filtered = transformable.filter(f);
 
             if (f.apply(value)) {
-                assertNotChanged(transformable, filtered);
+                assertEquals(transformable, filtered);
             }
             else {
-                assertEmptyCollection(filtered);
+                assertFalse(filtered.iterator().hasNext());
             }
         }));
     }
@@ -81,7 +79,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
             final boolean bPassed = f.apply(b);
 
             if (aPassed && bPassed) {
-                assertNotChanged(iterable, filtered);
+                assertEquals(iterable, filtered);
             }
             else if (aPassed) {
                 Iterator<T> iterator = filtered.iterator();
@@ -96,7 +94,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
                 assertFalse(iterator.hasNext());
             }
             else {
-                assertEmptyCollection(filtered);
+                assertFalse(filtered.iterator().hasNext());
             }
         })));
     }
@@ -107,7 +105,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
             throw new AssertionError("This function should not be called");
         };
 
-        assertEmptyCollection(newIterableBuilder().build().filterNot(f));
+        assertFalse(newIterableBuilder().build().filterNot(f).iterator().hasNext());
     }
 
     @Test
@@ -117,10 +115,10 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
             final Transformable<T> filtered = collection.filterNot(f);
 
             if (f.apply(value)) {
-                assertEmptyCollection(filtered);
+                assertFalse(filtered.iterator().hasNext());
             }
             else {
-                assertNotChanged(collection, filtered);
+                assertEquals(collection, filtered);
             }
         }));
     }
@@ -135,7 +133,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
             final boolean bRemoved = f.apply(b);
 
             if (aRemoved && bRemoved) {
-                assertEmptyCollection(filtered);
+                assertFalse(filtered.iterator().hasNext());
             }
             else if (aRemoved) {
                 Iterator<T> iterator = filtered.iterator();
@@ -150,7 +148,7 @@ abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
                 assertFalse(iterator.hasNext());
             }
             else {
-                assertNotChanged(iterable, filtered);
+                assertEquals(iterable, filtered);
             }
         })));
     }

@@ -21,16 +21,6 @@ abstract class MapTest<K, V> extends AbstractTransformableTest<V> {
     abstract void withMapFunc(Procedure<Function<V, String>> procedure);
     abstract void withMapToIntFunc(Procedure<IntResultFunction<V>> procedure);
 
-    @Override
-    void assertEmptyCollection(Transformable<V> collection) {
-        assertFalse(collection.iterator().hasNext());
-    }
-
-    @Override
-    void assertNotChanged(Object expected, Object given) {
-        assertEquals(expected, given);
-    }
-
     private void withArbitraryMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure) {
         procedure.apply(ImmutableHashMap.Builder::new);
         procedure.apply(MutableHashMap.Builder::new);
