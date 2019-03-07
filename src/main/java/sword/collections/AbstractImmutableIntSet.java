@@ -10,7 +10,7 @@ abstract class AbstractImmutableIntSet extends AbstractImmutableIntTransformable
     }
 
     @Override
-    ImmutableIntCollectionBuilder newIntBuilder() {
+    ImmutableIntTransformableBuilder newIntBuilder() {
         return new ImmutableIntSetBuilder();
     }
 

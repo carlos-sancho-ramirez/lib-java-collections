@@ -177,7 +177,7 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
     /**
      * Builder to create a new instance of an {@link ImmutableIntSet}.
      */
-    interface Builder extends ImmutableIntCollectionBuilder<ImmutableIntSet> {
+    interface Builder extends ImmutableIntTransformableBuilder<ImmutableIntSet> {
 
         /**
          * Includes a new value for the new set.

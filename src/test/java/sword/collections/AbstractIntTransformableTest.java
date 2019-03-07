@@ -1,5 +1,7 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +20,7 @@ abstract class AbstractIntTransformableTest extends AbstractIntTraversableTest {
         assertEmptyCollection(newIntBuilder().build().filter(f));
     }
 
+    @Test
     public void testFilterForSingleElement() {
         withFilterFunc(f -> withItem(value -> {
             final IntTransformable transformable = newIntBuilder().add(value).build();
@@ -32,6 +35,7 @@ abstract class AbstractIntTransformableTest extends AbstractIntTraversableTest {
         }));
     }
 
+    @Test
     public void testFilterForMultipleElements() {
         withFilterFunc(f -> withItem(a -> withItem(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();
@@ -61,6 +65,7 @@ abstract class AbstractIntTransformableTest extends AbstractIntTraversableTest {
         })));
     }
 
+    @Test
     public void testFilterNotWhenEmpty() {
         final IntPredicate f = unused -> {
             throw new AssertionError("This function should not be called");
@@ -69,6 +74,7 @@ abstract class AbstractIntTransformableTest extends AbstractIntTraversableTest {
         assertEmptyCollection(newIntBuilder().build().filterNot(f));
     }
 
+    @Test
     public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withItem(value -> {
             final IntTransformable transformable = newIntBuilder().add(value).build();
@@ -83,6 +89,7 @@ abstract class AbstractIntTransformableTest extends AbstractIntTraversableTest {
         }));
     }
 
+    @Test
     public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withItem(a -> withItem(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();

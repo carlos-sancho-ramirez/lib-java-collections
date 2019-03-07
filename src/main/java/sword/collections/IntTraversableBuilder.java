@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface IntTraversableBuilder<T extends IntTraversable> {
-    IntTraversableBuilder<T> add(int value);
-    T build();
+public interface IntTraversableBuilder<C extends IntTraversable> {
+    IntTraversableBuilder<C> add(int value);
+    C build();
 }

@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class ImmutableIntListTest extends AbstractImmutableIntTransformableTest {
+public final class ImmutableIntListTest extends AbstractIntTransformableTest implements ImmutableIntTransformableTest<ImmutableIntList> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE
@@ -20,12 +20,22 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
     }
 
     @Override
-    void withMapFunc(Procedure<IntFunction<String>> procedure) {
+    public void withTransformableBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntList, ImmutableIntTransformableBuilder<ImmutableIntList>>> procedure) {
+        procedure.apply(ImmutableIntList.Builder::new);
+    }
+
+    @Override
+    public void withValue(IntProcedure procedure) {
+        withItem(procedure);
+    }
+
+    @Override
+    public void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);
     }
 
     @Override
-    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+    public void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
         procedure.apply(v -> v * v);
         procedure.apply(v -> v + 1);
     }
@@ -59,6 +69,16 @@ public final class ImmutableIntListTest extends AbstractImmutableIntTransformabl
     @Override
     ImmutableIntList.Builder newIntBuilder() {
         return new ImmutableIntList.Builder();
+    }
+
+    @Override
+    void assertEmptyCollection(IntTransformable transformable) {
+        assertSame(ImmutableIntList.empty(), transformable);
+    }
+
+    @Override
+    void assertNotChanged(Object expected, Object given) {
+        assertSame(expected, given);
     }
 
     @Test

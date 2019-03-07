@@ -10,7 +10,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
 
     abstract AbstractIntTraversable emptyCollection();
 
-    abstract ImmutableIntCollectionBuilder newIntBuilder();
+    abstract ImmutableIntTransformableBuilder newIntBuilder();
     abstract void withItem(IntProcedure procedure);
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);
     abstract void withMapFunc(Procedure<IntFunction<String>> procedure);

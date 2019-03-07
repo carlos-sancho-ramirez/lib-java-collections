@@ -151,7 +151,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
         return defaultValue;
     }
 
-    public static class Builder implements ImmutableIntCollectionBuilder<ImmutableIntList> {
+    public static class Builder implements ImmutableIntTransformableBuilder<ImmutableIntList> {
         private final MutableIntList _list = MutableIntList.empty();
 
         public Builder append(int item) {
