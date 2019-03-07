@@ -16,7 +16,7 @@ package sword.collections;
  * This class also implements the {@link Iterable} interface, which
  * ensures that the for-each construction can be used.
  */
-public interface ImmutableIntSet extends IntSet, ImmutableIntTraversable {
+public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
 
     @Override
     ImmutableIntSet filter(IntPredicate predicate);

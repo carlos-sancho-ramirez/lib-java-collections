@@ -32,14 +32,14 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
             throw new AssertionError("This function should not be called");
         };
 
-        final ImmutableIntTraversable collection = newIntBuilder().build();
+        final ImmutableIntTransformable collection = newIntBuilder().build();
         assertSame(ImmutableList.empty(), collection.map(func));
     }
 
     @Test
     public void testMapForSingleElement() {
         withMapFunc(f -> withItem(value -> {
-            final ImmutableIntTraversable collection = newIntBuilder().add(value).build();
+            final ImmutableIntTransformable collection = newIntBuilder().add(value).build();
             final ImmutableTransformable<String> mapped = collection.map(f);
             final Iterator<String> iterator = mapped.iterator();
             assertTrue(iterator.hasNext());
@@ -51,7 +51,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
     @Test
     public void testMapForMultipleElements() {
         withMapFunc(f -> withItem(a -> withItem(b -> {
-            final ImmutableIntTraversable collection = newIntBuilder().add(a).add(b).build();
+            final ImmutableIntTransformable collection = newIntBuilder().add(a).add(b).build();
             final ImmutableTransformable<String> mapped = collection.map(f);
 
             final Iterator<Integer> iterator = collection.iterator();
@@ -71,7 +71,7 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
             throw new AssertionError("This function should not be called");
         };
 
-        final ImmutableIntTraversable collection = newIntBuilder().build();
+        final ImmutableIntTransformable collection = newIntBuilder().build();
         assertSame(ImmutableIntList.empty(), collection.mapToInt(func));
     }
 
@@ -88,8 +88,8 @@ abstract class AbstractImmutableIntTransformableTest extends AbstractIntTransfor
     @Test
     public void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withItem(a -> withItem(b -> {
-            final ImmutableIntTraversable collection = newIntBuilder().add(a).add(b).build();
-            final ImmutableIntTraversable mapped = collection.mapToInt(f);
+            final ImmutableIntTransformable collection = newIntBuilder().add(a).add(b).build();
+            final ImmutableIntTransformable mapped = collection.mapToInt(f);
 
             final Iterator<Integer> iterator = collection.iterator();
             final Iterator<Integer> mappedIterator = mapped.iterator();

@@ -2,7 +2,7 @@ package sword.collections;
 
 import java.util.Iterator;
 
-abstract class AbstractImmutableIntSet extends AbstractImmutableIntTraversable implements ImmutableIntSet {
+abstract class AbstractImmutableIntSet extends AbstractImmutableIntTransformable implements ImmutableIntSet {
 
     @Override
     <U> ImmutableTransformableBuilder<U> newBuilder() {

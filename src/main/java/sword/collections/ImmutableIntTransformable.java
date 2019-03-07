@@ -1,6 +1,6 @@
 package sword.collections;
 
-interface ImmutableIntTraversable extends IntTransformable {
+interface ImmutableIntTransformable extends IntTransformable {
 
     /**
      * Applies the given predicate to each of the values within the collection and
@@ -9,7 +9,7 @@ interface ImmutableIntTraversable extends IntTransformable {
      *
      * @param predicate To be applied to each element in order to filter.
      */
-    ImmutableIntTraversable filter(IntPredicate predicate);
+    ImmutableIntTransformable filter(IntPredicate predicate);
 
     /**
      * Applies the given predicate to each of the values within the collection and
@@ -18,7 +18,7 @@ interface ImmutableIntTraversable extends IntTransformable {
      *
      * @param predicate To be applied to each element in order to filter.
      */
-    ImmutableIntTraversable filterNot(IntPredicate predicate);
+    ImmutableIntTransformable filterNot(IntPredicate predicate);
 
     /**
      * Applies the given function to each element on the collection and composes a
@@ -26,7 +26,7 @@ interface ImmutableIntTraversable extends IntTransformable {
      *
      * @param func Function to be applied to each value in the collection.
      */
-    ImmutableIntTraversable mapToInt(IntToIntFunction func);
+    ImmutableIntTransformable mapToInt(IntToIntFunction func);
 
     /**
      * Applies the given function to each element on the collection and composes a

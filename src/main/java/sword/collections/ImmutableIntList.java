@@ -1,6 +1,6 @@
 package sword.collections;
 
-public final class ImmutableIntList extends AbstractImmutableIntTraversable implements IntList {
+public final class ImmutableIntList extends AbstractImmutableIntTransformable implements IntList {
 
     private static final ImmutableIntList EMPTY = new ImmutableIntList(new int[0]);
 

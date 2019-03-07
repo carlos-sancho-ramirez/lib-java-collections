@@ -10,7 +10,7 @@ package sword.collections;
  *
  * @param <T> Type for the key elements within the Map
  */
-public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTraversable {
+public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTransformable {
 
     @Override
     ImmutableSet<T> keySet();

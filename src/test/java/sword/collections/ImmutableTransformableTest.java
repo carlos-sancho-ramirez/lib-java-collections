@@ -7,7 +7,6 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sword.collections.SortUtils.equal;
-import static sword.collections.TestUtils.withInt;
 
 public interface ImmutableTransformableTest<T> {
 
@@ -108,7 +107,7 @@ public interface ImmutableTransformableTest<T> {
     default void testMapToIntForSingleElement() {
         withMapToIntFunc(f -> withValue(value -> withTransformableBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> collection = supplier.newBuilder().add(value).build();
-            final ImmutableIntTraversable mapped = collection.mapToInt(f);
+            final ImmutableIntTransformable mapped = collection.mapToInt(f);
 
             final Iterator<Integer> iterator = mapped.iterator();
             assertTrue(iterator.hasNext());
@@ -121,7 +120,7 @@ public interface ImmutableTransformableTest<T> {
     default void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withValue(a -> withValue(b -> withTransformableBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> collection = supplier.newBuilder().add(a).add(b).build();
-            final ImmutableIntTraversable mapped = collection.mapToInt(f);
+            final ImmutableIntTransformable mapped = collection.mapToInt(f);
 
             final Iterator<T> collectionIterator = collection.iterator();
             final Iterator<Integer> mappedIterator = mapped.iterator();

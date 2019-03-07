@@ -22,12 +22,12 @@ public interface ImmutableTransformable<T> extends Transformable<T> {
 
     /**
      * Applies the given function to each element on the collection and composes a
-     * new {@link ImmutableIntTraversable} with the results of each
+     * new {@link ImmutableIntTransformable} with the results of each
      * function execution in the same list index.
      *
      * @param func Function to be applied to each element in the list
      */
-    ImmutableIntTraversable mapToInt(IntResultFunction<T> func);
+    ImmutableIntTransformable mapToInt(IntResultFunction<T> func);
 
     /**
      * Applies the given function to each element on the collection and composes a

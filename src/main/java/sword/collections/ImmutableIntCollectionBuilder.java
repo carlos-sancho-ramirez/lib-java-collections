@@ -1,6 +1,6 @@
 package sword.collections;
 
-public interface ImmutableIntCollectionBuilder<T extends ImmutableIntTraversable> extends IntTransformableBuilder<T> {
+public interface ImmutableIntCollectionBuilder<T extends ImmutableIntTransformable> extends IntTransformableBuilder<T> {
     @Override
     ImmutableIntCollectionBuilder<T> add(int value);
 

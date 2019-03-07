@@ -1,12 +1,12 @@
 package sword.collections;
 
-abstract class AbstractImmutableIntTraversable extends AbstractIntTraversable implements ImmutableIntTraversable {
+abstract class AbstractImmutableIntTransformable extends AbstractIntTraversable implements ImmutableIntTransformable {
 
     abstract ImmutableIntCollectionBuilder newIntBuilder();
     abstract <U> ImmutableTransformableBuilder<U> newBuilder();
 
     @Override
-    public ImmutableIntTraversable filter(IntPredicate predicate) {
+    public ImmutableIntTransformable filter(IntPredicate predicate) {
         boolean somethingRemoved = false;
         ImmutableIntCollectionBuilder builder = newIntBuilder();
         for (int item : this) {
@@ -22,7 +22,7 @@ abstract class AbstractImmutableIntTraversable extends AbstractIntTraversable im
     }
 
     @Override
-    public ImmutableIntTraversable filterNot(IntPredicate predicate) {
+    public ImmutableIntTransformable filterNot(IntPredicate predicate) {
         boolean somethingRemoved = false;
         ImmutableIntCollectionBuilder builder = newIntBuilder();
         for (int item : this) {
@@ -38,7 +38,7 @@ abstract class AbstractImmutableIntTraversable extends AbstractIntTraversable im
     }
 
     @Override
-    public ImmutableIntTraversable mapToInt(IntToIntFunction func) {
+    public ImmutableIntTransformable mapToInt(IntToIntFunction func) {
         final ImmutableIntCollectionBuilder builder = newIntBuilder();
 
         for (int item : this) {
