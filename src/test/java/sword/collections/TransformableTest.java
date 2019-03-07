@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class AbstractTransformableTest<T> extends AbstractTraversableTest<T> {
+abstract class TransformableTest<T> extends TraversableTest<T> {
 
     abstract TransformableBuilder<T> newIterableBuilder();
 

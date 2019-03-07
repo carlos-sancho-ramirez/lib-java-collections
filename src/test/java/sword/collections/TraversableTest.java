@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class AbstractTraversableTest<T> {
+abstract class TraversableTest<T> {
 
     abstract TraversableBuilder<T> newIterableBuilder();
     abstract void withValue(Procedure<T> procedure);

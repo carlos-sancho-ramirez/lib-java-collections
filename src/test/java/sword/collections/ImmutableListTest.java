@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableListTest extends AbstractTransformableTest<String> implements ImmutableTransformableTest<String> {
+public final class ImmutableListTest extends TransformableTest<String> implements ImmutableTransformableTest<String> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"

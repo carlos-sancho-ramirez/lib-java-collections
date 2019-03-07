@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class MutableSetTest<T> extends AbstractTransformableTest<T> implements MutableTraversableTest<T> {
+abstract class MutableSetTest<T> extends TransformableTest<T> implements MutableTraversableTest<T> {
 
     abstract boolean lessThan(T a, T b);
     abstract MutableSet.Builder<T> newBuilder();

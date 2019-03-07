@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-public final class MutableListTest extends AbstractTransformableTest<String> implements MutableTraversableTest<String> {
+public final class MutableListTest extends TransformableTest<String> implements MutableTraversableTest<String> {
 
     private static final String[] stringValues = {
             null, "", "_", "0", "abcd"
