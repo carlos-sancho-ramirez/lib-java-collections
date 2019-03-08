@@ -35,7 +35,7 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
     }
 
     @Override
-    IntTraversableBuilder newIntBuilder() {
+    IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder(SortUtils::compareByHashCode);
     }
 

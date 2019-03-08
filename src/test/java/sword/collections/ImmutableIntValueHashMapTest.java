@@ -35,7 +35,7 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
     }
 
     @Override
-    IntTraversableBuilder newIntBuilder() {
+    IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder();
     }
 

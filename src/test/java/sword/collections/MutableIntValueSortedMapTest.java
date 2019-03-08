@@ -33,7 +33,7 @@ public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<S
     }
 
     @Override
-    IntTraversableBuilder newIntBuilder() {
+    IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder(SortUtils::compareByHashCode);
     }
 
@@ -86,7 +86,7 @@ public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<S
         })));
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTraversableBuilder<MutableIntValueSortedMap<String>> {
+    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder<MutableIntValueSortedMap<String>> {
         private final MutableIntValueSortedMap<String> map;
 
         SameKeyAndValueTraversableBuilder(SortFunction<String> sortFunc) {

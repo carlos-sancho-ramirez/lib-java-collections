@@ -8,13 +8,24 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntValueMapTest<T> extends IntTraversableTest {
+abstract class IntValueMapTest<T> extends IntTransformableTest {
 
     abstract IntValueMap.Builder<T> newBuilder();
 
     abstract void withKey(Procedure<T> procedure);
     abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
     abstract T keyFromInt(int value);
+
+    @Override
+    void withMapFunc(Procedure<IntFunction<String>> procedure) {
+        procedure.apply(Integer::toString);
+    }
+
+    @Override
+    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
+    }
 
     @Test
     public void testEmptyBuilderBuildsEmptyArray() {
