@@ -11,11 +11,6 @@ public final class MutableIntTreeSetTest extends IntTraversableTest {
     };
 
     @Override
-    AbstractIntTraversable emptyCollection() {
-        return ImmutableIntSetImpl.empty();
-    }
-
-    @Override
     IntTraversableBuilder newIntBuilder() {
         return new MutableIntTreeSet.Builder();
     }

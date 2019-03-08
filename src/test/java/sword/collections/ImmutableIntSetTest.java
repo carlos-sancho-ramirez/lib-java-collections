@@ -10,11 +10,6 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     abstract ImmutableIntSet.Builder newIntBuilder();
 
-    @Override
-    AbstractImmutableIntSet emptyCollection() {
-        return ImmutableIntSetImpl.empty();
-    }
-
     private boolean isPositiveValue(int value) {
         return value >= 0;
     }
@@ -195,26 +190,6 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
                 assertTrue(set2.contains(value));
             }
         }));
-    }
-
-    @Test
-    @Override
-    public void testFindFirstForMultipleElements() {
-        withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
-            final IntTraversable collection = newIntBuilder().add(a).add(b).build();
-            final boolean reversed = b < a;
-            final int first = collection.findFirst(f, defaultValue);
-
-            if (f.apply(a) && (!reversed || !f.apply(b))) {
-                assertEquals(a, first);
-            }
-            else if (f.apply(b) && (reversed || !f.apply(a))) {
-                assertEquals(b, first);
-            }
-            else {
-                assertEquals(defaultValue, first);
-            }
-        }))));
     }
 
     @Test

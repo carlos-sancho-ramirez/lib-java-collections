@@ -40,11 +40,6 @@ public final class MutableIntListTest extends IntTransformableTest implements Mu
     }
 
     @Override
-    ImmutableIntList emptyCollection() {
-        return ImmutableIntList.empty();
-    }
-
-    @Override
     MutableIntList.Builder newIntBuilder() {
         return new MutableIntList.Builder();
     }
@@ -85,47 +80,6 @@ public final class MutableIntListTest extends IntTransformableTest implements Mu
 
             assertFalse(iterator.hasNext());
         }));
-    }
-
-    @Test
-    public void testFindFirstWhenEmpty() {
-        withFilterFunc(f -> withItem(defaultValue -> {
-            final MutableIntList list = newIntBuilder().build();
-            assertEquals(defaultValue, list.findFirst(f, defaultValue));
-        }));
-    }
-
-    @Test
-    public void testFindFirstForSingleElement() {
-        withFilterFunc(f -> withItem(defaultValue -> withItem(value -> {
-            final MutableIntList list = newIntBuilder().append(value).build();
-            final int first = list.findFirst(f, defaultValue);
-
-            if (f.apply(value)) {
-                assertEquals(value, first);
-            }
-            else {
-                assertEquals(defaultValue, first);
-            }
-        })));
-    }
-
-    @Test
-    public void testFindFirstForMultipleElements() {
-        withFilterFunc(f -> withItem(defaultValue -> withItem(a -> withItem(b -> {
-            final MutableIntList list = newIntBuilder().append(a).append(b).build();
-            final int first = list.findFirst(f, defaultValue);
-
-            if (f.apply(a)) {
-                assertEquals(a, first);
-            }
-            else if (f.apply(b)) {
-                assertEquals(b, first);
-            }
-            else {
-                assertEquals(defaultValue, first);
-            }
-        }))));
     }
 
     @Test
