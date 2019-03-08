@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest {
+abstract class ImmutableIntSetTest extends AbstractIntTransformableTest implements ImmutableIntTransformableTest<ImmutableIntSet> {
 
     abstract ImmutableIntSet.Builder newIntBuilder();
 
@@ -25,14 +25,19 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
     }
 
     @Override
-    void withMapFunc(Procedure<IntFunction<String>> procedure) {
+    public void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);
     }
 
     @Override
-    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+    public void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
         procedure.apply(v -> v * v);
         procedure.apply(v -> v + 1);
+    }
+
+    @Override
+    public void withValue(IntProcedure procedure) {
+        withItem(procedure);
     }
 
     private int moduleFour(int value) {
@@ -45,6 +50,16 @@ abstract class ImmutableIntSetTest extends AbstractImmutableIntTransformableTest
 
     private void withGroupingIntFunc(Procedure<IntToIntFunction> procedure) {
         procedure.apply(this::moduleFour);
+    }
+
+    @Override
+    void assertEmptyCollection(IntTransformable transformable) {
+        assertFalse(transformable.iterator().hasNext());
+    }
+
+    @Override
+    void assertNotChanged(Object expected, Object given) {
+        assertSame(expected, given);
     }
 
     @Test
