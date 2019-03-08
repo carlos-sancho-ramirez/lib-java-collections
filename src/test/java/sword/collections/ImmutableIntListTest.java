@@ -100,21 +100,6 @@ public final class ImmutableIntListTest extends AbstractIntTransformableTest imp
     }
 
     @Test
-    public void testMapForMultipleElements() {
-        withMapFunc(f -> withItem(a -> withItem(b -> {
-            final ImmutableIntList collection = newIntBuilder().add(a).add(b).build();
-            final ImmutableList<String> mapped = collection.map(f);
-            final Iterator<String> iterator = mapped.iterator();
-
-            for (int item : collection) {
-                assertTrue(iterator.hasNext());
-                assertEquals(f.apply(item), iterator.next());
-            }
-            assertFalse(iterator.hasNext());
-        })));
-    }
-
-    @Test
     public void testFindFirstWhenEmpty() {
         withFilterFunc(f -> withItem(defaultValue -> {
             final ImmutableIntList list = newIntBuilder().build();
