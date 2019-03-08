@@ -19,6 +19,11 @@ public final class MutableIntPairMapTest extends IntPairMapTest implements Mutab
     }
 
     @Override
+    IntTraversableBuilder newIntBuilder() {
+        return new SameKeyAndValueTraversableBuilder();
+    }
+
+    @Override
     void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::valueIsEven);
     }

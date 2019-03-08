@@ -7,10 +7,15 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntPairMapTest {
+abstract class IntPairMapTest extends IntTraversableTest {
 
     abstract IntPairMapBuilder newBuilder();
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);
+
+    @Override
+    void withItem(IntProcedure procedure) {
+        withInt(procedure);
+    }
 
     @Test
     public void testEmptyBuilderBuildsEmptyArray() {

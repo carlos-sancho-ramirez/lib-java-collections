@@ -46,6 +46,11 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
     }
 
     @Override
+    IntTraversableBuilder newIntBuilder() {
+        return new SameKeyAndValueTraversableBuilder();
+    }
+
+    @Override
     void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::valueIsEven);
     }
@@ -331,5 +336,20 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
             assertEquals(2, map1.get(b, defValue));
             assertEquals(defValue, map2.get(b, defValue));
         }));
+    }
+
+    private static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder<ImmutableIntPairMap> {
+        private final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
+
+        @Override
+        public SameKeyAndValueTraversableBuilder add(int value) {
+            builder.put(value, value);
+            return this;
+        }
+
+        @Override
+        public ImmutableIntPairMap build() {
+            return builder.build();
+        }
     }
 }
