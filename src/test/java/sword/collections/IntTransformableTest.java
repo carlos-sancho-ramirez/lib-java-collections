@@ -12,6 +12,41 @@ abstract class IntTransformableTest extends IntTraversableTest {
     abstract void withMapFunc(Procedure<IntFunction<String>> procedure);
     abstract void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
 
+    @Test
+    public void testIndexesWhenEmpty() {
+        assertTrue(newIntBuilder().build().indexes().isEmpty());
+    }
+
+    @Test
+    public void testIndexesForSingleValue() {
+        withItem(value -> {
+            final IntTransformer indexIterator = newIntBuilder().add(value).build().indexes().iterator();
+            assertTrue(indexIterator.hasNext());
+            assertEquals(0, indexIterator.next().intValue());
+            assertFalse(indexIterator.hasNext());
+        });
+    }
+
+    @Test
+    public void testIndexesForMultipleValues() {
+        withItem(a -> withItem(b -> withItem(c -> {
+            final IntTransformable transformable = newIntBuilder().add(a).add(b).add(c).build();
+            final IntTransformer transformer = transformable.iterator();
+            int length = 0;
+            while (transformer.hasNext()) {
+                length++;
+                transformer.next();
+            }
+
+            final Iterator<Integer> indexIterator = transformable.indexes().iterator();
+            for (int i = 0; i < length; i++) {
+                assertTrue(indexIterator.hasNext());
+                assertEquals(i, indexIterator.next().intValue());
+            }
+            assertFalse(indexIterator.hasNext());
+        })));
+    }
+
     public void testFilterWhenEmpty() {
         final IntPredicate f = unused -> {
             throw new AssertionError("This function should not be called");

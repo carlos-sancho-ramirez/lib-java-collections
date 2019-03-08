@@ -4,6 +4,13 @@ public interface IntTransformable extends IntTraversable {
     IntTransformer iterator();
 
     /**
+     * Return all indexes within this collection in ascending order.
+     */
+    default IntSet indexes() {
+        return iterator().indexes().toSet();
+    }
+
+    /**
      * Applies the given predicate to each of the values within the set and
      * composes a new set including only the values whose predicate returned
      * true.
