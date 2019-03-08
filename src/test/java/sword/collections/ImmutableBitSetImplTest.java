@@ -21,11 +21,6 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
     }
 
     @Override
-    void assertEmptyCollection(IntTransformable transformable) {
-        assertFalse(transformable.iterator().hasNext());
-    }
-
-    @Override
     public void withTransformableBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntSet, ImmutableIntTransformableBuilder<ImmutableIntSet>>> procedure) {
         procedure.apply(ImmutableBitSetImpl.Builder::new);
     }

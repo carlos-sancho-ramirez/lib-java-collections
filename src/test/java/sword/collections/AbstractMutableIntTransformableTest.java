@@ -16,18 +16,8 @@ abstract class AbstractMutableIntTransformableTest<C extends MutableIntTraversab
     abstract void withMapFunc(Procedure<IntFunction<String>> procedure);
     abstract void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
 
-    @Override
-    void assertEmptyCollection(IntTransformable transformable) {
-        assertFalse(transformable.iterator().hasNext());
-    }
-
     private void assertMapTargetEmptyCollection(Transformable<String> transformable) {
         assertFalse(transformable.iterator().hasNext());
-    }
-
-    @Override
-    void assertNotChanged(Object expected, Object given) {
-        assertEquals(expected, given);
     }
 
     @Test
@@ -70,7 +60,7 @@ abstract class AbstractMutableIntTransformableTest<C extends MutableIntTraversab
             throw new AssertionError("This function should not be called");
         };
 
-        assertEmptyCollection(newIntBuilder().build().mapToInt(func));
+        assertFalse(newIntBuilder().build().mapToInt(func).iterator().hasNext());
     }
 
     @Test

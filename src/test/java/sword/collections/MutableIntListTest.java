@@ -14,16 +14,6 @@ public final class MutableIntListTest extends AbstractMutableIntTransformableTes
     };
 
     @Override
-    void assertEmptyCollection(IntTransformable collection) {
-        assertFalse(collection.iterator().hasNext());
-    }
-
-    @Override
-    void assertNotChanged(Object expected, Object given) {
-        assertEquals(expected, given);
-    }
-
-    @Override
     void withItem(IntProcedure procedure) {
         for (int value : INT_VALUES) {
             procedure.apply(value);

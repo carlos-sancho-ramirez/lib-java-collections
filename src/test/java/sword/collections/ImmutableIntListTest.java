@@ -71,16 +71,6 @@ public final class ImmutableIntListTest extends AbstractIntTransformableTest imp
         return new ImmutableIntList.Builder();
     }
 
-    @Override
-    void assertEmptyCollection(IntTransformable transformable) {
-        assertSame(ImmutableIntList.empty(), transformable);
-    }
-
-    @Override
-    void assertNotChanged(Object expected, Object given) {
-        assertSame(expected, given);
-    }
-
     @Test
     public void testSizeForTwoElements() {
         withItem(a -> withItem(b -> {
@@ -232,11 +222,6 @@ public final class ImmutableIntListTest extends AbstractIntTransformableTest imp
             assertEquals(a, result21.get(1));
             assertEquals(b, result21.get(2));
         })));
-    }
-
-    @Test
-    public void testFilterForSingleElement() {
-        super.testFilterForSingleElement();
     }
 
     @Test

@@ -52,16 +52,6 @@ abstract class ImmutableIntSetTest extends AbstractIntTransformableTest implemen
         procedure.apply(this::moduleFour);
     }
 
-    @Override
-    void assertEmptyCollection(IntTransformable transformable) {
-        assertFalse(transformable.iterator().hasNext());
-    }
-
-    @Override
-    void assertNotChanged(Object expected, Object given) {
-        assertSame(expected, given);
-    }
-
     @Test
     public void testSizeForMultipleElements() {
         withItem(a -> withItem(b -> {
