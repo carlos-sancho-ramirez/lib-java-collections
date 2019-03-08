@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class MutableIntTreeSetTest extends AbstractIntTraversableTest {
+public final class MutableIntTreeSetTest extends IntTraversableTest {
 
     private final int[] intValues = {
             Integer.MIN_VALUE, -100, -2, -1, 0, 1, 2, 5, Integer.MAX_VALUE

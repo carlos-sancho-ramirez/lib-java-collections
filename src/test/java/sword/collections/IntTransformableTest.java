@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class AbstractIntTransformableTest extends AbstractIntTraversableTest {
+abstract class IntTransformableTest extends IntTraversableTest {
 
     abstract IntTransformableBuilder newIntBuilder();
     abstract void withMapFunc(Procedure<IntFunction<String>> procedure);

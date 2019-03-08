@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntListTest extends AbstractIntTransformableTest implements MutableIntTraversableTest<MutableIntList> {
+public final class MutableIntListTest extends IntTransformableTest implements MutableIntTraversableTest<MutableIntList> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE

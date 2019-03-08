@@ -5,9 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntSetTest extends AbstractIntTransformableTest implements MutableIntTraversableTest<MutableIntSet> {
+public final class MutableIntSetTest extends IntTransformableTest implements MutableIntTraversableTest<MutableIntSet> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -500, -2, -1, 0, 1, 3, 127, 128, Integer.MAX_VALUE

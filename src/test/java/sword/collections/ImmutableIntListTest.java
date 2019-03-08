@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class ImmutableIntListTest extends AbstractIntTransformableTest implements ImmutableIntTransformableTest<ImmutableIntList> {
+public final class ImmutableIntListTest extends IntTransformableTest implements ImmutableIntTransformableTest<ImmutableIntList> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE
