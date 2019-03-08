@@ -33,6 +33,16 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
     }
 
     @Override
+    IntTraversableBuilder newIntBuilder() {
+        return new SameKeyAndValueTraversableBuilder();
+    }
+
+    @Override
+    void withItem(IntProcedure procedure) {
+        withInt(procedure);
+    }
+
+    @Override
     void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(v -> (v & 1) == 0);
     }

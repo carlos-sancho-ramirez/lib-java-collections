@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntValueMapTest<T> {
+abstract class IntValueMapTest<T> extends IntTraversableTest {
 
     abstract IntValueMap.Builder<T> newBuilder();
 
