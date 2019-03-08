@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntPairMapTest extends IntTraversableTest {
+abstract class IntPairMapTest extends IntTransformableTest {
 
     abstract IntPairMapBuilder newBuilder();
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);
@@ -15,6 +15,17 @@ abstract class IntPairMapTest extends IntTraversableTest {
     @Override
     void withItem(IntProcedure procedure) {
         withInt(procedure);
+    }
+
+    @Override
+    void withMapFunc(Procedure<IntFunction<String>> procedure) {
+        procedure.apply(Integer::toString);
+    }
+
+    @Override
+    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
     }
 
     @Test

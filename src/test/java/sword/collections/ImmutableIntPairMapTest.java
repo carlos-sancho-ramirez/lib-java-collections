@@ -46,7 +46,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
     }
 
     @Override
-    IntTraversableBuilder newIntBuilder() {
+    IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder();
     }
 

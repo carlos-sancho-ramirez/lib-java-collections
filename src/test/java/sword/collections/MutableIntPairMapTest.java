@@ -19,7 +19,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest implements Mutab
     }
 
     @Override
-    IntTraversableBuilder newIntBuilder() {
+    IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder();
     }
 
@@ -127,7 +127,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest implements Mutab
         })));
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTraversableBuilder<MutableIntPairMap> {
+    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder<MutableIntPairMap> {
         private final MutableIntPairMap map = MutableIntPairMap.empty();
 
         @Override
