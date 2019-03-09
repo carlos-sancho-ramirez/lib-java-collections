@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntPairMapTest extends IntPairMapTest {
+public final class ImmutableIntPairMapTest extends IntPairMapTest implements ImmutableIntTransformableTest<ImmutableIntPairMap> {
 
     @Override
     ImmutableIntPairMap.Builder newBuilder() {
@@ -55,130 +55,14 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
         procedure.apply(this::valueIsEven);
     }
 
-    @Test
     @Override
-    public void testFilterWhenEmpty() {
-        withFilterFunc(f -> {
-            final ImmutableIntPairMap map = newBuilder().build();
-            assertSame(map, map.filter(f));
-        });
+    public void withTransformableBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntPairMap, ImmutableIntTransformableBuilder<ImmutableIntPairMap>>> procedure) {
+        procedure.apply(SameKeyAndValueTraversableBuilder::new);
     }
 
-    @Test
     @Override
-    public void testFilterForSingleElement() {
-        withFilterFunc(f -> withInt(key -> {
-            final int value = key * key;
-            final ImmutableIntPairMap map = newBuilder().put(key, value).build();
-            final ImmutableIntPairMap filtered = map.filter(f);
-
-            if (f.apply(value)) {
-                assertSame(map, filtered);
-            }
-            else {
-                assertSame(newBuilder().build(), filtered);
-            }
-        }));
-    }
-
-    @Test
-    @Override
-    public void testFilterForMultipleElements() {
-        withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
-            final int valueA = keyA * keyA;
-            final int valueB = keyB * keyB;
-            final ImmutableIntPairMap map = newBuilder().put(keyA, valueA).put(keyB, valueB).build();
-            final ImmutableIntPairMap filtered = map.filter(f);
-
-            final boolean aPassed = f.apply(valueA);
-            final boolean bPassed = f.apply(valueB);
-
-            if (aPassed && bPassed) {
-                assertSame(map, filtered);
-            }
-            else if (aPassed) {
-                Iterator<IntPairMap.Entry> iterator = filtered.entries().iterator();
-                assertTrue(iterator.hasNext());
-                final IntPairMap.Entry entry = iterator.next();
-                assertEquals(keyA, entry.key());
-                assertEquals(valueA, entry.value());
-                assertFalse(iterator.hasNext());
-            }
-            else if (bPassed) {
-                Iterator<IntPairMap.Entry> iterator = filtered.entries().iterator();
-                assertTrue(iterator.hasNext());
-                final IntPairMap.Entry entry = iterator.next();
-                assertEquals(keyB, entry.key());
-                assertEquals(valueB, entry.value());
-                assertFalse(iterator.hasNext());
-            }
-            else {
-                assertSame(newBuilder().build(), filtered);
-            }
-        })));
-    }
-
-    @Test
-    @Override
-    public void testFilterNotWhenEmpty() {
-        withFilterFunc(f -> {
-            final ImmutableIntPairMap map = newBuilder().build();
-            assertSame(map, map.filterNot(f));
-        });
-    }
-
-    @Test
-    @Override
-    public void testFilterNotForSingleElement() {
-        withFilterFunc(f -> withInt(key -> {
-            final int value = key * key;
-            final ImmutableIntPairMap map = newBuilder().put(key, value).build();
-            final ImmutableIntPairMap filtered = map.filterNot(f);
-
-            if (!f.apply(value)) {
-                assertSame(map, filtered);
-            }
-            else {
-                assertSame(newBuilder().build(), filtered);
-            }
-        }));
-    }
-
-    @Test
-    @Override
-    public void testFilterNotForMultipleElements() {
-        withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
-            final int valueA = keyA * keyA;
-            final int valueB = keyB * keyB;
-            final ImmutableIntPairMap map = newBuilder().put(keyA, valueA).put(keyB, valueB).build();
-            final ImmutableIntPairMap filtered = map.filterNot(f);
-
-            final boolean aRemoved = f.apply(valueA);
-            final boolean bRemoved = f.apply(valueB);
-
-            if (aRemoved && bRemoved) {
-                assertSame(newBuilder().build(), filtered);
-            }
-            else if (aRemoved) {
-                Iterator<IntPairMap.Entry> iterator = filtered.entries().iterator();
-                assertTrue(iterator.hasNext());
-                final IntPairMap.Entry entry = iterator.next();
-                assertEquals(keyB, entry.key());
-                assertEquals(valueB, entry.value());
-                assertFalse(iterator.hasNext());
-            }
-            else if (bRemoved) {
-                Iterator<IntPairMap.Entry> iterator = filtered.entries().iterator();
-                assertTrue(iterator.hasNext());
-                final IntPairMap.Entry entry = iterator.next();
-                assertEquals(keyA, entry.key());
-                assertEquals(valueA, entry.value());
-                assertFalse(iterator.hasNext());
-            }
-            else {
-                assertSame(map, filtered);
-            }
-        })));
+    public void withValue(IntProcedure procedure) {
+        withInt(procedure);
     }
 
     private String mapValueFunction(int value) {
@@ -187,42 +71,6 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest {
 
     private int mapValueIntResultFunction(int value) {
         return value + 1;
-    }
-
-    @Test
-    public void testMapValuesMethod() {
-        withInt(a -> withInt(b -> {
-            final ImmutableIntPairMap map = new ImmutableIntPairMap.Builder()
-                    .put(a, a)
-                    .put(b, b)
-                    .build();
-
-            final ImmutableIntKeyMap<String> map2 = map.map(this::mapValueFunction);
-            assertEquals(map.size(), map2.size());
-            assertEquals(map.keySet(), map2.keySet());
-
-            for (int key : map.keySet()) {
-                assertEquals(mapValueFunction(map.get(key)), map2.get(key));
-            }
-        }));
-    }
-
-    @Test
-    public void testMapToIntMethod() {
-        withInt(a -> withInt(b -> {
-            final ImmutableIntPairMap map = new ImmutableIntPairMap.Builder()
-                    .put(a, a)
-                    .put(b, b)
-                    .build();
-
-            final ImmutableIntPairMap map2 = map.mapToInt(this::mapValueIntResultFunction);
-            assertEquals(map.size(), map2.size());
-            assertEquals(map.keySet(), map2.keySet());
-
-            for (int key : map.keySet()) {
-                assertEquals(mapValueIntResultFunction(map.get(key)), map2.get(key));
-            }
-        }));
     }
 
     @Test

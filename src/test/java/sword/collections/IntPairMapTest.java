@@ -18,12 +18,12 @@ abstract class IntPairMapTest extends IntTransformableTest {
     }
 
     @Override
-    void withMapFunc(Procedure<IntFunction<String>> procedure) {
+    public void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);
     }
 
     @Override
-    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+    public void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
         procedure.apply(v -> v * v);
         procedure.apply(v -> v + 1);
     }
@@ -263,6 +263,42 @@ abstract class IntPairMapTest extends IntTransformableTest {
             }
             else {
                 assertEquals(map, filtered);
+            }
+        })));
+    }
+
+    @Test
+    public void testMapResultingKeysForMultipleElements() {
+        withMapFunc(f -> withInt(a -> withInt(b -> {
+            final IntPairMap map = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+            final IntKeyMap<String> mapped = map.map(f);
+
+            final int size = map.size();
+            assertEquals(size, mapped.size());
+
+            for (int i = 0; i < size; i++) {
+                assertEquals(map.keyAt(i), mapped.keyAt(i));
+            }
+        })));
+    }
+
+    @Test
+    public void testMapToIntForMultipleElements() {
+        withMapToIntFunc(f -> withInt(a -> withInt(b -> {
+            final IntPairMap map = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+            final IntPairMap mapped = map.mapToInt(f);
+
+            final int size = map.size();
+            assertEquals(size, mapped.size());
+
+            for (int i = 0; i < size; i++) {
+                assertEquals(map.keyAt(i), mapped.keyAt(i));
             }
         })));
     }

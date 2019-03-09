@@ -47,6 +47,12 @@ public interface IntPairMap extends IntTransformable {
     @Override
     IntPairMap filterNot(IntPredicate predicate);
 
+    @Override
+    <U> IntKeyMap<U> map(IntFunction<U> func);
+
+    @Override
+    IntPairMap mapToInt(IntToIntFunction func);
+
     /**
      * Return an immutable map from the values contained in this map.
      * The same instance will be returned in case of being already immutable.

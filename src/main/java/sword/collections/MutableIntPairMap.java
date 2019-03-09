@@ -101,6 +101,32 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     }
 
     @Override
+    public IntPairMap mapToInt(IntToIntFunction mapFunc) {
+        final int size = _size;
+        final int[] newValues = new int[size];
+        final int[] newKeys = new int[size];
+        for (int i = 0; i < size; i++) {
+            newKeys[i] = _keys[i];
+            newValues[i] = mapFunc.apply(_values[i]);
+        }
+
+        return new ImmutableIntPairMap(newKeys, newValues);
+    }
+
+    @Override
+    public <U> IntKeyMap<U> map(IntFunction<U> mapFunc) {
+        final int size = _size;
+        final Object[] newValues = new Object[size];
+        final int[] newKeys = new int[size];
+        for (int i = 0; i < size; i++) {
+            newKeys[i] = _keys[i];
+            newValues[i] = mapFunc.apply(_values[i]);
+        }
+
+        return new ImmutableIntKeyMap<>(newKeys, newValues);
+    }
+
+    @Override
     public ImmutableIntPairMap toImmutable() {
         final int[] keys = new int[_size];
         final int[] values = new int[_size];
