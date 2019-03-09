@@ -418,45 +418,6 @@ public final class MutableListTest extends TransformableTest<String> implements 
     }
 
     @Test
-    public void testToSetWhenEmpty() {
-        final List<String> list = newBuilder().build();
-        assertTrue(list.toSet().isEmpty());
-    }
-
-    @Test
-    public void testToSetWithSingleElement() {
-        withValue(a -> {
-            final List<String> list = newBuilder().add(a).build();
-            final Set<String> set = list.toSet();
-            assertEquals(1, set.size());
-            assertEquals(a, set.valueAt(0));
-        });
-    }
-
-    @Test
-    public void testToSetWithTwoElements() {
-        withValue(a -> withValue(b -> {
-            final List<String> list = newBuilder().add(a).add(b).build();
-            final Set<String> set = list.toSet();
-
-            if (equal(a, b)) {
-                assertEquals(1, set.size());
-                assertEquals(a, set.valueAt(0));
-            }
-            else {
-                assertEquals(2, set.size());
-                if (equal(a, set.valueAt(0))) {
-                    assertEquals(b, set.valueAt(1));
-                }
-                else {
-                    assertEquals(a, set.valueAt(1));
-                    assertEquals(b, set.valueAt(0));
-                }
-            }
-        }));
-    }
-
-    @Test
     public void testSort() {
         withValue(a -> withValue(b -> withValue(c -> {
             final MutableList<String> list = newBuilder().add(a).add(b).add(c).build();

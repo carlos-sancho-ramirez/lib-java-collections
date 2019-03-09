@@ -14,6 +14,20 @@ public interface Transformable<T> extends Traversable<T> {
     }
 
     /**
+     * Converts this collection into a set.
+     *
+     * All duplicated elements within the collection will be removed as sets does not allow duplicating values.
+     * Because of that, the amount of elements in the resulting set may be less
+     * than the amount of elements in the original collection, but never more.
+     *
+     * The iteration order of elements in the resulting set is not guaranteed
+     * to be the same that was in the collection even if no elements are removed for duplication.
+     */
+    default Set<T> toSet() {
+        return iterator().toSet();
+    }
+
+    /**
      * Return all indexes within this collection in ascending order.
      */
     default IntSet indexes() {

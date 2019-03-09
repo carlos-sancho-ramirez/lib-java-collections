@@ -46,6 +46,11 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
+    public ImmutableSet<T> toSet() {
+        return this;
+    }
+
+    @Override
     public ImmutableSortedSet<T> filter(Predicate<T> predicate) {
         boolean somethingRemoved = false;
         final ImmutableSortedSet.Builder<T> builder = new Builder<>(_sortFunction);

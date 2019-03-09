@@ -34,6 +34,42 @@ abstract class TransformableTest<T> extends TraversableTest<T> {
     }
 
     @Test
+    public void testToSetWhenEmpty() {
+        assertTrue(newIterableBuilder().build().toSet().isEmpty());
+    }
+
+    @Test
+    public void testToSetForASingleElement() {
+        withValue(a -> {
+            final Transformable<T> transformable = newIterableBuilder().add(a).build();
+            final Set<T> set = transformable.toSet();
+            assertEquals(1, set.size());
+            assertEquals(a, set.valueAt(0));
+        });
+    }
+
+    @Test
+    public void testToSetForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final Transformable<T> transformable = newIterableBuilder().add(a).add(b).add(c).build();
+            final Set<T> set = transformable.toSet();
+            int count = 0;
+            for (T setValue : set) {
+                boolean found = false;
+                for (T transValue : transformable) {
+                    if (equal(setValue, transValue)) {
+                        count++;
+                        found = true;
+                    }
+                }
+                assertTrue(found);
+            }
+
+            assertEquals(count, transformable.size());
+        })));
+    }
+
+    @Test
     public void testIndexesWhenEmpty() {
         assertTrue(newIterableBuilder().build().indexes().isEmpty());
     }

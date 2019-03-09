@@ -96,6 +96,11 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
+    public ImmutableSet<V> toSet() {
+        return toList().toSet();
+    }
+
+    @Override
     public ImmutableSortedMap<K, V> filter(Predicate<V> predicate) {
         final Builder<K, V> builder = new Builder<>(_sortFunction);
         final int length = _keys.length;

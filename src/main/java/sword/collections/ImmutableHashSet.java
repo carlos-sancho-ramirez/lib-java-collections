@@ -169,6 +169,11 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableHashSet<>(keys, hashCodes);
     }
 
+    @Override
+    public ImmutableSet<T> toSet() {
+        return this;
+    }
+
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableHashSet<E> _set = MutableHashSet.empty();
 

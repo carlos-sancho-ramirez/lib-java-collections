@@ -108,6 +108,11 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
+    public ImmutableSet<V> toSet() {
+        return toList().toSet();
+    }
+
+    @Override
     public ImmutableHashMap<K, V> filter(Predicate<V> predicate) {
         final Builder<K, V> builder = new Builder<>();
         final int length = _keys.length;

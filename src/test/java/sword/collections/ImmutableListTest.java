@@ -324,45 +324,6 @@ public final class ImmutableListTest extends TransformableTest<String> implement
     }
 
     @Test
-    public void testToSetWhenEmpty() {
-        final ImmutableList<String> list = newBuilder().build();
-        assertTrue(list.toSet().isEmpty());
-    }
-
-    @Test
-    public void testToSetWithSingleElement() {
-        withValue(a -> {
-            final ImmutableList<String> list = newBuilder().add(a).build();
-            final ImmutableHashSet<String> set = list.toSet();
-            assertEquals(1, set.size());
-            assertEquals(a, set.valueAt(0));
-        });
-    }
-
-    @Test
-    public void testToSetWithTwoElements() {
-        withValue(a -> withValue(b -> {
-            final ImmutableList<String> list = newBuilder().add(a).add(b).build();
-            final ImmutableHashSet<String> set = list.toSet();
-
-            if (equal(a, b)) {
-                assertEquals(1, set.size());
-                assertEquals(a, set.valueAt(0));
-            }
-            else {
-                assertEquals(2, set.size());
-                if (equal(a, set.valueAt(0))) {
-                    assertEquals(b, set.valueAt(1));
-                }
-                else {
-                    assertEquals(a, set.valueAt(1));
-                    assertEquals(b, set.valueAt(0));
-                }
-            }
-        }));
-    }
-
-    @Test
     public void testSort() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
