@@ -84,7 +84,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     @Override
-    public ImmutableList<T> valueList() {
+    public ImmutableList<T> toList() {
         return new ImmutableList<>(_values);
     }
 

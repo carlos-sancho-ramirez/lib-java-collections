@@ -5,10 +5,33 @@ import org.junit.jupiter.api.Test;
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sword.collections.SortUtils.equal;
 
 abstract class TransformableTest<T> extends TraversableTest<T> {
 
     abstract TransformableBuilder<T> newIterableBuilder();
+
+    @Test
+    public void testToListWhenEmpty() {
+        final Transformable<T> transformable = newIterableBuilder().build();
+        assertTrue(transformable.isEmpty());
+        assertTrue(transformable.toList().isEmpty());
+    }
+
+    @Test
+    public void testToList() {
+        withValue(a -> withValue(b -> {
+            final Transformable<T> transformable = newIterableBuilder().add(a).add(b).build();
+            final List<T> list = transformable.toList();
+
+            final Transformer<T> transformer = transformable.iterator();
+            for (T value : list) {
+                assertTrue(transformer.hasNext());
+                assertSame(value, transformer.next());
+            }
+            assertFalse(transformer.hasNext());
+        }));
+    }
 
     @Test
     public void testIndexesWhenEmpty() {

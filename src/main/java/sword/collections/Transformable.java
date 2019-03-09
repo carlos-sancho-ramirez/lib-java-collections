@@ -5,6 +5,15 @@ public interface Transformable<T> extends Traversable<T> {
     Transformer<T> iterator();
 
     /**
+     * Converts this collection to a list.
+     *
+     * The order of iteration is guaranteed to be the same in the new list.
+     */
+    default List<T> toList() {
+        return iterator().toList();
+    }
+
+    /**
      * Return all indexes within this collection in ascending order.
      */
     default IntSet indexes() {

@@ -26,7 +26,7 @@ abstract class AbstractImmutableMap<K, V> extends AbstractMap<K, V> implements I
     }
 
     @Override
-    public ImmutableList<V> valueList() {
+    public ImmutableList<V> toList() {
         return new ImmutableList<>(_values);
     }
 

@@ -50,9 +50,6 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     ImmutableSet<T> addAll(Iterable<T> iterable);
 
     @Override
-    ImmutableList<T> toList();
-
-    @Override
     ImmutableSet<T> sort(SortFunction<T> function);
 
     interface Builder<E> extends ImmutableTransformableBuilder<E> {

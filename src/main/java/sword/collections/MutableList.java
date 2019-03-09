@@ -61,6 +61,11 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
         return new Iterator();
     }
 
+    @Override
+    public List<T> toList() {
+        return this;
+    }
+
     private class Iterator extends AbstractTransformer<T> {
         private int _index;
 

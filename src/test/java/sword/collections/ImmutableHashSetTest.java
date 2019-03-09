@@ -182,30 +182,6 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Test
-    public void testToList() {
-        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
-            final ImmutableHashSet<String> set = supplier.newBuilder().add(a).add(b).build();
-            final ImmutableList<String> list = set.toList();
-
-            if (equal(a, b)) {
-                assertEquals(1, list.size());
-                assertEquals(a, list.get(0));
-            }
-            else {
-                assertEquals(2, list.size());
-
-                if (equal(list.get(0), a)) {
-                    assertEquals(b, list.get(1));
-                }
-                else {
-                    assertEquals(a, list.get(1));
-                    assertEquals(b, list.get(0));
-                }
-            }
-        })));
-    }
-
-    @Test
     public void testGroupByWhenEmpty() {
         final Function<String, Integer> func = str -> {
             throw new AssertionError("This function should not be executed");

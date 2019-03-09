@@ -56,6 +56,11 @@ public final class ImmutableList<T> extends AbstractImmutableTraversable<T> impl
     }
 
     @Override
+    public ImmutableList<T> toList() {
+        return this;
+    }
+
+    @Override
     public ImmutableList<T> filter(Predicate<T> predicate) {
         return (ImmutableList<T>) super.filter(predicate);
     }

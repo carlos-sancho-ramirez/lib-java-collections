@@ -39,7 +39,7 @@ abstract class AbstractMutableMap<K, V> extends AbstractMap<K, V> implements Mut
     }
 
     @Override
-    public List<V> valueList() {
+    public List<V> toList() {
         final int length = _size;
         final Object[] newValues = new Object[length];
         System.arraycopy(_values, 0, newValues, 0, length);

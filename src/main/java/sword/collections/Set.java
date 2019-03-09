@@ -34,13 +34,6 @@ public interface Set<T> extends Transformable<T> {
     <E> List<E> map(Function<T, E> func);
 
     /**
-     * Converts this set to a list.
-     *
-     * The order of iteration is guaranteed to be the same in the new list.
-     */
-    List<T> toList();
-
-    /**
      * Return an immutable set from the values contained in this set.
      * The same instance will be returned in case of being already immutable.
      */

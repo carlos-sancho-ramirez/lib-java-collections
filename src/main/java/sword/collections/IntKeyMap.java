@@ -49,13 +49,6 @@ public interface IntKeyMap<T> extends Transformable<T> {
     IntSet keySet();
 
     /**
-     * Return the list of all values.
-     * It is guaranteed that the traverse order within the new list is exactly the same that
-     * traversing this map.
-     */
-    List<T> valueList();
-
-    /**
      * Compose a set of key-value entries from this map.
      * Resulting set is guaranteed to keep the same item order when it is iterated.
      */

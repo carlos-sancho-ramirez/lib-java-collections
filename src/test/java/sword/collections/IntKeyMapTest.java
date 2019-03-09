@@ -164,32 +164,6 @@ abstract class IntKeyMapTest<T> extends TransformableTest<T> {
     }
 
     @Test
-    public void testValueListWhenEmpty() {
-        final IntKeyMapBuilder<T> builder = newMapBuilder();
-        final IntKeyMap<T> map = builder.build();
-        assertTrue(map.valueList().isEmpty());
-    }
-
-    @Test
-    public void testValueList() {
-        withInt(a -> withInt(b -> withInt(c -> {
-            final IntKeyMapBuilder<T> builder = newMapBuilder();
-            final IntKeyMap<T> map = builder
-                    .put(a, valueFromKey(a))
-                    .put(b, valueFromKey(b))
-                    .put(c, valueFromKey(c))
-                    .build();
-
-            final ImmutableList.Builder<T> listBuilder = new ImmutableList.Builder<>();
-            for (T value : map) {
-                listBuilder.add(value);
-            }
-
-            assertEquals(listBuilder.build(), map.valueList().toImmutable());
-        })));
-    }
-
-    @Test
     public void testIndexOfKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final T value = getTestValue();

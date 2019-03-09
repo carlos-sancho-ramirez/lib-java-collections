@@ -181,7 +181,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
-    public List<T> valueList() {
+    public List<T> toList() {
         final int length = _size;
         final Object[] newValues = new Object[length];
         System.arraycopy(_values, 0, newValues, 0, length);

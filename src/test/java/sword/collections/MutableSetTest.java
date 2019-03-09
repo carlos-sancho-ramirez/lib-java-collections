@@ -197,38 +197,6 @@ abstract class MutableSetTest<T> extends TransformableTest<T> implements Mutable
     }
 
     @Test
-    public void testToListWhenEmpty() {
-        final Set<T> set = newBuilder().build();
-        assertTrue(set.isEmpty());
-        assertTrue(set.toList().isEmpty());
-    }
-
-    @Test
-    public void testToList() {
-        withValue(a -> withValue(b -> {
-            final Set<T> set = newBuilder().add(a).add(b).build();
-            final List<T> list = set.toList();
-
-            if (equal(a, b)) {
-                assertEquals(1, list.size());
-                assertEquals(a, list.get(0));
-            }
-            else {
-                assertEquals(2, list.size());
-
-                if (lessThan(b, a)) {
-                    assertEquals(b, list.get(0));
-                    assertEquals(a, list.get(1));
-                }
-                else {
-                    assertEquals(a, list.get(0));
-                    assertEquals(b, list.get(1));
-                }
-            }
-        }));
-    }
-
-    @Test
     public void testSort() {
         withValue(a -> withValue(b -> withValue(c -> {
             final MutableSet<T> set = newBuilder().add(a).add(b).add(c).build();

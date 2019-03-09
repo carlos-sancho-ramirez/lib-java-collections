@@ -108,29 +108,6 @@ abstract class MapTest<K, V> extends TransformableTest<V> {
     }
 
     @Test
-    public void testValueListWhenEmpty() {
-        assertTrue(newBuilder().build().valueList().isEmpty());
-    }
-
-    @Test
-    public void testValueList() {
-        withKey(a -> withKey(b -> withKey(c -> {
-            final Map<K, V> map = newBuilder()
-                    .put(a, valueFromKey(a))
-                    .put(b, valueFromKey(b))
-                    .put(c, valueFromKey(c))
-                    .build();
-
-            final ImmutableList.Builder<V> listBuilder = new ImmutableList.Builder<>();
-            for (V value : map) {
-                listBuilder.add(value);
-            }
-
-            assertEquals(listBuilder.build(), map.valueList().toImmutable());
-        })));
-    }
-
-    @Test
     public void testIndexOfKey() {
         final V value = getTestValue();
         withKey(a -> withKey(b -> withKey(c -> {

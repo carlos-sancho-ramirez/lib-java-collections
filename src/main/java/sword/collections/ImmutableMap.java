@@ -17,9 +17,6 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
     ImmutableSet<K> keySet();
 
     @Override
-    ImmutableList<V> valueList();
-
-    @Override
     ImmutableSet<Entry<K, V>> entries();
 
     ImmutableMap<K, V> put(K key, V value);

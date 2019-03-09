@@ -146,41 +146,6 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Tr
     }
 
     @Test
-    public void testToListWhenEmpty() {
-        withBuilderSupplier(supplier -> {
-            final ImmutableSet<T> set = supplier.newBuilder().build();
-            assertTrue(set.isEmpty());
-            assertTrue(set.toList().isEmpty());
-        });
-    }
-
-    @Test
-    public void testToList() {
-        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
-            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
-            final ImmutableList<T> list = set.toList();
-
-            if (equal(a, b)) {
-                assertEquals(1, list.size());
-                assertEquals(a, list.get(0));
-            }
-            else {
-                assertEquals(2, list.size());
-                T first = set.valueAt(0);
-
-                if (equal(b, first)) {
-                    assertEquals(b, list.get(0));
-                    assertEquals(a, list.get(1));
-                }
-                else {
-                    assertEquals(a, list.get(0));
-                    assertEquals(b, list.get(1));
-                }
-            }
-        })));
-    }
-
-    @Test
     public void testSort() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
