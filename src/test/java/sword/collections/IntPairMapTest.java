@@ -35,34 +35,6 @@ abstract class IntPairMapTest extends IntTransformableTest {
     }
 
     @Test
-    public void testSize() {
-        final int value = 14;
-        withInt(a -> withInt(b -> withInt(c -> withInt(d -> {
-            IntPairMap array = newBuilder()
-                    .put(a, value)
-                    .put(b, value)
-                    .put(c, value)
-                    .put(d, value)
-                    .build();
-
-            int expectedSize = 1;
-            if (b != a) {
-                expectedSize++;
-            }
-
-            if (c != b && c != a) {
-                expectedSize++;
-            }
-
-            if (d != c && d != b && d != a) {
-                expectedSize++;
-            }
-
-            assertEquals(expectedSize, array.size());
-        }))));
-    }
-
-    @Test
     public void testGet() {
         final int defValue = -3;
         final int value = 21;

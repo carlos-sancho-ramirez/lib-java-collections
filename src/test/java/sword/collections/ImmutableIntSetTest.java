@@ -48,19 +48,6 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
     }
 
     @Test
-    public void testSizeForMultipleElements() {
-        withItem(a -> withItem(b -> {
-            final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
-            if (a == b) {
-                assertEquals(1, set.size(), "Expected size 1 after building it adding twice value " + a);
-            }
-            else {
-                assertEquals(2, set.size(), "Expected size 2 after building it adding two different values " + a + " and " + b);
-            }
-        }));
-    }
-
-    @Test
     public void testIteratingForMultipleElements() {
         withItem(a -> withItem(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();

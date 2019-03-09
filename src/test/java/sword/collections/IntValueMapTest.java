@@ -48,29 +48,6 @@ abstract class IntValueMapTest<T> extends IntTransformableTest {
     }
 
     @Test
-    public void testSize() {
-        final int value = 4;
-        withKey(a -> withKey(b -> withKey(c -> {
-            IntValueMap<T> map = newBuilder()
-                    .put(a, value)
-                    .put(b, value)
-                    .put(c, value)
-                    .build();
-
-            int expectedSize = 1;
-            if (!equal(a, b)) {
-                expectedSize++;
-            }
-
-            if (!equal(b, c) && !equal(a, c)) {
-                expectedSize++;
-            }
-
-            assertEquals(expectedSize, map.size());
-        })));
-    }
-
-    @Test
     public void testGet() {
         final int value = 45;
         final int defValue = 3;

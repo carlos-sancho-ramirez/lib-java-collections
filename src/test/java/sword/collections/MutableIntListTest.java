@@ -55,18 +55,6 @@ public final class MutableIntListTest extends IntTransformableTest implements Mu
     }
 
     @Test
-    public void testSizeForTwoElements() {
-        withItem(a -> withItem(b -> {
-            final MutableIntList list = newIntBuilder().add(a).add(b).build();
-            final int size = list.size();
-            if (size != 2) {
-                fail("Expected size 2 after building it adding values " + a + " and " + b +
-                        ". But it was " + size);
-            }
-        }));
-    }
-
-    @Test
     public void testIteratingForMultipleElements() {
         withItem(a -> withItem(b -> {
             final MutableIntList list = newIntBuilder().add(a).add(b).build();

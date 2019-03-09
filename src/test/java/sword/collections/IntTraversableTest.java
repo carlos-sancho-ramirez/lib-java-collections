@@ -24,15 +24,30 @@ abstract class IntTraversableTest {
     @Test
     public void testSizeForNoElements() {
         final Sizable iterable = newIntBuilder().build();
-        assertEquals(0, iterable.size(), "Expected size 0 after building an empty list");
+        assertEquals(0, iterable.size());
     }
 
     @Test
     public void testSizeForOneElement() {
         withItem(value -> {
             final Sizable iterable = newIntBuilder().add(value).build();
-            assertEquals(1, iterable.size(), "Expected size 1 after building it adding a single value " + value);
+            assertEquals(1, iterable.size());
         });
+    }
+
+    @Test
+    public void testSizeForMultipleElements() {
+        withItem(a -> withItem(b -> withItem(c -> withItem(d -> {
+            final IntTraversable traversable = newIntBuilder().add(a).add(b).add(c).add(d).build();
+            final IntTraverser traverser = traversable.iterator();
+            int count = 0;
+            while (traverser.hasNext()) {
+                count++;
+                traverser.next();
+            }
+
+            assertEquals(count, traversable.size());
+        }))));
     }
 
     @Test
