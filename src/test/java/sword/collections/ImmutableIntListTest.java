@@ -152,45 +152,6 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
     }
 
     @Test
-    public void testToSetWhenEmpty() {
-        final ImmutableIntList list = newIntBuilder().build();
-        assertTrue(list.toSet().isEmpty());
-    }
-
-    @Test
-    public void testToSetWithSingleElement() {
-        withItem(a -> {
-            final ImmutableIntList list = newIntBuilder().add(a).build();
-            final ImmutableIntSet set = list.toSet();
-            assertEquals(1, set.size());
-            assertEquals(a, set.valueAt(0));
-        });
-    }
-
-    @Test
-    public void testToSetWithTwoElements() {
-        withItem(a -> withItem(b -> {
-            final ImmutableIntList list = newIntBuilder().add(a).add(b).build();
-            final ImmutableIntSet set = list.toSet();
-            if (a == b) {
-                assertEquals(1, set.size());
-                assertEquals(a, set.valueAt(0));
-            }
-            else {
-                assertEquals(2, set.size());
-                if (a < b) {
-                    assertEquals(a, set.valueAt(0));
-                    assertEquals(b, set.valueAt(1));
-                }
-                else {
-                    assertEquals(a, set.valueAt(1));
-                    assertEquals(b, set.valueAt(0));
-                }
-            }
-        }));
-    }
-
-    @Test
     public void testGroupByWhenEmpty() {
         final IntFunction<Integer> func = str -> {
             throw new AssertionError("This function should not be executed");

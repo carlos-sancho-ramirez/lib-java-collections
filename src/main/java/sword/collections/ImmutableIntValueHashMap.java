@@ -69,6 +69,11 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
     }
 
     @Override
+    public ImmutableIntSet toSet() {
+        return toList().toSet();
+    }
+
+    @Override
     public ImmutableIntValueHashMap<T> filter(IntPredicate predicate) {
         final Builder<T> builder = new Builder<>();
         final int length = _keys.length;

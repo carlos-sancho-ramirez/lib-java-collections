@@ -50,6 +50,42 @@ abstract class IntTransformableTest extends IntTraversableTest {
     }
 
     @Test
+    public void testToSetWhenEmpty() {
+        assertTrue(newIntBuilder().build().toSet().isEmpty());
+    }
+
+    @Test
+    public void testToSetForASingleElement() {
+        withItem(a -> {
+            final IntTransformable transformable = newIntBuilder().add(a).build();
+            final IntSet set = transformable.toSet();
+            assertEquals(1, set.size());
+            assertEquals(a, set.valueAt(0));
+        });
+    }
+
+    @Test
+    public void testToSetForMultipleElements() {
+        withItem(a -> withItem(b -> withItem(c -> {
+            final IntTransformable transformable = newIntBuilder().add(a).add(b).add(c).build();
+            final IntSet set = transformable.toSet();
+            int count = 0;
+            for (int setValue : set) {
+                boolean found = false;
+                for (int transValue : transformable) {
+                    if (setValue == transValue) {
+                        count++;
+                        found = true;
+                    }
+                }
+                assertTrue(found);
+            }
+
+            assertEquals(count, transformable.size());
+        })));
+    }
+
+    @Test
     public void testIndexesWhenEmpty() {
         assertTrue(newIntBuilder().build().indexes().isEmpty());
     }

@@ -15,6 +15,11 @@ abstract class AbstractImmutableIntSet extends AbstractImmutableIntTransformable
     }
 
     @Override
+    public ImmutableIntSet toSet() {
+        return this;
+    }
+
+    @Override
     public ImmutableIntSet filter(IntPredicate predicate) {
         return (ImmutableIntSet) super.filter(predicate);
     }

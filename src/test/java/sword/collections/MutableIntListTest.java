@@ -238,43 +238,4 @@ public final class MutableIntListTest extends IntTransformableTest implements Mu
             }
         }));
     }
-
-    @Test
-    public void testToSetWhenEmpty() {
-        final IntList list = newIntBuilder().build();
-        assertTrue(list.toSet().isEmpty());
-    }
-
-    @Test
-    public void testToSetWithSingleElement() {
-        withItem(a -> {
-            final IntList list = newIntBuilder().add(a).build();
-            final IntSet set = list.toSet();
-            assertEquals(1, set.size());
-            assertEquals(a, set.valueAt(0));
-        });
-    }
-
-    @Test
-    public void testToSetWithTwoElements() {
-        withItem(a -> withItem(b -> {
-            final IntList list = newIntBuilder().add(a).add(b).build();
-            final IntSet set = list.toSet();
-            if (a == b) {
-                assertEquals(1, set.size());
-                assertEquals(a, set.valueAt(0));
-            }
-            else {
-                assertEquals(2, set.size());
-                if (a < b) {
-                    assertEquals(a, set.valueAt(0));
-                    assertEquals(b, set.valueAt(1));
-                }
-                else {
-                    assertEquals(a, set.valueAt(1));
-                    assertEquals(b, set.valueAt(0));
-                }
-            }
-        }));
-    }
 }

@@ -190,6 +190,11 @@ public final class MutableIntSet extends AbstractIntTraversable implements IntSe
     }
 
     @Override
+    public IntSet toSet() {
+        return this;
+    }
+
+    @Override
     public ImmutableIntSet toImmutable() {
         return ImmutableIntSetBuilder.fromMutableIntSet(this);
     }

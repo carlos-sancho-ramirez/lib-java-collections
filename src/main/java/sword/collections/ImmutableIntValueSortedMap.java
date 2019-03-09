@@ -63,6 +63,11 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
     }
 
     @Override
+    public ImmutableIntSet toSet() {
+        return toList().toSet();
+    }
+
+    @Override
     public ImmutableIntValueSortedMap<T> filter(IntPredicate predicate) {
         final Builder<T> builder = new Builder<>(_sortFunction);
         final int length = _keys.length;

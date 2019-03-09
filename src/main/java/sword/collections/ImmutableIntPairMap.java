@@ -106,6 +106,11 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     @Override
+    public ImmutableIntSet toSet() {
+        return toList().toSet();
+    }
+
+    @Override
     public ImmutableIntPairMap filter(IntPredicate predicate) {
         final Builder builder = new Builder();
         final int length = _values.length;

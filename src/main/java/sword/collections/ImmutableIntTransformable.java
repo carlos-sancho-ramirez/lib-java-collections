@@ -5,6 +5,9 @@ interface ImmutableIntTransformable extends IntTransformable {
     @Override
     ImmutableIntList toList();
 
+    @Override
+    ImmutableIntSet toSet();
+
     /**
      * Applies the given predicate to each of the values within the collection and
      * composes a new collection including only the values whose predicate returned
