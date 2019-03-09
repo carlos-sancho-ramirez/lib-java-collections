@@ -169,6 +169,11 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         return new Iterator();
     }
 
+    @Override
+    public IntList toList() {
+        return this;
+    }
+
     public static final class Builder implements MutableIntTransformableBuilder<MutableIntList> {
 
         private final MutableIntList _list = MutableIntList.empty();

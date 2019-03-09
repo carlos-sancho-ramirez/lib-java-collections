@@ -180,38 +180,6 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
     }
 
     @Test
-    public void testToListWhenEmpty() {
-        final ImmutableIntSet set = newIntBuilder().build();
-        assertTrue(set.isEmpty());
-        assertTrue(set.toList().isEmpty());
-    }
-
-    @Test
-    public void testToList() {
-        withItem(a -> withItem(b -> {
-            final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
-            final ImmutableIntList list = set.toList();
-
-            if (a == b) {
-                assertEquals(1, list.size());
-                assertEquals(a, list.get(0));
-            }
-            else {
-                assertEquals(2, list.size());
-
-                if (a < b) {
-                    assertEquals(a, list.get(0));
-                    assertEquals(b, list.get(1));
-                }
-                else {
-                    assertEquals(a, list.get(1));
-                    assertEquals(b, list.get(0));
-                }
-            }
-        }));
-    }
-
-    @Test
     public void testGroupByWhenEmpty() {
         final IntFunction<Integer> func = str -> {
             throw new AssertionError("This function should not be executed");

@@ -4,6 +4,13 @@ public interface IntTransformable extends IntTraversable {
     IntTransformer iterator();
 
     /**
+     * Converts collection to a list.
+     *
+     * The order of iteration is guaranteed to be the same in the new list.
+     */
+    IntList toList();
+
+    /**
      * Return all indexes within this collection in ascending order.
      */
     default IntSet indexes() {

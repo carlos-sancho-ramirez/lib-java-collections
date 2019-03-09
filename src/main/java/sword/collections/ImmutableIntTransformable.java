@@ -2,6 +2,9 @@ package sword.collections;
 
 interface ImmutableIntTransformable extends IntTransformable {
 
+    @Override
+    ImmutableIntList toList();
+
     /**
      * Applies the given predicate to each of the values within the collection and
      * composes a new collection including only the values whose predicate returned

@@ -198,38 +198,6 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
         }));
     }
 
-    @Test
-    public void testToListWhenEmpty() {
-        final IntSet set = newIntBuilder().build();
-        assertTrue(set.isEmpty());
-        assertTrue(set.toList().isEmpty());
-    }
-
-    @Test
-    public void testToList() {
-        withItem(a -> withItem(b -> {
-            final IntSet set = newIntBuilder().add(a).add(b).build();
-            final IntList list = set.toList();
-
-            if (a == b) {
-                assertEquals(1, list.size());
-                assertEquals(a, list.get(0));
-            }
-            else {
-                assertEquals(2, list.size());
-
-                if (a < b) {
-                    assertEquals(a, list.get(0));
-                    assertEquals(b, list.get(1));
-                }
-                else {
-                    assertEquals(a, list.get(1));
-                    assertEquals(b, list.get(0));
-                }
-            }
-        }));
-    }
-
     @Override
     public void withIntTraversableBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntSet, MutableIntTraversableBuilder<MutableIntSet>>> procedure) {
         procedure.apply(MutableIntSet.Builder::new);
@@ -237,7 +205,7 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
 
     @Override
     public void withValue(IntProcedure procedure) {
-
+        withItem(procedure);
     }
 
     @Test

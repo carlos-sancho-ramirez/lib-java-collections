@@ -137,29 +137,6 @@ abstract class IntValueMapTest<T> extends IntTransformableTest {
     }
 
     @Test
-    public void testValueListWhenEmpty() {
-        assertTrue(newBuilder().build().valueList().isEmpty());
-    }
-
-    @Test
-    public void testValueList() {
-        withKey(a -> withKey(b -> withKey(c -> {
-            final IntValueMap<T> map = newBuilder()
-                    .put(a, valueFromKey(a))
-                    .put(b, valueFromKey(b))
-                    .put(c, valueFromKey(c))
-                    .build();
-
-            final ImmutableIntList.Builder listBuilder = new ImmutableIntList.Builder();
-            for (int value : map) {
-                listBuilder.add(value);
-            }
-
-            assertEquals(listBuilder.build(), map.valueList().toImmutable());
-        })));
-    }
-
-    @Test
     public void testIndexOfKey() {
         final int value = 37;
         withKey(a -> withKey(b -> withKey(c -> {

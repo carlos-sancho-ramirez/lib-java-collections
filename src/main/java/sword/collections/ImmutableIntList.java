@@ -69,6 +69,11 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
     }
 
     @Override
+    public ImmutableIntList toList() {
+        return this;
+    }
+
+    @Override
     public ImmutableIntList filter(IntPredicate predicate) {
         return (ImmutableIntList) super.filter(predicate);
     }

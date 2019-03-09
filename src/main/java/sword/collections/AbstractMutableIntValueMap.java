@@ -38,7 +38,7 @@ abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> impl
     }
 
     @Override
-    public IntList valueList() {
+    public IntList toList() {
         final int length = _size;
         final int[] newValues = new int[length];
         System.arraycopy(_values, 0, newValues, 0, length);

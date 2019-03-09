@@ -13,6 +13,43 @@ abstract class IntTransformableTest extends IntTraversableTest {
     abstract void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
 
     @Test
+    public void testToListWhenEmpty() {
+        final IntTransformable transformable = newIntBuilder().build();
+        assertTrue(transformable.isEmpty());
+        assertTrue(transformable.toList().isEmpty());
+    }
+
+    @Test
+    public void testToListForASingleElement() {
+        withItem(value -> {
+            final IntTransformable transformable = newIntBuilder().add(value).build();
+            final IntList list = transformable.toList();
+
+            final IntTransformer transformer = transformable.iterator();
+            for (int v : list) {
+                assertTrue(transformer.hasNext());
+                assertEquals(v, transformer.next());
+            }
+            assertFalse(transformer.hasNext());
+        });
+    }
+
+    @Test
+    public void testToListForMultipleElements() {
+        withItem(a -> withItem(b -> withItem(c -> {
+            final IntTransformable transformable = newIntBuilder().add(a).add(b).add(c).build();
+            final IntList list = transformable.toList();
+
+            final IntTransformer transformer = transformable.iterator();
+            for (int value : list) {
+                assertTrue(transformer.hasNext());
+                assertEquals(value, transformer.next());
+            }
+            assertFalse(transformer.hasNext());
+        })));
+    }
+
+    @Test
     public void testIndexesWhenEmpty() {
         assertTrue(newIntBuilder().build().indexes().isEmpty());
     }

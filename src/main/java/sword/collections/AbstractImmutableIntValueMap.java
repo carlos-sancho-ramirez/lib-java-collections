@@ -29,7 +29,7 @@ abstract class AbstractImmutableIntValueMap<T> extends AbstractIntValueMap<T> im
     }
 
     @Override
-    public ImmutableIntList valueList() {
+    public ImmutableIntList toList() {
         return new ImmutableIntList(_values);
     }
 

@@ -176,14 +176,6 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
         return builder.build();
     }
 
-    @Override
-    public IntList valueList() {
-        final int length = _size;
-        final int[] newValues = new int[length];
-        System.arraycopy(_values, 0, newValues, 0, length);
-        return new ImmutableIntList(newValues);
-    }
-
     /**
      * Include the given key-value pair into the map.
      * This will override any previous value assigned to the given key, in case there was any.
@@ -239,6 +231,14 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     @Override
     public IntTransformer iterator() {
         return new Iterator();
+    }
+
+    @Override
+    public IntList toList() {
+        final int length = _size;
+        final int[] newValues = new int[length];
+        System.arraycopy(_values, 0, newValues, 0, length);
+        return new ImmutableIntList(newValues);
     }
 
     @Override
