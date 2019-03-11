@@ -32,6 +32,12 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public T valueAt(int index) {
+        return (T) _keys[index];
+    }
+
+    @Override
     public int indexOf(T value) {
         return findValue(_sortFunction, _keys, _size, value);
     }
@@ -48,6 +54,32 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
         Object[] keys = new Object[_keys.length];
         System.arraycopy(_keys, 0, keys, 0, _size);
         return new MutableSortedSet<>(_sortFunction, keys, _size);
+    }
+
+    @Override
+    public Set<T> filter(Predicate<T> predicate) {
+        final ImmutableSortedSet.Builder<T> builder = new ImmutableSortedSet.Builder<>(_sortFunction);
+        for (int i = 0; i < _size; i++) {
+            T value = valueAt(i);
+            if (predicate.apply(value)) {
+                builder.add(value);
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public Set<T> filterNot(Predicate<T> predicate) {
+        final ImmutableSortedSet.Builder<T> builder = new ImmutableSortedSet.Builder<>(_sortFunction);
+        for (int i = 0; i < _size; i++) {
+            T value = valueAt(i);
+            if (!predicate.apply(value)) {
+                builder.add(value);
+            }
+        }
+
+        return builder.build();
     }
 
     /**
