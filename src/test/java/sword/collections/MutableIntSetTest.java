@@ -18,7 +18,7 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
     }
 
     @Override
-    void withItem(IntProcedure procedure) {
+    public void withValue(IntProcedure procedure) {
         for (int value : INT_VALUES) {
             procedure.apply(value);
         }
@@ -46,7 +46,7 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
 
     @Test
     public void testIteratingForMultipleElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableIntSet set = newIntBuilder().add(a).add(b).build();
             final Iterator<Integer> iterator = set.iterator();
 
@@ -76,7 +76,7 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
 
     @Test
     public void testAdd() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableIntSet set = MutableIntSet.empty();
             assertTrue(set.add(a));
             assertFalse(set.isEmpty());
@@ -97,9 +97,9 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
 
     @Test
     public void testAddAll() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableIntSet values = new ImmutableIntSetBuilder().add(a).add(b).build();
-            withItem(c -> {
+            withValue(c -> {
                 final MutableIntSet set = MutableIntSet.empty();
                 set.add(c);
 
@@ -127,7 +127,7 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
     @Test
     public void testRemoveForEmptySet() {
         final MutableIntSet set = newIntBuilder().build();
-        withItem(value -> {
+        withValue(value -> {
             assertFalse(set.remove(value));
             assertTrue(set.isEmpty());
         });
@@ -135,8 +135,8 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
 
     @Test
     public void testRemoveForASingleElement() {
-        withItem(included -> {
-            withItem(value -> {
+        withValue(included -> {
+            withValue(value -> {
                 final MutableIntSet set = newIntBuilder().add(included).build();
                 if (included == value) {
                     assertTrue(set.remove(value));
@@ -152,7 +152,7 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
 
     @Test
     public void testValueAt() {
-        withItem(a -> withItem(b -> withItem(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final MutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
             final Iterator<Integer> it = set.iterator();
             int index = 0;
@@ -164,7 +164,7 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
 
     @Test
     public void testToImmutableMethodReturnSameInstance() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableIntSet set = new MutableIntSet.Builder().add(a).add(b).build();
             final ImmutableIntSet set2 = set.toImmutable();
             assertEquals(set.size(), set2.size());
@@ -176,9 +176,9 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
 
     @Test
     public void testMutate() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final MutableIntSet set = new MutableIntSet.Builder().add(a).add(b).build();
-            withItem(c -> {
+            withValue(c -> {
                 final MutableIntSet set2 = set.mutate();
                 assertNotSame(set, set2);
                 set2.add(c);
@@ -203,14 +203,9 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
         procedure.apply(MutableIntSet.Builder::new);
     }
 
-    @Override
-    public void withValue(IntProcedure procedure) {
-        withItem(procedure);
-    }
-
     @Test
     public void testEqualSet() {
-        withItem(a -> withItem(b -> withItem(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final IntSet set = newIntBuilder().add(a).add(b).add(c).build();
             assertTrue(set.equalSet(set));
 

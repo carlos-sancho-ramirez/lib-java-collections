@@ -16,7 +16,7 @@ public final class MutableIntTreeSetTest extends IntTraversableTest {
     }
 
     @Override
-    void withItem(IntProcedure procedure) {
+    void withValue(IntProcedure procedure) {
         for (int value : intValues) {
             procedure.apply(value);
         }

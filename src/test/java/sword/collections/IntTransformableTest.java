@@ -21,7 +21,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testToListForASingleElement() {
-        withItem(value -> {
+        withValue(value -> {
             final IntTransformable transformable = newIntBuilder().add(value).build();
             final IntList list = transformable.toList();
 
@@ -36,7 +36,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testToListForMultipleElements() {
-        withItem(a -> withItem(b -> withItem(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).add(c).build();
             final IntList list = transformable.toList();
 
@@ -56,7 +56,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testToSetForASingleElement() {
-        withItem(a -> {
+        withValue(a -> {
             final IntTransformable transformable = newIntBuilder().add(a).build();
             final IntSet set = transformable.toSet();
             assertEquals(1, set.size());
@@ -66,7 +66,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testToSetForMultipleElements() {
-        withItem(a -> withItem(b -> withItem(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).add(c).build();
             final IntSet set = transformable.toSet();
             int count = 0;
@@ -92,7 +92,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testIndexesForSingleValue() {
-        withItem(value -> {
+        withValue(value -> {
             final IntTransformer indexIterator = newIntBuilder().add(value).build().indexes().iterator();
             assertTrue(indexIterator.hasNext());
             assertEquals(0, indexIterator.next().intValue());
@@ -102,7 +102,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testIndexesForMultipleValues() {
-        withItem(a -> withItem(b -> withItem(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).add(c).build();
             final IntTransformer transformer = transformable.iterator();
             int length = 0;
@@ -130,7 +130,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testFilterForSingleElement() {
-        withFilterFunc(f -> withItem(value -> {
+        withFilterFunc(f -> withValue(value -> {
             final IntTransformable transformable = newIntBuilder().add(value).build();
             final IntTransformable filtered = transformable.filter(f);
 
@@ -145,7 +145,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testFilterForMultipleElements() {
-        withFilterFunc(f -> withItem(a -> withItem(b -> {
+        withFilterFunc(f -> withValue(a -> withValue(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();
             final IntTransformable filtered = transformable.filter(f);
 
@@ -184,7 +184,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testFilterNotForSingleElement() {
-        withFilterFunc(f -> withItem(value -> {
+        withFilterFunc(f -> withValue(value -> {
             final IntTransformable transformable = newIntBuilder().add(value).build();
             final IntTransformable filtered = transformable.filterNot(f);
 
@@ -199,7 +199,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testFilterNotForMultipleElements() {
-        withFilterFunc(f -> withItem(a -> withItem(b -> {
+        withFilterFunc(f -> withValue(a -> withValue(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();
             final IntTransformable filtered = transformable.filterNot(f);
 
@@ -238,7 +238,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testMapForSingleElement() {
-        withMapFunc(f -> withItem(value -> {
+        withMapFunc(f -> withValue(value -> {
             final Transformer<String> transformer = newIntBuilder().add(value).build().map(f).iterator();
             assertTrue(transformer.hasNext());
             assertEquals(f.apply(value), transformer.next());
@@ -248,7 +248,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testMapForMultipleElements() {
-        withMapFunc(f -> withItem(a -> withItem(b -> {
+        withMapFunc(f -> withValue(a -> withValue(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();
             final IntTransformer transformer = transformable.iterator();
             final Transformer<String> mappedIterator = transformable.map(f).iterator();
@@ -272,7 +272,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testMapToIntForSingleElement() {
-        withMapToIntFunc(f -> withItem(value -> {
+        withMapToIntFunc(f -> withValue(value -> {
             final IntTransformer transformer = newIntBuilder().add(value).build().mapToInt(f).iterator();
             assertTrue(transformer.hasNext());
             assertEquals(f.apply(value), transformer.next().intValue());
@@ -282,7 +282,7 @@ abstract class IntTransformableTest extends IntTraversableTest {
 
     @Test
     public void testMapToIntForMultipleElements() {
-        withMapToIntFunc(f -> withItem(a -> withItem(b -> {
+        withMapToIntFunc(f -> withValue(a -> withValue(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();
             final IntTransformer transformer = transformable.iterator();
             final IntTransformer mappedIterator = transformable.mapToInt(f).iterator();

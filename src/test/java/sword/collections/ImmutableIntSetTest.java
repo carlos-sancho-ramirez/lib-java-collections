@@ -32,7 +32,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Override
     public void withValue(IntProcedure procedure) {
-        withItem(procedure);
+        withValue(procedure);
     }
 
     private int moduleFour(int value) {
@@ -49,7 +49,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Test
     public void testIteratingForMultipleElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
             final Iterator<Integer> iterator = set.iterator();
 
@@ -79,7 +79,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Test
     public void testAdd() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             ImmutableIntSet set = newIntBuilder().build();
             set = set.add(a);
             assertFalse(set.isEmpty());
@@ -106,7 +106,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
     @Test
     public void testAddAllForEmptyGiven() {
         final ImmutableIntSet empty = newIntBuilder().build();
-        withItem(a -> {
+        withValue(a -> {
             final ImmutableIntSet set = newIntBuilder().add(a).build();
             assertSame(set, set.addAll(empty));
         });
@@ -114,7 +114,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Test
     public void testAddAll() {
-        withItem(a -> withItem(b -> withItem(c -> withItem(d -> {
+        withValue(a -> withValue(b -> withValue(c -> withValue(d -> {
             ImmutableIntSet set1 = newIntBuilder().add(a).add(b).build();
             ImmutableIntSet set2 = newIntBuilder().add(c).add(d).build();
             ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).add(d).build();
@@ -125,14 +125,14 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
     @Test
     public void testRemoveForEmptySet() {
         final ImmutableIntSet set = newIntBuilder().build();
-        withItem(value -> assertSame(set, set.remove(value), "Removing on an empty set should always return the same set"));
+        withValue(value -> assertSame(set, set.remove(value), "Removing on an empty set should always return the same set"));
     }
 
     @Test
     public void testRemoveForASingleElement() {
-        withItem(included -> {
+        withValue(included -> {
             final ImmutableIntSet set = newIntBuilder().add(included).build();
-            withItem(value -> {
+            withValue(value -> {
                 if (included == value) {
                     final ImmutableIntSet emptySet = set.remove(value);
                     final String msg = "Removing value " + value + " from set containing only that value should return an empty set";
@@ -148,7 +148,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Test
     public void testValueAt() {
-        withItem(a -> withItem(b -> withItem(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
             final Iterator<Integer> it = set.iterator();
             int index = 0;
@@ -160,7 +160,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Test
     public void testToImmutableMethodReturnSameInstance() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
             assertSame(set, set.toImmutable());
         }));
@@ -168,7 +168,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Test
     public void testMutate() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
             final MutableIntSet set2 = set.mutate();
 
@@ -190,7 +190,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Test
     public void testGroupBy() {
-        withGroupingFunc(func -> withItem(a -> withItem(b -> withItem(c -> {
+        withGroupingFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
             final String aGroup = func.apply(a);
             final String bGroup = func.apply(b);
@@ -306,7 +306,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Test
     public void testGroupByInt() {
-        withGroupingIntFunc(func -> withItem(a -> withItem(b -> withItem(c -> {
+        withGroupingIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
             final int aGroup = func.apply(a);
             final int bGroup = func.apply(b);
@@ -413,7 +413,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest implements Immut
 
     @Test
     public void testEqualSet() {
-        withItem(a -> withItem(b -> withItem(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final IntSet set = newIntBuilder().add(a).add(b).add(c).build();
             assertTrue(set.equalSet(set));
 

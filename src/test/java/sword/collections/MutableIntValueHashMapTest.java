@@ -38,7 +38,7 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
     }
 
     @Override
-    void withItem(IntProcedure procedure) {
+    public void withValue(IntProcedure procedure) {
         withInt(procedure);
     }
 
@@ -50,11 +50,6 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
     @Override
     public void withIntTraversableBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntValueHashMap<String>, MutableIntTraversableBuilder<MutableIntValueHashMap<String>>>> procedure) {
         procedure.apply(SameKeyAndValueTraversableBuilder::new);
-    }
-
-    @Override
-    public void withValue(IntProcedure procedure) {
-        withInt(procedure);
     }
 
     @Test

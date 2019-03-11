@@ -13,7 +13,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
     };
 
     @Override
-    void withItem(IntProcedure procedure) {
+    public void withValue(IntProcedure procedure) {
         for (int value : INT_VALUES) {
             procedure.apply(value);
         }
@@ -22,11 +22,6 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
     @Override
     public void withTransformableBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntList, ImmutableIntTransformableBuilder<ImmutableIntList>>> procedure) {
         procedure.apply(ImmutableIntList.Builder::new);
-    }
-
-    @Override
-    public void withValue(IntProcedure procedure) {
-        withItem(procedure);
     }
 
     @Override
@@ -68,7 +63,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
 
     @Test
     public void testIteratingForMultipleElements() {
-        withItem(a -> withItem(b -> {
+        withValue(a -> withValue(b -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).build();
             final Iterator<Integer> iterator = list.iterator();
 
@@ -84,7 +79,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
 
     @Test
     public void testAppendWhenEmpty() {
-        withItem(value -> {
+        withValue(value -> {
             final ImmutableIntList empty = ImmutableIntList.empty();
             final ImmutableIntList list = empty.append(value);
             assertNotSame(empty, list);
@@ -95,7 +90,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
 
     @Test
     public void testAppendForASingleElement() {
-        withItem(a -> withItem(value -> {
+        withValue(a -> withValue(value -> {
             final ImmutableIntList initList = new ImmutableIntList.Builder().append(a).build();
             final ImmutableIntList list = initList.append(value);
             assertEquals(2, list.size());
@@ -114,7 +109,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
     @Test
     public void testAppendANonEmptyListWhenEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
-        withItem(value -> {
+        withValue(value -> {
             final ImmutableIntList list = new ImmutableIntList.Builder().append(value).build();
             final ImmutableIntList result = empty.appendAll(list);
             assertSame(list, result);
@@ -124,7 +119,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
     @Test
     public void testAppendAnEmptyListWhenNoEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
-        withItem(value -> {
+        withValue(value -> {
             final ImmutableIntList list = new ImmutableIntList.Builder().append(value).build();
             final ImmutableIntList result = list.appendAll(empty);
             assertSame(list, result);
@@ -133,7 +128,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
 
     @Test
     public void testAppendAll() {
-        withItem(a -> withItem(b -> withItem(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list1 = new ImmutableIntList.Builder().append(a).append(b).build();
             final ImmutableIntList list2 = new ImmutableIntList.Builder().append(c).build();
 
@@ -162,7 +157,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
 
     @Test
     public void testGroupBy() {
-        withGroupingFunc(func -> withItem(a -> withItem(b -> withItem(c -> {
+        withGroupingFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
             final String aGroup = func.apply(a);
             final String bGroup = func.apply(b);
@@ -278,7 +273,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
 
     @Test
     public void testGroupByInt() {
-        withGroupingIntFunc(func -> withItem(a -> withItem(b -> withItem(c -> {
+        withGroupingIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
             final int aGroup = func.apply(a);
             final int bGroup = func.apply(b);

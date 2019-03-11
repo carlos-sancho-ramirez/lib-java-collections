@@ -11,7 +11,6 @@ abstract class MapTest<K, V> extends TransformableTest<V> {
 
     abstract MapBuilder<K, V> newBuilder();
     abstract void withKey(Procedure<K> procedure);
-    abstract void withValue(Procedure<V> procedure);
     abstract void withFilterFunc(Procedure<Predicate<V>> procedure);
     abstract void withSortFunc(Procedure<SortFunction<K>> procedure);
     abstract V getTestValue();

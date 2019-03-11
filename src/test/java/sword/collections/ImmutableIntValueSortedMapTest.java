@@ -40,7 +40,7 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
     }
 
     @Override
-    void withItem(IntProcedure procedure) {
+    void withValue(IntProcedure procedure) {
         withInt(procedure);
     }
 

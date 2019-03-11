@@ -1,7 +1,5 @@
 package sword.collections;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
 
     private static final int[] INT_VALUES = {
@@ -9,7 +7,7 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
     };
 
     @Override
-    void withItem(IntProcedure procedure) {
+    public void withValue(IntProcedure procedure) {
         for (int value : INT_VALUES) {
             procedure.apply(value);
         }

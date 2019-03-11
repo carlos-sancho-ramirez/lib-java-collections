@@ -13,7 +13,7 @@ abstract class IntPairMapTest extends IntTransformableTest {
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);
 
     @Override
-    void withItem(IntProcedure procedure) {
+    void withValue(IntProcedure procedure) {
         withInt(procedure);
     }
 

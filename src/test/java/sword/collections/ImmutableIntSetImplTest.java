@@ -12,7 +12,7 @@ public final class ImmutableIntSetImplTest extends ImmutableIntSetTest {
     }
 
     @Override
-    void withItem(IntProcedure procedure) {
+    public void withValue(IntProcedure procedure) {
         for (int value : INT_VALUES) {
             procedure.apply(value);
         }

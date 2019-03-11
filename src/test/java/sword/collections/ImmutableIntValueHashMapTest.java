@@ -40,7 +40,7 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
     }
 
     @Override
-    void withItem(IntProcedure procedure) {
+    void withValue(IntProcedure procedure) {
         withInt(procedure);
     }
 

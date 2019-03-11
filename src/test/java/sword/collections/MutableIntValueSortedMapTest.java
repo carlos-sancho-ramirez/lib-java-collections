@@ -38,11 +38,6 @@ public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<S
     }
 
     @Override
-    void withItem(IntProcedure procedure) {
-        withInt(procedure);
-    }
-
-    @Override
     void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(v -> (v & 1) == 0);
     }
