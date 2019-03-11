@@ -55,7 +55,7 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntTrave
     public void testToSetForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final C transformable = builder.add(a).add(b).add(c).build();
-            final ImmutableIntSetBuilder setBuilder = new ImmutableIntSetBuilder();
+            final ImmutableIntSetCreator setBuilder = new ImmutableIntSetCreator();
             for (int value : transformable) {
                 setBuilder.add(value);
             }

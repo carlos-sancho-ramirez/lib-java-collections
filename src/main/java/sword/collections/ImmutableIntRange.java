@@ -105,7 +105,7 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
             return new ImmutableIntRange(_min, value);
         }
 
-        final ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
+        final ImmutableIntSetCreator builder = new ImmutableIntSetCreator();
         for (int i = _min; i < _max; i++) {
             builder.add(i);
         }
@@ -132,7 +132,7 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
             return new ImmutableIntRange(_min, value - 1);
         }
 
-        final ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
+        final ImmutableIntSetCreator builder = new ImmutableIntSetCreator();
         for (int i = _min; i < _max; i++) {
             if (i != value) {
                 builder.add(i);

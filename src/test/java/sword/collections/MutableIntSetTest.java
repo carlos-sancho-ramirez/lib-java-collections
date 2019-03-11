@@ -98,7 +98,7 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
     @Test
     public void testAddAll() {
         withValue(a -> withValue(b -> {
-            final ImmutableIntSet values = new ImmutableIntSetBuilder().add(a).add(b).build();
+            final ImmutableIntSet values = new ImmutableIntSetCreator().add(a).add(b).build();
             withValue(c -> {
                 final MutableIntSet set = MutableIntSet.empty();
                 set.add(c);

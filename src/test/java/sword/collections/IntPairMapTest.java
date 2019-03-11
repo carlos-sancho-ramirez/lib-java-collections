@@ -95,7 +95,7 @@ abstract class IntPairMapTest extends IntTransformableTest {
     public void testKeySet() {
         for (int amount = 0; amount < 3; amount++) {
             final IntPairMapBuilder mapBuilder = newBuilder();
-            final ImmutableIntSetBuilder setBuilder = new ImmutableIntSetBuilder();
+            final ImmutableIntSetCreator setBuilder = new ImmutableIntSetCreator();
             for (int i = 2; i < amount + 2; i++) {
                 setBuilder.add(i);
                 mapBuilder.put(i, 5);

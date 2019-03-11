@@ -30,7 +30,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
 
     @Override
     public ImmutableIntSet toSet() {
-        final ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
+        final ImmutableIntSetCreator builder = new ImmutableIntSetCreator();
         for (int i = 0; i < _values.length; i++) {
             builder.add(_values[i]);
         }

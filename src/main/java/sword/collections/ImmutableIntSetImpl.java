@@ -96,7 +96,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
             return new ImmutableIntSetImpl(newValues);
         }
 
-        if (ImmutableIntSetBuilder.betterAsBitSet(_values[0], _values[length - 1], _values.length)) {
+        if (ImmutableIntSetCreator.betterAsBitSet(_values[0], _values[length - 1], _values.length)) {
             ImmutableBitSetImpl.Builder builder = new ImmutableBitSetImpl.Builder();
             for (int i = 0; i < length; i++) {
                 builder.add(_values[i]);

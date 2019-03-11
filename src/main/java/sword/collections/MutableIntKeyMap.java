@@ -172,7 +172,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
 
     @Override
     public IntSet keySet() {
-        ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
+        ImmutableIntSetCreator builder = new ImmutableIntSetCreator();
         for (int i = 0; i < _size; i++) {
             builder.add(_keys[i]);
         }

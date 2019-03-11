@@ -113,7 +113,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
         final int newMax = Math.max(max(), value);
         final int newSize = currentSize + 1;
 
-        if (ImmutableIntSetBuilder.betterAsBitSet(newMin, newMax, newSize)) {
+        if (ImmutableIntSetCreator.betterAsBitSet(newMin, newMax, newSize)) {
             final int bitsPerWord = 1 << OFFSET_BITS_IN_INDEX;
             final int newLength = newMax / bitsPerWord + 1;
             final int[] values = new int[newLength];

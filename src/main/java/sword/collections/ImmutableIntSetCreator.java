@@ -1,16 +1,16 @@
 package sword.collections;
 
 /**
- * Builder to create a new instance of this set.
+ * Builder to create a new instance implementing ImmutableIntSet interface.
  *
  * This builder will automatically choose among all possible
- * implementations of ImmutableIntSet the more efficient for the provided
- * values.
+ * implementations of ImmutableIntSet the more efficient in terms of memory
+ * usage for the provided values.
  *
  * If it is desired an specific implementation, implementation's builder
  * should be used instead.
  */
-public final class ImmutableIntSetBuilder implements ImmutableIntSet.Builder {
+public final class ImmutableIntSetCreator implements ImmutableIntSet.Builder {
 
     private final MutableIntSet _set = MutableIntSet.empty();
 

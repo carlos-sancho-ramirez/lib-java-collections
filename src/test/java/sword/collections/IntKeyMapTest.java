@@ -157,7 +157,7 @@ abstract class IntKeyMapTest<T> extends TransformableTest<T> {
                     .put(c, valueFromKey(c))
                     .build();
 
-            final ImmutableIntSet set = new ImmutableIntSetBuilder()
+            final ImmutableIntSet set = new ImmutableIntSetCreator()
                     .add(a).add(b).add(c).build();
             assertEquals(set, map.keySet().toImmutable());
         })));

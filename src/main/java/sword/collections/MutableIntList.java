@@ -39,7 +39,7 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
 
     @Override
     public IntSet toSet() {
-        final ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
+        final ImmutableIntSetCreator builder = new ImmutableIntSetCreator();
         for (int i = 0; i < _size; i++) {
             builder.add(_values[i]);
         }

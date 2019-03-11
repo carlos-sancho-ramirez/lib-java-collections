@@ -14,7 +14,7 @@ abstract class AbstractIntTransformer implements IntTransformer {
 
     @Override
     public IntSet toSet() {
-        final ImmutableIntSetBuilder builder = new ImmutableIntSetBuilder();
+        final ImmutableIntSetCreator builder = new ImmutableIntSetCreator();
         while (hasNext()) {
             builder.add(next());
         }
