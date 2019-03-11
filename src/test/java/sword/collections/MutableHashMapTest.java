@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableHashMapTest extends MapTest<Integer, String> implements MutableTraversableTest<String> {
+public final class MutableHashMapTest extends MapTest<Integer, String, MutableTransformableBuilder<String>> implements MutableTraversableTest<String, MutableTransformableBuilder<String>> {
 
     @Override
     MutableHashMap.Builder<Integer, String> newBuilder() {
@@ -21,7 +21,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String> implement
     }
 
     @Override
-    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, MutableTransformableBuilder<String>>> procedure) {
         procedure.apply(HashCodeKeyTraversableBuilder::new);
     }
 
@@ -73,11 +73,6 @@ public final class MutableHashMapTest extends MapTest<Integer, String> implement
     @Override
     void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply((a, b) -> a + b);
-    }
-
-    @Override
-    TransformableBuilder<String> newIterableBuilder() {
-        return new HashCodeKeyTraversableBuilder();
     }
 
     @Override

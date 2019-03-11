@@ -1,13 +1,13 @@
 package sword.collections;
 
-public final class MutableSortedSetTest extends MutableSetTest<String> {
+public final class MutableSortedSetTest extends MutableSetTest<String, MutableSortedSet.Builder<String>> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"
     };
 
     @Override
-    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, MutableSortedSet.Builder<String>>> procedure) {
         withSortFunc(sortFunc -> procedure.apply(() -> new MutableSortedSet.Builder<>(sortFunc)));
     }
 

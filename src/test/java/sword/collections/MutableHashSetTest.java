@@ -7,14 +7,14 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-public final class MutableHashSetTest extends MutableSetTest<String> {
+public final class MutableHashSetTest extends MutableSetTest<String, MutableHashSet.Builder<String>> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"
     };
 
     @Override
-    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, MutableHashSet.Builder<String>>> procedure) {
         procedure.apply(MutableHashSet.Builder::new);
     }
 

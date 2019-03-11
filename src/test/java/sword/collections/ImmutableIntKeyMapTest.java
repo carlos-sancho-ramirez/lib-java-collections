@@ -9,7 +9,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> implements ImmutableTransformableTest<String> {
+public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, ImmutableTransformableBuilder<String>> implements ImmutableTransformableTest<String, ImmutableTransformableBuilder<String>> {
 
     @Override
     ImmutableIntKeyMap.Builder<String> newMapBuilder() {
@@ -17,7 +17,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String> implemen
     }
 
     @Override
-    public void withTransformableBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
         procedure.apply(HashCodeKeyTraversableBuilder::new);
     }
 

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableSortedMapTest extends MapTest<Integer, String> implements MutableTraversableTest<String> {
+public final class MutableSortedMapTest extends MapTest<Integer, String, MutableTransformableBuilder<String>> implements MutableTraversableTest<String, MutableTransformableBuilder<String>> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
@@ -25,7 +25,7 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> impleme
     }
 
     @Override
-    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, MutableTransformableBuilder<String>>> procedure) {
         procedure.apply(HashCodeKeyTransformableBuilder::new);
     }
 
@@ -72,11 +72,6 @@ public final class MutableSortedMapTest extends MapTest<Integer, String> impleme
     @Override
     void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply((a, b) -> a + b);
-    }
-
-    @Override
-    MutableTransformableBuilder<String> newIterableBuilder() {
-        return new HashCodeKeyTransformableBuilder();
     }
 
     @Override

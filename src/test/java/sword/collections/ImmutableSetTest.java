@@ -7,14 +7,9 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends TransformableTest<T> implements ImmutableTransformableTest<T> {
+abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends TransformableTest<T, B> implements ImmutableTransformableTest<T, B> {
 
     abstract boolean lessThan(T a, T b);
-
-    abstract void withBuilderSupplier(Procedure<BuilderSupplier<T, B>> procedure);
-
-    @Override
-    abstract ImmutableSet.Builder<T> newIterableBuilder();
 
     abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
 
@@ -108,41 +103,6 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Tr
             assertTrue(set1.contains(b));
             assertFalse(set2.contains(b));
         })));
-    }
-
-    @Test
-    @Override
-    public void testIndexOfForMultipleElements() {
-        withValue(a -> withValue(b -> withValue(value -> {
-            final Traversable<T> set = newIterableBuilder().add(a).add(b).build();
-            final int index = set.indexOf(value);
-
-            final int expectedIndex;
-            if (lessThan(b, a)) {
-                expectedIndex = equal(value, b)? 0 : equal(value, a)? 1 : -1;
-            }
-            else {
-                expectedIndex = equal(value, a)? 0 : equal(value, b)? 1 : -1;
-            }
-            assertEquals(expectedIndex, index);
-        })));
-    }
-
-    @Test
-    @Override
-    public void testFindFirstForMultipleElements() {
-        withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
-            final Traversable<T> collection = newIterableBuilder().add(a).add(b).build();
-
-            final T expected;
-            if (lessThan(b, a)) {
-                expected = f.apply(b)? b : f.apply(a)? a : defaultValue;
-            }
-            else {
-                expected = f.apply(a)? a : f.apply(b)? b : defaultValue;
-            }
-            assertSame(expected, collection.findFirst(f, defaultValue));
-        }))));
     }
 
     @Test

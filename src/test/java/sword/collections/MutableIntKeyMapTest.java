@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableIntKeyMapTest extends IntKeyMapTest<String> implements MutableTraversableTest<String> {
+public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTransformableBuilder<String>> implements MutableTraversableTest<String, MutableTransformableBuilder<String>> {
 
     @Override
     MutableIntKeyMap.Builder<String> newMapBuilder() {
@@ -16,7 +16,7 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String> implements
     }
 
     @Override
-    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, MutableTransformableBuilder<String>>> procedure) {
         procedure.apply(HashCodeKeyTraversableBuilder::new);
     }
 
@@ -174,7 +174,7 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String> implements
         })));
     }
 
-    private static final class HashCodeKeyTraversableBuilder implements MutableTraversableBuilder<String> {
+    private static final class HashCodeKeyTraversableBuilder implements MutableTransformableBuilder<String> {
         private final MutableIntKeyMap<String> map = MutableIntKeyMap.empty();
 
         @Override
@@ -184,7 +184,7 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String> implements
         }
 
         @Override
-        public MutableTraversable<String> build() {
+        public MutableTransformable<String> build() {
             return map;
         }
     }

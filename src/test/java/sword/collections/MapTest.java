@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class MapTest<K, V> extends TransformableTest<V> {
+abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends TransformableTest<V, B> {
 
     abstract MapBuilder<K, V> newBuilder();
     abstract void withKey(Procedure<K> procedure);

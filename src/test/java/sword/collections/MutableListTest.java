@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-public final class MutableListTest extends TransformableTest<String> implements MutableTraversableTest<String> {
+public final class MutableListTest extends TransformableTest<String, MutableList.Builder<String>> implements MutableTraversableTest<String, MutableList.Builder<String>> {
 
     private static final String[] stringValues = {
             null, "", "_", "0", "abcd"
@@ -20,7 +20,7 @@ public final class MutableListTest extends TransformableTest<String> implements 
     }
 
     @Override
-    public void withTraversableBuilderSupplier(Procedure<BuilderSupplier<String, MutableTraversableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, MutableList.Builder<String>>> procedure) {
         procedure.apply(MutableList.Builder::new);
     }
 
@@ -95,11 +95,6 @@ public final class MutableListTest extends TransformableTest<String> implements 
 
     MutableList.Builder<String> newBuilder() {
         return new MutableList.Builder<>();
-    }
-
-    @Override
-    MutableList.Builder<String> newIterableBuilder() {
-        return newBuilder();
     }
 
     @Test
@@ -503,8 +498,8 @@ public final class MutableListTest extends TransformableTest<String> implements 
 
     @Test
     public void testMapForMultipleElements() {
-        withMapFunc(f -> withValue(a -> withValue(b -> {
-            final MutableList<String> collection = newIterableBuilder().add(a).add(b).build();
+        withMapFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final MutableList<String> collection = supplier.newBuilder().add(a).add(b).build();
             final List<String> mapped = collection.map(f);
 
             final Iterator<String> collectionIterator = collection.iterator();
@@ -515,6 +510,6 @@ public final class MutableListTest extends TransformableTest<String> implements 
             }
 
             assertFalse(mappedIterator.hasNext());
-        })));
+        }))));
     }
 }

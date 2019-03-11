@@ -7,7 +7,7 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
     };
 
     @Override
-    public void withTransformableBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableSortedSet.Builder<String>>> procedure) {
         withSortFunc(sortFunc -> {
             procedure.apply(() -> new ImmutableSortedSet.Builder<>(sortFunc));
         });
@@ -61,16 +61,6 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
     @Override
     boolean lessThan(String a, String b) {
         return b != null && (a == null || a.hashCode() < b.hashCode());
-    }
-
-    @Override
-    void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableSortedSet.Builder<String>>> procedure) {
-        withSortFunc(sortFunc -> procedure.apply(() -> new ImmutableSortedSet.Builder<>(sortFunc)));
-    }
-
-    @Override
-    ImmutableSortedSet.Builder<String> newIterableBuilder() {
-        return new ImmutableSortedSet.Builder<>(this::lessThan);
     }
 
     private boolean sortByLength(String a, String b) {

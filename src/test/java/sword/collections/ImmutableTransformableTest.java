@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sword.collections.SortUtils.equal;
 
-public interface ImmutableTransformableTest<T> {
+public interface ImmutableTransformableTest<T, B extends ImmutableTransformableBuilder<T>> {
 
-    void withTransformableBuilderSupplier(Procedure<BuilderSupplier<T, ImmutableTransformableBuilder<T>>> procedure);
+    void withBuilderSupplier(Procedure<BuilderSupplier<T, B>> procedure);
     void withValue(Procedure<T> procedure);
     void withMapFunc(Procedure<Function<T, String>> procedure);
     void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
@@ -21,7 +21,7 @@ public interface ImmutableTransformableTest<T> {
             throw new AssertionError("Should not be called for empty collections");
         };
 
-        withTransformableBuilderSupplier(supplier -> {
+        withBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> transformable = supplier.newBuilder().build();
             assertSame(transformable, transformable.filter(func));
             assertTrue(transformable.isEmpty());
@@ -34,7 +34,7 @@ public interface ImmutableTransformableTest<T> {
             throw new AssertionError("Should not be called for empty collections");
         };
 
-        withTransformableBuilderSupplier(supplier -> {
+        withBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> transformable = supplier.newBuilder().build();
             assertSame(transformable, transformable.filterNot(func));
             assertTrue(transformable.isEmpty());
@@ -43,7 +43,7 @@ public interface ImmutableTransformableTest<T> {
 
     @Test
     default void testSameInstanceWhenFilteringAllValues() {
-        withValue(a -> withValue(b -> withTransformableBuilderSupplier(supplier -> {
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> transformable = supplier.newBuilder().add(a).add(b).build();
             final Predicate<T> predicate = value -> equal(a, value) || equal(b, value);
             assertSame(transformable, transformable.filter(predicate));
@@ -52,7 +52,7 @@ public interface ImmutableTransformableTest<T> {
 
     @Test
     default void testSameInstanceWhenNonFilteringAnyValue() {
-        withValue(a -> withValue(b -> withTransformableBuilderSupplier(supplier -> {
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> transformable = supplier.newBuilder().add(a).add(b).build();
             final Predicate<T> predicate = value -> !equal(a, value) && !equal(b, value);
             assertSame(transformable, transformable.filterNot(predicate));
@@ -61,14 +61,14 @@ public interface ImmutableTransformableTest<T> {
 
     @Test
     default void testMapWhenEmpty() {
-        withMapFunc(f -> withTransformableBuilderSupplier(supplier -> {
+        withMapFunc(f -> withBuilderSupplier(supplier -> {
             assertFalse(supplier.newBuilder().build().map(f).iterator().hasNext());
         }));
     }
 
     @Test
     default void testMapForSingleElement() {
-        withMapFunc(f -> withValue(value -> withTransformableBuilderSupplier(supplier -> {
+        withMapFunc(f -> withValue(value -> withBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> collection = supplier.newBuilder().add(value).build();
             final ImmutableTransformable<String> mapped = collection.map(f);
 
@@ -81,7 +81,7 @@ public interface ImmutableTransformableTest<T> {
 
     @Test
     default void testMapForMultipleElements() {
-        withMapFunc(f -> withValue(a -> withValue(b -> withTransformableBuilderSupplier(supplier -> {
+        withMapFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> collection = supplier.newBuilder().add(a).add(b).build();
             final ImmutableTransformable<String> mapped = collection.map(f);
 
@@ -98,14 +98,14 @@ public interface ImmutableTransformableTest<T> {
 
     @Test
     default void testMapToIntWhenEmpty() {
-        withMapToIntFunc(f -> withTransformableBuilderSupplier(supplier -> {
+        withMapToIntFunc(f -> withBuilderSupplier(supplier -> {
             assertFalse(supplier.newBuilder().build().mapToInt(f).iterator().hasNext());
         }));
     }
 
     @Test
     default void testMapToIntForSingleElement() {
-        withMapToIntFunc(f -> withValue(value -> withTransformableBuilderSupplier(supplier -> {
+        withMapToIntFunc(f -> withValue(value -> withBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> collection = supplier.newBuilder().add(value).build();
             final ImmutableIntTransformable mapped = collection.mapToInt(f);
 
@@ -118,7 +118,7 @@ public interface ImmutableTransformableTest<T> {
 
     @Test
     default void testMapToIntForMultipleElements() {
-        withMapToIntFunc(f -> withValue(a -> withValue(b -> withTransformableBuilderSupplier(supplier -> {
+        withMapToIntFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> collection = supplier.newBuilder().add(a).add(b).build();
             final ImmutableIntTransformable mapped = collection.mapToInt(f);
 

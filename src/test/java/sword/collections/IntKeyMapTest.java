@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntKeyMapTest<T> extends TransformableTest<T> {
+abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> extends TransformableTest<T, B> {
 
     abstract IntKeyMapBuilder<T> newMapBuilder();
     abstract T getTestValue();
@@ -36,11 +36,6 @@ abstract class IntKeyMapTest<T> extends TransformableTest<T> {
         public Transformable<T> build() {
             return _builder.build();
         }
-    }
-
-    @Override
-    TransformableBuilder<T> newIterableBuilder() {
-        return new IterableBuilderAdapter();
     }
 
     @Test

@@ -14,7 +14,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     };
 
     @Override
-    public void withTransformableBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableHashSet.Builder<String>>> procedure) {
         procedure.apply(ImmutableHashSet.Builder::new);
     }
 
@@ -88,97 +88,6 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
 
     private void withGroupingIntFunc(Procedure<IntResultFunction<String>> procedure) {
         procedure.apply(this::takeStringLength);
-    }
-
-    @Override
-    void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableHashSet.Builder<String>>> procedure) {
-        procedure.apply(ImmutableHashSet.Builder::new);
-    }
-
-    @Override
-    ImmutableHashSet.Builder<String> newIterableBuilder() {
-        return new ImmutableHashSet.Builder<>();
-    }
-
-    @Test
-    public void testIteratingForMultipleElements() {
-        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
-            final ImmutableHashSet<String> set = supplier.newBuilder().add(a).add(b).build();
-            final Iterator<String> iterator = set.iterator();
-
-            assertTrue(iterator.hasNext());
-            final String first = iterator.next();
-            final boolean sameValue = equal(a, b);
-
-            if (sameValue) {
-                assertEquals(a, first);
-            }
-            else if (equal(first, a)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(b, iterator.next());
-            }
-            else if (equal(first, b)) {
-                assertTrue(iterator.hasNext());
-                assertEquals(a, iterator.next());
-            }
-            else {
-                fail("Expected value " + a + " or " + b + " but iterator returned " + first);
-            }
-
-            assertFalse(iterator.hasNext());
-        })));
-    }
-
-    @Test
-    @Override
-    public void testIndexOfForMultipleElements() {
-        withValue(a -> withValue(b -> withValue(value -> {
-            final int aHash = SortUtils.hashCode(a);
-            final int bHash = SortUtils.hashCode(b);
-            final boolean reversedOrder = bHash < aHash;
-            final Traversable<String> set = newIterableBuilder().add(a).add(b).build();
-            final int index = set.indexOf(value);
-
-            if (aHash == bHash) {
-                if (equal(a, value) || equal(b, value)) {
-                    assertTrue(index == 0 || index == 1);
-                }
-                else {
-                    assertEquals(-1, index);
-                }
-            }
-            else {
-                final int expectedIndex = (!reversedOrder && equal(a, value) || reversedOrder && equal(b, value)) ? 0 :
-                        (!reversedOrder && equal(b, value) || reversedOrder && equal(a, value)) ? 1 : -1;
-                assertEquals(expectedIndex, index);
-            }
-        })));
-    }
-
-    @Test
-    @Override
-    public void testFindFirstForMultipleElements() {
-        withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
-            final int aHash = SortUtils.hashCode(a);
-            final int bHash = SortUtils.hashCode(b);
-            final boolean reversedOrder = bHash < aHash;
-            final Traversable<String> collection = newIterableBuilder().add(a).add(b).build();
-            final String first = collection.findFirst(f, defaultValue);
-
-            if (aHash == bHash) {
-                if (f.apply(a) || f.apply(b)) {
-                    assertTrue(equal(a, first) || equal(b, first));
-                }
-                else {
-                    assertSame(defaultValue, first);
-                }
-            }
-            else {
-                final String expected = (!reversedOrder && f.apply(a) || reversedOrder && !f.apply(b) && f.apply(a))? a :
-                        (reversedOrder && f.apply(b) || !reversedOrder && !f.apply(a) && f.apply(b))? b : defaultValue;
-                assertSame(expected, first);
-            }
-        }))));
     }
 
     @Test

@@ -7,21 +7,21 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class TransformableTest<T> extends TraversableTest<T> {
-
-    abstract TransformableBuilder<T> newIterableBuilder();
+abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends TraversableTest<T, B> {
 
     @Test
     public void testToListWhenEmpty() {
-        final Transformable<T> transformable = newIterableBuilder().build();
-        assertTrue(transformable.isEmpty());
-        assertTrue(transformable.toList().isEmpty());
+        withBuilderSupplier(supplier -> {
+            final Transformable<T> transformable = supplier.newBuilder().build();
+            assertTrue(transformable.isEmpty());
+            assertTrue(transformable.toList().isEmpty());
+        });
     }
 
     @Test
     public void testToList() {
-        withValue(a -> withValue(b -> {
-            final Transformable<T> transformable = newIterableBuilder().add(a).add(b).build();
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).build();
             final List<T> list = transformable.toList();
 
             final Transformer<T> transformer = transformable.iterator();
@@ -30,28 +30,28 @@ abstract class TransformableTest<T> extends TraversableTest<T> {
                 assertSame(value, transformer.next());
             }
             assertFalse(transformer.hasNext());
-        }));
+        })));
     }
 
     @Test
     public void testToSetWhenEmpty() {
-        assertTrue(newIterableBuilder().build().toSet().isEmpty());
+        withBuilderSupplier(supplier -> assertTrue(supplier.newBuilder().build().toSet().isEmpty()));
     }
 
     @Test
     public void testToSetForASingleElement() {
-        withValue(a -> {
-            final Transformable<T> transformable = newIterableBuilder().add(a).build();
+        withValue(a -> withBuilderSupplier(supplier -> {
+            final Transformable<T> transformable = supplier.newBuilder().add(a).build();
             final Set<T> set = transformable.toSet();
             assertEquals(1, set.size());
             assertEquals(a, set.valueAt(0));
-        });
+        }));
     }
 
     @Test
     public void testToSetForMultipleElements() {
-        withValue(a -> withValue(b -> withValue(c -> {
-            final Transformable<T> transformable = newIterableBuilder().add(a).add(b).add(c).build();
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).add(c).build();
             final Set<T> set = transformable.toSet();
             int count = 0;
             for (T setValue : set) {
@@ -66,28 +66,28 @@ abstract class TransformableTest<T> extends TraversableTest<T> {
             }
 
             assertEquals(count, transformable.size());
-        })));
+        }))));
     }
 
     @Test
     public void testIndexesWhenEmpty() {
-        assertTrue(newIterableBuilder().build().indexes().isEmpty());
+        withBuilderSupplier(supplier -> assertTrue(supplier.newBuilder().build().indexes().isEmpty()));
     }
 
     @Test
     public void testIndexesForSingleValue() {
-        withValue(value -> {
-            final Iterator<Integer> indexIterator = newIterableBuilder().add(value).build().indexes().iterator();
+        withValue(value -> withBuilderSupplier(supplier -> {
+            final Iterator<Integer> indexIterator = supplier.newBuilder().add(value).build().indexes().iterator();
             assertTrue(indexIterator.hasNext());
             assertEquals(0, indexIterator.next().intValue());
             assertFalse(indexIterator.hasNext());
-        });
+        }));
     }
 
     @Test
     public void testIndexesForMultipleValues() {
-        withValue(a -> withValue(b -> withValue(c -> {
-            final Transformable<T> transformable = newIterableBuilder().add(a).add(b).add(c).build();
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).add(c).build();
             final Iterator<T> it = transformable.iterator();
             int length = 0;
             while (it.hasNext()) {
@@ -101,7 +101,7 @@ abstract class TransformableTest<T> extends TraversableTest<T> {
                 assertEquals(i, indexIterator.next().intValue());
             }
             assertFalse(indexIterator.hasNext());
-        })));
+        }))));
     }
 
     @Test
@@ -110,13 +110,15 @@ abstract class TransformableTest<T> extends TraversableTest<T> {
             throw new AssertionError("This function should not be called");
         };
 
-        assertFalse(newIterableBuilder().build().filter(f).iterator().hasNext());
+        withBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filter(f).iterator().hasNext());
+        });
     }
 
     @Test
     public void testFilterForSingleElement() {
-        withFilterFunc(f -> withValue(value -> {
-            final Transformable<T> transformable = newIterableBuilder().add(value).build();
+        withFilterFunc(f -> withValue(value -> withBuilderSupplier(supplier -> {
+            final Transformable<T> transformable = supplier.newBuilder().add(value).build();
             final Transformable<T> filtered = transformable.filter(f);
 
             if (f.apply(value)) {
@@ -125,37 +127,24 @@ abstract class TransformableTest<T> extends TraversableTest<T> {
             else {
                 assertFalse(filtered.iterator().hasNext());
             }
-        }));
+        })));
     }
 
     @Test
     public void testFilterForMultipleElements() {
-        withFilterFunc(f -> withValue(a -> withValue(b -> {
-            final Transformable<T> iterable = newIterableBuilder().add(a).add(b).build();
+        withFilterFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final Transformable<T> iterable = supplier.newBuilder().add(a).add(b).build();
             final Transformable<T> filtered = iterable.filter(f);
 
-            final boolean aPassed = f.apply(a);
-            final boolean bPassed = f.apply(b);
-
-            if (aPassed && bPassed) {
-                assertEquals(iterable, filtered);
+            final Transformer<T> tr = filtered.iterator();
+            for (T value : iterable) {
+                if (f.apply(value)) {
+                    assertTrue(tr.hasNext());
+                    assertSame(value, tr.next());
+                }
             }
-            else if (aPassed) {
-                Iterator<T> iterator = filtered.iterator();
-                assertTrue(iterator.hasNext());
-                assertEquals(a, iterator.next());
-                assertFalse(iterator.hasNext());
-            }
-            else if (bPassed) {
-                Iterator<T> iterator = filtered.iterator();
-                assertTrue(iterator.hasNext());
-                assertEquals(b, iterator.next());
-                assertFalse(iterator.hasNext());
-            }
-            else {
-                assertFalse(filtered.iterator().hasNext());
-            }
-        })));
+            assertFalse(tr.hasNext());
+        }))));
     }
 
     @Test
@@ -164,13 +153,15 @@ abstract class TransformableTest<T> extends TraversableTest<T> {
             throw new AssertionError("This function should not be called");
         };
 
-        assertFalse(newIterableBuilder().build().filterNot(f).iterator().hasNext());
+        withBuilderSupplier(supplier-> {
+            assertFalse(supplier.newBuilder().build().filterNot(f).iterator().hasNext());
+        });
     }
 
     @Test
     public void testFilterNotForSingleElement() {
-        withFilterFunc(f -> withValue(value -> {
-            final Transformable<T> collection = newIterableBuilder().add(value).build();
+        withFilterFunc(f -> withValue(value -> withBuilderSupplier(supplier -> {
+            final Transformable<T> collection = supplier.newBuilder().add(value).build();
             final Transformable<T> filtered = collection.filterNot(f);
 
             if (f.apply(value)) {
@@ -179,13 +170,13 @@ abstract class TransformableTest<T> extends TraversableTest<T> {
             else {
                 assertEquals(collection, filtered);
             }
-        }));
+        })));
     }
 
     @Test
     public void testFilterNotForMultipleElements() {
-        withFilterFunc(f -> withValue(a -> withValue(b -> {
-            final Transformable<T> iterable = newIterableBuilder().add(a).add(b).build();
+        withFilterFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final Transformable<T> iterable = supplier.newBuilder().add(a).add(b).build();
             final Transformable<T> filtered = iterable.filterNot(f);
 
             final boolean aRemoved = f.apply(a);
@@ -209,6 +200,6 @@ abstract class TransformableTest<T> extends TraversableTest<T> {
             else {
                 assertEquals(iterable, filtered);
             }
-        })));
+        }))));
     }
 }

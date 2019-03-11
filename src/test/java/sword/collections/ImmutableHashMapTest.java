@@ -2,14 +2,12 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableHashMapTest extends MapTest<Integer, String> implements ImmutableTransformableTest<String> {
+public final class ImmutableHashMapTest extends MapTest<Integer, String, ImmutableTransformableBuilder<String>> implements ImmutableTransformableTest<String, ImmutableTransformableBuilder<String>> {
 
     @Override
     ImmutableHashMap.Builder<Integer, String> newBuilder() {
@@ -22,7 +20,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> impleme
     }
 
     @Override
-    public void withTransformableBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
         procedure.apply(HashCodeKeyTraversableBuilder::new);
     }
 
@@ -136,11 +134,6 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String> impleme
     @Override
     void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply((a, b) -> a + b);
-    }
-
-    @Override
-    TransformableBuilder<String> newIterableBuilder() {
-        return new HashCodeKeyTraversableBuilder();
     }
 
     private static final class HashCodeKeyTraversableBuilder implements ImmutableTransformableBuilder<String> {

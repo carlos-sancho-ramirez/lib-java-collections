@@ -2,14 +2,12 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableSortedMapTest extends MapTest<Integer, String> implements ImmutableTransformableTest<String> {
+public final class ImmutableSortedMapTest extends MapTest<Integer, String, ImmutableTransformableBuilder<String>> implements ImmutableTransformableTest<String, ImmutableTransformableBuilder<String>> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
@@ -26,7 +24,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> imple
     }
 
     @Override
-    public void withTransformableBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
         withSortFunc(sortFunc -> {
             procedure.apply(() -> new HashCodeKeyTransformableBuilder(sortFunc));
         });
@@ -66,11 +64,6 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String> imple
     @Override
     void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply((a, b) -> a + b);
-    }
-
-    @Override
-    ImmutableTransformableBuilder<String> newIterableBuilder() {
-        return new HashCodeKeyTransformableBuilder((a, b) -> a < b);
     }
 
     @Override

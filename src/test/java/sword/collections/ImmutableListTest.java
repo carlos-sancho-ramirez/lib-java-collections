@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableListTest extends TransformableTest<String> implements ImmutableTransformableTest<String> {
+public final class ImmutableListTest extends TransformableTest<String, ImmutableList.Builder<String>> implements ImmutableTransformableTest<String, ImmutableList.Builder<String>> {
 
     private static final String[] STRING_VALUES = {
             null, "", "_", "0", "abcd"
@@ -21,7 +21,7 @@ public final class ImmutableListTest extends TransformableTest<String> implement
     }
 
     @Override
-    public void withTransformableBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableList.Builder<String>>> procedure) {
         procedure.apply(ImmutableList.Builder::new);
     }
 
@@ -113,11 +113,6 @@ public final class ImmutableListTest extends TransformableTest<String> implement
 
     ImmutableList.Builder<String> newBuilder() {
         return new ImmutableList.Builder<>();
-    }
-
-    @Override
-    ImmutableList.Builder<String> newIterableBuilder() {
-        return newBuilder();
     }
 
     @Test
