@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntPairMapTest extends IntTransformableTest {
+abstract class IntPairMapTest<B extends IntTransformableBuilder> extends IntTransformableTest<B> {
 
     abstract IntPairMapBuilder newBuilder();
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);

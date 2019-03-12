@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class MutableIntSetTest extends IntTransformableTest implements MutableIntTraversableTest<MutableIntSet> {
+public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.Builder> implements MutableIntTraversableTest<MutableIntSet.Builder> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -500, -2, -1, 0, 1, 3, 127, 128, Integer.MAX_VALUE
@@ -199,7 +199,7 @@ public final class MutableIntSetTest extends IntTransformableTest implements Mut
     }
 
     @Override
-    public void withIntTraversableBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntSet, MutableIntTraversableBuilder<MutableIntSet>>> procedure) {
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntSet.Builder>> procedure) {
         procedure.apply(MutableIntSet.Builder::new);
     }
 

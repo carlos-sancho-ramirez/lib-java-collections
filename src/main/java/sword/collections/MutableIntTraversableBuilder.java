@@ -1,6 +1,9 @@
 package sword.collections;
 
-public interface MutableIntTraversableBuilder<C extends MutableIntTraversable> extends IntTraversableBuilder<C> {
-    MutableIntTraversableBuilder<C> add(int value);
-    C build();
+public interface MutableIntTraversableBuilder extends IntTraversableBuilder {
+    @Override
+    MutableIntTraversableBuilder add(int value);
+
+    @Override
+    MutableIntTraversable build();
 }

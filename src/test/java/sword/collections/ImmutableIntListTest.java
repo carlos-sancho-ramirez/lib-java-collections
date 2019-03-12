@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class ImmutableIntListTest extends IntTransformableTest implements ImmutableIntTransformableTest<ImmutableIntList> {
+public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIntList.Builder> implements ImmutableIntTransformableTest<ImmutableIntList.Builder> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE
@@ -20,7 +20,7 @@ public final class ImmutableIntListTest extends IntTransformableTest implements 
     }
 
     @Override
-    public void withTransformableBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntList, ImmutableIntTransformableBuilder<ImmutableIntList>>> procedure) {
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntList.Builder>> procedure) {
         procedure.apply(ImmutableIntList.Builder::new);
     }
 

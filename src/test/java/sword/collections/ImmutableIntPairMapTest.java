@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntPairMapTest extends IntPairMapTest implements ImmutableIntTransformableTest<ImmutableIntPairMap> {
+public final class ImmutableIntPairMapTest extends IntPairMapTest<ImmutableIntTransformableBuilder> implements ImmutableIntTransformableTest<ImmutableIntTransformableBuilder> {
 
     @Override
     ImmutableIntPairMap.Builder newBuilder() {
@@ -56,21 +56,13 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest implements Imm
     }
 
     @Override
-    public void withTransformableBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntPairMap, ImmutableIntTransformableBuilder<ImmutableIntPairMap>>> procedure) {
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntTransformableBuilder>> procedure) {
         procedure.apply(SameKeyAndValueTraversableBuilder::new);
     }
 
     @Override
     public void withValue(IntProcedure procedure) {
         withInt(procedure);
-    }
-
-    private String mapValueFunction(int value) {
-        return Integer.toString(value);
-    }
-
-    private int mapValueIntResultFunction(int value) {
-        return value + 1;
     }
 
     @Test
@@ -186,7 +178,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest implements Imm
         }));
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder<ImmutableIntPairMap> {
+    private static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {
         private final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
 
         @Override

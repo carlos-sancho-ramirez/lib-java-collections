@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntPairMapTest extends IntPairMapTest implements MutableIntTraversableTest<MutableIntPairMap> {
+public final class MutableIntPairMapTest extends IntPairMapTest<MutableIntTransformableBuilder> implements MutableIntTraversableTest<MutableIntTransformableBuilder> {
 
     @Override
     MutableIntPairMap.Builder newBuilder() {
@@ -29,7 +29,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest implements Mutab
     }
 
     @Override
-    public void withIntTraversableBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntPairMap, MutableIntTraversableBuilder<MutableIntPairMap>>> procedure) {
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntTransformableBuilder>> procedure) {
         procedure.apply(SameKeyAndValueTraversableBuilder::new);
     }
 
@@ -127,7 +127,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest implements Mutab
         })));
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder<MutableIntPairMap> {
+    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder {
         private final MutableIntPairMap map = MutableIntPairMap.empty();
 
         @Override

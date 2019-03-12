@@ -174,7 +174,7 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         return this;
     }
 
-    public static final class Builder implements MutableIntTransformableBuilder<MutableIntList> {
+    public static final class Builder implements MutableIntTransformableBuilder {
 
         private final MutableIntList _list = MutableIntList.empty();
 

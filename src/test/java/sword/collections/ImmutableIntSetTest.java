@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class ImmutableIntSetTest extends IntTransformableTest implements ImmutableIntTransformableTest<ImmutableIntSet> {
+abstract class ImmutableIntSetTest extends IntTransformableTest<ImmutableIntSet.Builder> implements ImmutableIntTransformableTest<ImmutableIntSet.Builder> {
 
     abstract ImmutableIntSet.Builder newIntBuilder();
 

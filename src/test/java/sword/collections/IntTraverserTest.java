@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversableBuilder<C>> {
+abstract class IntTraverserTest<B extends IntTraversableBuilder> {
 
     abstract void withBuilder(Procedure<B> procedure);
 
@@ -43,7 +43,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testContainsWhenContainingASingleElement() {
         withValue(valueIncluded -> withBuilder(builder -> {
-            final C iterable = builder.add(valueIncluded).build();
+            final IntTraversable iterable = builder.add(valueIncluded).build();
             withValue(otherValue -> {
                 final IntTraverser traverser = iterable.iterator();
                 if (equal(valueIncluded, otherValue) && !traverser.contains(otherValue)) {
@@ -59,7 +59,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testContainsWhenContainingMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final C iterable = builder.add(a).add(b).build();
+            final IntTraversable iterable = builder.add(a).add(b).build();
             final IntTraverser it = iterable.iterator();
             final int first = it.next();
             final boolean hasSecond = it.hasNext();
@@ -81,7 +81,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testAnyMatchWhenEmpty() {
         withBuilder(builder -> {
-            final C iterable = builder.build();
+            final IntTraversable iterable = builder.build();
             withFilterFunc(f -> assertFalse(iterable.iterator().anyMatch(f)));
         });
     }
@@ -89,7 +89,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testAnyMatchForSingleElement() {
         withValue(value -> withBuilder(builder -> {
-            final C iterable = builder.add(value).build();
+            final IntTraversable iterable = builder.add(value).build();
             withFilterFunc(f -> {
                 final IntTraverser traverser = iterable.iterator();
                 if (f.apply(value)) {
@@ -105,7 +105,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testAnyMatchForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final C iterable = builder.add(a).add(b).build();
+            final IntTraversable iterable = builder.add(a).add(b).build();
             withFilterFunc(f -> {
                 final IntTraverser traverser = iterable.iterator();
                 if (f.apply(a) || f.apply(b)) {
@@ -121,7 +121,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testIndexOfWhenEmpty() {
         withBuilder(builder -> {
-            C iterable = builder.build();
+            IntTraversable iterable = builder.build();
             withValue(value -> assertEquals(-1, iterable.iterator().indexOf(value)));
         });
     }
@@ -129,7 +129,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testIndexOfForSingleElement() {
         withValue(a -> withBuilder(builder -> {
-            final C iterable = builder.add(a).build();
+            final IntTraversable iterable = builder.add(a).build();
             withValue(value -> {
                 final int expected = equal(a, value)? 0 : -1;
                 assertEquals(expected, iterable.iterator().indexOf(value));
@@ -140,7 +140,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final C iterable = builder.add(a).add(b).build();
+            final IntTraversable iterable = builder.add(a).add(b).build();
             withValue(value -> {
                 final IntTraverser it = iterable.iterator();
                 final int first = it.next();
@@ -166,7 +166,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testValueAtForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final C iterable = builder.add(a).add(b).build();
+            final IntTraversable iterable = builder.add(a).add(b).build();
             final IntTraverser it = iterable.iterator();
             final int first = it.next();
             final boolean hasSecond = it.hasNext();
@@ -183,7 +183,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testFindFirstWhenEmpty() {
         withBuilder(builder -> {
-            final C iterable = builder.build();
+            final IntTraversable iterable = builder.build();
             final IntPredicate predicate = value -> {
                 throw new AssertionError("This should not be called");
             };
@@ -197,7 +197,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testFindFirstForSingleElement() {
         withValue(value -> withBuilder(builder -> {
-            final C iterable = builder.add(value).build();
+            final IntTraversable iterable = builder.add(value).build();
             withValue(defaultValue -> withFilterFunc(f -> {
                 final int expected = f.apply(value)? value : defaultValue;
                 assertEquals(expected, iterable.iterator().findFirst(f, defaultValue));
@@ -208,7 +208,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testFindFirstForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
-            final C iterable = builder.add(a).add(b).build();
+            final IntTraversable iterable = builder.add(a).add(b).build();
             final IntTraverser it = iterable.iterator();
             final int first = it.next();
             final boolean hasSecond = it.hasNext();
@@ -230,7 +230,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     public void testReduceForSingleElement() {
         final IntReduceFunction func = IntTraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
-            final C iterable = builder.add(value).build();
+            final IntTraversable iterable = builder.add(value).build();
             assertEquals(value, iterable.iterator().reduce(func));
         }));
     }
@@ -254,7 +254,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testReduceWithValueWhenEmpty() {
         withBuilder(builder -> {
-            final C iterable = builder.build();
+            final IntTraversable iterable = builder.build();
             final IntReduceFunction func = IntTraverserTest::unexpectedReduceFunction;
             withValue(value -> assertEquals(value, iterable.iterator().reduce(func, value)));
         });
@@ -264,7 +264,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     public void testReduceWithValueForSingleElement() {
         final IntReduceFunction func = IntTraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
-            final C iterable = builder.add(value).build();
+            final IntTraversable iterable = builder.add(value).build();
             withValue(defValue -> assertEquals(value, iterable.iterator().reduce(func, defValue)));
         }));
     }
@@ -272,7 +272,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testReduceWithValueForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C iterable = builder.add(a).add(b).add(c).build();
+            final IntTraversable iterable = builder.add(a).add(b).add(c).build();
             withReduceFunction(func -> {
                 final IntTraverser it = iterable.iterator();
                 int v = it.next();
@@ -289,7 +289,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testMinForSingleValue() {
         withValue(a -> withBuilder(builder -> {
-            final C iterable = builder.add(a).build();
+            final IntTraversable iterable = builder.add(a).build();
             assertEquals(a, iterable.iterator().min());
         }));
     }
@@ -297,7 +297,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testMinForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C iterable = builder.add(a).add(b).add(c).build();
+            final IntTraversable iterable = builder.add(a).add(b).add(c).build();
             final int halfMin = (a < b)? a : b;
             final int min = (halfMin < c)? halfMin : c;
             assertEquals(min, iterable.iterator().min());
@@ -307,7 +307,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testMaxForSingleValue() {
         withValue(a -> withBuilder(builder -> {
-            final C iterable = builder.add(a).build();
+            final IntTraversable iterable = builder.add(a).build();
             assertEquals(a, iterable.iterator().max());
         }));
     }
@@ -315,7 +315,7 @@ abstract class IntTraverserTest<C extends IntTraversable, B extends IntTraversab
     @Test
     public void testMaxForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C iterable = builder.add(a).add(b).add(c).build();
+            final IntTraversable iterable = builder.add(a).add(b).add(c).build();
             final int halfMax = (a > b)? a : b;
             final int max = (halfMax > c)? halfMax : c;
             assertEquals(max, iterable.iterator().max());

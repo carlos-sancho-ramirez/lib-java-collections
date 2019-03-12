@@ -3,7 +3,7 @@ package sword.collections;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest<String> {
+public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder> {
 
     @Override
     ImmutableIntValueHashMap.Builder<String> newBuilder() {
@@ -35,6 +35,11 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
     }
 
     @Override
+    void withBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntTransformableBuilder>> procedure) {
+        procedure.apply(SameKeyAndValueTraversableBuilder::new);
+    }
+
+    @Override
     IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder();
     }
@@ -44,7 +49,7 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
         withInt(procedure);
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder<ImmutableIntValueHashMap<String>> {
+    private static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {
         private final ImmutableIntValueHashMap.Builder<String> builder = new ImmutableIntValueHashMap.Builder<>();
 
         @Override

@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<ImmutableIntValueHashMap, IntTraversableBuilder<ImmutableIntValueHashMap>> {
+public final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<ImmutableIntTransformableBuilder> {
 
     @Override
-    void withBuilder(Procedure<IntTraversableBuilder<ImmutableIntValueHashMap>> procedure) {
+    void withBuilder(Procedure<ImmutableIntTransformableBuilder> procedure) {
         procedure.apply(new SameKeyAndValueBuilder());
         procedure.apply(new IndexedKeyBuilder());
     }
@@ -55,7 +55,7 @@ public final class ImmutableIntValueHashMapTransformerTest extends IntTransforme
         })));
     }
 
-    private static final class SameKeyAndValueBuilder implements IntTraversableBuilder<ImmutableIntValueHashMap> {
+    private static final class SameKeyAndValueBuilder implements ImmutableIntTransformableBuilder {
         private final ImmutableIntValueHashMap.Builder<String> builder = new ImmutableIntValueHashMap.Builder<>();
 
         @Override
@@ -70,7 +70,7 @@ public final class ImmutableIntValueHashMapTransformerTest extends IntTransforme
         }
     }
 
-    private static final class IndexedKeyBuilder implements IntTraversableBuilder<ImmutableIntValueHashMap> {
+    private static final class IndexedKeyBuilder implements ImmutableIntTransformableBuilder {
         private final ImmutableIntValueHashMap.Builder<Integer> builder = new ImmutableIntValueHashMap.Builder<>();
         private int key;
 

@@ -1,6 +1,6 @@
 package sword.collections;
 
-public final class ImmutableIntSetImplTransformerTest extends IntTransformerTest<ImmutableIntSet, ImmutableIntSetImpl.Builder> {
+public final class ImmutableIntSetImplTransformerTest extends IntTransformerTest<ImmutableIntSetImpl.Builder> {
 
     @Override
     void withBuilder(Procedure<ImmutableIntSetImpl.Builder> procedure) {

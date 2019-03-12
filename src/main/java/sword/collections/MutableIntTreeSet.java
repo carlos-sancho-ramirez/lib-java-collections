@@ -1,6 +1,6 @@
 package sword.collections;
 
-public final class MutableIntTreeSet implements IntTraversable, Sizable {
+public final class MutableIntTreeSet implements IntSet, MutableIntTransformable {
     private Node _root;
 
     public boolean contains(int value) {
@@ -80,6 +80,11 @@ public final class MutableIntTreeSet implements IntTraversable, Sizable {
         }
     }
 
+    @Override
+    public MutableIntSet mutate() {
+        throw new UnsupportedOperationException("Unimplemented");
+    }
+
     public int valueAt(int index) {
         if (index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException();
@@ -108,7 +113,22 @@ public final class MutableIntTreeSet implements IntTraversable, Sizable {
         return new Iterator(_root);
     }
 
-    static class Iterator implements IntTraverser {
+    @Override
+    public IntList toList() {
+        return iterator().toList();
+    }
+
+    @Override
+    public void removeAt(int index) throws IndexOutOfBoundsException {
+        throw new UnsupportedOperationException("Unimplemented");
+    }
+
+    @Override
+    public boolean clear() {
+        throw new UnsupportedOperationException("Unimplemented");
+    }
+
+    static class Iterator extends AbstractIntTransformer {
         private Node _node;
         private Iterator _it;
 
@@ -142,66 +162,9 @@ public final class MutableIntTreeSet implements IntTraversable, Sizable {
             _node = null;
             return value;
         }
-
-        @Override
-        public boolean anyMatch(IntPredicate predicate) {
-            while (hasNext()) {
-                if (predicate.apply(next())) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        @Override
-        public int findFirst(IntPredicate predicate, int defaultValue) {
-            while (hasNext()) {
-                final int value = next();
-                if (predicate.apply(value)) {
-                    return value;
-                }
-            }
-
-            return defaultValue;
-        }
-
-        @Override
-        public int indexOf(int value) {
-            for (int index = 0; hasNext(); index++) {
-                if (next() == value) {
-                    return index;
-                }
-            }
-
-            return -1;
-        }
-
-        private int reduceSecured(IntReduceFunction func) {
-            int result = next();
-            while (hasNext()) {
-                result = func.apply(result, next());
-            }
-
-            return result;
-        }
-
-        @Override
-        public int reduce(IntReduceFunction func) throws EmptyCollectionException {
-            if (!hasNext()) {
-                throw new EmptyCollectionException();
-            }
-
-            return reduceSecured(func);
-        }
-
-        @Override
-        public int reduce(IntReduceFunction func, int defaultValue) {
-            return hasNext()? reduceSecured(func) : defaultValue;
-        }
     }
 
-    public static final class Builder implements IntTraversableBuilder<MutableIntTreeSet> {
+    public static final class Builder implements MutableIntTransformableBuilder {
         private final MutableIntTreeSet _set = new MutableIntTreeSet();
 
         @Override

@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class IntTransformerTest<C extends IntTransformable, B extends IntTraversableBuilder<C>> extends IntTraverserTest<C, B> {
+abstract class IntTransformerTest<B extends IntTransformableBuilder> extends IntTraverserTest<B> {
 
     abstract void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
     abstract void withMapFunc(Procedure<IntFunction<Object>> procedure);
@@ -19,7 +19,7 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntTrave
     @Test
     public void testToListForSingleElement() {
         withValue(value -> withBuilder(builder -> {
-            final C transformable = builder.add(value).build();
+            final IntTransformable transformable = builder.add(value).build();
             final IntList expected = new ImmutableIntList.Builder().add(value).build();
             assertEquals(expected, transformable.iterator().toList().toImmutable());
         }));
@@ -28,7 +28,7 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntTrave
     @Test
     public void testToListForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformable transformable = builder.add(a).add(b).add(c).build();
             final ImmutableIntList.Builder listBuilder = new ImmutableIntList.Builder();
             for (int value : transformable) {
                 listBuilder.add(value);
@@ -54,7 +54,7 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntTrave
     @Test
     public void testToSetForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformable transformable = builder.add(a).add(b).add(c).build();
             final ImmutableIntSetCreator setBuilder = new ImmutableIntSetCreator();
             for (int value : transformable) {
                 setBuilder.add(value);
@@ -81,7 +81,7 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntTrave
     @Test
     public void testIndexesForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformable transformable = builder.add(a).add(b).add(c).build();
             final IntTransformer it = transformable.iterator();
             int length = 0;
             while (it.hasNext()) {
@@ -121,7 +121,7 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntTrave
     @Test
     public void testFilterForMultipleElements() {
         withFilterFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformable transformable = builder.add(a).add(b).add(c).build();
             final IntTransformer transformer = transformable.iterator().filter(func);
             for (int value : transformable) {
                 if (func.apply(value)) {
@@ -156,7 +156,7 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntTrave
     @Test
     public void testFilterNotForMultipleElements() {
         withFilterFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformable transformable = builder.add(a).add(b).add(c).build();
             final IntTransformer transformer = transformable.iterator().filterNot(func);
             for (int value : transformable) {
                 if (!func.apply(value)) {
@@ -189,7 +189,7 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntTrave
     @Test
     public void testMapToIntForMultipleValues() {
         withMapToIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformable transformable = builder.add(a).add(b).add(c).build();
             final IntTransformer transformer = transformable.iterator().mapToInt(func);
             for (int value : transformable) {
                 assertTrue(transformer.hasNext());
@@ -220,7 +220,7 @@ abstract class IntTransformerTest<C extends IntTransformable, B extends IntTrave
     @Test
     public void testMapForMultipleValues() {
         withMapFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
-            final C transformable = builder.add(a).add(b).add(c).build();
+            final IntTransformable transformable = builder.add(a).add(b).add(c).build();
             final Transformer transformer = transformable.iterator().map(func);
             for (int value : transformable) {
                 assertTrue(transformer.hasNext());

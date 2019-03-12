@@ -19,7 +19,7 @@ public final class ImmutableIntSetImplTest extends ImmutableIntSetTest {
     }
 
     @Override
-    public void withTransformableBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntSet, ImmutableIntTransformableBuilder<ImmutableIntSet>>> procedure) {
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntSet.Builder>> procedure) {
         procedure.apply(ImmutableIntSetImpl.Builder::new);
     }
 }

@@ -1,9 +1,9 @@
 package sword.collections;
 
-public interface MutableIntTransformableBuilder<C extends MutableIntTransformable> extends IntTransformableBuilder<C>, MutableIntTraversableBuilder<C> {
+public interface MutableIntTransformableBuilder extends IntTransformableBuilder, MutableIntTraversableBuilder {
     @Override
-    MutableIntTransformableBuilder<C> add(int value);
+    MutableIntTransformableBuilder add(int value);
 
     @Override
-    C build();
+    MutableIntTransformable build();
 }

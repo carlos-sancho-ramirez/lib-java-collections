@@ -7,8 +7,9 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class IntTraversableTest {
+abstract class IntTraversableTest<B extends IntTraversableBuilder> {
 
+    abstract void withBuilderSupplier(Procedure<IntBuilderSupplier<B>> procedure);
     abstract IntTraversableBuilder newIntBuilder();
     abstract void withValue(IntProcedure procedure);
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);

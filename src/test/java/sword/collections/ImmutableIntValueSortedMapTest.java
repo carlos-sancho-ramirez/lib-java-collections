@@ -3,7 +3,7 @@ package sword.collections;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTest<String> {
+public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder> {
 
     @Override
     ImmutableIntValueSortedMap.Builder<String> newBuilder() {
@@ -32,6 +32,11 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
     @Override
     void assertEmpty(ImmutableIntValueMap<String> map) {
         assertTrue(map.isEmpty());
+    }
+
+    @Override
+    void withBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntTransformableBuilder>> procedure) {
+        withSortFunc(sortFunc -> procedure.apply(() -> new SameKeyAndValueTraversableBuilder(sortFunc)));
     }
 
     @Override

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<String, MutableIntValueHashMap<String>> {
+public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<String, MutableIntTransformableBuilder> {
 
     @Override
     MutableIntValueHashMap.Builder<String> newBuilder() {
@@ -48,7 +48,7 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
     }
 
     @Override
-    public void withIntTraversableBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntValueHashMap<String>, MutableIntTraversableBuilder<MutableIntValueHashMap<String>>>> procedure) {
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntTransformableBuilder>> procedure) {
         procedure.apply(SameKeyAndValueTraversableBuilder::new);
     }
 
@@ -81,7 +81,7 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
         })));
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder<MutableIntValueHashMap<String>> {
+    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder {
         private final MutableIntValueHashMap<String> map = MutableIntValueHashMap.empty();
 
         @Override

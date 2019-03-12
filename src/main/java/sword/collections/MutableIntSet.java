@@ -245,7 +245,7 @@ public final class MutableIntSet extends AbstractIntTraversable implements IntSe
         return new MutableIntSet(values, size);
     }
 
-    public static class Builder implements MutableIntTransformableBuilder<MutableIntSet> {
+    public static class Builder implements MutableIntTransformableBuilder {
         private final MutableIntSet _set = MutableIntSet.empty();
 
         @Override

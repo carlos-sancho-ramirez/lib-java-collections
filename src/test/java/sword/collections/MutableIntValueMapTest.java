@@ -6,9 +6,8 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
-import static sword.collections.TestUtils.withInt;
 
-abstract class MutableIntValueMapTest<K, C extends MutableIntValueMap<K>> extends IntValueMapTest<K> implements MutableIntTraversableTest<C> {
+abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilder> extends IntValueMapTest<K, B> implements MutableIntTraversableTest<B> {
 
     @Override
     abstract MutableIntValueMap.Builder<K> newBuilder();
