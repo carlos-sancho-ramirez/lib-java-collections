@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class MutableIntTreeSetTest extends IntTraversableTest<MutableIntTreeSet.Builder> {
+public final class MutableIntTreeSetTest extends IntTraversableTest<MutableIntTreeSet.Builder> implements MutableIntTraversableTest<MutableIntTreeSet.Builder> {
 
     private final int[] intValues = {
             Integer.MIN_VALUE, -100, -2, -1, 0, 1, 2, 5, Integer.MAX_VALUE
     };
 
     @Override
-    void withBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntTreeSet.Builder>> procedure) {
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntTreeSet.Builder>> procedure) {
         procedure.apply(MutableIntTreeSet.Builder::new);
     }
 
@@ -21,7 +21,7 @@ public final class MutableIntTreeSetTest extends IntTraversableTest<MutableIntTr
     }
 
     @Override
-    void withValue(IntProcedure procedure) {
+    public void withValue(IntProcedure procedure) {
         for (int value : intValues) {
             procedure.apply(value);
         }

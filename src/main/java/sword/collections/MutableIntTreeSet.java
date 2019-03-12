@@ -125,7 +125,9 @@ public final class MutableIntTreeSet implements IntSet, MutableIntTransformable 
 
     @Override
     public boolean clear() {
-        throw new UnsupportedOperationException("Unimplemented");
+        final boolean changed = _root != null;
+        _root = null;
+        return changed;
     }
 
     static class Iterator extends AbstractIntTransformer {
