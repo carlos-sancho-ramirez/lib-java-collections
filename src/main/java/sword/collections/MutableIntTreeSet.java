@@ -120,7 +120,16 @@ public final class MutableIntTreeSet implements IntSet, MutableIntTransformable 
 
     @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
-        throw new UnsupportedOperationException("Unimplemented");
+        if (_root == null || index >= _root.size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        if (_root.size == 1) {
+            _root = null;
+        }
+        else {
+            _root.removeAt(index);
+        }
     }
 
     @Override
@@ -277,6 +286,99 @@ public final class MutableIntTreeSet implements IntSet, MutableIntTransformable 
                 addNotContained(value);
                 return true;
             }
+        }
+
+        private int pullMin() {
+            final int leftSize = (left != null)? left.size : 0;
+            final int toReturn;
+            if (leftSize == 0) {
+                toReturn = key;
+                if (right.size == 1) {
+                    key = right.key;
+                    right = null;
+                }
+                else {
+                    key = right.pullMin();
+                }
+            }
+            else if (leftSize == 1) {
+                toReturn = left.key;
+                left = null;
+            }
+            else {
+                toReturn = left.pullMin();
+            }
+
+            size--;
+            return toReturn;
+        }
+
+        private int pullMax() {
+            final int rightSize = (right != null)? right.size : 0;
+            final int toReturn;
+            if (rightSize == 0) {
+                toReturn = key;
+                if (left.size == 1) {
+                    key = left.key;
+                    left = null;
+                }
+                else {
+                    key = left.pullMax();
+                }
+            }
+            else if (rightSize == 1) {
+                toReturn = right.key;
+                right = null;
+            }
+            else {
+                toReturn = right.pullMax();
+            }
+
+            size--;
+            return toReturn;
+        }
+
+        void removeAt(int index) {
+            final int leftSize = (left != null)? left.size : 0;
+            if (index == leftSize) {
+                final int rightSize = (right != null)? right.size : 0;
+                if (leftSize < rightSize) {
+                    if (rightSize == 1) {
+                        key = right.key;
+                        right = null;
+                    }
+                    else {
+                        key = right.pullMin();
+                    }
+                }
+                else {
+                    if (leftSize == 1) {
+                        key = left.key;
+                        left = null;
+                    }
+                    else {
+                        key = left.pullMax();
+                    }
+                }
+            }
+            else if (index < leftSize) {
+                if (left.size == 1) {
+                    left = null;
+                }
+                else {
+                    left.removeAt(index);
+                }
+            }
+            else {
+                if (right.size == 1) {
+                    right = null;
+                }
+                else {
+                    right.removeAt(index - leftSize - 1);
+                }
+            }
+
+            size--;
         }
     }
 }
