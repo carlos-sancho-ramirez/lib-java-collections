@@ -12,7 +12,7 @@ package sword.collections;
  */
 public final class ImmutableIntSetCreator implements ImmutableIntSet.Builder {
 
-    private final MutableIntSet _set = MutableIntSet.empty();
+    private final MutableIntArraySet _set = MutableIntArraySet.empty();
 
     @Override
     public ImmutableIntSet.Builder add(int value) {
@@ -35,7 +35,7 @@ public final class ImmutableIntSetCreator implements ImmutableIntSet.Builder {
         return requiredWords < count;
     }
 
-    static ImmutableIntSet fromMutableIntSet(MutableIntSet set) {
+    static ImmutableIntSet fromMutableIntSet(MutableIntArraySet set) {
         if (betterAsRange(set)) {
             return new ImmutableIntRange(set.min(), set.max());
         }

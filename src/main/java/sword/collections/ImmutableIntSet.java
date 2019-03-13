@@ -60,7 +60,7 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
      *         values were already present.
      */
     default ImmutableIntSet addAll(Iterable<Integer> values) {
-        final MutableIntSet set = mutate();
+        final MutableIntArraySet set = mutate();
         return set.addAll(values)? set.toImmutable() : this;
     }
 
@@ -106,12 +106,12 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
      * @return A new map where items have been grouped into different set according with the function given.
      */
     default <K> ImmutableMap<K, ImmutableIntSet> groupBy(IntFunction<K> function) {
-        final MutableMap<K, MutableIntSet> map = MutableHashMap.empty();
+        final MutableMap<K, MutableIntArraySet> map = MutableHashMap.empty();
         for (int value : this) {
             final K group = function.apply(value);
-            MutableIntSet set = map.get(group, null);
+            MutableIntArraySet set = map.get(group, null);
             if (set == null) {
-                set = MutableIntSet.empty();
+                set = MutableIntArraySet.empty();
                 map.put(group, set);
             }
 
@@ -147,12 +147,12 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
      * @return A new map where items have been grouped into different set according with the function given.
      */
     default ImmutableIntKeyMap<ImmutableIntSet> groupByInt(IntToIntFunction function) {
-        final MutableIntKeyMap<MutableIntSet> map = MutableIntKeyMap.empty();
+        final MutableIntKeyMap<MutableIntArraySet> map = MutableIntKeyMap.empty();
         for (int value : this) {
             final int group = function.apply(value);
-            MutableIntSet set = map.get(group, null);
+            MutableIntArraySet set = map.get(group, null);
             if (set == null) {
-                set = MutableIntSet.empty();
+                set = MutableIntArraySet.empty();
                 map.put(group, set);
             }
 
@@ -177,7 +177,7 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
     /**
      * Builder to create a new instance of an {@link ImmutableIntSet}.
      */
-    interface Builder extends ImmutableIntTransformableBuilder {
+    interface Builder extends IntSet.Builder, ImmutableIntTransformableBuilder {
 
         /**
          * Includes a new value for the new set.

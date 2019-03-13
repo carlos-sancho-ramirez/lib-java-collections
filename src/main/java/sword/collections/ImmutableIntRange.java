@@ -57,8 +57,8 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
     }
 
     @Override
-    public MutableIntSet mutate() {
-        return MutableIntSet.fromIntRange(this);
+    public MutableIntArraySet mutate() {
+        return MutableIntArraySet.fromIntRange(this);
     }
 
     @Override

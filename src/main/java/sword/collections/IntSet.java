@@ -42,7 +42,7 @@ public interface IntSet extends IntTransformable {
      * Return a new mutable set.
      * This method will always generate a new instance in order to avoid affecting the state of its original set.
      */
-    MutableIntSet mutate();
+    MutableIntArraySet mutate();
 
     /**
      * Check if 2 set instances contain equivalent elements.
@@ -62,5 +62,13 @@ public interface IntSet extends IntTransformable {
         }
 
         return true;
+    }
+
+    interface Builder extends IntTransformableBuilder {
+        @Override
+        Builder add(int value);
+
+        @Override
+        IntSet build();
     }
 }

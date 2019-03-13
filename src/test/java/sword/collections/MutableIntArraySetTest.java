@@ -6,15 +6,15 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.Builder> implements MutableIntTraversableTest<MutableIntSet.Builder> {
+public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.Builder> implements MutableIntTraversableTest<MutableIntArraySet.Builder> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -500, -2, -1, 0, 1, 3, 127, 128, Integer.MAX_VALUE
     };
 
     @Override
-    MutableIntSet.Builder newIntBuilder() {
-        return new MutableIntSet.Builder();
+    MutableIntArraySet.Builder newIntBuilder() {
+        return new MutableIntArraySet.Builder();
     }
 
     @Override
@@ -47,7 +47,7 @@ public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.
     @Test
     public void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
-            final MutableIntSet set = newIntBuilder().add(a).add(b).build();
+            final MutableIntArraySet set = newIntBuilder().add(a).add(b).build();
             final Iterator<Integer> iterator = set.iterator();
 
             assertTrue(iterator.hasNext());
@@ -77,7 +77,7 @@ public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.
     @Test
     public void testAdd() {
         withValue(a -> withValue(b -> {
-            final MutableIntSet set = MutableIntSet.empty();
+            final MutableIntArraySet set = MutableIntArraySet.empty();
             assertTrue(set.add(a));
             assertFalse(set.isEmpty());
 
@@ -100,7 +100,7 @@ public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.
         withValue(a -> withValue(b -> {
             final ImmutableIntSet values = new ImmutableIntSetCreator().add(a).add(b).build();
             withValue(c -> {
-                final MutableIntSet set = MutableIntSet.empty();
+                final MutableIntArraySet set = MutableIntArraySet.empty();
                 set.add(c);
 
                 if (c == a && c == b) {
@@ -126,7 +126,7 @@ public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.
 
     @Test
     public void testRemoveForEmptySet() {
-        final MutableIntSet set = newIntBuilder().build();
+        final MutableIntArraySet set = newIntBuilder().build();
         withValue(value -> {
             assertFalse(set.remove(value));
             assertTrue(set.isEmpty());
@@ -137,7 +137,7 @@ public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.
     public void testRemoveForASingleElement() {
         withValue(included -> {
             withValue(value -> {
-                final MutableIntSet set = newIntBuilder().add(included).build();
+                final MutableIntArraySet set = newIntBuilder().add(included).build();
                 if (included == value) {
                     assertTrue(set.remove(value));
                     assertTrue(set.isEmpty());
@@ -153,7 +153,7 @@ public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.
     @Test
     public void testValueAt() {
         withValue(a -> withValue(b -> withValue(c -> {
-            final MutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
+            final MutableIntArraySet set = newIntBuilder().add(a).add(b).add(c).build();
             final Iterator<Integer> it = set.iterator();
             int index = 0;
             while (it.hasNext()) {
@@ -165,7 +165,7 @@ public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.
     @Test
     public void testToImmutableMethodReturnSameInstance() {
         withValue(a -> withValue(b -> {
-            final MutableIntSet set = new MutableIntSet.Builder().add(a).add(b).build();
+            final MutableIntArraySet set = new MutableIntArraySet.Builder().add(a).add(b).build();
             final ImmutableIntSet set2 = set.toImmutable();
             assertEquals(set.size(), set2.size());
             for (int value : set) {
@@ -177,9 +177,9 @@ public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.
     @Test
     public void testMutate() {
         withValue(a -> withValue(b -> {
-            final MutableIntSet set = new MutableIntSet.Builder().add(a).add(b).build();
+            final MutableIntArraySet set = new MutableIntArraySet.Builder().add(a).add(b).build();
             withValue(c -> {
-                final MutableIntSet set2 = set.mutate();
+                final MutableIntArraySet set2 = set.mutate();
                 assertNotSame(set, set2);
                 set2.add(c);
                 if (a == c || b == c) {
@@ -199,23 +199,7 @@ public final class MutableIntSetTest extends IntTransformableTest<MutableIntSet.
     }
 
     @Override
-    public void withBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntSet.Builder>> procedure) {
-        procedure.apply(MutableIntSet.Builder::new);
-    }
-
-    @Test
-    public void testEqualSet() {
-        withValue(a -> withValue(b -> withValue(c -> {
-            final IntSet set = newIntBuilder().add(a).add(b).add(c).build();
-            assertTrue(set.equalSet(set));
-
-            final MutableIntSet reducedSet = set.mutate();
-            reducedSet.removeAt(0);
-
-            assertFalse(set.equalSet(reducedSet));
-            assertFalse(reducedSet.equalSet(set));
-
-            assertTrue(set.equalSet(set.toImmutable()));
-        })));
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntArraySet.Builder>> procedure) {
+        procedure.apply(MutableIntArraySet.Builder::new);
     }
 }

@@ -3,21 +3,21 @@ package sword.collections;
 public final class SimpleTest {
 
     private static void testBuildIntSetAscending(int amount) {
-        final MutableIntSet set = MutableIntSet.empty();
+        final MutableIntArraySet set = MutableIntArraySet.empty();
         for (int i = 0; i < amount; i++) {
             set.add(i);
         }
     }
 
     private static void testBuildIntSetDescending(int amount) {
-        final MutableIntSet set = MutableIntSet.empty();
+        final MutableIntArraySet set = MutableIntArraySet.empty();
         for (int i = amount - 1; i >= 0; i--) {
             set.add(i);
         }
     }
 
     private static void testBuildIntSetSeeded(int amount) {
-        final MutableIntSet set = MutableIntSet.empty();
+        final MutableIntArraySet set = MutableIntArraySet.empty();
         int seed = 567;
         for (int i = 0; i < amount; i++) {
             set.add(seed);

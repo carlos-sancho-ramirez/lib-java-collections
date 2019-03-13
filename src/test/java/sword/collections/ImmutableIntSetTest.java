@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class ImmutableIntSetTest extends IntTransformableTest<ImmutableIntSet.Builder> implements ImmutableIntTransformableTest<ImmutableIntSet.Builder> {
+abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> implements ImmutableIntTransformableTest<ImmutableIntSet.Builder> {
 
     abstract ImmutableIntSet.Builder newIntBuilder();
 
@@ -170,7 +170,7 @@ abstract class ImmutableIntSetTest extends IntTransformableTest<ImmutableIntSet.
     public void testMutate() {
         withValue(a -> withValue(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
-            final MutableIntSet set2 = set.mutate();
+            final MutableIntArraySet set2 = set.mutate();
 
             assertEquals(set.size(), set2.size());
             for (int value : set) {
@@ -409,26 +409,5 @@ abstract class ImmutableIntSetTest extends IntTransformableTest<ImmutableIntSet.
                 }
             }
         }))));
-    }
-
-    @Test
-    public void testEqualSet() {
-        withValue(a -> withValue(b -> withValue(c -> {
-            final IntSet set = newIntBuilder().add(a).add(b).add(c).build();
-            assertTrue(set.equalSet(set));
-
-            final ImmutableIntSet.Builder setBuilder = newIntBuilder();
-            final IntTransformer it = set.iterator();
-            it.next();
-            while (it.hasNext()) {
-                setBuilder.add(it.next());
-            }
-            final IntSet reducedSet = setBuilder.build();
-
-            assertFalse(set.equalSet(reducedSet));
-            assertFalse(reducedSet.equalSet(set));
-
-            assertTrue(set.equalSet(set.mutate()));
-        })));
     }
 }

@@ -1,20 +1,10 @@
 package sword.collections;
 
-public final class MutableIntTreeSet implements IntSet, MutableIntTransformable {
+public final class MutableIntTreeSet implements MutableIntSet {
     private Node _root;
 
     public boolean contains(int value) {
         return _root != null && _root.contains(value);
-    }
-
-    @Override
-    public boolean anyMatch(IntPredicate predicate) {
-        return iterator().anyMatch(predicate);
-    }
-
-    @Override
-    public int indexOf(int value) {
-        return iterator().indexOf(value);
     }
 
     public int min() {
@@ -81,7 +71,7 @@ public final class MutableIntTreeSet implements IntSet, MutableIntTransformable 
     }
 
     @Override
-    public MutableIntSet mutate() {
+    public MutableIntArraySet mutate() {
         throw new UnsupportedOperationException("Unimplemented");
     }
 
@@ -91,21 +81,6 @@ public final class MutableIntTreeSet implements IntSet, MutableIntTransformable 
         }
 
         return _root.valueAt(index);
-    }
-
-    @Override
-    public int findFirst(IntPredicate predicate, int defaultValue) {
-        return iterator().findFirst(predicate, defaultValue);
-    }
-
-    @Override
-    public int reduce(IntReduceFunction func) throws EmptyCollectionException {
-        return iterator().reduce(func);
-    }
-
-    @Override
-    public int reduce(IntReduceFunction func, int defaultValue) {
-        return iterator().reduce(func, defaultValue);
     }
 
     @Override
@@ -175,7 +150,7 @@ public final class MutableIntTreeSet implements IntSet, MutableIntTransformable 
         }
     }
 
-    public static final class Builder implements MutableIntTransformableBuilder {
+    public static final class Builder implements MutableIntSet.Builder {
         private final MutableIntTreeSet _set = new MutableIntTreeSet();
 
         @Override

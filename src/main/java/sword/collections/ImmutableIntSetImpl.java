@@ -143,7 +143,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
         return new IntIterator();
     }
 
-    static ImmutableIntSetImpl fromMutableIntSet(MutableIntSet set) {
+    static ImmutableIntSetImpl fromMutableIntSet(MutableIntArraySet set) {
         final int length = set.size();
         if (length == 0) {
             return empty();
@@ -187,13 +187,13 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
-    public MutableIntSet mutate() {
-        return MutableIntSet.fromIntSet(this);
+    public MutableIntArraySet mutate() {
+        return MutableIntArraySet.fromIntSet(this);
     }
 
     static class Builder implements ImmutableIntSet.Builder {
 
-        private final MutableIntSet _set = MutableIntSet.empty();
+        private final MutableIntArraySet _set = MutableIntArraySet.empty();
 
         @Override
         public Builder add(int value) {

@@ -251,8 +251,8 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
-    public MutableIntSet mutate() {
-        return MutableIntSet.fromIntSet(this);
+    public MutableIntArraySet mutate() {
+        return MutableIntArraySet.fromIntSet(this);
     }
 
     private class Iterator extends AbstractIntTransformer {

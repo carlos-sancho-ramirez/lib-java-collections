@@ -134,7 +134,7 @@ public class ImmutableIntRangeTest {
     @Test
     public void testMutable() {
         withSmallRange(range -> {
-            final MutableIntSet set = range.mutate();
+            final MutableIntArraySet set = range.mutate();
             assertEquals(range.size(), set.size());
             assertEquals(range.min(), set.min());
             assertEquals(range.max(), set.max());
