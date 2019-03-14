@@ -33,6 +33,7 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
         return node.key;
     }
 
+    @Override
     public boolean add(int value) {
         if (_root == null) {
             _root = new Node(value);

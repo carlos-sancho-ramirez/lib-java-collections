@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.Builder> implements MutableIntTraversableTest<MutableIntArraySet.Builder> {
+public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.Builder> implements MutableIntSetTest<MutableIntArraySet.Builder> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -500, -2, -1, 0, 1, 3, 127, 128, Integer.MAX_VALUE
@@ -71,56 +71,6 @@ public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.
                     assertEquals(b, first);
                 }
             }
-        }));
-    }
-
-    @Test
-    public void testAdd() {
-        withValue(a -> withValue(b -> {
-            final MutableIntArraySet set = MutableIntArraySet.empty();
-            assertTrue(set.add(a));
-            assertFalse(set.isEmpty());
-
-            if (a == b) {
-                assertFalse(set.add(b));
-                assertEquals(1, set.size());
-                assertTrue(set.contains(b));
-            }
-            else {
-                assertTrue(set.add(b));
-                assertEquals(2, set.size());
-                assertTrue(set.contains(a));
-                assertTrue(set.contains(b));
-            }
-        }));
-    }
-
-    @Test
-    public void testAddAll() {
-        withValue(a -> withValue(b -> {
-            final ImmutableIntSet values = new ImmutableIntSetCreator().add(a).add(b).build();
-            withValue(c -> {
-                final MutableIntArraySet set = MutableIntArraySet.empty();
-                set.add(c);
-
-                if (c == a && c == b) {
-                    assertFalse(set.addAll(values));
-                    assertEquals(1, set.size());
-                    assertTrue(set.contains(c));
-                }
-                else {
-                    assertTrue(set.addAll(values));
-                    assertTrue(set.contains(a));
-                    assertTrue(set.contains(b));
-                    assertTrue(set.contains(c));
-                    if (a == b || a == c || b == c) {
-                        assertEquals(2, set.size());
-                    }
-                    else {
-                        assertEquals(3, set.size());
-                    }
-                }
-            });
         }));
     }
 
