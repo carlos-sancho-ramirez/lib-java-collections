@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class MutableIntTreeSetTest extends IntTraversableTest<MutableIntTreeSet.Builder> implements MutableIntTraversableTest<MutableIntTreeSet.Builder> {
+public final class MutableIntTreeSetTest extends IntTransformableTest<MutableIntTreeSet.Builder> implements MutableIntTraversableTest<MutableIntTreeSet.Builder> {
 
     private final int[] intValues = {
             Integer.MIN_VALUE, -100, -2, -1, 0, 1, 2, 5, Integer.MAX_VALUE
@@ -16,7 +16,7 @@ public final class MutableIntTreeSetTest extends IntTraversableTest<MutableIntTr
     }
 
     @Override
-    IntTraversableBuilder newIntBuilder() {
+    IntTransformableBuilder newIntBuilder() {
         return new MutableIntTreeSet.Builder();
     }
 
@@ -34,6 +34,17 @@ public final class MutableIntTreeSetTest extends IntTraversableTest<MutableIntTr
     @Override
     void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(MutableIntTreeSetTest::evenIntFilter);
+    }
+
+    @Override
+    public void withMapFunc(Procedure<IntFunction<String>> procedure) {
+        procedure.apply(Integer::toString);
+    }
+
+    @Override
+    public void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
     }
 
     @Test

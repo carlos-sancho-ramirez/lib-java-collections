@@ -1,6 +1,6 @@
 package sword.collections;
 
-public final class MutableIntTreeSet implements MutableIntSet {
+public final class MutableIntTreeSet extends AbstractIntTraversable implements MutableIntSet {
     private Node _root;
 
     public boolean contains(int value) {
