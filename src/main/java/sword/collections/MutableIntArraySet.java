@@ -39,6 +39,11 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
     }
 
     @Override
+    public int indexOf(int value) {
+        return findKey(_values, _size, value);
+    }
+
+    @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
         if (_size != 1 && (_size % GRANULARITY) == 1) {
             int[] oldValues = _values;
@@ -114,16 +119,6 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
 
             _values[index] = value;
             _size++;
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean remove(int value) {
-        int index = findKey(_values, _size, value);
-        if (index >= 0) {
-            removeAt(index);
             return true;
         }
 

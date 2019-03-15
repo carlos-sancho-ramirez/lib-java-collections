@@ -75,32 +75,6 @@ public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.
     }
 
     @Test
-    public void testRemoveForEmptySet() {
-        final MutableIntArraySet set = newIntBuilder().build();
-        withValue(value -> {
-            assertFalse(set.remove(value));
-            assertTrue(set.isEmpty());
-        });
-    }
-
-    @Test
-    public void testRemoveForASingleElement() {
-        withValue(included -> {
-            withValue(value -> {
-                final MutableIntArraySet set = newIntBuilder().add(included).build();
-                if (included == value) {
-                    assertTrue(set.remove(value));
-                    assertTrue(set.isEmpty());
-                }
-                else {
-                    assertFalse(set.remove(value));
-                    assertFalse(set.isEmpty());
-                }
-            });
-        });
-    }
-
-    @Test
     public void testValueAt() {
         withValue(a -> withValue(b -> withValue(c -> {
             final MutableIntArraySet set = newIntBuilder().add(a).add(b).add(c).build();

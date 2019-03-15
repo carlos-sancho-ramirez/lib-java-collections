@@ -28,6 +28,16 @@ public interface MutableIntSet extends IntSet, MutableIntTransformable {
         return changed;
     }
 
+    default boolean remove(int value) {
+        int index = indexOf(value);
+        if (index >= 0) {
+            removeAt(index);
+            return true;
+        }
+
+        return false;
+    }
+
     interface Builder extends IntSet.Builder, MutableIntTransformableBuilder {
         @Override
         Builder add(int value);

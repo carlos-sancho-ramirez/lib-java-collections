@@ -55,4 +55,40 @@ public interface MutableIntSetTest<B extends MutableIntSet.Builder> extends Muta
             }));
         }));
     }
+
+    @Test
+    default void testRemoveForEmptySet() {
+        withBuilderSupplier(supplier -> {
+            final MutableIntSet set = supplier.newBuilder().build();
+            withValue(value -> {
+                assertFalse(set.remove(value));
+                assertTrue(set.isEmpty());
+            });
+        });
+    }
+
+    @Test
+    default void testRemove() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final MutableIntSet set = supplier.newBuilder().add(a).add(b).build();
+            final int originalSize = set.size();
+            final boolean shouldBeRemoved = a == c || b == c;
+            assertEquals(shouldBeRemoved, set.remove(c));
+
+            if (shouldBeRemoved) {
+                assertEquals(originalSize - 1, set.size());
+                if (a == c && b != c) {
+                    assertEquals(b, set.valueAt(0));
+                }
+                else if (a != c) {
+                    assertEquals(a, set.valueAt(0));
+                }
+            }
+            else {
+                assertEquals(originalSize, set.size());
+                assertTrue(set.contains(a));
+                assertTrue(set.contains(b));
+            }
+        }))));
+    }
 }
