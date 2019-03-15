@@ -167,19 +167,6 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testMutate() {
-        withValue(a -> withValue(b -> {
-            final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
-            final MutableIntArraySet set2 = set.mutate();
-
-            assertEquals(set.size(), set2.size());
-            for (int value : set) {
-                assertTrue(set2.contains(value));
-            }
-        }));
-    }
-
-    @Test
     public void testGroupByWhenEmpty() {
         final IntFunction<Integer> func = str -> {
             throw new AssertionError("This function should not be executed");

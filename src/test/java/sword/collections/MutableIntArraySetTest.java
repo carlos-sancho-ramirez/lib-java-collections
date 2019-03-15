@@ -98,30 +98,6 @@ public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.
         }));
     }
 
-    @Test
-    public void testMutate() {
-        withValue(a -> withValue(b -> {
-            final MutableIntArraySet set = new MutableIntArraySet.Builder().add(a).add(b).build();
-            withValue(c -> {
-                final MutableIntArraySet set2 = set.mutate();
-                assertNotSame(set, set2);
-                set2.add(c);
-                if (a == c || b == c) {
-                    assertEquals(set.size(), set2.size());
-                }
-                else {
-                    assertEquals(set.size() + 1, set2.size());
-                    assertTrue(set2.contains(c));
-                    assertFalse(set.contains(c));
-                }
-
-                for (int value : set) {
-                    assertTrue(set2.contains(value));
-                }
-            });
-        }));
-    }
-
     @Override
     public void withBuilderSupplier(Procedure<IntBuilderSupplier<MutableIntArraySet.Builder>> procedure) {
         procedure.apply(MutableIntArraySet.Builder::new);

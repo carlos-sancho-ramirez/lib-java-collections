@@ -72,8 +72,13 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
     }
 
     @Override
-    public MutableIntArraySet mutate() {
-        throw new UnsupportedOperationException("Unimplemented");
+    public MutableIntTreeSet mutate() {
+        final MutableIntTreeSet newSet = new MutableIntTreeSet();
+        if (_root != null) {
+            newSet._root = _root.mutate();
+        }
+
+        return newSet;
     }
 
     public int valueAt(int index) {
@@ -355,6 +360,21 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
             }
 
             size--;
+        }
+
+        Node mutate() {
+            final Node newNode = new Node(key);
+            newNode.size = size;
+
+            if (left != null) {
+                newNode.left = left.mutate();
+            }
+
+            if (right != null) {
+                newNode.right = right.mutate();
+            }
+
+            return newNode;
         }
     }
 }

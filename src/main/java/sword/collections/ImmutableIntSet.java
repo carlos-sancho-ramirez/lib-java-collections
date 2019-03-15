@@ -60,7 +60,7 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
      *         values were already present.
      */
     default ImmutableIntSet addAll(Iterable<Integer> values) {
-        final MutableIntArraySet set = mutate();
+        final MutableIntSet set = mutate();
         return set.addAll(values)? set.toImmutable() : this;
     }
 
