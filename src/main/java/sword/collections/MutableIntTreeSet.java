@@ -100,6 +100,26 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
     }
 
     @Override
+    public <E> IntKeyMap<E> assign(IntFunction<E> function) {
+        final int size = size();
+        if (size == 0) {
+            return ImmutableIntKeyMap.empty();
+        }
+
+        final int[] keys = new int[size];
+        final Object[] values = new Object[size];
+
+        final IntTraverser it = iterator();
+        for (int i = 0; it.hasNext(); i++) {
+            final int key = it.next();
+            keys[i] = key;
+            values[i] = function.apply(key);
+        }
+
+        return new ImmutableIntKeyMap<>(keys, values);
+    }
+
+    @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
         if (_root == null || index >= _root.size) {
             throw new IndexOutOfBoundsException();

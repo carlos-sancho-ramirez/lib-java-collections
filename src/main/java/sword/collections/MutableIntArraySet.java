@@ -94,6 +94,23 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
     }
 
     @Override
+    public <E> IntKeyMap<E> assign(IntFunction<E> function) {
+        if (_size == 0) {
+            return ImmutableIntKeyMap.empty();
+        }
+
+        final int[] keys = new int[_size];
+        final Object[] values = new Object[_size];
+        for (int i = 0; i < _size; i++) {
+            final int value = _values[i];
+            keys[i] = value;
+            values[i] = function.apply(value);
+        }
+
+        return new ImmutableIntKeyMap<>(keys, values);
+    }
+
+    @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
         if (_size > GRANULARITY) {

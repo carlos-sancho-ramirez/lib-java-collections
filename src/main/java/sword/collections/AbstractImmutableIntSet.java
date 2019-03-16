@@ -36,13 +36,23 @@ abstract class AbstractImmutableIntSet extends AbstractImmutableIntTransformable
     public abstract <U> ImmutableList<U> map(IntFunction<U> func);
 
     @Override
-    public <E> ImmutableIntKeyMap<E> mapTo(IntFunction<E> function) {
-        ImmutableIntKeyMap.Builder<E> builder = new ImmutableIntKeyMap.Builder<>();
-        for (int key : this) {
-            builder.put(key, function.apply(key));
+    public <E> ImmutableIntKeyMap<E> assign(IntFunction<E> function) {
+        final int size = size();
+        if (size == 0) {
+            return ImmutableIntKeyMap.empty();
         }
 
-        return builder.build();
+        final int[] keys = new int[size];
+        final Object[] values = new Object[size];
+
+        final IntTraverser it = iterator();
+        for (int i = 0; it.hasNext(); i++) {
+            final int key = it.next();
+            keys[i] = key;
+            values[i] = function.apply(key);
+        }
+
+        return new ImmutableIntKeyMap<>(keys, values);
     }
 
     @Override

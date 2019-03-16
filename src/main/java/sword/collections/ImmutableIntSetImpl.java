@@ -84,6 +84,22 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
+    public <E> ImmutableIntKeyMap<E> assign(IntFunction<E> function) {
+        final int size = _values.length;
+        if (size == 0) {
+            return ImmutableIntKeyMap.empty();
+        }
+
+        final Object[] values = new Object[size];
+
+        for (int i = 0; i < size; i++) {
+            values[i] = function.apply(_values[i]);
+        }
+
+        return new ImmutableIntKeyMap<>(_values, values);
+    }
+
+    @Override
     public ImmutableIntSet add(int value) {
         final int length = _values.length;
         if (findKey(_values, length, value) >= 0) {

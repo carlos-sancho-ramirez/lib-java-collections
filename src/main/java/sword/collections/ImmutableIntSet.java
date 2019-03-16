@@ -30,6 +30,9 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
     @Override
     <U> ImmutableList<U> map(IntFunction<U> func);
 
+    @Override
+    <V> ImmutableIntKeyMap<V> assign(IntFunction<V> function);
+
     /**
      * Add the given value to the values of the current set if not
      * included yet.
@@ -76,17 +79,6 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
      *         was not already present.
      */
     ImmutableIntSet remove(int value);
-
-    /**
-     * Applies the given function to each value on this set and composes
-     * a new {@link ImmutableIntKeyMap}
-     * where original values of this set becomes the keys and the result
-     * of each function executing becomes the values.
-     *
-     * @param function the function used to generate all values.
-     * @param <E> Type for the values in the new {@link ImmutableIntKeyMap}
-     */
-    <E> ImmutableIntKeyMap<E> mapTo(IntFunction<E> function);
 
     @Override
     ImmutableIntList toList();
