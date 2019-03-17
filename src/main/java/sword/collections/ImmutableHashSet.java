@@ -179,7 +179,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
         final int[] hashCodes = new int[length];
 
         for (int i = 0; i < length; i++) {
-            final E key = set.keyAt(i);
+            final E key = set.valueAt(i);
             keys[i] = key;
             hashCodes[i] = SortUtils.hashCode(key);
         }

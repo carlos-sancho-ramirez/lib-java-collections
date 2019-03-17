@@ -11,11 +11,11 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         return (s > 0)? s : GRANULARITY;
     }
 
-    Object[] _keys;
+    Object[] values;
     int _size;
 
     AbstractMutableSet(Object[] keys, int size) {
-        _keys = keys;
+        values = keys;
         _size = size;
     }
 
@@ -29,15 +29,10 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         return _size;
     }
 
-    @SuppressWarnings("unchecked")
-    public T keyAt(int index) {
-        return (T) _keys[index];
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public T valueAt(int index) {
-        return (T) _keys[index];
+        return (T) values[index];
     }
 
     private class Iterator extends AbstractTransformer<T> {
@@ -52,7 +47,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         @Override
         @SuppressWarnings("unchecked")
         public T next() {
-            return (T) _keys[_index++];
+            return (T) values[_index++];
         }
 
         @Override
@@ -70,7 +65,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     public List<T> toList() {
         final Object[] values = new Object[_size];
         for (int i = 0; i < _size; i++) {
-            values[i] = _keys[i];
+            values[i] = this.values[i];
         }
         return new ImmutableList<>(values);
     }
@@ -119,7 +114,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     }
 
     int itemHashCode(int index) {
-        return SortUtils.hashCode(_keys[index]);
+        return SortUtils.hashCode(values[index]);
     }
 
     @Override
@@ -141,7 +136,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         }
 
         for (int index = 0; index < _size; index++) {
-            if (!that.contains(_keys[index])) {
+            if (!that.contains(values[index])) {
                 return false;
             }
         }

@@ -15,9 +15,6 @@ package sword.collections;
  */
 public interface MutableSet<T> extends Set<T>, MutableTraversable<T> {
 
-    @SuppressWarnings("unchecked")
-    T keyAt(int index);
-
     boolean add(T key);
     boolean remove(T key);
 

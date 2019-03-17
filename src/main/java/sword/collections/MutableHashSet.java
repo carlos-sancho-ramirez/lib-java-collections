@@ -39,7 +39,7 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
 
     @Override
     public int indexOf(T value) {
-        return findKey(_hashCodes, _keys, _size, value);
+        return findKey(_hashCodes, values, _size, value);
     }
 
     @Override
@@ -68,7 +68,7 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
         Object[] keys = new Object[_size];
         int[] hashCodes = new int[_size];
 
-        System.arraycopy(_keys, 0, keys, 0, _size);
+        System.arraycopy(values, 0, keys, 0, _size);
         System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
 
         return new ImmutableHashSet<>(keys, hashCodes);
@@ -76,24 +76,24 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
 
     @Override
     public MutableHashSet<T> mutate() {
-        Object[] keys = new Object[_keys.length];
+        Object[] keys = new Object[values.length];
         int[] hashCodes = new int[_hashCodes.length];
 
-        System.arraycopy(_keys, 0, keys, 0, _size);
+        System.arraycopy(values, 0, keys, 0, _size);
         System.arraycopy(_hashCodes, 0, hashCodes, 0, _size);
 
         return new MutableHashSet<>(keys, hashCodes, _size);
     }
 
     private void enlargeArrays() {
-        Object[] oldKeys = _keys;
+        Object[] oldKeys = values;
         int[] oldHashCodes = _hashCodes;
 
-        _keys = new Object[_size + GRANULARITY];
+        values = new Object[_size + GRANULARITY];
         _hashCodes = new int[_size + GRANULARITY];
 
         for (int i = 0; i < _size; i++) {
-            _keys[i] = oldKeys[i];
+            values[i] = oldKeys[i];
             _hashCodes[i] = oldHashCodes[i];
         }
     }
@@ -110,11 +110,11 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
         }
 
         for (int i = _size; i > index; i--) {
-            _keys[i] = _keys[i - 1];
+            values[i] = values[i - 1];
             _hashCodes[i] = _hashCodes[i - 1];
         }
 
-        _keys[index] = value;
+        values[index] = value;
         _hashCodes[index] = SortUtils.hashCode(value);
         _size++;
     }
@@ -126,26 +126,26 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
         }
 
         if (_size != 1 && (_size % GRANULARITY) == 1) {
-            Object[] oldKeys = _keys;
+            Object[] oldKeys = values;
             int[] oldHashCodes = _hashCodes;
 
-            _keys = new Object[--_size];
+            values = new Object[--_size];
             _hashCodes = new int[_size];
 
             if (index > 0) {
-                System.arraycopy(oldKeys, 0, _keys, 0, index);
+                System.arraycopy(oldKeys, 0, values, 0, index);
                 System.arraycopy(oldHashCodes, 0, _hashCodes, 0, index);
             }
 
             if (_size > index) {
-                System.arraycopy(oldKeys, index + 1, _keys, index, _size - index);
+                System.arraycopy(oldKeys, index + 1, values, index, _size - index);
                 System.arraycopy(oldHashCodes, index + 1, _hashCodes, index, _size - index);
             }
         }
         else {
             --_size;
             for (int i = index; i < _size; i++) {
-                _keys[i] = _keys[i + 1];
+                values[i] = values[i + 1];
                 _hashCodes[i] = _hashCodes[i + 1];
             }
         }
@@ -154,13 +154,13 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
     @Override
     public boolean clear() {
         final int suitableLength = suitableArrayLength(0);
-        if (_keys.length != suitableLength) {
-            _keys = new Object[suitableLength];
+        if (values.length != suitableLength) {
+            values = new Object[suitableLength];
             _hashCodes = new int[suitableLength];
         }
         else {
             for (int i = 0; i < _size; i++) {
-                _keys[i] = null;
+                values[i] = null;
             }
         }
 

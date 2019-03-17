@@ -34,12 +34,12 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T valueAt(int index) {
-        return (T) _keys[index];
+        return (T) values[index];
     }
 
     @Override
     public int indexOf(T value) {
-        return findValue(_sortFunction, _keys, _size, value);
+        return findValue(_sortFunction, values, _size, value);
     }
 
     @Override
@@ -60,14 +60,14 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     @Override
     public ImmutableSortedSet<T> toImmutable() {
         Object[] keys = new Object[_size];
-        System.arraycopy(_keys, 0, keys, 0, _size);
+        System.arraycopy(values, 0, keys, 0, _size);
         return new ImmutableSortedSet<>(_sortFunction, keys);
     }
 
     @Override
     public MutableSortedSet<T> mutate() {
-        Object[] keys = new Object[_keys.length];
-        System.arraycopy(_keys, 0, keys, 0, _size);
+        Object[] keys = new Object[values.length];
+        System.arraycopy(values, 0, keys, 0, _size);
         return new MutableSortedSet<>(_sortFunction, keys, _size);
     }
 
@@ -114,18 +114,18 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     }
 
     private void enlargeArrays() {
-        Object[] oldKeys = _keys;
+        Object[] oldKeys = values;
 
-        _keys = new Object[_size + GRANULARITY];
+        values = new Object[_size + GRANULARITY];
 
         for (int i = 0; i < _size; i++) {
-            _keys[i] = oldKeys[i];
+            values[i] = oldKeys[i];
         }
     }
 
     @Override
     int findSuitableIndex(T key) {
-        return SortUtils.findSuitableIndex(_sortFunction, _keys, _size, key);
+        return SortUtils.findSuitableIndex(_sortFunction, values, _size, key);
     }
 
     @Override
@@ -135,10 +135,10 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
         }
 
         for (int i = _size; i > index; i--) {
-            _keys[i] = _keys[i - 1];
+            values[i] = values[i - 1];
         }
 
-        _keys[index] = value;
+        values[index] = value;
         _size++;
     }
 
@@ -149,21 +149,21 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
         }
 
         if (_size != 1 && (_size % GRANULARITY) == 1) {
-            Object[] oldKeys = _keys;
-            _keys = new Object[--_size];
+            Object[] oldKeys = values;
+            values = new Object[--_size];
 
             if (index > 0) {
-                System.arraycopy(oldKeys, 0, _keys, 0, index);
+                System.arraycopy(oldKeys, 0, values, 0, index);
             }
 
             if (_size > index) {
-                System.arraycopy(oldKeys, index + 1, _keys, index, _size - index);
+                System.arraycopy(oldKeys, index + 1, values, index, _size - index);
             }
         }
         else {
             --_size;
             for (int i = index; i < _size; i++) {
-                _keys[i] = _keys[i + 1];
+                values[i] = values[i + 1];
             }
         }
     }
@@ -171,12 +171,12 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     @Override
     public boolean clear() {
         final int suitableLength = suitableArrayLength(0);
-        if (_keys.length != suitableLength) {
-            _keys = new Object[suitableLength];
+        if (values.length != suitableLength) {
+            values = new Object[suitableLength];
         }
         else {
             for (int i = 0; i < _size; i++) {
-                _keys[i] = null;
+                values[i] = null;
             }
         }
 
