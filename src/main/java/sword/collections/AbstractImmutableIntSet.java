@@ -56,6 +56,26 @@ abstract class AbstractImmutableIntSet extends AbstractImmutableIntTransformable
     }
 
     @Override
+    public ImmutableIntPairMap assignToInt(IntToIntFunction function) {
+        final int size = size();
+        if (size == 0) {
+            return ImmutableIntPairMap.empty();
+        }
+
+        final int[] keys = new int[size];
+        final int[] values = new int[size];
+
+        final IntTraverser it = iterator();
+        for (int i = 0; i < size; i++) {
+            final int key = it.next();
+            keys[i] = key;
+            values[i] = function.apply(key);
+        }
+
+        return new ImmutableIntPairMap(keys, values);
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (!(other instanceof AbstractImmutableIntSet)) {
             return false;

@@ -33,6 +33,9 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
     @Override
     <V> ImmutableIntKeyMap<V> assign(IntFunction<V> function);
 
+    @Override
+    ImmutableIntPairMap assignToInt(IntToIntFunction function);
+
     /**
      * Add the given value to the values of the current set if not
      * included yet.

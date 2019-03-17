@@ -32,7 +32,7 @@ abstract class IntSetTest<B extends IntSet.Builder> extends IntTransformableTest
     @Test
     public void testAssignWhenEmpty() {
         final IntFunction<String> func = key -> {
-            throw new AssertionError("This method should not be called");
+            throw new AssertionError("This function should not be called");
         };
 
         withBuilderSupplier(supplier -> {
@@ -49,6 +49,36 @@ abstract class IntSetTest<B extends IntSet.Builder> extends IntTransformableTest
             final int size = set.size();
 
             final IntKeyMap<String> map = set.assign(func);
+            assertEquals(size, map.size());
+
+            for (int i = 0; i < size; i++) {
+                final int value = set.valueAt(i);
+                assertEquals(value, map.keyAt(i));
+                assertEquals(func.apply(value), map.valueAt(i));
+            }
+        })))));
+    }
+
+    @Test
+    public void testAssignToIntWhenEmpty() {
+        final IntToIntFunction func = key -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withBuilderSupplier(supplier -> {
+            final IntSet set = supplier.newBuilder().build();
+            final IntPairMap map = set.assignToInt(func);
+            assertFalse(map.iterator().hasNext());
+        });
+    }
+
+    @Test
+    public void testAssignToInt() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> withMapToIntFunc(func -> {
+            final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+
+            final IntPairMap map = set.assignToInt(func);
             assertEquals(size, map.size());
 
             for (int i = 0; i < size; i++) {

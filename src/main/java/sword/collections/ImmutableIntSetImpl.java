@@ -100,6 +100,22 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
+    public ImmutableIntPairMap assignToInt(IntToIntFunction function) {
+        final int size = _values.length;
+        if (size == 0) {
+            return ImmutableIntPairMap.empty();
+        }
+
+        final int[] values = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            values[i] = function.apply(_values[i]);
+        }
+
+        return new ImmutableIntPairMap(_values, values);
+    }
+
+    @Override
     public ImmutableIntSet add(int value) {
         final int length = _values.length;
         if (findKey(_values, length, value) >= 0) {
