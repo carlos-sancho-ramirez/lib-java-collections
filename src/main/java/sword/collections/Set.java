@@ -45,6 +45,16 @@ public interface Set<T> extends Transformable<T> {
     <V> Map<T, V> assign(Function<T, V> function);
 
     /**
+     * Assign a value calculated though the given function to each value of this set,
+     * resulting in a map where the values of this set become that keys of the new map.
+     *
+     * @param function Function to calculate the suitable value for the new map.
+     * @return A new map where value of this set becomes its keys,
+     *         and values are calculated through the given function.
+     */
+    IntValueMap<T> assignToInt(IntResultFunction<T> function);
+
+    /**
      * Return an immutable set from the values contained in this set.
      * The same instance will be returned in case of being already immutable.
      */

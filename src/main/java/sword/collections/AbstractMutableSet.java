@@ -86,7 +86,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     }
 
     @Override
-    public <V> Map<T, V> assign(Function<T, V> function) {
+    public IntValueMap<T> assignToInt(IntResultFunction<T> function) {
         throw new UnsupportedOperationException("Unimplemented");
     }
 

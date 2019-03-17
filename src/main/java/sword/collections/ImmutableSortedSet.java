@@ -42,7 +42,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
 
     @Override
     public int indexOf(T value) {
-        return findValue(_sortFunction, _keys, _keys.length, value);
+        return findValue(_sortFunction, _values, _values.length, value);
     }
 
     @Override
@@ -84,16 +84,27 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
 
     @Override
     public <E> ImmutableSortedMap<T, E> assign(Function<T, E> function) {
-        final int size = size();
+        final int size = _values.length;
         final Object[] values = new Object[size];
 
-        final Traverser<T> it = iterator();
-        for (int i = 0; it.hasNext(); i++) {
-            final T key = it.next();
+        for (int i = 0; i < size; i++) {
+            values[i] = function.apply(valueAt(i));
+        }
+
+        return new ImmutableSortedMap<>(_sortFunction, _values, values);
+    }
+
+    @Override
+    public ImmutableIntValueSortedMap<T> assignToInt(IntResultFunction<T> function) {
+        final int size = _values.length;
+        final int[] values = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            final T key = valueAt(i);
             values[i] = function.apply(key);
         }
 
-        return new ImmutableSortedMap<>(_sortFunction, _keys, values);
+        return new ImmutableIntValueSortedMap<>(_sortFunction, _values, values);
     }
 
     @Override
@@ -102,15 +113,15 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
             return this;
         }
 
-        final int length = _keys.length;
-        final int index = SortUtils.findSuitableIndex(_sortFunction, _keys, length, value);
+        final int length = _values.length;
+        final int index = SortUtils.findSuitableIndex(_sortFunction, _values, length, value);
         final Object[] newKeys = new Object[length + 1];
         if (index > 0) {
-            System.arraycopy(_keys, 0, newKeys, 0, index);
+            System.arraycopy(_values, 0, newKeys, 0, index);
         }
         newKeys[index] = value;
         if (index < length) {
-            System.arraycopy(_keys, index, newKeys, index + 1, length - index);
+            System.arraycopy(_values, index, newKeys, index + 1, length - index);
         }
 
         return new ImmutableSortedSet<>(_sortFunction, newKeys);
@@ -123,7 +134,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
             result.add(item);
         }
 
-        return (result.size() == _keys.length)? this : result.toImmutable();
+        return (result.size() == _values.length)? this : result.toImmutable();
     }
 
     @Override
@@ -133,11 +144,11 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
 
     @Override
     public MutableSortedSet<T> mutate() {
-        final int length = _keys.length;
+        final int length = _values.length;
         final int newLength = MutableHashSet.suitableArrayLength(length);
 
         Object[] keys = new Object[newLength];
-        System.arraycopy(_keys, 0, keys, 0, length);
+        System.arraycopy(_values, 0, keys, 0, length);
         return new MutableSortedSet<>(_sortFunction, keys, length);
     }
 

@@ -2,21 +2,21 @@ package sword.collections;
 
 abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> implements ImmutableSet<T> {
 
-    final Object[] _keys;
+    final Object[] _values;
 
     AbstractImmutableSet(Object[] keys) {
-        _keys = keys;
+        _values = keys;
     }
 
     @Override
     public int size() {
-        return _keys.length;
+        return _values.length;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T keyAt(int index) {
-        return (T) _keys[index];
+    public T valueAt(int index) {
+        return (T) _values[index];
     }
 
     @Override
@@ -31,10 +31,10 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> i
 
     @Override
     public ImmutableIntList mapToInt(IntResultFunction<T> func) {
-        final int length = _keys.length;
+        final int length = _values.length;
         final int[] newValues = new int[length];
         for (int i = 0; i < length; i++) {
-            newValues[i] = func.apply(keyAt(i));
+            newValues[i] = func.apply(valueAt(i));
         }
 
         return new ImmutableIntList(newValues);
@@ -42,10 +42,10 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> i
 
     @Override
     public <E> ImmutableList<E> map(Function<T, E> func) {
-        final int length = _keys.length;
+        final int length = _values.length;
         final Object[] newValues = new Object[length];
         for (int i = 0; i < length; i++) {
-            newValues[i] = func.apply(keyAt(i));
+            newValues[i] = func.apply(valueAt(i));
         }
 
         return new ImmutableList<>(newValues);
@@ -66,12 +66,12 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> i
             result.add(item);
         }
 
-        return (result.size() == _keys.length)? this : result.toImmutable();
+        return (result.size() == _values.length)? this : result.toImmutable();
     }
 
     @Override
     public ImmutableList<T> toList() {
-        return new ImmutableList<>(_keys);
+        return new ImmutableList<>(_values);
     }
 
     @Override
@@ -90,13 +90,13 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> i
 
         @Override
         public boolean hasNext() {
-            return _index < _keys.length;
+            return _index < _values.length;
         }
 
         @Override
         @SuppressWarnings("unchecked")
         public T next() {
-            return (T) _keys[_index++];
+            return (T) _values[_index++];
         }
     }
 
@@ -106,12 +106,12 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> i
     }
 
     int itemHashCode(int index) {
-        return SortUtils.hashCode(_keys[index]);
+        return SortUtils.hashCode(_values[index]);
     }
 
     @Override
     public int hashCode() {
-        final int length = _keys.length;
+        final int length = _values.length;
         int hash = length * 11069;
 
         for (int i = 0; i < length; i++) {
@@ -123,12 +123,12 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTraversable<T> i
 
     @Override
     public boolean equalSet(Set that) {
-        if (_keys.length != that.size()) {
+        if (_values.length != that.size()) {
             return false;
         }
 
-        for (int index = 0; index < _keys.length; index++) {
-            if (!that.contains(_keys[index])) {
+        for (int index = 0; index < _values.length; index++) {
+            if (!that.contains(_values[index])) {
                 return false;
             }
         }

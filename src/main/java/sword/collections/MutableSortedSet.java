@@ -58,6 +58,21 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
+    public IntValueMap<T> assignToInt(IntResultFunction<T> function) {
+        final int size = _size;
+        final Object[] keys = new Object[size];
+        final int[] values = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            final T key = valueAt(i);
+            keys[i] = key;
+            values[i] = function.apply(key);
+        }
+
+        return new ImmutableIntValueSortedMap<>(_sortFunction, keys, values);
+    }
+
+    @Override
     public ImmutableSortedSet<T> toImmutable() {
         Object[] keys = new Object[_size];
         System.arraycopy(values, 0, keys, 0, _size);

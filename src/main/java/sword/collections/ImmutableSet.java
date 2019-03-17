@@ -12,9 +12,6 @@ package sword.collections;
  */
 public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
 
-    @SuppressWarnings("unchecked")
-    T keyAt(int index);
-
     @Override
     ImmutableSet<T> filter(Predicate<T> predicate);
 
@@ -29,6 +26,9 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
 
     @Override
     <V> ImmutableMap<T, V> assign(Function<T, V> function);
+
+    @Override
+    ImmutableIntValueMap<T> assignToInt(IntResultFunction<T> function);
 
     /**
      * Creates a new {@link ImmutableSet} of the same type where the given

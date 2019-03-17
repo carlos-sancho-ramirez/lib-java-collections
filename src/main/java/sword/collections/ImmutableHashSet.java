@@ -48,7 +48,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
 
     @Override
     public int indexOf(T value) {
-        return findKey(_hashCodes, _keys, _keys.length, value);
+        return findKey(_hashCodes, _values, _values.length, value);
     }
 
     @Override
@@ -66,7 +66,24 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
             values[i] = function.apply(key);
         }
 
-        return new ImmutableHashMap<T, E>(_keys, _hashCodes, values);
+        return new ImmutableHashMap<>(_values, _hashCodes, values);
+    }
+
+    @Override
+    public ImmutableIntValueMap<T> assignToInt(IntResultFunction<T> function) {
+        final int size = _values.length;
+        if (size == 0) {
+            return ImmutableIntValueHashMap.empty();
+        }
+
+        final int[] values = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            final T key = valueAt(i);
+            values[i] = function.apply(key);
+        }
+
+        return new ImmutableIntValueHashMap<>(_values, _hashCodes, values);
     }
 
     @Override
@@ -76,13 +93,13 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
 
     @Override
     public MutableHashSet<T> mutate() {
-        final int length = _keys.length;
+        final int length = _values.length;
         final int newLength = MutableHashSet.suitableArrayLength(length);
 
         Object[] keys = new Object[newLength];
         int[] hashCodes = new int[newLength];
 
-        System.arraycopy(_keys, 0, keys, 0, length);
+        System.arraycopy(_values, 0, keys, 0, length);
         System.arraycopy(_hashCodes, 0, hashCodes, 0, length);
 
         return new MutableHashSet<>(keys, hashCodes, length);
@@ -94,7 +111,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
             return this;
         }
 
-        final int length = _keys.length;
+        final int length = _values.length;
         final int newHash = SortUtils.hashCode(value);
         final int index = SortUtils.findSuitableIndex(_hashCodes, length, newHash);
 
@@ -102,13 +119,13 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
         final Object[] newKeys = new Object[length + 1];
         if (index > 0) {
             System.arraycopy(_hashCodes, 0, newHashes, 0, index);
-            System.arraycopy(_keys, 0, newKeys, 0, index);
+            System.arraycopy(_values, 0, newKeys, 0, index);
         }
         newHashes[index] = newHash;
         newKeys[index] = value;
         if (index < length) {
             System.arraycopy(_hashCodes, index, newHashes, index + 1, length - index);
-            System.arraycopy(_keys, index, newKeys, index + 1, length - index);
+            System.arraycopy(_values, index, newKeys, index + 1, length - index);
         }
 
         return new ImmutableHashSet<>(newKeys, newHashes);

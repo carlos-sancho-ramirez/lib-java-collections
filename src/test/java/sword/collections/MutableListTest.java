@@ -55,6 +55,11 @@ public final class MutableListTest extends TransformableTest<String, MutableList
         procedure.apply(this::charCounter);
     }
 
+    @Override
+    public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(SortUtils::hashCode);
+    }
+
     private boolean filterFunc(String value) {
         return value != null && !value.isEmpty();
     }

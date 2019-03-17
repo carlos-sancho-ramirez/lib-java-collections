@@ -42,6 +42,11 @@ public final class MutableSortedSetTest extends MutableSetTest<String, MutableSo
         procedure.apply(this::charCounter);
     }
 
+    @Override
+    public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(SortUtils::hashCode);
+    }
+
     private boolean filterFunc(String value) {
         return value != null && !value.isEmpty();
     }

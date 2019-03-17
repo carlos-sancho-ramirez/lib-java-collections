@@ -14,6 +14,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
     abstract void withReduceFunction(Procedure<ReduceFunction<T>> procedure);
     abstract void withMapFunc(Procedure<Function<T, String>> procedure);
+    abstract void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
 
     @Test
     public void testSizeForNoElements() {
