@@ -21,7 +21,7 @@ public interface MutableSet<T> extends Set<T>, MutableTraversable<T> {
     boolean add(T key);
     boolean remove(T key);
 
-    interface Builder<E> extends TransformableBuilder<E>, MutableTraversableBuilder<E> {
+    interface Builder<E> extends Set.Builder<E>, MutableTraversableBuilder<E> {
         @Override
         Builder<E> add(E element);
 

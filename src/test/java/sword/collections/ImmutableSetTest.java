@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends TransformableTest<T, B> implements ImmutableTransformableTest<T, B> {
+abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends SetTest<T, B> implements ImmutableTransformableTest<T, B> {
 
     abstract boolean lessThan(T a, T b);
 

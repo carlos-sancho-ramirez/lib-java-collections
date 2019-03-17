@@ -34,6 +34,12 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         return (T) _keys[index];
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public T valueAt(int index) {
+        return (T) _keys[index];
+    }
+
     private class Iterator extends AbstractTransformer<T> {
 
         private int _index;
@@ -82,6 +88,11 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     @Override
     public <E> List<E> map(Function<T, E> func) {
         return new MapResultList<>(this, func);
+    }
+
+    @Override
+    public <V> Map<T, V> assign(Function<T, V> function) {
+        throw new UnsupportedOperationException("Unimplemented");
     }
 
     abstract int findSuitableIndex(T key);

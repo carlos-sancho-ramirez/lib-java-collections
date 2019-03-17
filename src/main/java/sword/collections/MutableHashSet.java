@@ -43,6 +43,27 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
+    public <E> Map<T, E> assign(Function<T, E> function) {
+        final int size = _size;
+        if (size == 0) {
+            return ImmutableHashMap.empty();
+        }
+
+        final Object[] keys = new Object[size];
+        final int[] hashCodes = new int[size];
+        final Object[] values = new Object[size];
+
+        for (int i = 0; i < size; i++) {
+            final T key = valueAt(i);
+            keys[i] = key;
+            hashCodes[i] = _hashCodes[i];
+            values[i] = function.apply(key);
+        }
+
+        return new ImmutableHashMap<>(keys, hashCodes, values);
+    }
+
+    @Override
     public ImmutableHashSet<T> toImmutable() {
         Object[] keys = new Object[_size];
         int[] hashCodes = new int[_size];

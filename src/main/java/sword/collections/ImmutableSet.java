@@ -27,6 +27,9 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     @Override
     <E> ImmutableList<E> map(Function<T, E> func);
 
+    @Override
+    <V> ImmutableMap<T, V> assign(Function<T, V> function);
+
     /**
      * Creates a new {@link ImmutableSet} of the same type where the given
      * value is included.
@@ -52,7 +55,7 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     @Override
     ImmutableSet<T> sort(SortFunction<T> function);
 
-    interface Builder<E> extends ImmutableTransformableBuilder<E> {
+    interface Builder<E> extends Set.Builder<E>, ImmutableTransformableBuilder<E> {
 
         @Override
         Builder<E> add(E element);

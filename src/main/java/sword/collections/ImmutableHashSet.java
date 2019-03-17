@@ -52,6 +52,24 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
+    public <E> ImmutableHashMap<T, E> assign(Function<T, E> function) {
+        final int size = size();
+        if (size == 0) {
+            return ImmutableHashMap.empty();
+        }
+
+        final Object[] values = new Object[size];
+
+        final Traverser<T> it = iterator();
+        for (int i = 0; it.hasNext(); i++) {
+            final T key = it.next();
+            values[i] = function.apply(key);
+        }
+
+        return new ImmutableHashMap<T, E>(_keys, _hashCodes, values);
+    }
+
+    @Override
     public ImmutableHashSet<T> toImmutable() {
         return this;
     }

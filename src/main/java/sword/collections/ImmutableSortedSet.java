@@ -83,6 +83,20 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
+    public <E> ImmutableSortedMap<T, E> assign(Function<T, E> function) {
+        final int size = size();
+        final Object[] values = new Object[size];
+
+        final Traverser<T> it = iterator();
+        for (int i = 0; it.hasNext(); i++) {
+            final T key = it.next();
+            values[i] = function.apply(key);
+        }
+
+        return new ImmutableSortedMap<>(_sortFunction, _keys, values);
+    }
+
+    @Override
     public ImmutableSortedSet<T> add(T value) {
         if (contains(value)) {
             return this;
