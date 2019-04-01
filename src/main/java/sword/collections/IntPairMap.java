@@ -65,6 +65,32 @@ public interface IntPairMap extends IntTransformable {
      */
     MutableIntPairMap mutate();
 
+    /**
+     * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
+     *
+     * Note that the order of the key-value pair within the map and the collection mutability is irrelevant.
+     *
+     * @param that Map to be contrasted to.
+     */
+    default boolean equalMap(IntPairMap that) {
+        if (that == null) {
+            return false;
+        }
+
+        final IntSet keySet = keySet();
+        if (!keySet.equalSet(that.keySet())) {
+            return false;
+        }
+
+        for (int key : keySet) {
+            if (!equal(get(key), that.get(key))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     final class Entry {
         private final int _key;
         private final int _value;

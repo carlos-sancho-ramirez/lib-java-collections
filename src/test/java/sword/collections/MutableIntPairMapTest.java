@@ -34,6 +34,11 @@ public final class MutableIntPairMapTest extends IntPairMapTest<MutableIntTransf
     }
 
     @Override
+    void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
+        procedure.apply(MutableIntPairMap.Builder::new);
+    }
+
+    @Override
     public void withValue(IntProcedure procedure) {
         withInt(procedure);
     }

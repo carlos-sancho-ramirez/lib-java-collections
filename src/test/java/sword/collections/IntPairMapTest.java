@@ -11,6 +11,12 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> extends IntTran
 
     abstract IntPairMapBuilder newBuilder();
     abstract void withFilterFunc(Procedure<IntPredicate> procedure);
+    abstract void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure);
+
+    private void withArbitraryMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
+        procedure.apply(ImmutableIntPairMap.Builder::new);
+        procedure.apply(MutableIntPairMap.Builder::new);
+    }
 
     @Override
     void withValue(IntProcedure procedure) {
@@ -145,6 +151,73 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> extends IntTran
 
             assertFalse(iterator.hasNext());
         })));
+    }
+
+    @Test
+    public void testEqualMapReturnsFalseWhenAPairIsMissing() {
+        withInt(a -> withInt(b -> withInt(c -> withMapToIntFunc(mapFunc -> withMapBuilderSupplier(supplier -> {
+            final IntPairMap map = supplier.newBuilder()
+                    .put(a, mapFunc.apply(a))
+                    .put(b, mapFunc.apply(b))
+                    .put(c, mapFunc.apply(c))
+                    .build();
+
+            final int mapSize = map.size();
+            final IntPairMapBuilder mapBuilder = supplier.newBuilder();
+            for (int i = 1; i < mapSize; i++) {
+                mapBuilder.put(map.keyAt(i), map.valueAt(i));
+            }
+            final IntPairMap reducedMap = mapBuilder.build();
+
+            assertFalse(map.equalMap(reducedMap));
+            assertFalse(reducedMap.equalMap(map));
+        })))));
+    }
+
+    @Test
+    public void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
+        withInt(a -> withInt(b -> withInt(c -> withMapToIntFunc(mapFunc -> withMapBuilderSupplier(supplier -> {
+            final IntPairMap map = supplier.newBuilder()
+                    .put(a, mapFunc.apply(a))
+                    .put(b, mapFunc.apply(b))
+                    .put(c, mapFunc.apply(c))
+                    .build();
+
+            final int mapSize = map.size();
+            for (int j = 0; j < mapSize; j++) {
+                final IntPairMapBuilder mapBuilder = supplier.newBuilder();
+                for (int i = 0; i < mapSize; i++) {
+                    final int mapValue = map.valueAt(i);
+                    final int value = (i == j)? ~mapValue : mapValue;
+                    mapBuilder.put(map.keyAt(i), value);
+                }
+                final IntPairMap modifiedMap = mapBuilder.build();
+
+                assertFalse(map.equalMap(modifiedMap));
+                assertFalse(modifiedMap.equalMap(map));
+            }
+        })))));
+    }
+
+    @Test
+    public void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
+        withInt(a -> withInt(b -> withInt(c -> withMapToIntFunc(mapFunc -> withMapBuilderSupplier(supplier -> {
+            final IntPairMap map = supplier.newBuilder()
+                    .put(a, mapFunc.apply(a))
+                    .put(b, mapFunc.apply(b))
+                    .put(c, mapFunc.apply(c))
+                    .build();
+
+            withArbitraryMapBuilderSupplier(mapSupplier -> {
+                final IntPairMap arbitraryMap = mapSupplier.newBuilder()
+                        .put(a, mapFunc.apply(a))
+                        .put(b, mapFunc.apply(b))
+                        .put(c, mapFunc.apply(c))
+                        .build();
+
+                assertTrue(map.equalMap(arbitraryMap));
+            });
+        })))));
     }
 
     @Test

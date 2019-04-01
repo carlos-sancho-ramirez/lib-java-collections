@@ -61,6 +61,11 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest<ImmutableIntTr
     }
 
     @Override
+    void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
+        procedure.apply(ImmutableIntPairMap.Builder::new);
+    }
+
+    @Override
     public void withValue(IntProcedure procedure) {
         withInt(procedure);
     }
