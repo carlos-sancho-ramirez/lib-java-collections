@@ -12,9 +12,19 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> extends Int
 
     abstract IntValueMap.Builder<K> newBuilder();
 
+    abstract void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure);
     abstract void withKey(Procedure<K> procedure);
     abstract void withSortFunc(Procedure<SortFunction<K>> procedure);
     abstract K keyFromInt(int value);
+
+    private void withArbitraryMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure) {
+        procedure.apply(ImmutableIntValueHashMap.Builder::new);
+        procedure.apply(MutableIntValueHashMap.Builder::new);
+        withSortFunc(sortFunc -> {
+            procedure.apply(() -> new ImmutableIntValueSortedMap.Builder<>(sortFunc));
+            procedure.apply(() -> new MutableIntValueSortedMap.Builder<>(sortFunc));
+        });
+    }
 
     @Override
     void withMapFunc(Procedure<IntFunction<String>> procedure) {
@@ -174,6 +184,73 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> extends Int
 
             assertFalse(iterator.hasNext());
         })));
+    }
+
+    @Test
+    public void testEqualMapReturnsFalseWhenAPairIsMissing() {
+        withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap<K> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            final int mapSize = map.size();
+            final IntValueMap.Builder<K> mapBuilder = supplier.newBuilder();
+            for (int i = 1; i < mapSize; i++) {
+                mapBuilder.put(map.keyAt(i), map.valueAt(i));
+            }
+            final IntValueMap<K> reducedMap = mapBuilder.build();
+
+            assertFalse(map.equalMap(reducedMap));
+            assertFalse(reducedMap.equalMap(map));
+        }))));
+    }
+
+    @Test
+    public void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
+        withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap<K> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            final int mapSize = map.size();
+            for (int j = 0; j < mapSize; j++) {
+                final IntValueMap.Builder<K> mapBuilder = supplier.newBuilder();
+                for (int i = 0; i < mapSize; i++) {
+                    final int mapValue = map.valueAt(i);
+                    final int value = (i == j)? ~mapValue : mapValue;
+                    mapBuilder.put(map.keyAt(i), value);
+                }
+                final IntValueMap<K> modifiedMap = mapBuilder.build();
+
+                assertFalse(map.equalMap(modifiedMap));
+                assertFalse(modifiedMap.equalMap(map));
+            }
+        }))));
+    }
+
+    @Test
+    public void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
+        withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap<K> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .put(c, valueFromKey(c))
+                    .build();
+
+            withArbitraryMapBuilderSupplier(mapSupplier -> {
+                final IntValueMap<K> arbitraryMap = mapSupplier.newBuilder()
+                        .put(a, valueFromKey(a))
+                        .put(b, valueFromKey(b))
+                        .put(c, valueFromKey(c))
+                        .build();
+
+                assertTrue(map.equalMap(arbitraryMap));
+            });
+        }))));
     }
 
     @Test

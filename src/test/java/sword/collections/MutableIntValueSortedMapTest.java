@@ -48,6 +48,11 @@ public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<S
     }
 
     @Override
+    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+        withSortFunc(sortFunc -> procedure.apply(() -> new MutableIntValueSortedMap.Builder<>(sortFunc)));
+    }
+
+    @Override
     public void withValue(IntProcedure procedure) {
         withInt(procedure);
     }

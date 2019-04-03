@@ -52,6 +52,11 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
         procedure.apply(SameKeyAndValueTraversableBuilder::new);
     }
 
+    @Override
+    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+        procedure.apply(MutableIntValueHashMap.Builder::new);
+    }
+
     @Test
     public void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {

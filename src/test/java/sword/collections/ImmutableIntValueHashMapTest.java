@@ -11,6 +11,11 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
     }
 
     @Override
+    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+        procedure.apply(ImmutableIntValueHashMap.Builder::new);
+    }
+
+    @Override
     void withKey(Procedure<String> procedure) {
         final String[] values = {null, "", " ", "abcd", "0"};
         for (String value : values) {

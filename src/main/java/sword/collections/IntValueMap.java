@@ -99,6 +99,32 @@ public interface IntValueMap<T> extends IntTransformable {
      */
     IntValueMap<T> sort(SortFunction<T> function);
 
+    /**
+     * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
+     *
+     * Note that the order of the key-value pair within the map and the collection mutability is irrelevant.
+     *
+     * @param that Map to be contrasted to.
+     */
+    default boolean equalMap(IntValueMap that) {
+        if (that == null) {
+            return false;
+        }
+
+        final Set<T> keySet = keySet();
+        if (!keySet.equalSet(that.keySet())) {
+            return false;
+        }
+
+        for (T key : keySet) {
+            if (!equal(get(key), that.get(key))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     final class Entry<E> {
         private final int _index;
         private final E _key;
@@ -135,7 +161,7 @@ public interface IntValueMap<T> extends IntTransformable {
 
         @Override
         public boolean equals(Object other) {
-            if (other == null || !(other instanceof Entry)) {
+            if (!(other instanceof Entry)) {
                 return false;
             }
 

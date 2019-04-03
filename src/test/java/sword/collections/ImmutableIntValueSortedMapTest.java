@@ -40,6 +40,11 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
     }
 
     @Override
+    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+        withSortFunc(sortFunc -> procedure.apply(() -> new ImmutableIntValueSortedMap.Builder<>(sortFunc)));
+    }
+
+    @Override
     IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder(SortUtils::compareByHashCode);
     }
