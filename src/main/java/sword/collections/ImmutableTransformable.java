@@ -8,6 +8,9 @@ public interface ImmutableTransformable<T> extends Transformable<T> {
     @Override
     ImmutableSet<T> toSet();
 
+    @Override
+    ImmutableIntSet indexes();
+
     /**
      * Applies the given predicate to each of the items within the list and
      * composes a new list including only the items whose predicate returned

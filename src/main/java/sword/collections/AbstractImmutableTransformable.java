@@ -1,6 +1,6 @@
 package sword.collections;
 
-abstract class AbstractImmutableTraversable<T> extends AbstractTraversable<T> implements ImmutableTransformable<T> {
+abstract class AbstractImmutableTransformable<T> extends AbstractTraversable<T> implements ImmutableTransformable<T> {
 
     abstract <U> ImmutableTransformableBuilder<U> newBuilder();
 

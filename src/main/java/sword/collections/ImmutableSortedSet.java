@@ -51,6 +51,12 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
+    public ImmutableIntSet indexes() {
+        final int size = size();
+        return (size == 0)? ImmutableIntSetImpl.empty() : new ImmutableIntRange(0, size - 1);
+    }
+
+    @Override
     public ImmutableSortedSet<T> filter(Predicate<T> predicate) {
         boolean somethingRemoved = false;
         final ImmutableSortedSet.Builder<T> builder = new Builder<>(_sortFunction);

@@ -94,6 +94,12 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     @Override
+    public ImmutableIntSet indexes() {
+        final int size = size();
+        return (size == 0)? ImmutableIntSetImpl.empty() : new ImmutableIntRange(0, size - 1);
+    }
+
+    @Override
     public ImmutableHashSet<Entry<T>> entries() {
         final int length = _keys.length;
         final Entry[] entries = new Entry[length];

@@ -2,7 +2,7 @@ package sword.collections;
 
 import java.util.Collection;
 
-public final class ImmutableList<T> extends AbstractImmutableTraversable<T> implements List<T> {
+public final class ImmutableList<T> extends AbstractImmutableTransformable<T> implements List<T> {
 
     private static final ImmutableList<Object> EMPTY = new ImmutableList<>(new Object[0]);
 
@@ -58,6 +58,12 @@ public final class ImmutableList<T> extends AbstractImmutableTraversable<T> impl
     @Override
     public ImmutableList<T> toList() {
         return this;
+    }
+
+    @Override
+    public ImmutableIntSet indexes() {
+        final int size = size();
+        return (size == 0)? ImmutableIntSetImpl.empty() : new ImmutableIntRange(0, size - 1);
     }
 
     @Override

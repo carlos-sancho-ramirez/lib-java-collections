@@ -209,6 +209,12 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
         return this;
     }
 
+    @Override
+    public ImmutableIntSet indexes() {
+        final int size = size();
+        return (size == 0)? ImmutableIntSetImpl.empty() : new ImmutableIntRange(0, size - 1);
+    }
+
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableHashSet<E> _set = MutableHashSet.empty();
 
