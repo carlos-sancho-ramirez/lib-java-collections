@@ -64,10 +64,6 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
     @Override
     public <U> ImmutableList<U> map(IntFunction<U> func) {
         final int size = size();
-        if (size == 0) {
-            return ImmutableList.empty();
-        }
-
         final Object[] newValues = new Object[size];
         for (int i = 0; i < size; i++) {
             newValues[i] = func.apply(_min + i);
@@ -79,10 +75,6 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
     @Override
     public ImmutableIntList mapToInt(IntToIntFunction func) {
         final int size = size();
-        if (size == 0) {
-            return ImmutableIntList.empty();
-        }
-
         final int[] newValues = new int[size];
         for (int i = 0; i < size; i++) {
             newValues[i] = func.apply(_min + i);
