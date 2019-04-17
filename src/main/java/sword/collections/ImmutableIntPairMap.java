@@ -83,7 +83,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     public ImmutableIntSet keySet() {
-        return (_keys.length != 0)? new ImmutableIntSetImpl(_keys) : ImmutableIntSetImpl.empty();
+        return (_keys.length != 0)? new ImmutableIntArraySet(_keys) : ImmutableIntArraySet.empty();
     }
 
     @Override

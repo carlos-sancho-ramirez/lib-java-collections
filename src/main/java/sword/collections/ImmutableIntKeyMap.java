@@ -80,7 +80,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
 
     @Override
     public ImmutableIntSet keySet() {
-        return (_keys.length != 0)? new ImmutableIntSetImpl(_keys) : ImmutableIntSetImpl.empty();
+        return (_keys.length != 0)? new ImmutableIntArraySet(_keys) : ImmutableIntArraySet.empty();
     }
 
     @Override
@@ -96,7 +96,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     @Override
     public ImmutableIntSet indexes() {
         final int size = size();
-        return (size == 0)? ImmutableIntSetImpl.empty() : new ImmutableIntRange(0, size - 1);
+        return (size == 0)? ImmutableIntArraySet.empty() : new ImmutableIntRange(0, size - 1);
     }
 
     @Override

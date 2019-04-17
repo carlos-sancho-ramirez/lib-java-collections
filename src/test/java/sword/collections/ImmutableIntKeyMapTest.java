@@ -267,7 +267,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     @Test
     public void testKeySetWhenEmpty() {
         final ImmutableIntKeyMap<String> empty = ImmutableIntKeyMap.empty();
-        assertSame(ImmutableIntSetImpl.empty(), empty.keySet());
+        assertSame(ImmutableIntArraySet.empty(), empty.keySet());
     }
 
     @Test

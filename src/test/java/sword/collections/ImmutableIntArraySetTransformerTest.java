@@ -1,10 +1,10 @@
 package sword.collections;
 
-public final class ImmutableIntSetImplTransformerTest extends IntTransformerTest<ImmutableIntSetImpl.Builder> {
+public final class ImmutableIntArraySetTransformerTest extends IntTransformerTest<ImmutableIntArraySet.Builder> {
 
     @Override
-    void withBuilder(Procedure<ImmutableIntSetImpl.Builder> procedure) {
-        procedure.apply(new ImmutableIntSetImpl.Builder());
+    void withBuilder(Procedure<ImmutableIntArraySet.Builder> procedure) {
+        procedure.apply(new ImmutableIntArraySet.Builder());
     }
 
     @Override

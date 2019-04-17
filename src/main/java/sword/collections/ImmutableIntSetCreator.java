@@ -42,7 +42,7 @@ public final class ImmutableIntSetCreator implements ImmutableIntSet.Builder {
 
         final int setSize = set.size();
         final ImmutableIntSet.Builder builder = (setSize > 0 && betterAsBitSet(set.min(), set.max(), setSize))?
-                new ImmutableBitSetImpl.Builder() : new ImmutableIntSetImpl.Builder();
+                new ImmutableBitSetImpl.Builder() : new ImmutableIntArraySet.Builder();
         for (int value : set) {
             builder.add(value);
         }

@@ -115,7 +115,7 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     @Override
     public ImmutableIntSet indexes() {
         final int size = size();
-        return (size == 0)? ImmutableIntSetImpl.empty() : new ImmutableIntRange(0, size - 1);
+        return (size == 0)? ImmutableIntArraySet.empty() : new ImmutableIntRange(0, size - 1);
     }
 
     @Override

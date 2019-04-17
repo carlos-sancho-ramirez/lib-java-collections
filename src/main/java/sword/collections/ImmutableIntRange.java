@@ -113,7 +113,7 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
         }
 
         if (_min == _max) {
-            return ImmutableIntSetImpl.empty();
+            return ImmutableIntArraySet.empty();
         }
 
         if (value == _min) {

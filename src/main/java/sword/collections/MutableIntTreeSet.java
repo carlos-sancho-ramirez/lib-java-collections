@@ -67,7 +67,7 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
             for (int i = 0; i < size; i++) {
                 values[i] = valueAt(i);
             }
-            return new ImmutableIntSetImpl(values);
+            return new ImmutableIntArraySet(values);
         }
     }
 

@@ -63,7 +63,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     @Override
     public ImmutableIntSet indexes() {
         final int size = size();
-        return (size == 0)? ImmutableIntSetImpl.empty() : new ImmutableIntRange(0, size - 1);
+        return (size == 0)? ImmutableIntArraySet.empty() : new ImmutableIntRange(0, size - 1);
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.Arrays;
 final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
 
     public static ImmutableIntSet empty() {
-        return ImmutableIntSetImpl.empty();
+        return ImmutableIntArraySet.empty();
     }
 
     static final int OFFSET_BITS_IN_INDEX = 5; // int has 32 bits in Java. 1 << 5 == 32
@@ -106,7 +106,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
         if (currentSize == 0) {
             int[] values = new int[1];
             values[0] = value;
-            return new ImmutableIntSetImpl(values);
+            return new ImmutableIntArraySet(values);
         }
 
         final int newMin = Math.min(min(), value);
@@ -140,7 +140,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
             if (intSetIndex < newSize) {
                 values[intSetIndex] = value;
             }
-            return new ImmutableIntSetImpl(values);
+            return new ImmutableIntArraySet(values);
         }
     }
 

@@ -21,11 +21,11 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This class also implements the {@link Iterable} interface, which
  * ensures that the for-each construction can be used.
  */
-final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
+final class ImmutableIntArraySet extends AbstractImmutableIntSet {
 
-    private static final ImmutableIntSetImpl EMPTY = new ImmutableIntSetImpl(new int[0]);
+    private static final ImmutableIntArraySet EMPTY = new ImmutableIntArraySet(new int[0]);
 
-    public static ImmutableIntSetImpl empty() {
+    public static ImmutableIntArraySet empty() {
         return EMPTY;
     }
 
@@ -34,7 +34,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
      */
     private final int[] _values;
 
-    ImmutableIntSetImpl(int[] values) {
+    ImmutableIntArraySet(int[] values) {
         _values = values;
     }
 
@@ -125,7 +125,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
         if (length == 0) {
             int[] newValues = new int[1];
             newValues[0] = value;
-            return new ImmutableIntSetImpl(newValues);
+            return new ImmutableIntArraySet(newValues);
         }
 
         if (ImmutableIntSetCreator.betterAsBitSet(_values[0], _values[length - 1], _values.length)) {
@@ -146,12 +146,12 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
                 newValues[i] = (i < index) ? _values[i] : (i == index) ? value : _values[i - 1];
             }
 
-            return new ImmutableIntSetImpl(newValues);
+            return new ImmutableIntArraySet(newValues);
         }
     }
 
     @Override
-    public ImmutableIntSetImpl remove(int value) {
+    public ImmutableIntArraySet remove(int value) {
         final int length = _values.length;
         final int index = findKey(_values, length, value);
         if (index < 0) {
@@ -162,7 +162,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
         System.arraycopy(_values, 0, result, 0, index);
         System.arraycopy(_values, index + 1, result, index, length - index - 1);
 
-        return new ImmutableIntSetImpl(result);
+        return new ImmutableIntArraySet(result);
     }
 
     @Override
@@ -175,7 +175,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
         return new IntIterator();
     }
 
-    static ImmutableIntSetImpl fromMutableIntSet(MutableIntArraySet set) {
+    static ImmutableIntArraySet fromMutableIntSet(MutableIntArraySet set) {
         final int length = set.size();
         if (length == 0) {
             return empty();
@@ -186,7 +186,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
             values[i] = set.valueAt(i);
         }
 
-        return new ImmutableIntSetImpl(values);
+        return new ImmutableIntArraySet(values);
     }
 
     @Override
@@ -234,7 +234,7 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
         }
 
         @Override
-        public ImmutableIntSetImpl build() {
+        public ImmutableIntArraySet build() {
             return fromMutableIntSet(_set);
         }
     }
@@ -255,11 +255,11 @@ final class ImmutableIntSetImpl extends AbstractImmutableIntSet {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof ImmutableIntSetImpl)) {
+        if (!(other instanceof ImmutableIntArraySet)) {
             return super.equals(other);
         }
 
-        final ImmutableIntSetImpl that = (ImmutableIntSetImpl) other;
+        final ImmutableIntArraySet that = (ImmutableIntArraySet) other;
         return Arrays.equals(_values, that._values);
     }
 }

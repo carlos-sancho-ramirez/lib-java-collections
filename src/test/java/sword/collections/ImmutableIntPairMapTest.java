@@ -130,7 +130,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest<ImmutableIntTr
     @Test
     public void testKeySetWhenEmpty() {
         final ImmutableIntPairMap empty = ImmutableIntPairMap.empty();
-        assertSame(ImmutableIntSetImpl.empty(), empty.keySet());
+        assertSame(ImmutableIntArraySet.empty(), empty.keySet());
     }
 
     @Test
