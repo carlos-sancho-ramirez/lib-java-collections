@@ -21,7 +21,7 @@ import static sword.collections.SortUtils.findSuitableIndex;
  * This class also implements the {@link Iterable} interface, which
  * ensures that the for-each construction can be used.
  */
-final class ImmutableIntArraySet extends AbstractImmutableIntSet {
+public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
 
     private static final ImmutableIntArraySet EMPTY = new ImmutableIntArraySet(new int[0]);
 
