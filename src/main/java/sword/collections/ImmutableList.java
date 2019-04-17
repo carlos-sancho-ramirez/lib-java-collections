@@ -364,8 +364,20 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
         }
     }
 
+    /**
+     * Wraps the given array into an ImmutableList instance.
+     *
+     * In order to be efficient, this method will not copy the given array, but
+     * the same copy of the given array will be used instead. The caller of
+     * this method is responsible to do not modify directly the given array
+     * once this method has been called.
+     *
+     * @param items array to be used be the new created ImmutableList
+     * @param <E> type for the array
+     * @return A new ImmutableList containing the same array given.
+     */
     public static <E> ImmutableList<E> from(E[] items) {
-        return new ImmutableList<E>(items);
+        return new ImmutableList<>(items);
     }
 
     public static <E> ImmutableList<E> from(Collection<E> collection) {

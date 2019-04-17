@@ -177,6 +177,30 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
     }
 
     /**
+     * Wraps the given array into an ImmutableIntList instance.
+     *
+     * In order to be efficient, this method will not copy the given array, but
+     * the same copy of the given array will be used instead. The caller of
+     * this method is responsible to do not modify directly the given array
+     * once this method has been called.
+     *
+     * @param items array to be used be the new created ImmutableIntList
+     * @return A new ImmutableIntList containing the same array given.
+     */
+    public static ImmutableIntList from(int[] items) {
+        return new ImmutableIntList(items);
+    }
+
+    /**
+     * Return a new created int array that contains a copy of the content of this collection.
+     */
+    public int[] toArray() {
+        final int[] array = new int[_values.length];
+        System.arraycopy(_values, 0, array, 0, _values.length);
+        return array;
+    }
+
+    /**
      * Creates a new {@link ImmutableIntList} of the same type where the given
      * value is included at the end of the list.
      *
