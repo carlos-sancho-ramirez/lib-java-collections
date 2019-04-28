@@ -88,6 +88,13 @@ interface IntTraversable extends Iterable<Integer>, Sizable {
         return iterator().max();
     }
 
+    /**
+     * Returns the sum of all values within this collection.
+     */
+    default int sum() {
+        return iterator().sum();
+    }
+
     @Override
     default int size() {
         int count = 0;

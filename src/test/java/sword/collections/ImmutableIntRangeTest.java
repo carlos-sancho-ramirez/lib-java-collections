@@ -76,6 +76,18 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
+    public void testSum() {
+        withSmallRange(range -> {
+            int result = 0;
+            for (int value : range) {
+                result += value;
+            }
+
+            assertEquals(result, range.sum());
+        });
+    }
+
+    @Test
     public void testContains() {
         withRange(range -> withValue(value -> {
             if (value >= range.min() && value <= range.max()) {
