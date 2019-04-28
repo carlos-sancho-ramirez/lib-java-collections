@@ -163,4 +163,16 @@ public interface IntTraverser extends Iterator<Integer> {
 
         return result;
     }
+
+    /**
+     * Traverses the whole collection and return the sum of all items.
+     */
+    default int sum() {
+        int result = 0;
+        while (hasNext()) {
+            result += next();
+        }
+
+        return result;
+    }
 }

@@ -321,4 +321,33 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
             assertEquals(max, iterable.iterator().max());
         }))));
     }
+
+    @Test
+    public void testSumWhenEmpty() {
+        withBuilder(builder -> {
+            final IntTraversable iterable = builder.build();
+            assertEquals(0, iterable.iterator().sum());
+        });
+    }
+
+    @Test
+    public void testSumForSingleValue() {
+        withValue(a -> withBuilder(builder -> {
+            final IntTraversable iterable = builder.add(a).build();
+            assertEquals(a, iterable.iterator().sum());
+        }));
+    }
+
+    @Test
+    public void testSumForMultipleValues() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final IntTraversable iterable = builder.add(a).add(b).add(c).build();
+            int result = 0;
+            for (int value : iterable) {
+                result += value;
+            }
+
+            assertEquals(result, iterable.iterator().sum());
+        }))));
+    }
 }
