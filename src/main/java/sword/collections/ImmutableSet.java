@@ -30,6 +30,9 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     @Override
     ImmutableIntValueMap<T> assignToInt(IntResultFunction<T> function);
 
+    @Override
+    ImmutableSet<T> removeAt(int index);
+
     /**
      * Creates a new {@link ImmutableSet} of the same type where the given
      * value is included.

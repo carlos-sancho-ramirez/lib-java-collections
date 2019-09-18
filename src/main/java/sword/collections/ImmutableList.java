@@ -176,6 +176,26 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     @Override
+    public ImmutableList<T> removeAt(int index) {
+        final int size = _values.length;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final Object[] newValues = new Object[size - 1];
+        if (index > 0) {
+            System.arraycopy(_values, 0, newValues, 0, index);
+        }
+
+        final int remaining = size - index - 1;
+        if (remaining > 0) {
+            System.arraycopy(_values, index + 1, newValues, index, remaining);
+        }
+
+        return new ImmutableList<>(newValues);
+    }
+
+    @Override
     public Transformer<T> iterator() {
         return new Iterator();
     }

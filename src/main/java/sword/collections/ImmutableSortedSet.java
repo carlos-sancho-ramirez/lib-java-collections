@@ -163,6 +163,26 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
         return equal(_sortFunction, function)? this : super.sort(function);
     }
 
+    @Override
+    public ImmutableSortedSet<T> removeAt(int index) {
+        final int size = _values.length;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final Object[] newValues = new Object[size - 1];
+        if (index > 0) {
+            System.arraycopy(_values, 0, newValues, 0, index);
+        }
+
+        final int remaining = size - index - 1;
+        if (remaining > 0) {
+            System.arraycopy(_values, index + 1, newValues, index, size - index - 1);
+        }
+
+        return new ImmutableSortedSet<>(_sortFunction, newValues);
+    }
+
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableSortedSet<E> _set;
 

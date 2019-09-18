@@ -87,6 +87,29 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
+    public ImmutableHashSet<T> removeAt(int index) {
+        final int size = _values.length;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final int[] newHashCodes = new int[size - 1];
+        final Object[] newValues = new Object[size - 1];
+        if (index > 0) {
+            System.arraycopy(_values, 0, newValues, 0, index);
+            System.arraycopy(_hashCodes, 0, newHashCodes, 0, index);
+        }
+
+        final int remaining = size - index - 1;
+        if (remaining > 0) {
+            System.arraycopy(_values, index + 1, newValues, index, remaining);
+            System.arraycopy(_hashCodes, index + 1, newHashCodes, index, remaining);
+        }
+
+        return new ImmutableHashSet<>(newValues, newHashCodes);
+    }
+
+    @Override
     public ImmutableHashSet<T> toImmutable() {
         return this;
     }

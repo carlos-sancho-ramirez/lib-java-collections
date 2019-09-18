@@ -36,6 +36,9 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
     @Override
     ImmutableMap<K, V> sort(SortFunction<K> function);
 
+    @Override
+    ImmutableMap<K, V> removeAt(int index);
+
     interface Builder<K, V> extends MapBuilder<K, V> {
         @Override
         Builder<K, V> put(K key, V value);

@@ -164,6 +164,29 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableSortedMap<>(_sortFunction, _keys, newValues);
     }
 
+    @Override
+    public ImmutableSortedMap<K, V> removeAt(int index) {
+        final int size = _values.length;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final Object[] newKeys = new Object[size - 1];
+        final Object[] newValues = new Object[size - 1];
+        if (index > 0) {
+            System.arraycopy(_values, 0, newValues, 0, index);
+            System.arraycopy(_keys, 0, newKeys, 0, index);
+        }
+
+        final int remaining = size - index - 1;
+        if (remaining > 0) {
+            System.arraycopy(_values, index + 1, newValues, index, remaining);
+            System.arraycopy(_keys, index + 1, newKeys, index, remaining);
+        }
+
+        return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
         private final MutableSortedMap<K, V> _map;
 

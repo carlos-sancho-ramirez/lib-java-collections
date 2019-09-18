@@ -47,4 +47,13 @@ public interface ImmutableTransformable<T> extends Transformable<T> {
      * @param <U> New type for the elements in the new created collection.
      */
     <U> ImmutableTransformable<U> map(Function<T, U> func);
+
+    /**
+     * Returns a new {@link ImmutableTransformable} where the item in the given position has been removed.
+     * Calling this method will always result in a new instance whose size is 1 less than the original one.
+     * @param index Valid index within the collection. This must be between 0 (included) and the value returned by {@link #size()} (excluded)
+     * @return a new {@link ImmutableTransformable} where the item in the given position has been removed.
+     * @throws java.lang.IndexOutOfBoundsException when an invalid index is provided.
+     */
+    ImmutableTransformable<T> removeAt(int index);
 }
