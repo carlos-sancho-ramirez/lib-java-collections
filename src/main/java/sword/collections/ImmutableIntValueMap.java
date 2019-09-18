@@ -36,6 +36,9 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
     @Override
     ImmutableIntValueMap<T> sort(SortFunction<T> function);
 
+    @Override
+    ImmutableIntValueMap removeAt(int index);
+
     ImmutableIntKeyMap<T> invert();
 
     interface Builder<E> extends IntValueMap.Builder<E> {

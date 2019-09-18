@@ -151,6 +151,26 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
     }
 
     @Override
+    public ImmutableIntArraySet removeAt(int index) {
+        final int size = _values.length;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final int[] newValues = new int[size - 1];
+        if (index > 0) {
+            System.arraycopy(_values, 0, newValues, 0, index);
+        }
+
+        final int remaining = size - index - 1;
+        if (remaining > 0) {
+            System.arraycopy(_values, index + 1, newValues, index, remaining);
+        }
+
+        return new ImmutableIntArraySet(newValues);
+    }
+
+    @Override
     public ImmutableIntArraySet remove(int value) {
         final int length = _values.length;
         final int index = findKey(_values, length, value);

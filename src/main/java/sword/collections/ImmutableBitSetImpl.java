@@ -145,6 +145,57 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
+    public ImmutableBitSetImpl removeAt(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        int wordIndex = 0;
+        int value = 0;
+        int bitMask = 1;
+
+        while (true) {
+            if ((_value[wordIndex] & bitMask) != 0) {
+                if (index == 0) {
+                    break;
+                }
+                else {
+                    index--;
+                }
+            }
+            ++value;
+            if ((value & OFFSET_MASK) == 0) {
+                ++wordIndex;
+                bitMask = 1;
+            }
+            else {
+                bitMask <<= 1;
+            }
+        }
+
+        final int newWord = _value[wordIndex] & (~bitMask);
+
+        int newLength = _value.length;
+        if (wordIndex == newLength - 1 && newWord == 0) {
+            --newLength;
+            while (newLength > 0 && _value[newLength - 1] == 0) {
+                --newLength;
+            }
+        }
+
+        if (newLength > 0) {
+            final int[] newValue = Arrays.copyOf(_value, newLength);
+            if (wordIndex < newLength) {
+                newValue[wordIndex] = newWord;
+            }
+
+            return new ImmutableBitSetImpl(newValue);
+        }
+
+        return new ImmutableBitSetImpl(null);
+    }
+
+    @Override
     public ImmutableBitSetImpl remove(int value) {
         if (value < 0) {
             throw new IllegalArgumentException();

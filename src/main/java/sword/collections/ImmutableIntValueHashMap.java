@@ -131,6 +131,32 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
         return new ImmutableHashMap<>(_keys, _hashCodes, newValues);
     }
 
+    @Override
+    public ImmutableIntValueHashMap<T> removeAt(int index) {
+        final int size = _values.length;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final Object[] newKeys = new Object[size - 1];
+        final int[] newHashCodes = new int[size - 1];
+        final int[] newValues = new int[size - 1];
+        if (index > 0) {
+            System.arraycopy(_values, 0, newValues, 0, index);
+            System.arraycopy(_keys, 0, newKeys, 0, index);
+            System.arraycopy(_hashCodes, 0, newHashCodes, 0, index);
+        }
+
+        final int remaining = size - index - 1;
+        if (remaining > 0) {
+            System.arraycopy(_values, index + 1, newValues, index, remaining);
+            System.arraycopy(_keys, index + 1, newKeys, index, remaining);
+            System.arraycopy(_hashCodes, index + 1, newHashCodes, index, remaining);
+        }
+
+        return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {
         final MutableIntValueHashMap<E> _map = MutableIntValueHashMap.empty();
 

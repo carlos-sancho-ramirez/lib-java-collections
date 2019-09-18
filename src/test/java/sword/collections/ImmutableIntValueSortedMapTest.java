@@ -35,7 +35,7 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
     }
 
     @Override
-    void withBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntTransformableBuilder>> procedure) {
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntTransformableBuilder>> procedure) {
         withSortFunc(sortFunc -> procedure.apply(() -> new SameKeyAndValueTraversableBuilder(sortFunc)));
     }
 
@@ -50,7 +50,7 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
     }
 
     @Override
-    void withValue(IntProcedure procedure) {
+    public void withValue(IntProcedure procedure) {
         withInt(procedure);
     }
 

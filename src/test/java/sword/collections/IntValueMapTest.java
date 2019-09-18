@@ -27,12 +27,12 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> extends Int
     }
 
     @Override
-    void withMapFunc(Procedure<IntFunction<String>> procedure) {
+    public void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);
     }
 
     @Override
-    void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+    public void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
         procedure.apply(v -> v * v);
         procedure.apply(v -> v + 1);
     }

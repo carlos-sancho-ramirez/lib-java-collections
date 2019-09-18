@@ -70,6 +70,9 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
         return set.addAll(values)? set.toImmutable() : this;
     }
 
+    @Override
+    ImmutableIntSet removeAt(int index);
+
     /**
      * Remove the given value from the current set if included.
      *

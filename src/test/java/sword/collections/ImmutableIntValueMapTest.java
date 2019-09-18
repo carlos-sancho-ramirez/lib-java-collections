@@ -8,7 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder> extends IntValueMapTest<T, B> {
+abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder> extends IntValueMapTest<T, B>
+        implements ImmutableIntTransformableTest<B> {
 
     private void withInvertibleArray(Procedure<ImmutableIntValueMap<T>> action) {
         withKey(key1 -> withKey(key2 -> withKey(key3 -> {

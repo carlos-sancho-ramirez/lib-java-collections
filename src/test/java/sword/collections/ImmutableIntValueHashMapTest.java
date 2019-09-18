@@ -40,7 +40,7 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
     }
 
     @Override
-    void withBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntTransformableBuilder>> procedure) {
+    public void withBuilderSupplier(Procedure<IntBuilderSupplier<ImmutableIntTransformableBuilder>> procedure) {
         procedure.apply(SameKeyAndValueTraversableBuilder::new);
     }
 
@@ -50,7 +50,7 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
     }
 
     @Override
-    void withValue(IntProcedure procedure) {
+    public void withValue(IntProcedure procedure) {
         withInt(procedure);
     }
 

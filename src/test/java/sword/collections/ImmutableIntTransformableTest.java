@@ -129,4 +129,31 @@ public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformab
             assertFalse(mappedIterator.hasNext());
         }))));
     }
+
+    @Test
+    default void testRemoveAtForSingleElement() {
+        withValue(value -> withBuilderSupplier(supplier -> {
+            final ImmutableIntTransformable collection = supplier.newBuilder().add(value).build();
+            assertTrue(collection.removeAt(0).isEmpty());
+        }));
+    }
+
+    @Test
+    default void testRemoveAtForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableIntTransformable collection = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = collection.size();
+            for (int index = 0; index < size; index++) {
+                final IntTransformer origTransformer = collection.iterator();
+                final IntTransformer removedTransformer = collection.removeAt(index).iterator();
+                for (int i = 0; i < size; i++) {
+                    final int value = origTransformer.next();
+                    if (i != index) {
+                        assertEquals(value, removedTransformer.next().intValue());
+                    }
+                }
+                assertFalse(removedTransformer.hasNext());
+            }
+        }))));
+    }
 }

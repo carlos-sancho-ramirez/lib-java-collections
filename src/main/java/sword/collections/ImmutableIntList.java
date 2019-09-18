@@ -237,6 +237,26 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
         }
     }
 
+    @Override
+    public ImmutableIntList removeAt(int index) {
+        final int size = _values.length;
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final int[] newValues = new int[size - 1];
+        if (index > 0) {
+            System.arraycopy(_values, 0, newValues, 0, index);
+        }
+
+        final int remaining = size - index - 1;
+        if (remaining > 0) {
+            System.arraycopy(_values, index + 1, newValues, index, remaining);
+        }
+
+        return new ImmutableIntList(newValues);
+    }
+
     /**
      * Composes a new map traversing this list, applying the given function to each item.
      *

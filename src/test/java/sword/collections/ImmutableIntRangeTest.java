@@ -71,12 +71,12 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testMinMaxAndSizeConsistency() {
+    void testMinMaxAndSizeConsistency() {
         withRange(range -> assertEquals(range.size(), range.max() - range.min() + 1));
     }
 
     @Test
-    public void testSum() {
+    void testSum() {
         withSmallRange(range -> {
             int result = 0;
             for (int value : range) {
@@ -88,7 +88,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testContains() {
+    void testContains() {
         withRange(range -> withValue(value -> {
             if (value >= range.min() && value <= range.max()) {
                 assertTrue(range.contains(value));
@@ -100,7 +100,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testIteration() {
+    void testIteration() {
         withSmallRange(range -> {
             final int max = range.max();
             final Iterator<Integer> it = range.iterator();
@@ -114,7 +114,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testIndexOfForSingleElement() {
+    void testIndexOfForSingleElement() {
         withValue(a -> {
             final IntTraversable list = new ImmutableIntRange(a, a);
 
@@ -125,7 +125,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testIndexOfForMultipleElements() {
+    void testIndexOfForMultipleElements() {
         withRange(range -> {
             final int min = range.min();
             withValue(value -> {
@@ -137,14 +137,14 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testToImmutable() {
+    void testToImmutable() {
         withRange(range -> {
             assertSame(range, range.toImmutable());
         });
     }
 
     @Test
-    public void testMutable() {
+    void testMutable() {
         withSmallRange(range -> {
             final MutableIntArraySet set = range.mutate();
             assertEquals(range.size(), set.size());
@@ -154,7 +154,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         withSmallRange(range -> withValue(value -> {
             final ImmutableIntSet set = range.add(value);
 
@@ -172,7 +172,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testRemove() {
+    void testRemove() {
         withSmallRange(range -> withValue(value -> {
             final ImmutableIntSet set = range.remove(value);
 
@@ -194,7 +194,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testToList() {
+    void testToList() {
         for (int min : INT_VALUES) {
             for (int i = 0; i < 3; i++) {
                 final int max = min + i;
@@ -213,7 +213,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testGroupBy() {
+    void testGroupBy() {
         withGroupingFunc(func -> withSmallRange(range -> {
             final ImmutableMap<String, ImmutableIntSet> map = range.groupBy(func);
             final int mapLength = map.size();
@@ -242,7 +242,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testGroupByInt() {
+    void testGroupByInt() {
         withGroupingIntFunc(func -> withSmallRange(range -> {
             final ImmutableIntKeyMap<ImmutableIntSet> map = range.groupByInt(func);
             final int mapLength = map.size();
@@ -271,7 +271,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testMap() {
+    void testMap() {
         withSmallRange(range -> withMapFunc(func -> {
             final Iterator<Integer> it = range.iterator();
             final Iterator<String> mappedIt = range.map(func).iterator();
@@ -285,7 +285,7 @@ public class ImmutableIntRangeTest {
     }
 
     @Test
-    public void testMapToInt() {
+    void testMapToInt() {
         withSmallRange(range -> withMapToIntFunc(func -> {
             final Iterator<Integer> it = range.iterator();
             final Iterator<Integer> mappedIt = range.mapToInt(func).iterator();
@@ -296,5 +296,31 @@ public class ImmutableIntRangeTest {
             }
             assertFalse(mappedIt.hasNext());
         }));
+    }
+
+    @Test
+    void testRemoveAtForSingleElement() {
+        withValue(value -> {
+            final ImmutableIntRange collection = new ImmutableIntRange(value, value);
+            assertTrue(collection.removeAt(0).isEmpty());
+        });
+    }
+
+    @Test
+    void testRemoveAtForMultipleElements() {
+        withSmallRange(range -> {
+            final int size = range.size();
+            for (int index = 0; index < size; index++) {
+                final IntTransformer origTransformer = range.iterator();
+                final IntTransformer removedTransformer = range.removeAt(index).iterator();
+                for (int i = 0; i < size; i++) {
+                    final int value = origTransformer.next();
+                    if (i != index) {
+                        assertEquals(value, removedTransformer.next().intValue());
+                    }
+                }
+                assertFalse(removedTransformer.hasNext());
+            }
+        });
     }
 }

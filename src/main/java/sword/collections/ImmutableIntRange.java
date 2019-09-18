@@ -107,6 +107,15 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
     }
 
     @Override
+    public ImmutableIntSet removeAt(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        return remove(_min + index);
+    }
+
+    @Override
     public ImmutableIntSet remove(int value) {
         if (value < _min || value > _max) {
             return this;
