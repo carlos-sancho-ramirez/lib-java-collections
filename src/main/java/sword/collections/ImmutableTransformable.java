@@ -11,6 +11,9 @@ public interface ImmutableTransformable<T> extends Transformable<T> {
     @Override
     ImmutableIntSet indexes();
 
+    @Override
+    ImmutableIntValueMap<T> count();
+
     /**
      * Applies the given predicate to each of the items within the list and
      * composes a new list including only the items whose predicate returned

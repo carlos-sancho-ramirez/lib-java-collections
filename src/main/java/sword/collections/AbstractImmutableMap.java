@@ -55,6 +55,17 @@ abstract class AbstractImmutableMap<K, V> extends AbstractMap<K, V> implements I
         return new ImmutableSortedSet<>(this::entryLessThan, entries);
     }
 
+    @Override
+    public ImmutableIntValueMap<V> count() {
+        final MutableIntValueMap<V> result = MutableIntValueHashMap.empty();
+        for (V value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
+
     private class Iterator extends AbstractTransformerWithKey<K, V> {
 
         private int _index;

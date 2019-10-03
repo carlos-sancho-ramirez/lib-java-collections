@@ -35,4 +35,15 @@ abstract class AbstractImmutableTransformable<T> extends AbstractTraversable<T> 
 
         return somethingRemoved? builder.build() : this;
     }
+
+    @Override
+    public ImmutableIntValueMap<T> count() {
+        final MutableIntValueMap<T> result = MutableIntValueHashMap.empty();
+        for (T value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
 }

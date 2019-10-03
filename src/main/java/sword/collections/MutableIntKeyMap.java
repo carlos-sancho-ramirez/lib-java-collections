@@ -88,6 +88,17 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
+    public IntValueMap<T> count() {
+        final MutableIntValueMap<T> result = MutableIntValueHashMap.empty();
+        for (T value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
+
+    @Override
     public IntPairMap mapToInt(IntResultFunction<T> func) {
         final int[] newKeys = new int[_size];
         final int[] newValues = new int[_size];

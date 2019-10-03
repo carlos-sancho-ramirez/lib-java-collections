@@ -92,6 +92,17 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
     }
 
     @Override
+    public IntValueMap<T> count() {
+        final MutableIntValueMap<T> result = MutableIntValueHashMap.empty();
+        for (T value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
+
+    @Override
     public ImmutableList<T> toImmutable() {
         final Object[] newValues = new Object[_size];
         System.arraycopy(_values, 0, newValues, 0, _size);

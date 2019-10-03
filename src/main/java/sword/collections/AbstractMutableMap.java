@@ -56,6 +56,17 @@ abstract class AbstractMutableMap<K, V> extends AbstractMap<K, V> implements Mut
         return builder.build();
     }
 
+    @Override
+    public IntValueMap<V> count() {
+        final MutableIntValueMap<V> result = MutableIntValueHashMap.empty();
+        for (V value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
+
     abstract boolean entryLessThan(Entry<K, V> a, Entry<K, V> b);
 
     @Override

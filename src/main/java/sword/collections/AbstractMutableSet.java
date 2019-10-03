@@ -35,6 +35,17 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         return (T) values[index];
     }
 
+    @Override
+    public IntValueMap<T> count() {
+        final MutableIntValueMap<T> result = MutableIntValueHashMap.empty();
+        for (T value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
+
     private class Iterator extends AbstractTransformer<T> {
 
         private int _index;

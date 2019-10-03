@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
+import static java.nio.file.attribute.AclEntry.newBuilder;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
@@ -199,6 +200,43 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends T
             }
             else {
                 assertEquals(iterable, filtered);
+            }
+        }))));
+    }
+
+    @Test
+    void testCountWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntValueMap<T> map = supplier.newBuilder().build().count();
+            assertTrue(map.isEmpty());
+        });
+    }
+
+    @Test
+    void testCountForSingleElement() {
+        withValue(value -> withBuilderSupplier(supplier -> {
+            final IntValueMap<T> map = supplier.newBuilder().add(value).build().count();
+            assertEquals(1, map.size());
+            assertSame(value, map.keyAt(0));
+            assertEquals(1, map.valueAt(0));
+        }));
+    }
+
+    @Test
+    void testCountForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).add(c).build();
+            final IntValueMap<T> map = transformable.count();
+
+            final MutableIntValueMap<T> expected = MutableIntValueHashMap.empty();
+            for (T value : transformable) {
+                final int count = expected.get(value, 0);
+                expected.put(value, count + 1);
+            }
+
+            assertEquals(expected.size(), map.size());
+            for (T value : expected.keySet()) {
+                assertEquals(expected.get(value), map.get(value));
             }
         }))));
     }

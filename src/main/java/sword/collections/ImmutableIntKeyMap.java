@@ -249,6 +249,17 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         }
     }
 
+    @Override
+    public ImmutableIntValueMap<T> count() {
+        final MutableIntValueMap<T> result = MutableIntValueHashMap.empty();
+        for (T value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
+
     /**
      * Swaps keys and values in order to search keys given a value.
      *

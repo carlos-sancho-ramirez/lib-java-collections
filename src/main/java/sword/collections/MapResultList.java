@@ -28,4 +28,15 @@ final class MapResultList<S, T> extends AbstractTraversable<T> implements List<T
     public Transformer<T> iterator() {
         return new MapTransformer<>(_transformable.iterator(), _function);
     }
+
+    @Override
+    public IntValueMap<T> count() {
+        final MutableIntValueMap<T> result = MutableIntValueHashMap.empty();
+        for (T value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
 }
