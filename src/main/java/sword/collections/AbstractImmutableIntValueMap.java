@@ -59,6 +59,17 @@ abstract class AbstractImmutableIntValueMap<T> extends AbstractIntValueMap<T> im
     }
 
     @Override
+    public ImmutableIntPairMap count() {
+        MutableIntPairMap result = MutableIntPairMap.empty();
+        for (int value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
+
+    @Override
     public ImmutableIntKeyMap<T> invert() {
         // TODO: Ensure that no repeated keys are going inside the inverted version
         final int length = _values.length;

@@ -56,4 +56,18 @@ public interface IntTransformable extends IntTraversable {
     default <U> Transformable<U> map(IntFunction<U> func) {
         return iterator().map(func).toList();
     }
+
+    /**
+     * Composes a map by traversing the collection and counting how many times an element is found.
+     *
+     * The resulting map will have the elements from the collection as keys,
+     * and the number of times that each element is found as its value.
+     *
+     * It is expected that the size of the resulting map will never be longer that the original one,
+     * and the sum of all resulting values should match the original size. Note that the values within
+     * the resulting map will never be negative nor 0.
+     */
+    default IntPairMap count() {
+        return iterator().count();
+    }
 }

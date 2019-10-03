@@ -242,6 +242,17 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         return new ImmutableIntPairMap(newKeys, newValues);
     }
 
+    @Override
+    public ImmutableIntPairMap count() {
+        MutableIntPairMap result = MutableIntPairMap.empty();
+        for (int value : this) {
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result.toImmutable();
+    }
+
     public ImmutableIntPairMap reverse() {
         // TODO: Ensure that no repeated keys are going inside the reversed version
         final int length = _values.length;

@@ -52,4 +52,6 @@ interface ImmutableIntTransformable extends IntTransformable {
      * @throws java.lang.IndexOutOfBoundsException when an invalid index is provided.
      */
     ImmutableIntTransformable removeAt(int index);
+
+    ImmutableIntPairMap count();
 }
