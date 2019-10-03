@@ -46,4 +46,16 @@ abstract class AbstractIntTransformer implements IntTransformer {
     public <U> Transformer<U> map(IntFunction<U> mapFunc) {
         return new MapIntTransformer<>(this, mapFunc);
     }
+
+    @Override
+    public IntPairMap count() {
+        final MutableIntPairMap result = MutableIntPairMap.empty();
+        while (hasNext()) {
+            final int value = next();
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result;
+    }
 }
