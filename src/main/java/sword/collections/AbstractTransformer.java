@@ -53,6 +53,18 @@ public abstract class AbstractTransformer<E> implements Transformer<E> {
     }
 
     @Override
+    public IntValueMap<E> count() {
+        final MutableIntValueMap<E> result = MutableIntValueHashMap.empty();
+        while (hasNext()) {
+            final E value = next();
+            final int amount = result.get(value, 0);
+            result.put(value, amount + 1);
+        }
+
+        return result;
+    }
+
+    @Override
     public void remove() {
         throw new UnsupportedOperationException("This class is immutable");
     }

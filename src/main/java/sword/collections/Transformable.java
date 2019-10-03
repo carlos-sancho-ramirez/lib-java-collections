@@ -70,5 +70,7 @@ public interface Transformable<T> extends Traversable<T> {
      * and the sum of all resulting values should match the original size. Note that the values within
      * the resulting map will never be negative nor 0.
      */
-    IntValueMap<T> count();
+    default IntValueMap<T> count() {
+        return iterator().count();
+    }
 }

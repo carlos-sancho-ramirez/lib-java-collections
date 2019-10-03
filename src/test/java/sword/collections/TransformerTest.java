@@ -229,4 +229,41 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
             assertFalse(transformer.hasNext());
         })))));
     }
+
+    @Test
+    void testCountWhenEmpty() {
+        withBuilder(builder -> {
+            final IntValueMap<T> map = builder.build().iterator().count();
+            assertTrue(map.isEmpty());
+        });
+    }
+
+    @Test
+    void testCountForSingleElement() {
+        withValue(value -> withBuilder(builder -> {
+            final IntValueMap<T> map = builder.add(value).build().iterator().count();
+            assertEquals(1, map.size());
+            assertSame(value, map.keyAt(0));
+            assertEquals(1, map.valueAt(0));
+        }));
+    }
+
+    @Test
+    void testCountForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
+            final IntValueMap<T> map = transformable.iterator().count();
+
+            final MutableIntValueMap<T> expected = MutableIntValueHashMap.empty();
+            for (T value : transformable) {
+                final int count = expected.get(value, 0);
+                expected.put(value, count + 1);
+            }
+
+            assertEquals(expected.size(), map.size());
+            for (T value : expected.keySet()) {
+                assertEquals(expected.get(value), map.get(value));
+            }
+        }))));
+    }
 }
