@@ -33,6 +33,15 @@ interface IntTraversable extends Iterable<Integer>, Sizable {
     }
 
     /**
+     * Returns the index within this collection for the first element matching the given predicate. Or -1 if none matches.
+     * @param predicate Condition to be satisfied for the element that we are looking for.
+     * @return The index of the first element matching the predicate, or -1 if none matches.
+     */
+    default int indexWhere(IntPredicate predicate) {
+        return iterator().indexWhere(predicate);
+    }
+
+    /**
      * Return the value in the given index position.
      *
      * @param index Index within the array of values.
