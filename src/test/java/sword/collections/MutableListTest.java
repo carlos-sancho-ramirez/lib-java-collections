@@ -131,69 +131,6 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testIndexOfWhenEmpty() {
-        withValue(value -> {
-            assertEquals(-1, newBuilder().build().indexOf(value));
-        });
-    }
-
-    @Test
-    public void testIndexOfForSingleElement() {
-        withValue(a -> withValue(value -> {
-            final MutableList<String> list = newBuilder().add(a).build();
-            final int index = list.indexOf(value);
-
-            if (equal(a, value)) {
-                assertEquals(0, index);
-            }
-            else {
-                assertEquals(-1, index);
-            }
-        }));
-    }
-
-    @Test
-    public void testFindFirstWhenEmpty() {
-        withFilterFunc(f -> withString(defaultValue -> {
-            final MutableList<String> list = newBuilder().build();
-            assertEquals(defaultValue, list.findFirst(f, defaultValue));
-        }));
-    }
-
-    @Test
-    public void testFindFirstForSingleElement() {
-        withFilterFunc(f -> withString(defaultValue -> withString(value -> {
-            final MutableList<String> list = newBuilder().add(value).build();
-            final String first = list.findFirst(f, defaultValue);
-
-            if (f.apply(value)) {
-                assertSame(value, first);
-            }
-            else {
-                assertSame(defaultValue, first);
-            }
-        })));
-    }
-
-    @Test
-    public void testFindFirstForMultipleElements() {
-        withFilterFunc(f -> withString(defaultValue -> withString(a -> withString(b -> {
-            final MutableList<String> list = newBuilder().add(a).add(b).build();
-            final String first = list.findFirst(f, defaultValue);
-
-            if (f.apply(a)) {
-                assertSame(a, first);
-            }
-            else if (f.apply(b)) {
-                assertSame(b, first);
-            }
-            else {
-                assertSame(defaultValue, first);
-            }
-        }))));
-    }
-
-    @Test
     public void testAppendWhenEmpty() {
         withString(value -> {
             final MutableList<String> list = MutableList.empty();

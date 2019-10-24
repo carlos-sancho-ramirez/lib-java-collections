@@ -110,41 +110,6 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    @Override
-    public void testIndexOfForMultipleElements() {
-        withValue(a -> withValue(b -> withValue(value -> {
-            final Traversable<T> set = newIterableBuilder().add(a).add(b).build();
-            final int index = set.indexOf(value);
-
-            final int expectedIndex;
-            if (lessThan(b, a)) {
-                expectedIndex = equal(value, b)? 0 : equal(value, a)? 1 : -1;
-            }
-            else {
-                expectedIndex = equal(value, a)? 0 : equal(value, b)? 1 : -1;
-            }
-            assertEquals(expectedIndex, index);
-        })));
-    }
-
-    @Test
-    @Override
-    public void testFindFirstForMultipleElements() {
-        withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> {
-            final Traversable<T> collection = newIterableBuilder().add(a).add(b).build();
-
-            final T expected;
-            if (lessThan(b, a)) {
-                expected = f.apply(b)? b : f.apply(a)? a : defaultValue;
-            }
-            else {
-                expected = f.apply(a)? a : f.apply(b)? b : defaultValue;
-            }
-            assertSame(expected, collection.findFirst(f, defaultValue));
-        }))));
-    }
-
-    @Test
     public void testMapWhenEmpty() {
         withMapFunc(f -> {
             final MutableSet<T> set = newBuilder().build();
