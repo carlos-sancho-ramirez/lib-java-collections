@@ -31,7 +31,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testContainsWhenEmpty() {
+    void testContainsWhenEmpty() {
         withValue(value -> withBuilder(builder -> {
             if (builder.build().iterator().contains(value)) {
                 fail("contains method is expected to return false always for any empty set. " +
@@ -41,7 +41,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testContainsWhenContainingASingleElement() {
+    void testContainsWhenContainingASingleElement() {
         withValue(valueIncluded -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(valueIncluded).build();
             withValue(otherValue -> {
@@ -57,7 +57,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testContainsWhenContainingMultipleElements() {
+    void testContainsWhenContainingMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).build();
             final IntTraverser it = iterable.iterator();
@@ -79,7 +79,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testAnyMatchWhenEmpty() {
+    void testAnyMatchWhenEmpty() {
         withBuilder(builder -> {
             final IntTraversable iterable = builder.build();
             withFilterFunc(f -> assertFalse(iterable.iterator().anyMatch(f)));
@@ -87,7 +87,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testAnyMatchForSingleElement() {
+    void testAnyMatchForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(value).build();
             withFilterFunc(f -> {
@@ -103,7 +103,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testAnyMatchForMultipleElements() {
+    void testAnyMatchForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).build();
             withFilterFunc(f -> {
@@ -119,7 +119,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testIndexOfWhenEmpty() {
+    void testIndexOfWhenEmpty() {
         withBuilder(builder -> {
             IntTraversable iterable = builder.build();
             withValue(value -> assertEquals(-1, iterable.iterator().indexOf(value)));
@@ -127,7 +127,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testIndexOfForSingleElement() {
+    void testIndexOfForSingleElement() {
         withValue(a -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).build();
             withValue(value -> {
@@ -138,7 +138,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testIndexOfForMultipleElements() {
+    void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).build();
             withValue(value -> {
@@ -156,7 +156,42 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testValueAtForSingleElement() {
+    void testIndexWhereWhenEmpty() {
+        final IntPredicate predicate = v -> {
+            throw new AssertionError("This method should not be called");
+        };
+
+        withBuilder(builder -> assertEquals(-1, builder.build().iterator().indexWhere(predicate)));
+    }
+
+    @Test
+    void testIndexWhereForSingleElement() {
+        withFilterFunc(predicate -> withValue(a -> withBuilder(builder -> {
+            final IntTraversable collection = builder.add(a).build();
+            final int expected = predicate.apply(a)? 0 : -1;
+            assertEquals(expected, collection.iterator().indexWhere(predicate));
+        })));
+    }
+
+    @Test
+    void testIndexWhereForMultipleElements() {
+        withFilterFunc(predicate -> withValue(a -> withValue(b -> withBuilder(builder -> {
+            final IntTraversable collection = builder.add(a).add(b).build();
+            int expected = -1;
+            final IntTraverser it = collection.iterator();
+            for (int index = 0; it.hasNext(); index++) {
+                if (predicate.apply(it.next())) {
+                    expected = index;
+                    break;
+                }
+            }
+
+            assertEquals(expected, collection.iterator().indexWhere(predicate));
+        }))));
+    }
+
+    @Test
+    void testValueAtForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final IntTraverser traverser = builder.add(value).build().iterator();
             assertEquals(value, traverser.valueAt(0));
@@ -164,7 +199,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testValueAtForMultipleElements() {
+    void testValueAtForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).build();
             final IntTraverser it = iterable.iterator();
@@ -181,21 +216,19 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testFindFirstWhenEmpty() {
+    void testFindFirstWhenEmpty() {
         withBuilder(builder -> {
             final IntTraversable iterable = builder.build();
             final IntPredicate predicate = value -> {
                 throw new AssertionError("This should not be called");
             };
 
-            withValue(defaultValue -> {
-                assertEquals(defaultValue, iterable.iterator().findFirst(predicate, defaultValue));
-            });
+            withValue(defaultValue -> assertEquals(defaultValue, iterable.iterator().findFirst(predicate, defaultValue)));
         });
     }
 
     @Test
-    public void testFindFirstForSingleElement() {
+    void testFindFirstForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(value).build();
             withValue(defaultValue -> withFilterFunc(f -> {
@@ -206,7 +239,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testFindFirstForMultipleElements() {
+    void testFindFirstForMultipleElements() {
         withValue(a -> withValue(b -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).build();
             final IntTraverser it = iterable.iterator();
@@ -227,7 +260,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testReduceForSingleElement() {
+    void testReduceForSingleElement() {
         final IntReduceFunction func = IntTraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(value).build();
@@ -236,7 +269,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testReduceForMultipleElements() {
+    void testReduceForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).add(c).build();
             withReduceFunction(func -> {
@@ -252,7 +285,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testReduceWithValueWhenEmpty() {
+    void testReduceWithValueWhenEmpty() {
         withBuilder(builder -> {
             final IntTraversable iterable = builder.build();
             final IntReduceFunction func = IntTraverserTest::unexpectedReduceFunction;
@@ -261,7 +294,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testReduceWithValueForSingleElement() {
+    void testReduceWithValueForSingleElement() {
         final IntReduceFunction func = IntTraverserTest::unexpectedReduceFunction;
         withValue(value -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(value).build();
@@ -270,7 +303,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testReduceWithValueForMultipleElements() {
+    void testReduceWithValueForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).add(c).build();
             withReduceFunction(func -> {
@@ -287,7 +320,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testMinForSingleValue() {
+    void testMinForSingleValue() {
         withValue(a -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).build();
             assertEquals(a, iterable.iterator().min());
@@ -295,7 +328,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testMinForMultipleValues() {
+    void testMinForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).add(c).build();
             final int halfMin = (a < b)? a : b;
@@ -305,7 +338,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testMaxForSingleValue() {
+    void testMaxForSingleValue() {
         withValue(a -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).build();
             assertEquals(a, iterable.iterator().max());
@@ -313,7 +346,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testMaxForMultipleValues() {
+    void testMaxForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).add(c).build();
             final int halfMax = (a > b)? a : b;
@@ -323,7 +356,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testSumWhenEmpty() {
+    void testSumWhenEmpty() {
         withBuilder(builder -> {
             final IntTraversable iterable = builder.build();
             assertEquals(0, iterable.iterator().sum());
@@ -331,7 +364,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testSumForSingleValue() {
+    void testSumForSingleValue() {
         withValue(a -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).build();
             assertEquals(a, iterable.iterator().sum());
@@ -339,7 +372,7 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
-    public void testSumForMultipleValues() {
+    void testSumForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final IntTraversable iterable = builder.add(a).add(b).add(c).build();
             int result = 0;

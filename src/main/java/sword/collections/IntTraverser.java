@@ -50,6 +50,21 @@ public interface IntTraverser extends Iterator<Integer> {
     }
 
     /**
+     * Returns the index within this collection for the first element matching the given predicate. Or -1 if none matches.
+     * @param predicate Condition to be satisfied for the element that we are looking for.
+     * @return The index of the first element matching the predicate, or -1 if none matches.
+     */
+    default int indexWhere(IntPredicate predicate) {
+        for (int i = 0; hasNext(); i++) {
+            if (predicate.apply(next())) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * Return the value in the given index position.
      *
      * @param index Index from the current position of the Traverser.
