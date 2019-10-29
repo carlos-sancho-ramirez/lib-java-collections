@@ -133,7 +133,7 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
         return changed;
     }
 
-    public static class Builder<E> implements TransformableBuilder<E>, MutableTraversableBuilder<E> {
+    public static class Builder<E> implements ListBuilder<E>, MutableTraversableBuilder<E> {
         private final MutableList<E> _list = MutableList.empty();
 
         @Override

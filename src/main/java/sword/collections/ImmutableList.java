@@ -329,7 +329,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
         }
     }
 
-    public static class Builder<E> implements ImmutableTransformableBuilder<E> {
+    public static class Builder<E> implements ListBuilder<E>, ImmutableTransformableBuilder<E> {
         private static final int DEFAULT_GRANULARITY = 12;
         private final int _granularity;
         private int _size;

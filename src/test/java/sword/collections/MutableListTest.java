@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.SortUtils.equal;
 
-public final class MutableListTest extends TransformableTest<String, MutableList.Builder<String>> implements MutableTraversableTest<String, MutableList.Builder<String>> {
+public final class MutableListTest extends ListTest<String, MutableList.Builder<String>> implements MutableTraversableTest<String, MutableList.Builder<String>> {
 
     private static final String[] stringValues = {
             null, "", "_", "0", "abcd"
@@ -103,7 +103,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testSizeForTwoElements() {
+    void testSizeForTwoElements() {
         withValue(a -> withValue(b -> {
             final MutableList<String> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
@@ -115,7 +115,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testIteratingForMultipleElements() {
+    void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final MutableList<String> list = newBuilder().add(a).add(b).build();
             final Iterator<String> iterator = list.iterator();
@@ -131,7 +131,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testAppendWhenEmpty() {
+    void testAppendWhenEmpty() {
         withString(value -> {
             final MutableList<String> list = MutableList.empty();
             list.append(value);
@@ -141,7 +141,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testAppendForASingleElement() {
+    void testAppendForASingleElement() {
         withString(a -> withString(value -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(a).build();
             list.append(value);
@@ -152,14 +152,14 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testAppendAllWhenBothEmpty() {
+    void testAppendAllWhenBothEmpty() {
         final MutableList<String> list = MutableList.empty();
         list.appendAll(MutableList.empty());
         assertTrue(list.isEmpty());
     }
 
     @Test
-    public void testAppendANonEmptyListWhenEmpty() {
+    void testAppendANonEmptyListWhenEmpty() {
         withString(value -> {
             final MutableList<String> list = MutableList.empty();
             final MutableList<String> nonEmpty = new MutableList.Builder<String>().add(value).build();
@@ -169,7 +169,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testAppendAnEmptyListWhenNoEmpty() {
+    void testAppendAnEmptyListWhenNoEmpty() {
         final MutableList<String> empty = MutableList.empty();
         withString(value -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(value).build();
@@ -180,7 +180,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testAppendAllA() {
+    void testAppendAllA() {
         withString(a -> withString(b -> withString(c -> {
             final MutableList<String> list1 = new MutableList.Builder<String>().add(a).add(b).build();
             final MutableList<String> list2 = new MutableList.Builder<String>().add(c).build();
@@ -194,7 +194,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testAppendAllB() {
+    void testAppendAllB() {
         withString(a -> withString(b -> withString(c -> {
             final MutableList<String> list1 = new MutableList.Builder<String>().add(a).build();
             final MutableList<String> list2 = new MutableList.Builder<String>().add(b).add(c).build();
@@ -208,7 +208,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testRemoveThroughIterator() {
+    void testRemoveThroughIterator() {
         final Predicate<String> predicate = str -> str != null && str.length() > 0;
         withString(a -> withString(b -> withString(c -> withString(d -> withString(e -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).add(c).add(d).add(e).build();
@@ -231,7 +231,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testInsertForEmptyList() {
+    void testInsertForEmptyList() {
         withString(a -> {
             final MutableList<String> list = MutableList.empty();
             list.insert(0, a);
@@ -241,7 +241,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testInsertFirstForSingleElementList() {
+    void testInsertFirstForSingleElementList() {
         withString(a -> withString(b -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(a).build();
             list.insert(0, b);
@@ -252,7 +252,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testInsertLastForSingleElementList() {
+    void testInsertLastForSingleElementList() {
         withString(a -> withString(b -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(a).build();
             list.insert(1, b);
@@ -263,7 +263,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testInsert() {
+    void testInsert() {
         withString(a -> withString(b -> withString(c -> {
             for (int i = 0; i <= 4; i++) {
                 MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).add(b).add(a).build();
@@ -287,7 +287,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testRemoveAtForSingleElementList() {
+    void testRemoveAtForSingleElementList() {
         withString(a -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(a).build();
             list.removeAt(0);
@@ -296,7 +296,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testRemoveFirstFor2ElementsList() {
+    void testRemoveFirstFor2ElementsList() {
         withString(a -> withString(b -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).build();
             list.removeAt(0);
@@ -306,7 +306,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testRemoveLastFor2ElementsList() {
+    void testRemoveLastFor2ElementsList() {
         withString(a -> withString(b -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).build();
             list.removeAt(1);
@@ -316,7 +316,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testRemoveAt() {
+    void testRemoveAt() {
         withString(a -> withString(b -> {
             for (int i = 0; i <= 4; i++) {
                 MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).add(a).add(b).add(a).build();
@@ -335,7 +335,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testPut() {
+    void testPut() {
         withString(a -> withString(b -> withString(c -> {
             for (int i = 0; i < 2; i++) {
                 final MutableList<String> list = new MutableList.Builder<String>().add(a).add(b).build();
@@ -355,7 +355,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testSort() {
+    void testSort() {
         withValue(a -> withValue(b -> withValue(c -> {
             final MutableList<String> list = newBuilder().add(a).add(b).add(c).build();
             final boolean changed = list.sort(this::sortAlphabetically);
@@ -404,7 +404,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testMapWhenEmpty() {
+    void testMapWhenEmpty() {
         withMapFunc(f -> {
             final MutableList<String> list = newBuilder().build();
             final List<String> mapped = list.map(f);
@@ -424,7 +424,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testMapForSingleElement() {
+    void testMapForSingleElement() {
         withMapFunc(f -> withValue(value -> {
             final MutableList<String> collection = newBuilder().add(value).build();
             final List<String> mapped = collection.map(f);
@@ -439,7 +439,7 @@ public final class MutableListTest extends TransformableTest<String, MutableList
     }
 
     @Test
-    public void testMapForMultipleElements() {
+    void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final MutableList<String> collection = supplier.newBuilder().add(a).add(b).build();
             final List<String> mapped = collection.map(f);
