@@ -39,4 +39,10 @@ public interface IntList extends IntTransformable {
      * The same instance will be returned in case of being already immutable.
      */
     ImmutableIntList toImmutable();
+
+    /**
+     * Return a new mutable list.
+     * This method will always generate a new instance in order to avoid affecting the state of its original collection.
+     */
+    MutableIntList mutate();
 }

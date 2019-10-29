@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIntList.Builder> implements ImmutableIntTransformableTest<ImmutableIntList.Builder> {
+public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Builder> implements ImmutableIntTransformableTest<ImmutableIntList.Builder> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE
@@ -62,7 +62,7 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testIteratingForMultipleElements() {
+    void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).build();
             final Iterator<Integer> iterator = list.iterator();
@@ -78,7 +78,7 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testAppendWhenEmpty() {
+    void testAppendWhenEmpty() {
         withValue(value -> {
             final ImmutableIntList empty = ImmutableIntList.empty();
             final ImmutableIntList list = empty.append(value);
@@ -89,7 +89,7 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testAppendForASingleElement() {
+    void testAppendForASingleElement() {
         withValue(a -> withValue(value -> {
             final ImmutableIntList initList = new ImmutableIntList.Builder().append(a).build();
             final ImmutableIntList list = initList.append(value);
@@ -100,14 +100,14 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testAppendAllWhenBothEmpty() {
+    void testAppendAllWhenBothEmpty() {
         final ImmutableList<String> empty = ImmutableList.empty();
         final ImmutableList<String> result = empty.appendAll(empty);
         assertSame(empty, result);
     }
 
     @Test
-    public void testAppendANonEmptyListWhenEmpty() {
+    void testAppendANonEmptyListWhenEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withValue(value -> {
             final ImmutableIntList list = new ImmutableIntList.Builder().append(value).build();
@@ -117,7 +117,7 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testAppendAnEmptyListWhenNoEmpty() {
+    void testAppendAnEmptyListWhenNoEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withValue(value -> {
             final ImmutableIntList list = new ImmutableIntList.Builder().append(value).build();
@@ -127,7 +127,7 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testAppendAll() {
+    void testAppendAll() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list1 = new ImmutableIntList.Builder().append(a).append(b).build();
             final ImmutableIntList list2 = new ImmutableIntList.Builder().append(c).build();
@@ -147,7 +147,7 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testGroupByWhenEmpty() {
+    void testGroupByWhenEmpty() {
         final IntFunction<Integer> func = str -> {
             throw new AssertionError("This function should not be executed");
         };
@@ -156,7 +156,7 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testGroupBy() {
+    void testGroupBy() {
         withGroupingFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
             final String aGroup = func.apply(a);
@@ -263,7 +263,7 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testGroupByIntWhenEmpty() {
+    void testGroupByIntWhenEmpty() {
         final IntToIntFunction func = str -> {
             throw new AssertionError("This function should not be executed");
         };
@@ -272,7 +272,7 @@ public final class ImmutableIntListTest extends IntTransformableTest<ImmutableIn
     }
 
     @Test
-    public void testGroupByInt() {
+    void testGroupByInt() {
         withGroupingIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
             final int aGroup = func.apply(a);

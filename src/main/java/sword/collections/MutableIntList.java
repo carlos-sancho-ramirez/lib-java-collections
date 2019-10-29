@@ -91,6 +91,13 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         }
     }
 
+    @Override
+    public MutableIntList mutate() {
+        final int[] newValues = new int[_values.length];
+        System.arraycopy(_values, 0, newValues, 0, _size);
+        return new MutableIntList(newValues, _size);
+    }
+
     public void append(int value) {
         final int length = suitableArrayLength(_size + 1);
         if (length != _values.length) {
@@ -174,7 +181,7 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         return this;
     }
 
-    public static final class Builder implements MutableIntTransformableBuilder {
+    public static final class Builder implements IntListBuilder, MutableIntTransformableBuilder {
 
         private final MutableIntList _list = MutableIntList.empty();
 

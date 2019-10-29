@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntListTest extends IntTransformableTest<MutableIntList.Builder> implements MutableIntTraversableTest<MutableIntList.Builder> {
+public final class MutableIntListTest extends IntListTest<MutableIntList.Builder> implements MutableIntTraversableTest<MutableIntList.Builder> {
 
     private static final int[] INT_VALUES = {
             Integer.MIN_VALUE, -1023, -2, -1, 0, 1, 2, 7, 108, Integer.MAX_VALUE
@@ -50,7 +50,7 @@ public final class MutableIntListTest extends IntTransformableTest<MutableIntLis
     }
 
     @Test
-    public void testIteratingForMultipleElements() {
+    void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final MutableIntList list = newIntBuilder().add(a).add(b).build();
             final Iterator<Integer> iterator = list.iterator();
@@ -66,7 +66,7 @@ public final class MutableIntListTest extends IntTransformableTest<MutableIntLis
     }
 
     @Test
-    public void testAppendWhenEmpty() {
+    void testAppendWhenEmpty() {
         withValue(value -> {
             final ImmutableIntList empty = ImmutableIntList.empty();
             final ImmutableIntList list = empty.append(value);
@@ -77,7 +77,7 @@ public final class MutableIntListTest extends IntTransformableTest<MutableIntLis
     }
 
     @Test
-    public void testAppendForASingleElement() {
+    void testAppendForASingleElement() {
         withValue(a -> withValue(value -> {
             final ImmutableIntList initList = new ImmutableIntList.Builder().append(a).build();
             final ImmutableIntList list = initList.append(value);
@@ -88,14 +88,14 @@ public final class MutableIntListTest extends IntTransformableTest<MutableIntLis
     }
 
     @Test
-    public void testAppendAllWhenBothEmpty() {
+    void testAppendAllWhenBothEmpty() {
         final ImmutableList<String> empty = ImmutableList.empty();
         final ImmutableList<String> result = empty.appendAll(empty);
         assertSame(empty, result);
     }
 
     @Test
-    public void testAppendANonEmptyListWhenEmpty() {
+    void testAppendANonEmptyListWhenEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withValue(value -> {
             final ImmutableIntList list = new ImmutableIntList.Builder().append(value).build();
@@ -105,7 +105,7 @@ public final class MutableIntListTest extends IntTransformableTest<MutableIntLis
     }
 
     @Test
-    public void testAppendAnEmptyListWhenNoEmpty() {
+    void testAppendAnEmptyListWhenNoEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withValue(value -> {
             final ImmutableIntList list = new ImmutableIntList.Builder().append(value).build();
@@ -115,7 +115,7 @@ public final class MutableIntListTest extends IntTransformableTest<MutableIntLis
     }
 
     @Test
-    public void testAppendAll() {
+    void testAppendAll() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list1 = new ImmutableIntList.Builder().append(a).append(b).build();
             final ImmutableIntList list2 = new ImmutableIntList.Builder().append(c).build();
@@ -135,12 +135,12 @@ public final class MutableIntListTest extends IntTransformableTest<MutableIntLis
     }
 
     @Test
-    public void testToImmutableForEmpty() {
+    void testToImmutableForEmpty() {
         assertTrue(newIntBuilder().build().toImmutable().isEmpty());
     }
 
     @Test
-    public void testToImmutable() {
+    void testToImmutable() {
         withInt(a -> withInt(b -> {
             final MutableIntList list1 = newIntBuilder().add(a).add(b).build();
             final ImmutableIntList list2 = list1.toImmutable();
@@ -158,7 +158,7 @@ public final class MutableIntListTest extends IntTransformableTest<MutableIntLis
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
             final MutableIntList mutable = newIntBuilder()
                     .add(a)
@@ -172,7 +172,7 @@ public final class MutableIntListTest extends IntTransformableTest<MutableIntLis
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntList mutable = newIntBuilder()
                     .add(a)

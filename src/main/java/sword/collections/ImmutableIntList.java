@@ -43,6 +43,14 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
     }
 
     @Override
+    public MutableIntList mutate() {
+        final int size = _values.length;
+        final int[] newValues = new int[MutableIntList.suitableArrayLength(size)];
+        System.arraycopy(_values, 0, newValues, 0, size);
+        return new MutableIntList(newValues, size);
+    }
+
+    @Override
     public int valueAt(int index) {
         return _values[index];
     }
@@ -156,7 +164,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
         return defaultValue;
     }
 
-    public static class Builder implements ImmutableIntTransformableBuilder {
+    public static class Builder implements IntListBuilder, ImmutableIntTransformableBuilder {
         private final MutableIntList _list = MutableIntList.empty();
 
         public Builder append(int item) {
