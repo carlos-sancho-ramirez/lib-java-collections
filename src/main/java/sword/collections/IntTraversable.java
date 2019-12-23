@@ -1,6 +1,6 @@
 package sword.collections;
 
-interface IntTraversable extends Iterable<Integer>, Sizable {
+public interface IntTraversable extends Iterable<Integer>, Sizable {
 
     @Override
     IntTraverser iterator();
