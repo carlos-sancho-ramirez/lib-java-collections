@@ -1,6 +1,6 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.findKey;
+import static sword.collections.SortUtils.*;
 
 /**
  * Efficient implementation for map where keys are internally
@@ -42,6 +42,42 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
     @Override
     public ImmutableHashSet<T> keySet() {
         return new ImmutableHashSet<>(_keys, _hashCodes);
+    }
+
+    @Override
+    public ImmutableIntValueMap<T> put(T key, int value) {
+        int index = findKey(_hashCodes, _keys, _keys.length, key);
+        if (index >= 0) {
+            if (equal(_values[index], value)) {
+                return this;
+            }
+            else {
+                final int length = _values.length;
+                final int[] newValues = new int[length];
+                for (int i = 0; i < length; i++) {
+                    newValues[i] = (i == index)? value : _values[i];
+                }
+
+                return new ImmutableIntValueHashMap<>(_keys, _hashCodes, newValues);
+            }
+        }
+        else {
+            final int hashCode = SortUtils.hashCode(key);
+            index = findSuitableIndex(_hashCodes, _hashCodes.length, hashCode);
+
+            final int newLength = _values.length + 1;
+            final int[] newHashCodes = new int[newLength];
+            final Object[] newKeys = new Object[newLength];
+            final int[] newValues = new int[newLength];
+
+            for (int i = 0; i < newLength; i++) {
+                newHashCodes[i] = (i < index)? _hashCodes[i] : (i == index)? hashCode : _hashCodes[i - 1];
+                newKeys[i] = (i < index)? _keys[i] : (i == index)? key : _keys[i - 1];
+                newValues[i] = (i < index)? _values[i] : (i == index)? value : _values[i - 1];
+            }
+
+            return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
+        }
     }
 
     @Override

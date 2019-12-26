@@ -18,6 +18,8 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
     @Override
     ImmutableSet<Entry<T>> entries();
 
+    ImmutableIntValueMap<T> put(T key, int value);
+
     @Override
     MutableIntValueMap<T> mutate();
 

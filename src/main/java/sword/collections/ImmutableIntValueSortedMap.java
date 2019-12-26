@@ -38,6 +38,39 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
     }
 
     @Override
+    public ImmutableIntValueMap<T> put(T key, int value) {
+        int index = findValue(_sortFunction, _keys, _keys.length, key);
+        if (index >= 0) {
+            if (equal(_values[index], value)) {
+                return this;
+            }
+            else {
+                final int length = _values.length;
+                final int[] newValues = new int[length];
+                for (int i = 0; i < length; i++) {
+                    newValues[i] = (i == index)? value : _values[i];
+                }
+
+                return new ImmutableIntValueSortedMap<>(_sortFunction, _keys, newValues);
+            }
+        }
+        else {
+            index = findSuitableIndex(_sortFunction, _keys, _keys.length, key);
+
+            final int newLength = _values.length + 1;
+            final Object[] newKeys = new Object[newLength];
+            final int[] newValues = new int[newLength];
+
+            for (int i = 0; i < newLength; i++) {
+                newKeys[i] = (i < index)? _keys[i] : (i == index)? key : _keys[i - 1];
+                newValues[i] = (i < index)? _values[i] : (i == index)? value : _values[i - 1];
+            }
+
+            return new ImmutableIntValueSortedMap<>(_sortFunction, newKeys, newValues);
+        }
+    }
+
+    @Override
     boolean entryLessThan(Entry<T> a, Entry<T> b) {
         return b != null && (a == null || _sortFunction.lessThan(a.key(), b.key()));
     }

@@ -227,4 +227,40 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
             }
         }));
     }
+
+    @Test
+    public void testPutMethod() {
+        withKey(a -> withKey(b -> withKey(key -> withValue(value -> {
+            final ImmutableIntValueMap<T> map = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final boolean contained = map.containsKey(key);
+            final ImmutableIntValueMap<T> newMap = map.put(key, value);
+
+            if (!contained) {
+                final ImmutableIntValueMap.Builder<T> builder = newBuilder();
+                for (IntValueMap.Entry<T> entry : map.entries()) {
+                    builder.put(entry.key(), entry.value());
+                }
+                assertEquals(builder.put(key, value).build(), newMap);
+            }
+            else {
+                assertSame(map, map.put(key, valueFromKey(key)));
+
+                final ImmutableSet<T> keySet = map.keySet();
+                assertEquals(keySet, newMap.keySet());
+
+                for (T k : keySet) {
+                    if (equal(k, key)) {
+                        assertEquals(value, newMap.get(k));
+                    }
+                    else {
+                        assertEquals(map.get(k), newMap.get(k));
+                    }
+                }
+            }
+        }))));
+    }
 }
