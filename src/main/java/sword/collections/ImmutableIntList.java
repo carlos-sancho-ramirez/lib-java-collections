@@ -101,6 +101,32 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
         return (ImmutableIntList) super.mapToInt(func);
     }
 
+    /**
+     * Returns a new instance of a list, where all the items from this list has
+     * been copied but in the reversed traversable order.
+     *
+     * This method has no effect for empty lists or lists with only one element,
+     * and the same instance will be returned. For the rest of cases, a new
+     * instance will be created and the values within this list will
+     * be copied in the opposite order. In other words, the last item in the
+     * list will become the first.
+     *
+     * @return A list where all items are in the opposite order of iteration.
+     */
+    public ImmutableIntList reverse() {
+        final int size = _values.length;
+        if (size < 2) {
+            return this;
+        }
+        else {
+            final int[] newValues = new int[size];
+            for (int i = 0; i < size; i++) {
+                newValues[size - i - 1] = _values[i];
+            }
+            return new ImmutableIntList(newValues);
+        }
+    }
+
     @Override
     public int reduce(IntReduceFunction func) {
         final int size = _values.length;

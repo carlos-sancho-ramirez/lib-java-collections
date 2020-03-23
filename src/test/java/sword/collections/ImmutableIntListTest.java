@@ -147,6 +147,43 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Test
+    void testReverseWhenEmpty() {
+        final ImmutableIntList empty = ImmutableIntList.empty();
+        assertSame(empty, empty.reverse());
+    }
+
+    @Test
+    void testReverseForSingleElement() {
+        withValue(value -> {
+            final ImmutableIntList list = newIntBuilder().append(value).build();
+            assertSame(list, list.reverse());
+        });
+    }
+
+    @Test
+    void testReverseForTwoElements() {
+        withValue(a -> withValue(b -> {
+            final ImmutableIntList list = newIntBuilder().append(a).append(b).build();
+            final ImmutableIntList reversed = list.reverse();
+            assertEquals(2, reversed.size());
+            assertEquals(b, reversed.valueAt(0));
+            assertEquals(a, reversed.valueAt(1));
+        }));
+    }
+
+    @Test
+    void testReverseForThreeElements() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableIntList list = newIntBuilder().append(a).append(b).append(c).build();
+            final ImmutableIntList reversed = list.reverse();
+            assertEquals(3, reversed.size());
+            assertEquals(c, reversed.valueAt(0));
+            assertEquals(b, reversed.valueAt(1));
+            assertEquals(a, reversed.valueAt(2));
+        })));
+    }
+
+    @Test
     void testGroupByWhenEmpty() {
         final IntFunction<Integer> func = str -> {
             throw new AssertionError("This function should not be executed");
