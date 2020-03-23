@@ -107,6 +107,32 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     /**
+     * Returns a new instance of a list, where all the items from this list has
+     * been copied but in the reversed traversable order.
+     *
+     * This method has no effect for empty lists or lists with only one element,
+     * and the same instance will be returned. For the rest of cases, a new
+     * instance will be created and the object references within this list will
+     * be copied in the opposite order. In other words, the last items in the
+     * list will become the first.
+     *
+     * @return A list where all items are in the opposite order of iteration.
+     */
+    public ImmutableList<T> reverse() {
+        final int size = _values.length;
+        if (size < 2) {
+            return this;
+        }
+        else {
+            final Object[] newValues = new Object[size];
+            for (int i = 0; i < size; i++) {
+                newValues[size - i - 1] = _values[i];
+            }
+            return new ImmutableList<>(newValues);
+        }
+    }
+
+    /**
      * Method that iterates only once the collection and creates a pair of lists.
      * The left list in the pair will contain all elements that satisfies the given predicate,
      * while the right list in the pair will contain all elements that will not satisfy the predicate.

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
 public final class ImmutableListTest extends ListTest<String, ImmutableList.Builder<String>> implements ImmutableTransformableTest<String, ImmutableList.Builder<String>> {
@@ -116,7 +115,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testSizeForTwoElements() {
+    void testSizeForTwoElements() {
         withValue(a -> withValue(b -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
@@ -128,7 +127,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testIteratingForMultipleElements() {
+    void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).build();
             final Iterator<String> iterator = list.iterator();
@@ -144,7 +143,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testSkip() {
+    void testSkip() {
         withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
 
@@ -160,7 +159,44 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testSpan() {
+    void testReverseWhenEmpty() {
+        final ImmutableList empty = ImmutableList.empty();
+        assertSame(empty, empty.reverse());
+    }
+
+    @Test
+    void testReverseForSingleElement() {
+        withValue(value -> {
+            final ImmutableList<String> list = newBuilder().append(value).build();
+            assertSame(list, list.reverse());
+        });
+    }
+
+    @Test
+    void testReverseForTwoElements() {
+        withValue(a -> withValue(b -> {
+            final ImmutableList<String> list = newBuilder().append(a).append(b).build();
+            final ImmutableList<String> reversed = list.reverse();
+            assertEquals(2, reversed.size());
+            assertSame(b, reversed.valueAt(0));
+            assertSame(a, reversed.valueAt(1));
+        }));
+    }
+
+    @Test
+    void testReverseForThreeElements() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableList<String> list = newBuilder().append(a).append(b).append(c).build();
+            final ImmutableList<String> reversed = list.reverse();
+            assertEquals(3, reversed.size());
+            assertSame(c, reversed.valueAt(0));
+            assertSame(b, reversed.valueAt(1));
+            assertSame(a, reversed.valueAt(2));
+        })));
+    }
+
+    @Test
+    void testSpan() {
         withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
             final ImmutableList<String> filtered = list.filter(f);
@@ -183,7 +219,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testReduceFor1Item() {
+    void testReduceFor1Item() {
         withString(value ->  {
             final ImmutableList<String> list = new ImmutableList.Builder<String>()
                     .add(value)
@@ -199,7 +235,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testReduceFor2Items() {
+    void testReduceFor2Items() {
         withInt(a -> withInt(b -> {
             final ImmutableList<Integer> list = new ImmutableList.Builder<Integer>()
                     .add(a)
@@ -213,7 +249,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testReduceFor3Items() {
+    void testReduceFor3Items() {
         withInt(a -> withInt(b -> withInt(c -> {
             final ImmutableList<String> list = new ImmutableList.Builder<String>()
                     .add(Integer.toString(a))
@@ -228,7 +264,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testAppendWhenEmpty() {
+    void testAppendWhenEmpty() {
         withString(value -> {
             final ImmutableList<String> empty = ImmutableList.empty();
             final ImmutableList<String> list = empty.append(value);
@@ -239,7 +275,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testAppendForASingleElement() {
+    void testAppendForASingleElement() {
         withString(a -> withString(value -> {
             final ImmutableList<String> initList = new ImmutableList.Builder<String>().append(a).build();
             final ImmutableList<String> list = initList.append(value);
@@ -250,14 +286,14 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testAppendAllWhenBothEmpty() {
+    void testAppendAllWhenBothEmpty() {
         final ImmutableList<String> empty = ImmutableList.empty();
         final ImmutableList<String> result = empty.appendAll(empty);
         assertSame(empty, result);
     }
 
     @Test
-    public void testPrependWhenEmpty() {
+    void testPrependWhenEmpty() {
         withString(value -> {
             final ImmutableList<String> empty = ImmutableList.empty();
             final ImmutableList<String> list = empty.prepend(value);
@@ -268,7 +304,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testPrependForASingleElement() {
+    void testPrependForASingleElement() {
         withString(a -> withString(value -> {
             final ImmutableList<String> initList = new ImmutableList.Builder<String>().append(a).build();
             final ImmutableList<String> list = initList.prepend(value);
@@ -279,7 +315,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testAppendANonEmptyListWhenEmpty() {
+    void testAppendANonEmptyListWhenEmpty() {
         final ImmutableList<String> empty = ImmutableList.empty();
         withString(value -> {
             final ImmutableList<String> list = new ImmutableList.Builder<String>().append(value).build();
@@ -289,7 +325,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testAppendAnEmptyListWhenNoEmpty() {
+    void testAppendAnEmptyListWhenNoEmpty() {
         final ImmutableList<String> empty = ImmutableList.empty();
         withString(value -> {
             final ImmutableList<String> list = new ImmutableList.Builder<String>().append(value).build();
@@ -299,7 +335,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testAppendAll() {
+    void testAppendAll() {
         withString(a -> withString(b -> withString(c -> {
             final ImmutableList<String> list1 = new ImmutableList.Builder<String>().append(a).append(b).build();
             final ImmutableList<String> list2 = new ImmutableList.Builder<String>().append(c).build();
@@ -319,7 +355,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testSort() {
+    void testSort() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
             final ImmutableList<String> sortedList = list.sort(this::sortAlphabetically);
@@ -360,7 +396,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testGroupByWhenEmpty() {
+    void testGroupByWhenEmpty() {
         final Function<String, Integer> func = str -> {
             throw new AssertionError("This function should not be executed");
         };
@@ -369,7 +405,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testGroupBy() {
+    void testGroupBy() {
         withGroupingFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
             final String aGroup = func.apply(a);
@@ -476,7 +512,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testGroupByIntWhenEmpty() {
+    void testGroupByIntWhenEmpty() {
         final IntResultFunction<String> func = str -> {
             throw new AssertionError("This function should not be executed");
         };
@@ -485,7 +521,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    public void testGroupByInt() {
+    void testGroupByInt() {
         withGroupingIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
             final int aGroup = func.apply(a);
