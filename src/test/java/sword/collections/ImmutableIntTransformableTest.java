@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformableBuilder> {
 
@@ -14,7 +17,7 @@ public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformab
     void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
 
     @Test
-    default void testFilterWhenEmpty() {
+    default void testFilterWhenEmptyOnImmutable() {
         final IntPredicate func = v -> {
             throw new AssertionError("Should not be called for empty collections");
         };
@@ -27,7 +30,7 @@ public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformab
     }
 
     @Test
-    default void testFilterNotWhenEmpty() {
+    default void testFilterNotWhenEmptyOnImmutable() {
         final IntPredicate func = v -> {
             throw new AssertionError("Should not be called for empty collections");
         };
@@ -58,14 +61,14 @@ public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformab
     }
 
     @Test
-    default void testMapWhenEmpty() {
+    default void testMapWhenEmptyOnImmutable() {
         withMapFunc(f -> withBuilderSupplier(supplier -> {
             assertFalse(supplier.newBuilder().build().map(f).iterator().hasNext());
         }));
     }
 
     @Test
-    default void testMapForSingleElement() {
+    default void testMapForSingleElementOnImmutable() {
         withMapFunc(f -> withValue(value -> withBuilderSupplier(supplier -> {
             final ImmutableIntTransformable collection = supplier.newBuilder().add(value).build();
             final ImmutableTransformable<String> mapped = collection.map(f);
@@ -78,7 +81,7 @@ public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformab
     }
 
     @Test
-    default void testMapForMultipleElements() {
+    default void testMapForMultipleElementsOnImmutable() {
         withMapFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableIntTransformable collection = supplier.newBuilder().add(a).add(b).build();
             final ImmutableTransformable<String> mapped = collection.map(f);
@@ -95,14 +98,14 @@ public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformab
     }
 
     @Test
-    default void testMapToIntWhenEmpty() {
+    default void testMapToIntWhenEmptyOnImmutable() {
         withMapToIntFunc(f -> withBuilderSupplier(supplier -> {
             assertFalse(supplier.newBuilder().build().mapToInt(f).iterator().hasNext());
         }));
     }
 
     @Test
-    default void testMapToIntForSingleElement() {
+    default void testMapToIntForSingleElementOnImmutable() {
         withMapToIntFunc(f -> withValue(value -> withBuilderSupplier(supplier -> {
             final ImmutableIntTransformable collection = supplier.newBuilder().add(value).build();
             final ImmutableIntTransformable mapped = collection.mapToInt(f);
@@ -115,7 +118,7 @@ public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformab
     }
 
     @Test
-    default void testMapToIntForMultipleElements() {
+    default void testMapToIntForMultipleElementsOnImmutable() {
         withMapToIntFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableIntTransformable collection = supplier.newBuilder().add(a).add(b).build();
             final ImmutableIntTransformable mapped = collection.mapToInt(f);

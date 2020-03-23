@@ -2,13 +2,15 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class IntSetTest<B extends IntSet.Builder> extends IntTransformableTest<B> {
 
     @Test
-    public void testMutate() {
+    void testMutate() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntSet set = supplier.newBuilder().add(a).add(b).build();
             final MutableIntSet mutated = set.mutate();
@@ -30,7 +32,7 @@ abstract class IntSetTest<B extends IntSet.Builder> extends IntTransformableTest
     }
 
     @Test
-    public void testAssignWhenEmpty() {
+    void testAssignWhenEmpty() {
         final IntFunction<String> func = key -> {
             throw new AssertionError("This function should not be called");
         };
@@ -43,7 +45,7 @@ abstract class IntSetTest<B extends IntSet.Builder> extends IntTransformableTest
     }
 
     @Test
-    public void testAssign() {
+    void testAssign() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> withMapFunc(func -> {
             final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();
@@ -60,7 +62,7 @@ abstract class IntSetTest<B extends IntSet.Builder> extends IntTransformableTest
     }
 
     @Test
-    public void testAssignToIntWhenEmpty() {
+    void testAssignToIntWhenEmpty() {
         final IntToIntFunction func = key -> {
             throw new AssertionError("This function should not be called");
         };
@@ -73,7 +75,7 @@ abstract class IntSetTest<B extends IntSet.Builder> extends IntTransformableTest
     }
 
     @Test
-    public void testAssignToInt() {
+    void testAssignToInt() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> withMapToIntFunc(func -> {
             final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();
@@ -90,7 +92,7 @@ abstract class IntSetTest<B extends IntSet.Builder> extends IntTransformableTest
     }
 
     @Test
-    public void testEqualSet() {
+    void testEqualSet() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
             assertTrue(set.equalSet(set));

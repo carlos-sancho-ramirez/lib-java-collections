@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
@@ -91,7 +94,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
     }
 
     @Test
-    public void testToImmutableMethod() {
+    void testToImmutableMethod() {
         withKey(a -> withKey(b -> {
             MutableMap<Integer, String> map1 = newBuilder()
                     .put(a, valueFromKey(a))
@@ -119,7 +122,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
             final Map<Integer, String> mutable = newBuilder()
                     .put(a, Integer.toString(b))
@@ -133,7 +136,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         withInt(a -> withInt(b -> withInt(c -> {
             final Map<Integer, String> mutable = newBuilder()
                     .put(a, Integer.toString(b))

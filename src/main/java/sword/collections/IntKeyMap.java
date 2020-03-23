@@ -132,7 +132,7 @@ public interface IntKeyMap<T> extends Transformable<T> {
             }
 
             final Entry that = (Entry) other;
-            return (_key == that._key && equal(_value, that._value));
+            return _key == that._key && equal(_value, that._value);
         }
     }
 }

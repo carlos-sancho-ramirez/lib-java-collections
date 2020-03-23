@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableIntKeyMapTransformerTest extends TransformerTest<String, TransformableBuilder<String>> {
+final class ImmutableIntKeyMapTransformerTest extends TransformerTest<String, TransformableBuilder<String>> {
 
     @Override
     void withBuilder(Procedure<TransformableBuilder<String>> procedure) {

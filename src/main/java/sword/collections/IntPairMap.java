@@ -126,12 +126,12 @@ public interface IntPairMap extends IntTransformable {
 
         @Override
         public boolean equals(Object other) {
-            if (other == null || !(other instanceof Entry)) {
+            if (!(other instanceof Entry)) {
                 return false;
             }
 
             final Entry that = (Entry) other;
-            return (_key == that._key && equal(_value, that._value));
+            return _key == that._key && equal(_value, that._value);
         }
     }
 }

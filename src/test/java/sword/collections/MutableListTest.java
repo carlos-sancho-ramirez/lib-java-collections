@@ -4,7 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static sword.collections.SortUtils.equal;
 
 public final class MutableListTest extends ListTest<String, MutableList.Builder<String>> implements MutableTraversableTest<String, MutableList.Builder<String>> {
@@ -345,7 +349,8 @@ public final class MutableListTest extends ListTest<String, MutableList.Builder<
                         .build();
                 if (i == 0 && equal(a, c) || i == 1 && equal(b, c)) {
                     assertFalse(list.put(i, c));
-                } else {
+                }
+                else {
                     assertTrue(list.put(i, c));
                 }
 

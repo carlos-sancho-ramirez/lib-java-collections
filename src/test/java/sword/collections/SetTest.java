@@ -2,12 +2,14 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 abstract class SetTest<T, B extends Set.Builder<T>> extends TransformableTest<T, B> {
 
     @Test
-    public void testAssignWhenEmpty() {
+    void testAssignWhenEmpty() {
         final Function<T, String> func = key -> {
             throw new AssertionError("This function should not be called");
         };
@@ -20,7 +22,7 @@ abstract class SetTest<T, B extends Set.Builder<T>> extends TransformableTest<T,
     }
 
     @Test
-    public void testAssign() {
+    void testAssign() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> withMapFunc(func -> {
             final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();
@@ -37,7 +39,7 @@ abstract class SetTest<T, B extends Set.Builder<T>> extends TransformableTest<T,
     }
 
     @Test
-    public void testAssignToIntWhenEmpty() {
+    void testAssignToIntWhenEmpty() {
         final IntResultFunction<T> func = key -> {
             throw new AssertionError("This function should not be called");
         };
@@ -50,7 +52,7 @@ abstract class SetTest<T, B extends Set.Builder<T>> extends TransformableTest<T,
     }
 
     @Test
-    public void testAssignToInt() {
+    void testAssignToInt() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> withMapToIntFunc(func -> {
             final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();

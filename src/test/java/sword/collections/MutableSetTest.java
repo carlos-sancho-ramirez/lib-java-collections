@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
 abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTest<T, B> implements MutableTraversableTest<T, B> {
@@ -15,7 +18,7 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
 
     @Test
-    public void testSizeForTwoElements() {
+    void testSizeForTwoElements() {
         withValue(a -> withValue(b -> {
             final MutableSet<T> list = newBuilder().add(a).add(b).build();
             final int size = list.size();
@@ -29,7 +32,7 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    public void testIteratingForMultipleElements() {
+    void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final MutableSet<T> set = newBuilder().add(a).add(b).build();
             final Iterator<T> iterator = set.iterator();
@@ -55,12 +58,12 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    public void testToImmutableForEmpty() {
+    void testToImmutableForEmpty() {
         assertTrue(newBuilder().build().toImmutable().isEmpty());
     }
 
     @Test
-    public void testMutateForEmpty() {
+    void testMutateForEmpty() {
         final MutableSet<T> set1 = newBuilder().build();
         withValue(value -> {
             final MutableSet<T> set2 = set1.mutate();
@@ -74,7 +77,7 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    public void testToImmutable() {
+    void testToImmutable() {
         withValue(a -> withValue(b -> {
             final MutableSet<T> set = newBuilder().add(a).add(b).build();
             final ImmutableSet<T> set2 = set.toImmutable();
@@ -90,7 +93,7 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    public void testMutate() {
+    void testMutate() {
         withValue(a -> withValue(b -> {
             final MutableSet<T> set1 = newBuilder().add(a).add(b).build();
             final MutableSet<T> set2 = set1.mutate();
@@ -110,7 +113,7 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    public void testMapWhenEmpty() {
+    void testMapWhenEmpty() {
         withMapFunc(f -> {
             final MutableSet<T> set = newBuilder().build();
             final List<String> mapped = set.map(f);
@@ -130,7 +133,7 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    public void testMapForSingleElement() {
+    void testMapForSingleElement() {
         withMapFunc(f -> withValue(value -> {
             final MutableSet<T> set = newBuilder().add(value).build();
             final List<String> mapped = set.map(f);
@@ -145,7 +148,7 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    public void testMapForMultipleElements() {
+    void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> {
             final MutableSet<T> set = newIterableBuilder().add(a).add(b).build();
             final List<String> mapped = set.map(f);
@@ -162,7 +165,7 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    public void testSort() {
+    void testSort() {
         withValue(a -> withValue(b -> withValue(c -> {
             final MutableSet<T> set = newBuilder().add(a).add(b).add(c).build();
             final int setLength = set.size();
@@ -185,7 +188,7 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
     }
 
     @Test
-    public void testEqualsInItems() {
+    void testEqualsInItems() {
         withValue(a -> withValue(b -> withValue(c -> {
             final Set<T> set = newBuilder().add(a).add(b).add(c).build();
             assertTrue(set.equalSet(set));

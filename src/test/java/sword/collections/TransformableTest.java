@@ -4,14 +4,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static java.nio.file.attribute.AclEntry.newBuilder;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
 abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends TraversableTest<T, B> {
 
     @Test
-    public void testToListWhenEmpty() {
+    void testToListWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().build();
             assertTrue(transformable.isEmpty());
@@ -20,7 +22,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends T
     }
 
     @Test
-    public void testToList() {
+    void testToList() {
         withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).build();
             final List<T> list = transformable.toList();
@@ -35,12 +37,12 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends T
     }
 
     @Test
-    public void testToSetWhenEmpty() {
+    void testToSetWhenEmpty() {
         withBuilderSupplier(supplier -> assertTrue(supplier.newBuilder().build().toSet().isEmpty()));
     }
 
     @Test
-    public void testToSetForASingleElement() {
+    void testToSetForASingleElement() {
         withValue(a -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(a).build();
             final Set<T> set = transformable.toSet();
@@ -50,7 +52,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends T
     }
 
     @Test
-    public void testToSetForMultipleElements() {
+    void testToSetForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).add(c).build();
             final Set<T> set = transformable.toSet();
@@ -71,12 +73,12 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends T
     }
 
     @Test
-    public void testIndexesWhenEmpty() {
+    void testIndexesWhenEmpty() {
         withBuilderSupplier(supplier -> assertTrue(supplier.newBuilder().build().indexes().isEmpty()));
     }
 
     @Test
-    public void testIndexesForSingleValue() {
+    void testIndexesForSingleValue() {
         withValue(value -> withBuilderSupplier(supplier -> {
             final Iterator<Integer> indexIterator = supplier.newBuilder().add(value).build().indexes().iterator();
             assertTrue(indexIterator.hasNext());
@@ -86,7 +88,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends T
     }
 
     @Test
-    public void testIndexesForMultipleValues() {
+    void testIndexesForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).add(c).build();
             final Iterator<T> it = transformable.iterator();
@@ -106,7 +108,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends T
     }
 
     @Test
-    public void testFilterWhenEmpty() {
+    void testFilterWhenEmpty() {
         final Predicate<T> f = unused -> {
             throw new AssertionError("This function should not be called");
         };
@@ -149,7 +151,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends T
     }
 
     @Test
-    public void testFilterNotWhenEmpty() {
+    void testFilterNotWhenEmpty() {
         final Predicate<T> f = unused -> {
             throw new AssertionError("This function should not be called");
         };

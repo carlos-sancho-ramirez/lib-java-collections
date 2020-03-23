@@ -2,7 +2,9 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class MutableIntTreeSetTest extends IntSetTest<MutableIntTreeSet.Builder> implements MutableIntSetTest<MutableIntTreeSet.Builder> {
 
@@ -48,7 +50,7 @@ public final class MutableIntTreeSetTest extends IntSetTest<MutableIntTreeSet.Bu
     }
 
     @Test
-    public void testIteratorOrderForAscending() {
+    void testIteratorOrderForAscending() {
         final int amount = 10;
         final MutableIntTreeSet set = new MutableIntTreeSet();
         for (int i = 0; i < amount; i++) {
@@ -65,7 +67,7 @@ public final class MutableIntTreeSetTest extends IntSetTest<MutableIntTreeSet.Bu
     }
 
     @Test
-    public void testIteratorOrderForDescending() {
+    void testIteratorOrderForDescending() {
         final int amount = 10;
         final MutableIntTreeSet set = new MutableIntTreeSet();
         for (int i = amount - 1; i >= 0; i--) {

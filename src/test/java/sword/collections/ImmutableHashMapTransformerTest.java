@@ -2,7 +2,10 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withString;
 
 public final class ImmutableHashMapTransformerTest extends TransformerTest<String, TransformableBuilder<String>> {
@@ -82,12 +85,12 @@ public final class ImmutableHashMapTransformerTest extends TransformerTest<Strin
     }
 
     @Test
-    public void testToMapWhenEmpty() {
+    void testToMapWhenEmpty() {
         withMapBuilder(builder -> assertTrue(builder.build().iterator().toMap().isEmpty()));
     }
 
     @Test
-    public void testToMap() {
+    void testToMap() {
         withValue(a -> withValue(b -> withValue(c -> withMapBuilder(builder -> {
             final Map<String, String> map = builder
                     .put(keyFromValue(a), a)

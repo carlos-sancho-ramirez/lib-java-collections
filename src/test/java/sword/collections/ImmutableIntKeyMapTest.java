@@ -4,7 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
@@ -208,7 +212,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     }
 
     @Test
-    public void testPutMethod() {
+    void testPutMethod() {
         withImmutableIntKeyMap(array -> withInt(key -> withString(value -> {
             if (array != null) {
                 boolean contained = false;
@@ -233,7 +237,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     }
 
     @Test
-    public void testInvertMethod() {
+    void testInvertMethod() {
         withImmutableIntKeyMap(array -> {
             if (array != null) {
                 // Check if the array is invertible, so no duplicated values should be found
@@ -265,20 +269,20 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     }
 
     @Test
-    public void testKeySetWhenEmpty() {
+    void testKeySetWhenEmpty() {
         final ImmutableIntKeyMap<String> empty = ImmutableIntKeyMap.empty();
         assertSame(ImmutableIntArraySet.empty(), empty.keySet());
     }
 
     @Test
-    public void testToImmutableForEmpty() {
+    void testToImmutableForEmpty() {
         final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
         final ImmutableIntKeyMap<String> map = builder.build();
         assertSame(map, map.toImmutable());
     }
 
     @Test
-    public void testMutateForEmpty() {
+    void testMutateForEmpty() {
         final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
         final ImmutableIntKeyMap<String> map1 = builder.build();
         final MutableIntKeyMap<String> map2 = map1.mutate();
@@ -286,11 +290,11 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
         assertTrue(map2.isEmpty());
 
         map2.put(1, "");
-        assertEquals(null, map1.get(1, null));
+        assertNull(map1.get(1, null));
     }
 
     @Test
-    public void testToImmutable() {
+    void testToImmutable() {
         withInt(a -> withInt(b -> {
             final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
             final ImmutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
@@ -300,7 +304,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     }
 
     @Test
-    public void testMutate() {
+    void testMutate() {
         withInt(a -> withInt(b -> {
             final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
             final ImmutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
@@ -319,7 +323,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
 
             map2.remove(b);
             assertEquals("", map1.get(b, null));
-            assertEquals(null, map2.get(b, null));
+            assertNull(map2.get(b, null));
         }));
     }
 

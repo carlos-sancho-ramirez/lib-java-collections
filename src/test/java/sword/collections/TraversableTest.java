@@ -4,7 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static sword.collections.SortUtils.equal;
 
 abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
@@ -89,8 +93,13 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
             boolean aIncluded = false;
             boolean bIncluded = false;
             for (T value : traversable) {
-                if (value == a) aIncluded = true;
-                if (value == b) bIncluded = true;
+                if (value == a) {
+                    aIncluded = true;
+                }
+
+                if (value == b) {
+                    bIncluded = true;
+                }
             }
             final boolean aIn = aIncluded;
             final boolean bIn = bIncluded;

@@ -4,7 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> implements ImmutableIntTransformableTest<ImmutableIntSet.Builder> {
 
@@ -30,11 +34,6 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
         procedure.apply(v -> v + 1);
     }
 
-    @Override
-    public void withValue(IntProcedure procedure) {
-        withValue(procedure);
-    }
-
     private int moduleFour(int value) {
         return value & 3;
     }
@@ -48,7 +47,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testIteratingForMultipleElements() {
+    void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
             final Iterator<Integer> iterator = set.iterator();
@@ -78,7 +77,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         withValue(a -> withValue(b -> {
             ImmutableIntSet set = newIntBuilder().build();
             set = set.add(a);
@@ -98,13 +97,13 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testAddAllForBothEmpty() {
+    void testAddAllForBothEmpty() {
         ImmutableIntSet set = newIntBuilder().build();
         assertSame(set, set.addAll(set));
     }
 
     @Test
-    public void testAddAllForEmptyGiven() {
+    void testAddAllForEmptyGiven() {
         final ImmutableIntSet empty = newIntBuilder().build();
         withValue(a -> {
             final ImmutableIntSet set = newIntBuilder().add(a).build();
@@ -113,7 +112,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testAddAll() {
+    void testAddAll() {
         withValue(a -> withValue(b -> withValue(c -> withValue(d -> {
             ImmutableIntSet set1 = newIntBuilder().add(a).add(b).build();
             ImmutableIntSet set2 = newIntBuilder().add(c).add(d).build();
@@ -123,13 +122,13 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testRemoveForEmptySet() {
+    void testRemoveForEmptySet() {
         final ImmutableIntSet set = newIntBuilder().build();
         withValue(value -> assertSame(set, set.remove(value), "Removing on an empty set should always return the same set"));
     }
 
     @Test
-    public void testRemoveForASingleElement() {
+    void testRemoveForASingleElement() {
         withValue(included -> {
             final ImmutableIntSet set = newIntBuilder().add(included).build();
             withValue(value -> {
@@ -147,7 +146,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testValueAt() {
+    void testValueAt() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
             final Iterator<Integer> it = set.iterator();
@@ -159,7 +158,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testToImmutableMethodReturnSameInstance() {
+    void testToImmutableMethodReturnSameInstance() {
         withValue(a -> withValue(b -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).build();
             assertSame(set, set.toImmutable());
@@ -167,7 +166,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testGroupByWhenEmpty() {
+    void testGroupByWhenEmpty() {
         final IntFunction<Integer> func = str -> {
             throw new AssertionError("This function should not be executed");
         };
@@ -176,7 +175,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testGroupBy() {
+    void testGroupBy() {
         withGroupingFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
             final String aGroup = func.apply(a);
@@ -283,7 +282,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testGroupByIntWhenEmpty() {
+    void testGroupByIntWhenEmpty() {
         final IntToIntFunction func = str -> {
             throw new AssertionError("This function should not be executed");
         };
@@ -292,7 +291,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    public void testGroupByInt() {
+    void testGroupByInt() {
         withGroupingIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
             final int aGroup = func.apply(a);

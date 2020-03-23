@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
 abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends TransformableTest<V, B> {
@@ -30,13 +33,13 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testEmptyBuilderBuildsEmptyArray() {
+    void testEmptyBuilderBuildsEmptyArray() {
         Map<K, V> array = newBuilder().build();
         assertEquals(0, array.size());
     }
 
     @Test
-    public void testGet() {
+    void testGet() {
         final V value = getTestValue();
         withKey(a -> withKey(b -> {
             final Map<K, V> map = newBuilder()
@@ -52,7 +55,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testKeyAtMethod() {
+    void testKeyAtMethod() {
         withValue(value -> withKey(a -> withKey(b -> withKey(c -> {
             final Map<K, V> map = newBuilder()
                     .put(a, value)
@@ -72,7 +75,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testValueAtMethod() {
+    void testValueAtMethod() {
         withKey(a -> withKey(b -> withKey(c -> {
             Map<K, V> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -89,7 +92,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testKeySet() {
+    void testKeySet() {
         final V value = getTestValue();
         for (int amount = 0; amount < 3; amount++) {
             final MapBuilder<K, V> mapBuilder = newBuilder();
@@ -107,7 +110,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testIndexOfKey() {
+    void testIndexOfKey() {
         final V value = getTestValue();
         withKey(a -> withKey(b -> withKey(c -> {
             final Map map = newBuilder()
@@ -123,7 +126,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testEntryIterator() {
+    void testEntryIterator() {
         withKey(a -> withKey(b -> withKey(c -> {
             Map<K, V> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -147,7 +150,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testMutateMethod() {
+    void testMutateMethod() {
         withKey(a -> withKey(b -> {
             Map<K, V> map1 = newBuilder()
                     .put(a, valueFromKey(a))
@@ -175,7 +178,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testSortWhenEmpty() {
+    void testSortWhenEmpty() {
         final SortFunction<K> func = (a, b) -> {
             throw new AssertionError("Should not be called");
         };
@@ -183,7 +186,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testSortForSingleElement() {
+    void testSortForSingleElement() {
         final SortFunction<K> func = (a, b) -> {
             throw new AssertionError("Should not be called");
         };
@@ -197,7 +200,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testSort() {
+    void testSort() {
         withKey(a -> withKey(b -> withKey(c -> {
             final Map<K, V> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -216,7 +219,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testFilterResultingKeysForMultipleElements() {
+    void testFilterResultingKeysForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final V valueA = valueFromKey(keyA);
             final V valueB = valueFromKey(keyB);
@@ -239,7 +242,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testFilterNotResultingKeysForMultipleElements() {
+    void testFilterNotResultingKeysForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final V valueA = valueFromKey(keyA);
             final V valueB = valueFromKey(keyB);
@@ -262,7 +265,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testEqualMapReturnsFalseWhenAPairIsMissing() {
+    void testEqualMapReturnsFalseWhenAPairIsMissing() {
         withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
             final Map<K, V> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -283,7 +286,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
+    void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
         withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
             final Map<K, V> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -307,7 +310,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
+    void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
         withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
             final Map<K, V> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -328,7 +331,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testMapResultingKeysForMultipleElements() {
+    void testMapResultingKeysForMultipleElements() {
         withMapFunc(f -> withKey(keyA -> withKey(keyB -> withMapBuilderSupplier(supplier -> {
             final Map<K, V> map = supplier.newBuilder()
                     .put(keyA, valueFromKey(keyA))
@@ -346,7 +349,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     }
 
     @Test
-    public void testMapToIntForMultipleElements() {
+    void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
             final Map<K, V> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))

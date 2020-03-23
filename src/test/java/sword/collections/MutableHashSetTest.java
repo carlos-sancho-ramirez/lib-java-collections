@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static sword.collections.SortUtils.equal;
 
 public final class MutableHashSetTest extends MutableSetTest<String, MutableHashSet.Builder<String>> {
@@ -90,7 +93,7 @@ public final class MutableHashSetTest extends MutableSetTest<String, MutableHash
 
     @Test
     @Override
-    public void testIteratingForMultipleElements() {
+    void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final MutableHashSet<String> set = newBuilder().add(a).add(b).build();
             final Iterator<String> iterator = set.iterator();

@@ -2,10 +2,9 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static sword.collections.SortUtils.equal;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class ImmutableHashSetTest extends ImmutableSetTest<String, ImmutableHashSet.Builder<String>> {
 
@@ -91,7 +90,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Test
-    public void testGroupByWhenEmpty() {
+    void testGroupByWhenEmpty() {
         final Function<String, Integer> func = str -> {
             throw new AssertionError("This function should not be executed");
         };
@@ -103,7 +102,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Test
-    public void testGroupBy() {
+    void testGroupBy() {
         withGroupingFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableHashSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final String aGroup = func.apply(a);
@@ -210,7 +209,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Test
-    public void testGroupByIntWhenEmpty() {
+    void testGroupByIntWhenEmpty() {
         final IntResultFunction<String> func = str -> {
             throw new AssertionError("This function should not be executed");
         };
@@ -222,7 +221,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Test
-    public void testGroupByInt() {
+    void testGroupByInt() {
         withGroupingIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableHashSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int aGroup = func.apply(a);

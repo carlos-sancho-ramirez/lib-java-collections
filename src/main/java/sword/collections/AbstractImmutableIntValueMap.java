@@ -1,6 +1,8 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.*;
+import sword.collections.SortUtils.SwapMethod;
+
+import static sword.collections.SortUtils.quickSort;
 
 abstract class AbstractImmutableIntValueMap<T> extends AbstractIntValueMap<T> implements ImmutableIntValueMap<T> {
 

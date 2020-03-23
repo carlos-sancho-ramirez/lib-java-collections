@@ -1,6 +1,8 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.*;
+import static sword.collections.SortUtils.equal;
+import static sword.collections.SortUtils.findSuitableIndex;
+import static sword.collections.SortUtils.findValue;
 
 /**
  * Efficient implementation for map where keys are internally

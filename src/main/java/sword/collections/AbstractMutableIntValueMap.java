@@ -1,6 +1,6 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.*;
+import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 
 abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> implements MutableIntValueMap<T> {
 

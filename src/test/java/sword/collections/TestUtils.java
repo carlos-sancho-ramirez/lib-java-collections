@@ -21,4 +21,7 @@ final class TestUtils {
             procedure.apply(value);
         }
     }
+
+    private TestUtils() {
+    }
 }

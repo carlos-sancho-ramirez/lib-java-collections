@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.Builder> implements MutableIntSetTest<MutableIntArraySet.Builder> {
 
@@ -45,7 +47,7 @@ public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.
     }
 
     @Test
-    public void testIteratingForMultipleElements() {
+    void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> {
             final MutableIntArraySet set = newIntBuilder().add(a).add(b).build();
             final Iterator<Integer> iterator = set.iterator();
@@ -75,7 +77,7 @@ public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.
     }
 
     @Test
-    public void testValueAt() {
+    void testValueAt() {
         withValue(a -> withValue(b -> withValue(c -> {
             final MutableIntArraySet set = newIntBuilder().add(a).add(b).add(c).build();
             final Iterator<Integer> it = set.iterator();
@@ -87,7 +89,7 @@ public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.
     }
 
     @Test
-    public void testToImmutableMethodReturnSameInstance() {
+    void testToImmutableMethodReturnSameInstance() {
         withValue(a -> withValue(b -> {
             final MutableIntArraySet set = new MutableIntArraySet.Builder().add(a).add(b).build();
             final ImmutableIntSet set2 = set.toImmutable();

@@ -4,7 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
@@ -84,12 +88,12 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
     }
 
     @Test
-    public void testToImmutableForEmpty() {
+    void testToImmutableForEmpty() {
         assertTrue(newMapBuilder().build().toImmutable().isEmpty());
     }
 
     @Test
-    public void testMutateForEmpty() {
+    void testMutateForEmpty() {
         final MutableIntKeyMap<String> map1 = new MutableIntKeyMap.Builder<String>().build();
         final MutableIntKeyMap<String> map2 = map1.mutate();
 
@@ -101,7 +105,7 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
     }
 
     @Test
-    public void testToImmutable() {
+    void testToImmutable() {
         withInt(a -> withInt(b -> {
             final MutableIntKeyMap.Builder<String> builder = newMapBuilder();
             final MutableIntKeyMap<String> map1 = builder.put(a, "").put(b, "").build();
@@ -121,7 +125,7 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
     }
 
     @Test
-    public void testMutate() {
+    void testMutate() {
         final String defValue = "notFound!";
         withInt(a -> withInt(b -> {
             final MutableIntKeyMap.Builder<String> builder = newMapBuilder();
@@ -146,7 +150,7 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntKeyMap<String> mutable = newMapBuilder()
                     .put(a, Integer.toString(a))
@@ -160,7 +164,7 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntKeyMap<String> mutable = newMapBuilder()
                     .put(a, Integer.toString(a))

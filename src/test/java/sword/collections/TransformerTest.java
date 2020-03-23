@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends TraverserTest<T, B> {
 
@@ -12,12 +15,12 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     abstract void withMapFunc(Procedure<Function<T, Object>> procedure);
 
     @Test
-    public void testToListWhenEmpty() {
+    void testToListWhenEmpty() {
         withBuilder(builder -> assertTrue(builder.build().iterator().toList().isEmpty()));
     }
 
     @Test
-    public void testToListForSingleElement() {
+    void testToListForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final Transformable<T> transformable = builder.add(value).build();
             final List<T> expected = new ImmutableList.Builder<T>().add(value).build();
@@ -26,7 +29,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testToListForMultipleElements() {
+    void testToListForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
             final ImmutableList.Builder<T> listBuilder = new ImmutableList.Builder<>();
@@ -38,12 +41,12 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testToSetWhenEmpty() {
+    void testToSetWhenEmpty() {
         withBuilder(builder -> assertTrue(builder.build().iterator().toSet().isEmpty()));
     }
 
     @Test
-    public void testToSetForSingleElement() {
+    void testToSetForSingleElement() {
         withValue(value -> withBuilder(builder -> {
             final Set<T> set = builder.add(value).build().iterator().toSet();
             assertEquals(1, set.size());
@@ -52,7 +55,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testToSetForMultipleElements() {
+    void testToSetForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
             final ImmutableHashSet.Builder<T> setBuilder = new ImmutableHashSet.Builder<>();
@@ -64,12 +67,12 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testIndexesWhenEmpty() {
+    void testIndexesWhenEmpty() {
         withBuilder(builder -> assertFalse(builder.build().iterator().indexes().hasNext()));
     }
 
     @Test
-    public void testIndexesForSingleValue() {
+    void testIndexesForSingleValue() {
         withValue(value -> withBuilder(builder -> {
             final Iterator<Integer> indexIterator = builder.add(value).build().iterator().indexes();
             assertTrue(indexIterator.hasNext());
@@ -79,7 +82,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testIndexesForMultipleValues() {
+    void testIndexesForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
             final Iterator<T> it = transformable.iterator();
@@ -99,7 +102,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testFilterWhenEmpty() {
+    void testFilterWhenEmpty() {
         final Predicate<T> func = value -> {
             throw new AssertionError("Should never be called");
         };
@@ -107,7 +110,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testFilterForSingleElement() {
+    void testFilterForSingleElement() {
         withFilterFunc(func -> withValue(value -> withBuilder(builder -> {
             final Transformer<T> transformer = builder.add(value).build().iterator().filter(func);
             if (func.apply(value)) {
@@ -119,7 +122,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testFilterForMultipleElements() {
+    void testFilterForMultipleElements() {
         withFilterFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
             final Transformer<T> transformer = transformable.iterator().filter(func);
@@ -134,7 +137,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testFilterNotWhenEmpty() {
+    void testFilterNotWhenEmpty() {
         final Predicate<T> func = value -> {
             throw new AssertionError("Should never be called");
         };
@@ -142,7 +145,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testFilterNotForSingleElement() {
+    void testFilterNotForSingleElement() {
         withFilterFunc(func -> withValue(value -> withBuilder(builder -> {
             final Transformer<T> transformer = builder.add(value).build().iterator().filterNot(func);
             if (!func.apply(value)) {
@@ -154,7 +157,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testFilterNotForMultipleElements() {
+    void testFilterNotForMultipleElements() {
         withFilterFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
             final Transformer<T> transformer = transformable.iterator().filterNot(func);
@@ -169,7 +172,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testMapToIntWhenEmpty() {
+    void testMapToIntWhenEmpty() {
         final IntResultFunction<T> func = v -> {
             throw new AssertionError("This method should not be called");
         };
@@ -177,7 +180,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testMapToIntForSingleValue() {
+    void testMapToIntForSingleValue() {
         withMapToIntFunc(func -> withValue(a -> withBuilder(builder -> {
             final IntTransformer transformer = builder.add(a).build().iterator().mapToInt(func);
             assertTrue(transformer.hasNext());
@@ -187,7 +190,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testMapToIntForMultipleValues() {
+    void testMapToIntForMultipleValues() {
         withMapToIntFunc(func -> withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
             final Transformable<T> transformable = builder.add(a).add(b).add(c).build();
             final IntTransformer transformer = transformable.iterator().mapToInt(func);
@@ -200,7 +203,7 @@ abstract class TransformerTest<T, B extends TransformableBuilder<T>> extends Tra
     }
 
     @Test
-    public void testMapWhenEmpty() {
+    void testMapWhenEmpty() {
         final Function<T, T> func = v -> {
             throw new AssertionError("This method should not be called");
         };

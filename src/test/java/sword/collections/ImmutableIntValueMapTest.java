@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
@@ -33,7 +36,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     abstract ImmutableIntValueMap.Builder<T> newBuilder();
 
     @Test
-    public void testInverted() {
+    void testInverted() {
         withInvertibleArray(invertedArray -> {
             final ImmutableIntKeyMap<T> array = invertedArray.invert();
             assertEquals(invertedArray.size(), array.size());
@@ -45,7 +48,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    public void testKeySet() {
+    void testKeySet() {
         withInvertibleArray(array -> {
             final ImmutableSet<T> result = array.keySet();
 
@@ -67,7 +70,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    public void testFilterWhenEmpty() {
+    void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntValueMap<T> map = newBuilder().build();
             assertSame(map, map.filter(f));
@@ -77,7 +80,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     abstract void assertEmpty(ImmutableIntValueMap<T> map);
 
     @Test
-    public void testFilterForSingleElement() {
+    void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(value -> {
             final T key = keyFromInt(value);
             final ImmutableIntValueMap<T> map = newBuilder().put(key, value).build();
@@ -93,7 +96,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    public void testFilterForMultipleElements() {
+    void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(valueA -> withInt(valueB -> {
             final T keyA = keyFromInt(valueA);
             final T keyB = keyFromInt(valueB);
@@ -129,7 +132,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    public void testFilterNotWhenEmpty() {
+    void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntValueMap<T> map = newBuilder().build();
             assertSame(map, map.filterNot(f));
@@ -137,7 +140,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    public void testFilterNotForSingleElement() {
+    void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(value -> {
             final T key = keyFromInt(value);
             final ImmutableIntValueMap<T> map = newBuilder().put(key, value).build();
@@ -153,7 +156,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    public void testFilterNotForMultipleElements() {
+    void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(valueA -> withInt(valueB -> {
             final T keyA = keyFromInt(valueA);
             final T keyB = keyFromInt(valueB);
@@ -189,7 +192,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    public void testMapToIntMethod() {
+    void testMapToIntMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntValueMap<T> map = newBuilder()
                     .put(keyFromInt(a), a)
@@ -209,7 +212,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    public void testMapValues() {
+    void testMapValues() {
         withInt(a -> withInt(b -> {
             final ImmutableIntValueMap<T> map = newBuilder()
                     .put(keyFromInt(a), a)
@@ -229,7 +232,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    public void testPutMethod() {
+    void testPutMethod() {
         withKey(a -> withKey(b -> withKey(key -> withValue(value -> {
             final ImmutableIntValueMap<T> map = newBuilder()
                     .put(a, valueFromKey(a))

@@ -4,8 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
 public interface ImmutableTransformableTest<T, B extends ImmutableTransformableBuilder<T>> {
@@ -16,7 +18,7 @@ public interface ImmutableTransformableTest<T, B extends ImmutableTransformableB
     void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
 
     @Test
-    default void testFilterWhenEmpty() {
+    default void testFilterWhenEmptyOnImmutable() {
         final Predicate<T> func = v -> {
             throw new AssertionError("Should not be called for empty collections");
         };
@@ -29,7 +31,7 @@ public interface ImmutableTransformableTest<T, B extends ImmutableTransformableB
     }
 
     @Test
-    default void testFilterNotWhenEmpty() {
+    default void testFilterNotWhenEmptyOnImmutable() {
         final Predicate<T> func = v -> {
             throw new AssertionError("Should not be called for empty collections");
         };
@@ -117,7 +119,7 @@ public interface ImmutableTransformableTest<T, B extends ImmutableTransformableB
     }
 
     @Test
-    default void testMapToIntForMultipleElements() {
+    default void testMapToIntForMultipleElementsOnImmutable() {
         withMapToIntFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableTransformable<T> collection = supplier.newBuilder().add(a).add(b).build();
             final ImmutableIntTransformable mapped = collection.mapToInt(f);

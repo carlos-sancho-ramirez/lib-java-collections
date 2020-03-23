@@ -168,7 +168,7 @@ public interface Map<K, V> extends Transformable<V> {
             }
 
             final Entry that = (Entry) other;
-            return (equal(_key, that._key) && equal(_value, that._value));
+            return equal(_key, that._key) && equal(_value, that._value);
         }
     }
 }

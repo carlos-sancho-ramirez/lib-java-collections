@@ -1,6 +1,11 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.*;
+import sword.collections.SortUtils.SwapMethod;
+
+import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
+import static sword.collections.SortUtils.findKey;
+import static sword.collections.SortUtils.findSuitableIndex;
+import static sword.collections.SortUtils.quickSort;
 
 /**
  * Mutable small memory foot-print implementation for Map where keys are integers.

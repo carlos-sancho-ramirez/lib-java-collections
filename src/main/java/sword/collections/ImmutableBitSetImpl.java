@@ -306,7 +306,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
         return MutableIntArraySet.fromIntSet(this);
     }
 
-    private class Iterator extends AbstractIntTransformer {
+    private final class Iterator extends AbstractIntTransformer {
         private int _wordIndex;
         private int _offset;
         private int _nextValue;

@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
 abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends SetTest<T, B> implements ImmutableTransformableTest<T, B> {
@@ -14,7 +17,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     abstract void withSortFunc(Procedure<SortFunction<T>> procedure);
 
     @Test
-    public void testSizeForTwoElements() {
+    void testSizeForTwoElements() {
         withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
             final int size = set.size();
@@ -28,7 +31,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testIteratingForMultipleElements() {
+    void testIteratingForMultipleElements() {
         withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
             final Iterator<T> iterator = set.iterator();
@@ -56,7 +59,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testToImmutableForEmpty() {
+    void testToImmutableForEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableSet set = supplier.newBuilder().build();
             assertSame(set, set.toImmutable());
@@ -64,7 +67,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testMutateForEmpty() {
+    void testMutateForEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set1 = supplier.newBuilder().build();
             withValue(value -> {
@@ -78,7 +81,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testToImmutable() {
+    void testToImmutable() {
         withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
             assertSame(set, set.toImmutable());
@@ -86,7 +89,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testMutate() {
+    void testMutate() {
         withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set1 = supplier.newBuilder().add(a).add(b).build();
             final MutableSet<T> set2 = set1.mutate();
@@ -106,7 +109,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testSort() {
+    void testSort() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int setLength = set.size();
@@ -129,7 +132,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).build();
             final ImmutableSet<T> expectedSet = supplier.newBuilder().add(a).add(b).add(c).build();
@@ -143,7 +146,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testAddAll() {
+    void testAddAll() {
         withValue(a -> withValue(b -> withValue(c -> withValue(d -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set1 = supplier.newBuilder().add(a).add(b).build();
             final ImmutableSet<T> set2 = supplier.newBuilder().add(c).add(d).build();
@@ -170,7 +173,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(setSupplier -> withTraversableBuilderSupplier(trSupplier -> {
             final ImmutableSet<T> set = setSupplier.newBuilder().add(a).add(b).add(c).build();
             final TraversableBuilder<T> builder = trSupplier.newBuilder();
@@ -196,7 +199,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    public void testEqualSet() {
+    void testEqualSet() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             assertTrue(set.equalSet(set));

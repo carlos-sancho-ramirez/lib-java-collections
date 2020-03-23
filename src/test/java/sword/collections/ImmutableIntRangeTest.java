@@ -4,9 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ImmutableIntRangeTest {
+class ImmutableIntRangeTest {
 
     // This is used in some tests that iterates in a range instance as the maximum allowed size.
     // If the size is exceeded, then that range instance is not tested.
@@ -118,9 +122,7 @@ public class ImmutableIntRangeTest {
         withValue(a -> {
             final IntTraversable list = new ImmutableIntRange(a, a);
 
-            withValue(value -> {
-                assertEquals((a == value)? 0 : -1, list.indexOf(value));
-            });
+            withValue(value -> assertEquals((a == value)? 0 : -1, list.indexOf(value)));
         });
     }
 
@@ -138,9 +140,7 @@ public class ImmutableIntRangeTest {
 
     @Test
     void testToImmutable() {
-        withRange(range -> {
-            assertSame(range, range.toImmutable());
-        });
+        withRange(range -> assertSame(range, range.toImmutable()));
     }
 
     @Test
@@ -222,7 +222,7 @@ public class ImmutableIntRangeTest {
             for (int mapIndex = 0; mapIndex < mapLength; mapIndex++) {
                 final int setLength = map.valueAt(mapIndex).size();
                 assertFalse(setLength > range.size());
-                assertFalse(setLength == 0);
+                assertNotEquals(0, setLength);
                 count += setLength;
             }
             assertEquals(range.size(), count);
@@ -233,7 +233,8 @@ public class ImmutableIntRangeTest {
                     final ImmutableIntSet set = map.valueAt(mapIndex);
                     if (SortUtils.equal(group, map.keyAt(mapIndex))) {
                         assertTrue(set.contains(value));
-                    } else {
+                    }
+                    else {
                         assertFalse(set.contains(value));
                     }
                 }
@@ -251,7 +252,7 @@ public class ImmutableIntRangeTest {
             for (int mapIndex = 0; mapIndex < mapLength; mapIndex++) {
                 final int setLength = map.valueAt(mapIndex).size();
                 assertFalse(setLength > range.size());
-                assertFalse(setLength == 0);
+                assertNotEquals(0, setLength);
                 count += setLength;
             }
             assertEquals(range.size(), count);
@@ -262,7 +263,8 @@ public class ImmutableIntRangeTest {
                     final ImmutableIntSet set = map.valueAt(mapIndex);
                     if (group == map.keyAt(mapIndex)) {
                         assertTrue(set.contains(value));
-                    } else {
+                    }
+                    else {
                         assertFalse(set.contains(value));
                     }
                 }

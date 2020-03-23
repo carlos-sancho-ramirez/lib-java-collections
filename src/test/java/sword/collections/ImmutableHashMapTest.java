@@ -2,7 +2,8 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
@@ -76,7 +77,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Test
-    public void testToImmutableMethod() {
+    void testToImmutableMethod() {
         withKey(a -> withKey(b -> {
             final ImmutableMap<Integer, String> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -87,7 +88,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Test
-    public void testPutMethod() {
+    void testPutMethod() {
         withKey(a -> withKey(b -> withKey(key -> withValue(value -> {
             final ImmutableHashMap<Integer, String> map = newBuilder()
                     .put(a, valueFromKey(a))

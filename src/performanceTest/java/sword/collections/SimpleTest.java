@@ -93,4 +93,7 @@ public final class SimpleTest {
         performTest("BuildIntTreeSetDescending", SimpleTest::testBuildIntTreeSetDescending, amount);
         performTest("BuildIntTreeSetSeeded", SimpleTest::testBuildIntTreeSetSeeded, amount);
     }
+
+    private SimpleTest() {
+    }
 }

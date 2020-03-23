@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableHashSetTransformerTest extends TransformerTest<String, ImmutableHashSet.Builder<String>> {
+final class ImmutableHashSetTransformerTest extends TransformerTest<String, ImmutableHashSet.Builder<String>> {
 
     @Override
     void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {

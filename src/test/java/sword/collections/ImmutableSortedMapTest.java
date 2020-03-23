@@ -2,7 +2,8 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
@@ -25,9 +26,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
 
     @Override
     public void withBuilderSupplier(Procedure<BuilderSupplier<String, ImmutableTransformableBuilder<String>>> procedure) {
-        withSortFunc(sortFunc -> {
-            procedure.apply(() -> new HashCodeKeyTransformableBuilder(sortFunc));
-        });
+        withSortFunc(sortFunc -> procedure.apply(() -> new HashCodeKeyTransformableBuilder(sortFunc)));
     }
 
     @Override
@@ -87,7 +86,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
     }
 
     @Test
-    public void testToImmutableMethod() {
+    void testToImmutableMethod() {
         withKey(a -> withKey(b -> {
             final ImmutableMap<Integer, String> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -98,7 +97,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
     }
 
     @Test
-    public void testPutMethod() {
+    void testPutMethod() {
         withKey(a -> withKey(b -> withKey(key -> withValue(value -> {
             final ImmutableMap<Integer, String> map = newBuilder()
                     .put(a, valueFromKey(a))

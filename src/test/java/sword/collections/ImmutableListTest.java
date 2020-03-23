@@ -4,7 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static sword.collections.TestUtils.withInt;
 
 public final class ImmutableListTest extends ListTest<String, ImmutableList.Builder<String>> implements ImmutableTransformableTest<String, ImmutableList.Builder<String>> {
@@ -225,7 +230,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
                     .add(value)
                     .build();
 
-            final ReduceFunction<String> func = (l,r) -> {
+            final ReduceFunction<String> func = (l, r) -> {
                 fail("Should not be called for a single item");
                 return l;
             };
@@ -242,7 +247,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
                     .add(b)
                     .build();
 
-            final ReduceFunction<Integer> func = (l,r) -> l + r;
+            final ReduceFunction<Integer> func = (l, r) -> l + r;
             final Integer result = list.reduce(func);
             assertEquals(func.apply(a, b), result);
         }));
@@ -257,7 +262,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
                     .add(Integer.toString(c))
                     .build();
 
-            final ReduceFunction<String> func = (l,r) -> l + ", " + r;
+            final ReduceFunction<String> func = (l, r) -> l + ", " + r;
             final String result = list.reduce(func);
             assertEquals(func.apply(func.apply(Integer.toString(a), Integer.toString(b)), Integer.toString(c)), result);
         })));
