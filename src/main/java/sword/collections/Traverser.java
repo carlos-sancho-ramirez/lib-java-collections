@@ -29,7 +29,7 @@ public interface Traverser<T> extends Iterator<T> {
      *
      * @param predicate Predicate to be evaluated.
      */
-    default boolean anyMatch(Predicate<T> predicate) {
+    default boolean anyMatch(Predicate<? super T> predicate) {
         while (hasNext()) {
             if (predicate.apply(next())) {
                 return true;
@@ -59,7 +59,7 @@ public interface Traverser<T> extends Iterator<T> {
      * @param predicate Condition to be satisfied for the element that we are looking for.
      * @return The index of the first element matching the predicate, or -1 if none matches.
      */
-    default int indexWhere(Predicate<T> predicate) {
+    default int indexWhere(Predicate<? super T> predicate) {
         for (int index = 0; hasNext(); index++) {
             if (predicate.apply(next())) {
                 return index;
@@ -92,7 +92,7 @@ public interface Traverser<T> extends Iterator<T> {
     /**
      * Returns the first item matching the predicate or the default value if none matches.
      */
-    default T findFirst(Predicate<T> predicate, T defaultValue) {
+    default T findFirst(Predicate<? super T> predicate, T defaultValue) {
         while (hasNext()) {
             final T value = next();
             if (predicate.apply(value)) {

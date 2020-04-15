@@ -21,7 +21,7 @@ public interface Traversable<T> extends Iterable<T>, Sizable {
      *
      * @param predicate Predicate to be evaluated.
      */
-    default boolean anyMatch(Predicate<T> predicate) {
+    default boolean anyMatch(Predicate<? super T> predicate) {
         return iterator().anyMatch(predicate);
     }
 
@@ -39,7 +39,7 @@ public interface Traversable<T> extends Iterable<T>, Sizable {
      * @param predicate Condition to be satisfied for the element that we are looking for.
      * @return The index of the first element matching the predicate, or -1 if none matches.
      */
-    default int indexWhere(Predicate<T> predicate) {
+    default int indexWhere(Predicate<? super T> predicate) {
         return iterator().indexWhere(predicate);
     }
 
@@ -59,7 +59,7 @@ public interface Traversable<T> extends Iterable<T>, Sizable {
     /**
      * Returns the first item matching the predicate or the default value if none matches.
      */
-    default T findFirst(Predicate<T> predicate, T defaultValue) {
+    default T findFirst(Predicate<? super T> predicate, T defaultValue) {
         return iterator().findFirst(predicate, defaultValue);
     }
 
