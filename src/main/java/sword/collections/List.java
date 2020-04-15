@@ -42,4 +42,8 @@ public interface List<T> extends Transformable<T> {
      * This method will always generate a new instance in order to avoid affecting the state of its original collection.
      */
     MutableList<T> mutate();
+
+    default List<T> sort(SortFunction<? super T> function) {
+        return new SortedList<>(this, function);
+    }
 }

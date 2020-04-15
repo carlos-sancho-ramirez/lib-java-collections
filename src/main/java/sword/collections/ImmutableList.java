@@ -148,7 +148,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
      *                  included in the 'left' list, if false, it will be included in the 'right' list.
      * @return An {@link ImmutablePair} of lists. This will never be null.
      */
-    public ImmutablePair<ImmutableList<T>, ImmutableList<T>> span(Predicate<T> predicate) {
+    public ImmutablePair<ImmutableList<T>, ImmutableList<T>> span(Predicate<? super T> predicate) {
         boolean allTrue = true;
         boolean allFalse = true;
 
@@ -263,7 +263,8 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
      * @param function Function the sort the elements within this collection.
      * @return A new list where all current elements are sorted following the given function.
      */
-    public ImmutableList<T> sort(SortFunction<T> function) {
+    @Override
+    public ImmutableList<T> sort(SortFunction<? super T> function) {
         final int length = _values.length;
         if (length < 2) {
             return this;

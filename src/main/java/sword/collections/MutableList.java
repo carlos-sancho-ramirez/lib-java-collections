@@ -106,17 +106,18 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
     }
 
     /**
-     * Sorts this collection according to the given function.
+     * Sort the items in the connection according to the given function.
+     *
      * @param function Used to sort the elements within this list.
      * @return Whether if the collection has changed.
      */
-    public boolean sort(SortFunction<T> function) {
+    public boolean arrange(SortFunction<T> function) {
         final int length = _size;
         if (length < 2) {
             return false;
         }
 
-        final Object[] newValues = new Object[length];
+        final Object[] newValues = new Object[_values.length];
         newValues[0] = _values[0];
         boolean changed = false;
 

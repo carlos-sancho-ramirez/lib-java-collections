@@ -102,6 +102,15 @@ public final class MutableListTest extends ListTest<String, MutableList.Builder<
         return bLength > aLength;
     }
 
+    private boolean sortByLength(String a, String b) {
+        return b != null && (a == null || a.length() < b.length());
+    }
+
+    void withSortFunc(Procedure<SortFunction<String>> procedure) {
+        procedure.apply(this::sortAlphabetically);
+        procedure.apply(this::sortByLength);
+    }
+
     MutableList.Builder<String> newBuilder() {
         return new MutableList.Builder<>();
     }
@@ -360,10 +369,10 @@ public final class MutableListTest extends ListTest<String, MutableList.Builder<
     }
 
     @Test
-    void testSort() {
+    void testArrange() {
         withValue(a -> withValue(b -> withValue(c -> {
             final MutableList<String> list = newBuilder().add(a).add(b).add(c).build();
-            final boolean changed = list.sort(this::sortAlphabetically);
+            final boolean changed = list.arrange(this::sortAlphabetically);
 
             if (sortAlphabetically(b, a)) {
                 if (sortAlphabetically(c, b)) {
@@ -457,6 +466,82 @@ public final class MutableListTest extends ListTest<String, MutableList.Builder<
             }
 
             assertFalse(mappedIterator.hasNext());
+        }))));
+    }
+
+    @Test
+    void testSortWhenEmpty() {
+        final SortFunction<String> sortFunc = (a, b) -> fail("This function should not be called");
+        assertTrue(newBuilder().build().sort(sortFunc).isEmpty());
+    }
+
+    @Test
+    void testSortForASingleElementAppendedBeforeCreation() {
+        withValue(value -> withSortFunc(sortFunc -> {
+            final MutableList<String> original = newBuilder().add(value).build();
+            final List<String> list = original.sort(sortFunc);
+            assertEquals(1, list.size());
+            assertSame(value, list.valueAt(0));
+        }));
+    }
+
+    @Test
+    void testSortForASingleElementAppendedAfterCreation() {
+        withValue(value -> withSortFunc(sortFunc -> {
+            final MutableList<String> original = newBuilder().build();
+            final List<String> list = original.sort(sortFunc);
+            assertTrue(list.isEmpty());
+
+            original.append(value);
+            assertEquals(1, list.size());
+            assertSame(value, list.valueAt(0));
+        }));
+    }
+
+    @Test
+    void testSort() {
+        withValue(a -> withValue(b -> withValue(c -> withSortFunc(sortFunc -> {
+            final MutableList<String> original = newBuilder().build();
+            final List<String> list = original.sort(sortFunc);
+            original.append(a);
+            original.append(b);
+            original.append(c);
+
+            assertEquals(3, list.size());
+            if (sortFunc.lessThan(b, a)) {
+                if (sortFunc.lessThan(c, b)) {
+                    assertEquals(c, list.valueAt(0));
+                    assertEquals(b, list.valueAt(1));
+                    assertEquals(a, list.valueAt(2));
+                }
+                else if (sortFunc.lessThan(c, a)) {
+                    assertEquals(b, list.valueAt(0));
+                    assertEquals(c, list.valueAt(1));
+                    assertEquals(a, list.valueAt(2));
+                }
+                else {
+                    assertEquals(b, list.valueAt(0));
+                    assertEquals(a, list.valueAt(1));
+                    assertEquals(c, list.valueAt(2));
+                }
+            }
+            else {
+                if (sortFunc.lessThan(c, a)) {
+                    assertEquals(c, list.valueAt(0));
+                    assertEquals(a, list.valueAt(1));
+                    assertEquals(b, list.valueAt(2));
+                }
+                else if (sortFunc.lessThan(c, b)) {
+                    assertEquals(a, list.valueAt(0));
+                    assertEquals(c, list.valueAt(1));
+                    assertEquals(b, list.valueAt(2));
+                }
+                else {
+                    assertEquals(a, list.valueAt(0));
+                    assertEquals(b, list.valueAt(1));
+                    assertEquals(c, list.valueAt(2));
+                }
+            }
         }))));
     }
 }
