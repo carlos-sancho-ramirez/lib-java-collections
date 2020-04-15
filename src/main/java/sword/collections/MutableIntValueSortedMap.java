@@ -29,9 +29,9 @@ public final class MutableIntValueSortedMap<T> extends AbstractMutableIntValueMa
         return new MutableIntValueSortedMap<>(sortFunction, new Object[length], new int[length], 0);
     }
 
-    private SortFunction<T> _sortFunction;
+    private SortFunction<? super T> _sortFunction;
 
-    MutableIntValueSortedMap(SortFunction<T> sortFunction, Object[] keys, int[] values, int size) {
+    MutableIntValueSortedMap(SortFunction<? super T> sortFunction, Object[] keys, int[] values, int size) {
         super(keys, values, size);
         _sortFunction = sortFunction;
     }

@@ -75,7 +75,7 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTransformable<T>
     }
 
     @Override
-    public ImmutableSortedSet<T> sort(SortFunction<T> function) {
+    public ImmutableSortedSet<T> sort(SortFunction<? super T> function) {
         final ImmutableSortedSet.Builder<T> builder = new ImmutableSortedSet.Builder<>(function);
         for (T value : this) {
             builder.add(value);

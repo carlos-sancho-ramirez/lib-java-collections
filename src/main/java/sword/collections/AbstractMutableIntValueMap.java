@@ -46,7 +46,7 @@ abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> impl
     }
 
     @Override
-    public IntValueMap<T> sort(SortFunction<T> function) {
+    public IntValueMap<T> sort(SortFunction<? super T> function) {
         final ImmutableIntValueSortedMap.Builder<T> builder = new ImmutableIntValueSortedMap.Builder<>(function);
         for (int i = 0; i < _size; i++) {
             builder.put(keyAt(i), valueAt(i));

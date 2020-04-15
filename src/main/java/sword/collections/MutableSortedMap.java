@@ -30,9 +30,9 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
         return new MutableSortedMap<>(sortFunction, new Object[length], new Object[length], 0);
     }
 
-    private final SortFunction<K> _sortFunction;
+    private final SortFunction<? super K> _sortFunction;
 
-    MutableSortedMap(SortFunction<K> sortFunction, Object[] keys, Object[] values, int size) {
+    MutableSortedMap(SortFunction<? super K> sortFunction, Object[] keys, Object[] values, int size) {
         super(keys, values, size);
         _sortFunction = sortFunction;
     }

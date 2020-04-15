@@ -34,7 +34,7 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
     <U> ImmutableMap<K, U> map(Function<? super V, ? extends U> mapFunc);
 
     @Override
-    ImmutableMap<K, V> sort(SortFunction<K> function);
+    ImmutableMap<K, V> sort(SortFunction<? super K> function);
 
     @Override
     ImmutableMap<K, V> removeAt(int index);

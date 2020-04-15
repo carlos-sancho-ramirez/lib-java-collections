@@ -56,7 +56,7 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     ImmutableSet<T> addAll(Iterable<T> iterable);
 
     @Override
-    ImmutableSet<T> sort(SortFunction<T> function);
+    ImmutableSet<T> sort(SortFunction<? super T> function);
 
     interface Builder<E> extends Set.Builder<E>, ImmutableTransformableBuilder<E> {
 

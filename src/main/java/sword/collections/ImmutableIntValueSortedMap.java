@@ -22,9 +22,9 @@ import static sword.collections.SortUtils.findValue;
  */
 public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntValueMap<T> {
 
-    private final SortFunction<T> _sortFunction;
+    private final SortFunction<? super T> _sortFunction;
 
-    ImmutableIntValueSortedMap(SortFunction<T> sortFunction, Object[] keys, int[] values) {
+    ImmutableIntValueSortedMap(SortFunction<? super T> sortFunction, Object[] keys, int[] values) {
         super(keys, values);
         _sortFunction = sortFunction;
     }
@@ -186,7 +186,7 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {
         final MutableIntValueSortedMap<E> _map;
 
-        Builder(SortFunction<E> sortFunction) {
+        Builder(SortFunction<? super E> sortFunction) {
             final int length = MutableIntValueSortedMap.suitableArrayLength(0);
             _map = new MutableIntValueSortedMap<>(sortFunction, new Object[length], new int[length], 0);
         }

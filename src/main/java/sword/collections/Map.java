@@ -100,7 +100,7 @@ public interface Map<K, V> extends Transformable<V> {
      * @return A new map where all current elements and future newly added will
      * be sorted following the given function.
      */
-    Map<K, V> sort(SortFunction<K> function);
+    Map<K, V> sort(SortFunction<? super K> function);
 
     /**
      * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.

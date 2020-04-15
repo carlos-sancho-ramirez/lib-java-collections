@@ -71,7 +71,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     }
 
     @Override
-    public Set<T> sort(SortFunction<T> function) {
+    public Set<T> sort(SortFunction<? super T> function) {
         final ImmutableSortedSet.Builder<T> builder = new ImmutableSortedSet.Builder<>(function);
         for (T value : this) {
             builder.add(value);

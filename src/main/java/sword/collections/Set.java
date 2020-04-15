@@ -74,7 +74,7 @@ public interface Set<T> extends Transformable<T> {
      * @return A new set where all current elements and future newly added will
      * be sorted following the given function.
      */
-    Set<T> sort(SortFunction<T> function);
+    Set<T> sort(SortFunction<? super T> function);
 
     /**
      * Returns a hash code calculated from the hashcode of any of the elements.

@@ -36,7 +36,7 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
     <U> ImmutableMap<T, U> map(IntFunction<? extends U> mapFunc);
 
     @Override
-    ImmutableIntValueMap<T> sort(SortFunction<T> function);
+    ImmutableIntValueMap<T> sort(SortFunction<? super T> function);
 
     @Override
     ImmutableIntValueMap removeAt(int index);

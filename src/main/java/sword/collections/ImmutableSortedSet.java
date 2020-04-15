@@ -28,9 +28,9 @@ import static sword.collections.SortUtils.findValue;
  */
 public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
 
-    private SortFunction<T> _sortFunction;
+    private SortFunction<? super T> _sortFunction;
 
-    ImmutableSortedSet(SortFunction<T> sortFunction, Object[] keys) {
+    ImmutableSortedSet(SortFunction<? super T> sortFunction, Object[] keys) {
         super(keys);
         _sortFunction = sortFunction;
     }
@@ -159,7 +159,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    public ImmutableSortedSet<T> sort(SortFunction<T> function) {
+    public ImmutableSortedSet<T> sort(SortFunction<? super T> function) {
         return equal(_sortFunction, function)? this : super.sort(function);
     }
 
@@ -186,7 +186,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableSortedSet<E> _set;
 
-        Builder(SortFunction<E> sortFunction) {
+        Builder(SortFunction<? super E> sortFunction) {
             _set = new MutableSortedSet<>(sortFunction, new Object[AbstractMutableSet.suitableArrayLength(0)], 0);
         }
 

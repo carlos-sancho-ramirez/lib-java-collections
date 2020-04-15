@@ -24,9 +24,9 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
         return new MutableSortedSet<>(sortFunction, new Object[suitableArrayLength(0)], 0);
     }
 
-    private final SortFunction<T> _sortFunction;
+    private final SortFunction<? super T> _sortFunction;
 
-    MutableSortedSet(SortFunction<T> sortFunction, Object[] keys, int size) {
+    MutableSortedSet(SortFunction<? super T> sortFunction, Object[] keys, int size) {
         super(keys, size);
         _sortFunction = sortFunction;
     }
@@ -124,7 +124,7 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
      * be sorted following the the given function.
      */
     @Override
-    public Set<T> sort(SortFunction<T> function) {
+    public Set<T> sort(SortFunction<? super T> function) {
         return (function == _sortFunction)? this : super.sort(function);
     }
 

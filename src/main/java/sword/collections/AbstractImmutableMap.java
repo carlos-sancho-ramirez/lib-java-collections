@@ -33,7 +33,7 @@ abstract class AbstractImmutableMap<K, V> extends AbstractMap<K, V> implements I
     abstract boolean entryLessThan(Entry<K, V> a, Entry<K, V> b);
 
     @Override
-    public ImmutableSortedMap<K, V> sort(SortFunction<K> function) {
+    public ImmutableSortedMap<K, V> sort(SortFunction<? super K> function) {
         final ImmutableSortedMap.Builder<K, V> builder = new ImmutableSortedMap.Builder<>(function);
         final int size = _keys.length;
         for (int i = 0; i < size; i++) {

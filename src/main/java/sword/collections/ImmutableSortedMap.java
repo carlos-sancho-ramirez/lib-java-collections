@@ -23,9 +23,9 @@ import static sword.collections.SortUtils.findValue;
  */
 public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
 
-    private final SortFunction<K> _sortFunction;
+    private final SortFunction<? super K> _sortFunction;
 
-    ImmutableSortedMap(SortFunction<K> sortFunction, Object[] keys, Object[] values) {
+    ImmutableSortedMap(SortFunction<? super K> sortFunction, Object[] keys, Object[] values) {
         super(keys, values);
         _sortFunction = sortFunction;
     }
@@ -192,7 +192,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
         private final MutableSortedMap<K, V> _map;
 
-        Builder(SortFunction<K> sortFunction) {
+        Builder(SortFunction<? super K> sortFunction) {
             final int length = MutableSortedMap.suitableArrayLength(0);
             _map = new MutableSortedMap<>(sortFunction, new Object[length], new Object[length], 0);
         }

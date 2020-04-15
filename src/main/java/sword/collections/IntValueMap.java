@@ -97,7 +97,7 @@ public interface IntValueMap<T> extends IntTransformable {
      * @return A new map where all current elements and future newly added will
      * be sorted following the given function.
      */
-    IntValueMap<T> sort(SortFunction<T> function);
+    IntValueMap<T> sort(SortFunction<? super T> function);
 
     /**
      * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
