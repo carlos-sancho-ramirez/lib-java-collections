@@ -100,7 +100,7 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
     }
 
     @Override
-    public <E> IntKeyMap<E> assign(IntFunction<E> function) {
+    public <E> IntKeyMap<E> assign(IntFunction<? extends E> function) {
         final int size = size();
         if (size == 0) {
             return ImmutableIntKeyMap.empty();

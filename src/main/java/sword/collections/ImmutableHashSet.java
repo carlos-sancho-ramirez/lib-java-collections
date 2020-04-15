@@ -52,7 +52,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    public <E> ImmutableHashMap<T, E> assign(Function<T, E> function) {
+    public <E> ImmutableHashMap<T, E> assign(Function<? super T, ? extends E> function) {
         final int size = size();
         if (size == 0) {
             return ImmutableHashMap.empty();
@@ -70,7 +70,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    public ImmutableIntValueMap<T> assignToInt(IntResultFunction<T> function) {
+    public ImmutableIntValueMap<T> assignToInt(IntResultFunction<? super T> function) {
         final int size = _values.length;
         if (size == 0) {
             return ImmutableIntValueHashMap.empty();

@@ -89,7 +89,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    public <E> ImmutableSortedMap<T, E> assign(Function<T, E> function) {
+    public <E> ImmutableSortedMap<T, E> assign(Function<? super T, ? extends E> function) {
         final int size = _values.length;
         final Object[] values = new Object[size];
 
@@ -101,7 +101,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    public ImmutableIntValueSortedMap<T> assignToInt(IntResultFunction<T> function) {
+    public ImmutableIntValueSortedMap<T> assignToInt(IntResultFunction<? super T> function) {
         final int size = _values.length;
         final int[] values = new int[size];
 

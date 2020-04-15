@@ -84,7 +84,7 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
     }
 
     @Override
-    public <E> ImmutableIntKeyMap<E> assign(IntFunction<E> function) {
+    public <E> ImmutableIntKeyMap<E> assign(IntFunction<? extends E> function) {
         final int size = _values.length;
         if (size == 0) {
             return ImmutableIntKeyMap.empty();

@@ -25,10 +25,10 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     <E> ImmutableList<E> map(Function<? super T, ? extends E> func);
 
     @Override
-    <V> ImmutableMap<T, V> assign(Function<T, V> function);
+    <V> ImmutableMap<T, V> assign(Function<? super T, ? extends V> function);
 
     @Override
-    ImmutableIntValueMap<T> assignToInt(IntResultFunction<T> function);
+    ImmutableIntValueMap<T> assignToInt(IntResultFunction<? super T> function);
 
     @Override
     ImmutableSet<T> removeAt(int index);

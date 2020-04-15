@@ -43,7 +43,7 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
-    public <E> Map<T, E> assign(Function<T, E> function) {
+    public <E> Map<T, E> assign(Function<? super T, ? extends E> function) {
         final int size = _size;
         if (size == 0) {
             return ImmutableHashMap.empty();
@@ -64,7 +64,7 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
-    public IntValueMap<T> assignToInt(IntResultFunction<T> function) {
+    public IntValueMap<T> assignToInt(IntResultFunction<? super T> function) {
         final int size = _size;
         if (size == 0) {
             return ImmutableIntValueHashMap.empty();

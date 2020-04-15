@@ -42,7 +42,7 @@ public interface Set<T> extends Transformable<T> {
      * @return A new map where value of this set becomes its keys,
      *         and values are calculated through the given function.
      */
-    <V> Map<T, V> assign(Function<T, V> function);
+    <V> Map<T, V> assign(Function<? super T, ? extends V> function);
 
     /**
      * Assign a value calculated though the given function to each value of this set,
@@ -52,7 +52,7 @@ public interface Set<T> extends Transformable<T> {
      * @return A new map where value of this set becomes its keys,
      *         and values are calculated through the given function.
      */
-    IntValueMap<T> assignToInt(IntResultFunction<T> function);
+    IntValueMap<T> assignToInt(IntResultFunction<? super T> function);
 
     /**
      * Return an immutable set from the values contained in this set.

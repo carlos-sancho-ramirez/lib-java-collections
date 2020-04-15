@@ -43,7 +43,7 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
-    public <E> Map<T, E> assign(Function<T, E> function) {
+    public <E> Map<T, E> assign(Function<? super T, ? extends E> function) {
         final int size = _size;
         final Object[] keys = new Object[size];
         final Object[] values = new Object[size];
@@ -58,7 +58,7 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
-    public IntValueMap<T> assignToInt(IntResultFunction<T> function) {
+    public IntValueMap<T> assignToInt(IntResultFunction<? super T> function) {
         final int size = _size;
         final Object[] keys = new Object[size];
         final int[] values = new int[size];

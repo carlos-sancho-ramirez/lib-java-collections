@@ -41,7 +41,7 @@ public interface IntSet extends IntTransformable {
      * @return A new map where value of this set becomes its keys,
      *         and values are calculated through the given function.
      */
-    <V> IntKeyMap<V> assign(IntFunction<V> function);
+    <V> IntKeyMap<V> assign(IntFunction<? extends V> function);
 
     /**
      * Assign a value calculated though the given function to each value of this set,

@@ -94,7 +94,7 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
     }
 
     @Override
-    public <E> IntKeyMap<E> assign(IntFunction<E> function) {
+    public <E> IntKeyMap<E> assign(IntFunction<? extends E> function) {
         if (_size == 0) {
             return ImmutableIntKeyMap.empty();
         }
