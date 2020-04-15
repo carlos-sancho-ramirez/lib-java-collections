@@ -50,7 +50,7 @@ public interface Transformer<T> extends Traverser<T> {
      * @param mapFunc Function to be applied to each of the values within the collection.
      * @return A transformer that applies the given function just in time.
      */
-    IntTransformer mapToInt(IntResultFunction<T> mapFunc);
+    IntTransformer mapToInt(IntResultFunction<? super T> mapFunc);
 
     /**
      * Applies the given function to each of the
@@ -58,7 +58,7 @@ public interface Transformer<T> extends Traverser<T> {
      * @param mapFunc Function to be applied to each of the values within the collection.
      * @return A transformer that applies the given function just in time.
      */
-    <U> Transformer<U> map(Function<T, U> mapFunc);
+    <U> Transformer<U> map(Function<? super T, ? extends U> mapFunc);
 
     /**
      * Composes a map by traversing the collection and counting how many times an element is found.

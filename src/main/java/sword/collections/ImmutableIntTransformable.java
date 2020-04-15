@@ -42,7 +42,7 @@ interface ImmutableIntTransformable extends IntTransformable {
      * @param func Function to be applied to each value in the collection.
      * @param <U> New type for the elements in the new created collection.
      */
-    <U> ImmutableTransformable<U> map(IntFunction<U> func);
+    <U> ImmutableTransformable<U> map(IntFunction<? extends U> func);
 
     /**
      * Returns a new {@link ImmutableIntTransformable} where the item in the given position has been removed.

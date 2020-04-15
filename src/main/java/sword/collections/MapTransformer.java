@@ -3,9 +3,9 @@ package sword.collections;
 final class MapTransformer<T, R> extends AbstractTransformer<R> {
 
     private final Transformer<T> _source;
-    private final Function<T, R> _func;
+    private final Function<? super T, ? extends R> _func;
 
-    MapTransformer(Transformer<T> source, Function<T, R> func) {
+    MapTransformer(Transformer<T> source, Function<? super T, ? extends R> func) {
         if (source == null || func == null) {
             throw new IllegalArgumentException();
         }

@@ -28,7 +28,7 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
     ImmutableIntList mapToInt(IntToIntFunction func);
 
     @Override
-    <U> ImmutableList<U> map(IntFunction<U> func);
+    <U> ImmutableList<U> map(IntFunction<? extends U> func);
 
     @Override
     <V> ImmutableIntKeyMap<V> assign(IntFunction<V> function);

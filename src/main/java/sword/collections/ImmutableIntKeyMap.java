@@ -159,7 +159,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
      * @param mapFunc Function the must be applied to values in order to modify them.
      */
     @Override
-    public ImmutableIntPairMap mapToInt(IntResultFunction<T> mapFunc) {
+    public ImmutableIntPairMap mapToInt(IntResultFunction<? super T> mapFunc) {
         final int size = _keys.length;
         final int[] newValues = new int[size];
         for (int i = 0; i < size; i++) {
@@ -170,7 +170,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     @Override
-    public <U> ImmutableIntKeyMap<U> map(Function<T, U> mapFunc) {
+    public <U> ImmutableIntKeyMap<U> map(Function<? super T, ? extends U> mapFunc) {
         final int size = _keys.length;
         final Object[] newValues = new Object[size];
         for (int i = 0; i < size; i++) {

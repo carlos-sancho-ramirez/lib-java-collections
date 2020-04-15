@@ -26,12 +26,12 @@ public interface Set<T> extends Transformable<T> {
     }
 
     @Override
-    default IntList mapToInt(IntResultFunction<T> func) {
+    default IntList mapToInt(IntResultFunction<? super T> func) {
         return iterator().mapToInt(func).toList();
     }
 
     @Override
-    <E> List<E> map(Function<T, E> func);
+    <E> List<E> map(Function<? super T, ? extends E> func);
 
     /**
      * Assign a value calculated though the given function to each value of this set,

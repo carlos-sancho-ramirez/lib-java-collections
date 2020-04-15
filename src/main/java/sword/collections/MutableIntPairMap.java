@@ -114,7 +114,7 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     }
 
     @Override
-    public <U> IntKeyMap<U> map(IntFunction<U> mapFunc) {
+    public <U> IntKeyMap<U> map(IntFunction<? extends U> mapFunc) {
         final int size = _size;
         final Object[] newValues = new Object[size];
         final int[] newKeys = new int[size];

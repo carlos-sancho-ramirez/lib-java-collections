@@ -3,9 +3,9 @@ package sword.collections;
 final class MapResultList<S, T> extends AbstractTraversable<T> implements List<T> {
 
     private final Transformable<S> _transformable;
-    private final Function<S, T> _function;
+    private final Function<? super S, ? extends T> _function;
 
-    MapResultList(Transformable<S> transformable, Function<S, T> function) {
+    MapResultList(Transformable<S> transformable, Function<? super S, ? extends T> function) {
         if (transformable == null || function == null) {
             throw new IllegalArgumentException();
         }

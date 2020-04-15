@@ -49,7 +49,7 @@ abstract class AbstractImmutableIntTransformable extends AbstractIntTraversable 
     }
 
     @Override
-    public <U> ImmutableTransformable<U> map(IntFunction<U> func) {
+    public <U> ImmutableTransformable<U> map(IntFunction<? extends U> func) {
         final ImmutableTransformableBuilder<U> builder = newBuilder();
 
         for (int item : this) {

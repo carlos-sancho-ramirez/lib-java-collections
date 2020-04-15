@@ -23,12 +23,12 @@ public abstract class AbstractTransformer<E> implements Transformer<E> {
     }
 
     @Override
-    public IntTransformer mapToInt(IntResultFunction<E> mapFunc) {
+    public IntTransformer mapToInt(IntResultFunction<? super E> mapFunc) {
         return new MapToIntTransformer<>(this, mapFunc);
     }
 
     @Override
-    public <U> Transformer<U> map(Function<E, U> mapFunc) {
+    public <U> Transformer<U> map(Function<? super E, ? extends U> mapFunc) {
         return new MapTransformer<>(this, mapFunc);
     }
 

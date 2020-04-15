@@ -33,7 +33,7 @@ abstract class AbstractImmutableIntSet extends AbstractImmutableIntTransformable
     public abstract ImmutableIntList mapToInt(IntToIntFunction func);
 
     @Override
-    public abstract <U> ImmutableList<U> map(IntFunction<U> func);
+    public abstract <U> ImmutableList<U> map(IntFunction<? extends U> func);
 
     @Override
     public <E> ImmutableIntKeyMap<E> assign(IntFunction<E> function) {

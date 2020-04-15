@@ -43,7 +43,7 @@ abstract class AbstractIntTransformer implements IntTransformer {
     }
 
     @Override
-    public <U> Transformer<U> map(IntFunction<U> mapFunc) {
+    public <U> Transformer<U> map(IntFunction<? extends U> mapFunc) {
         return new MapIntTransformer<>(this, mapFunc);
     }
 

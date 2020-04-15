@@ -92,7 +92,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
     }
 
     @Override
-    public <U> ImmutableList<U> map(IntFunction<U> func) {
+    public <U> ImmutableList<U> map(IntFunction<? extends U> func) {
         return (ImmutableList<U>) super.map(func);
     }
 

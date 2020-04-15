@@ -62,7 +62,7 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
     }
 
     @Override
-    public <U> ImmutableList<U> map(IntFunction<U> func) {
+    public <U> ImmutableList<U> map(IntFunction<? extends U> func) {
         final int size = size();
         final Object[] newValues = new Object[size];
         for (int i = 0; i < size; i++) {

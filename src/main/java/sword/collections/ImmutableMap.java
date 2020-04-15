@@ -28,10 +28,10 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
     ImmutableMap<K, V> filterNot(Predicate<? super V> predicate);
 
     @Override
-    ImmutableIntValueMap<K> mapToInt(IntResultFunction<V> mapFunc);
+    ImmutableIntValueMap<K> mapToInt(IntResultFunction<? super V> mapFunc);
 
     @Override
-    <U> ImmutableMap<K, U> map(Function<V, U> mapFunc);
+    <U> ImmutableMap<K, U> map(Function<? super V, ? extends U> mapFunc);
 
     @Override
     ImmutableMap<K, V> sort(SortFunction<K> function);

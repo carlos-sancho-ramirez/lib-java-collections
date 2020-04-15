@@ -180,7 +180,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     @Override
-    public ImmutableIntList mapToInt(IntResultFunction<T> func) {
+    public ImmutableIntList mapToInt(IntResultFunction<? super T> func) {
         final int length = _values.length;
         final int[] newValues = new int[length];
         for (int i = 0; i < length; i++) {
@@ -191,7 +191,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     @Override
-    public <U> ImmutableList<U> map(Function<T, U> func) {
+    public <U> ImmutableList<U> map(Function<? super T, ? extends U> func) {
         final int length = _values.length;
         final Object[] newValues = new Object[length];
         for (int i = 0; i < length; i++) {

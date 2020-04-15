@@ -30,7 +30,7 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTransformable<T>
     }
 
     @Override
-    public ImmutableIntList mapToInt(IntResultFunction<T> func) {
+    public ImmutableIntList mapToInt(IntResultFunction<? super T> func) {
         final int length = _values.length;
         final int[] newValues = new int[length];
         for (int i = 0; i < length; i++) {
@@ -41,7 +41,7 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTransformable<T>
     }
 
     @Override
-    public <E> ImmutableList<E> map(Function<T, E> func) {
+    public <E> ImmutableList<E> map(Function<? super T, ? extends E> func) {
         final int length = _values.length;
         final Object[] newValues = new Object[length];
         for (int i = 0; i < length; i++) {

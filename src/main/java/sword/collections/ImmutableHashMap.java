@@ -157,7 +157,7 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableIntValueHashMap<K> mapToInt(IntResultFunction<V> mapFunc) {
+    public ImmutableIntValueHashMap<K> mapToInt(IntResultFunction<? super V> mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
         for (int i = 0; i < itemCount; i++) {
@@ -168,7 +168,7 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public <U> ImmutableHashMap<K, U> map(Function<V, U> mapFunc) {
+    public <U> ImmutableHashMap<K, U> map(Function<? super V, ? extends U> mapFunc) {
         final int itemCount = _keys.length;
         final Object[] newValues = new Object[itemCount];
         for (int i = 0; i < itemCount; i++) {

@@ -11,10 +11,10 @@ public interface IntKeyMap<T> extends Transformable<T> {
     IntKeyMap<T> filterNot(Predicate<? super T> predicate);
 
     @Override
-    <E> IntKeyMap<E> map(Function<T, E> func);
+    <E> IntKeyMap<E> map(Function<? super T, ? extends E> func);
 
     @Override
-    IntPairMap mapToInt(IntResultFunction<T> func);
+    IntPairMap mapToInt(IntResultFunction<? super T> func);
 
     /**
      * Return the value assigned to the given key.

@@ -8,7 +8,7 @@ public interface TransformerWithKey<K, V> extends Transformer<V> {
     K key();
 
     @Override
-    <U> TransformerWithKey<K, U> map(Function<V, U> mapFunc);
+    <U> TransformerWithKey<K, U> map(Function<? super V, ? extends U> mapFunc);
 
     /**
      * Build a new map containing all elements given on traversing this collection

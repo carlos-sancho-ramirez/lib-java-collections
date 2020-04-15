@@ -80,7 +80,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
-    public <E> IntKeyMap<E> map(Function<T, E> func) {
+    public <E> IntKeyMap<E> map(Function<? super T, ? extends E> func) {
         final int[] newKeys = new int[_size];
         final Object[] newValues = new Object[_size];
 
@@ -93,7 +93,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
-    public IntPairMap mapToInt(IntResultFunction<T> func) {
+    public IntPairMap mapToInt(IntResultFunction<? super T> func) {
         final int[] newKeys = new int[_size];
         final int[] newValues = new int[_size];
 

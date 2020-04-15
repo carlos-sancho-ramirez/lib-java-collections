@@ -49,7 +49,7 @@ public interface IntTransformer extends IntTraverser {
      * @param mapFunc Function to be applied to each of the values within the collection.
      * @return A transformer that applies the given function just in time.
      */
-    <U> Transformer<U> map(IntFunction<U> mapFunc);
+    <U> Transformer<U> map(IntFunction<? extends U> mapFunc);
 
     /**
      * Composes a map by traversing the collection and counting how many times an element is found.

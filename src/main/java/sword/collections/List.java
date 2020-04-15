@@ -17,8 +17,8 @@ public interface List<T> extends Transformable<T> {
     }
 
     @Override
-    default <E> List<E> map(Function<T, E> func) {
-        return iterator().map(func).toList();
+    default <E> List<E> map(Function<? super T, ? extends E> func) {
+        return iterator().<E>map(func).toList();
     }
 
     /**

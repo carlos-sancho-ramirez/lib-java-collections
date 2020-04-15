@@ -30,8 +30,8 @@ public interface IntList extends IntTransformable {
     }
 
     @Override
-    default <U> List<U> map(IntFunction<U> func) {
-        return iterator().map(func).toList();
+    default <U> List<U> map(IntFunction<? extends U> func) {
+        return iterator().<U>map(func).toList();
     }
 
     /**

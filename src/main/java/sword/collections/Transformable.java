@@ -50,12 +50,12 @@ public interface Transformable<T> extends Traversable<T> {
      */
     Transformable<T> filterNot(Predicate<? super T> predicate);
 
-    default IntTransformable mapToInt(IntResultFunction<T> func) {
+    default IntTransformable mapToInt(IntResultFunction<? super T> func) {
         return iterator().mapToInt(func).toList();
     }
 
-    default <E> Transformable<E> map(Function<T, E> func) {
-        return iterator().map(func).toList();
+    default <E> Transformable<E> map(Function<? super T, ? extends E> func) {
+        return iterator().<E>map(func).toList();
     }
 
     /**

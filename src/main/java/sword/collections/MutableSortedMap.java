@@ -220,7 +220,7 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
-    public <E> Map<K, E> map(Function<V, E> func) {
+    public <E> Map<K, E> map(Function<? super V, ? extends E> func) {
         final Object[] newKeys = new Object[_size];
         final Object[] newValues = new Object[_size];
 
@@ -233,7 +233,7 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
-    public IntValueMap<K> mapToInt(IntResultFunction<V> func) {
+    public IntValueMap<K> mapToInt(IntResultFunction<? super V> func) {
         final Object[] newKeys = new Object[_size];
         final int[] newValues = new int[_size];
 

@@ -39,7 +39,7 @@ public interface ImmutableTransformable<T> extends Transformable<T> {
      *
      * @param func Function to be applied to each element in the list
      */
-    ImmutableIntTransformable mapToInt(IntResultFunction<T> func);
+    ImmutableIntTransformable mapToInt(IntResultFunction<? super T> func);
 
     /**
      * Applies the given function to each element on the collection and composes a
@@ -49,7 +49,7 @@ public interface ImmutableTransformable<T> extends Transformable<T> {
      * @param func Function to be applied to each element in the list
      * @param <U> New type for the elements in the new created collection.
      */
-    <U> ImmutableTransformable<U> map(Function<T, U> func);
+    <U> ImmutableTransformable<U> map(Function<? super T, ? extends U> func);
 
     /**
      * Returns a new {@link ImmutableTransformable} where the item in the given position has been removed.

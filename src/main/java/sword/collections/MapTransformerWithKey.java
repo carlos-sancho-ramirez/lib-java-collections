@@ -3,9 +3,9 @@ package sword.collections;
 final class MapTransformerWithKey<K, T, R> extends AbstractTransformerWithKey<K, R> {
 
     private final TransformerWithKey<K, T> _source;
-    private final Function<T, R> _func;
+    private final Function<? super T, ? extends R> _func;
 
-    MapTransformerWithKey(TransformerWithKey<K, T> source, Function<T, R> func) {
+    MapTransformerWithKey(TransformerWithKey<K, T> source, Function<? super T, ? extends R> func) {
         if (source == null || func == null) {
             throw new IllegalArgumentException();
         }

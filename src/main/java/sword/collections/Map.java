@@ -75,10 +75,10 @@ public interface Map<K, V> extends Transformable<V> {
     Map<K, V> filterNot(Predicate<? super V> predicate);
 
     @Override
-    <E> Map<K, E> map(Function<V, E> func);
+    <E> Map<K, E> map(Function<? super V, ? extends E> func);
 
     @Override
-    IntValueMap<K> mapToInt(IntResultFunction<V> func);
+    IntValueMap<K> mapToInt(IntResultFunction<? super V> func);
 
     /**
      * Return an immutable map from the values contained in this map.

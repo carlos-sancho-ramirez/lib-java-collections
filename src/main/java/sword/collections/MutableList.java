@@ -87,7 +87,7 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
     }
 
     @Override
-    public <E> List<E> map(Function<T, E> func) {
+    public <E> List<E> map(Function<? super T, ? extends E> func) {
         return new MapResultList<>(this, func);
     }
 

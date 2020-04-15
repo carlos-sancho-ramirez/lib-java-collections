@@ -48,7 +48,7 @@ public interface IntPairMap extends IntTransformable {
     IntPairMap filterNot(IntPredicate predicate);
 
     @Override
-    <U> IntKeyMap<U> map(IntFunction<U> func);
+    <U> IntKeyMap<U> map(IntFunction<? extends U> func);
 
     @Override
     IntPairMap mapToInt(IntToIntFunction func);

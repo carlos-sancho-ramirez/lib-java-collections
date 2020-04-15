@@ -28,8 +28,8 @@ public interface IntSet extends IntTransformable {
         return iterator().mapToInt(func).toList();
     }
 
-    default <U> List<U> map(IntFunction<U> func) {
-        return iterator().map(func).toList();
+    default <U> List<U> map(IntFunction<? extends U> func) {
+        return iterator().<U>map(func).toList();
     }
 
     /**

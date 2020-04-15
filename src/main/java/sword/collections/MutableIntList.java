@@ -66,7 +66,7 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
     }
 
     @Override
-    public <U> List<U> map(IntFunction<U> func) {
+    public <U> List<U> map(IntFunction<? extends U> func) {
         if (_size == 0) {
             return ImmutableList.empty();
         }

@@ -3,9 +3,9 @@ package sword.collections;
 final class MapToIntTransformer<T> extends AbstractIntTransformer {
 
     private final Transformer<T> _source;
-    private final IntResultFunction<T> _func;
+    private final IntResultFunction<? super T> _func;
 
-    MapToIntTransformer(Transformer<T> source, IntResultFunction<T> func) {
+    MapToIntTransformer(Transformer<T> source, IntResultFunction<? super T> func) {
         if (source == null || func == null) {
             throw new IllegalArgumentException();
         }

@@ -19,10 +19,10 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     ImmutableSet<T> filterNot(Predicate<? super T> predicate);
 
     @Override
-    ImmutableIntList mapToInt(IntResultFunction<T> func);
+    ImmutableIntList mapToInt(IntResultFunction<? super T> func);
 
     @Override
-    <E> ImmutableList<E> map(Function<T, E> func);
+    <E> ImmutableList<E> map(Function<? super T, ? extends E> func);
 
     @Override
     <V> ImmutableMap<T, V> assign(Function<T, V> function);

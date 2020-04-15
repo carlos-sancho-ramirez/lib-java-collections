@@ -145,7 +145,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableIntValueSortedMap<K> mapToInt(IntResultFunction<V> mapFunc) {
+    public ImmutableIntValueSortedMap<K> mapToInt(IntResultFunction<? super V> mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
         for (int i = 0; i < itemCount; i++) {
@@ -156,7 +156,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public <U> ImmutableSortedMap<K, U> map(Function<V, U> mapFunc) {
+    public <U> ImmutableSortedMap<K, U> map(Function<? super V, ? extends U> mapFunc) {
         final int itemCount = _keys.length;
         final Object[] newValues = new Object[itemCount];
         for (int i = 0; i < itemCount; i++) {

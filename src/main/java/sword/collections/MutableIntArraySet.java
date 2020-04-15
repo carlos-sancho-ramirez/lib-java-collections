@@ -80,7 +80,7 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
     }
 
     @Override
-    public <U> List<U> map(IntFunction<U> func) {
+    public <U> List<U> map(IntFunction<? extends U> func) {
         if (_size == 0) {
             return ImmutableList.empty();
         }

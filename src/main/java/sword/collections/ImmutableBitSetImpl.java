@@ -79,7 +79,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
     }
 
     @Override
-    public <U> ImmutableList<U> map(IntFunction<U> func) {
+    public <U> ImmutableList<U> map(IntFunction<? extends U> func) {
         final ImmutableList.Builder<U> builder = new ImmutableList.Builder<>();
         for (int value : this) {
             builder.append(func.apply(value));

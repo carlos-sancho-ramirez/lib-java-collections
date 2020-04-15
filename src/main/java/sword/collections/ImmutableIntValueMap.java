@@ -33,7 +33,7 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
     ImmutableIntValueMap<T> mapToInt(IntToIntFunction mapFunc);
 
     @Override
-    <U> ImmutableMap<T, U> map(IntFunction<U> mapFunc);
+    <U> ImmutableMap<T, U> map(IntFunction<? extends U> mapFunc);
 
     @Override
     ImmutableIntValueMap<T> sort(SortFunction<T> function);

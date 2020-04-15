@@ -3,7 +3,7 @@ package sword.collections;
 public abstract class AbstractTransformerWithKey<K, V> extends AbstractTransformer<V> implements TransformerWithKey<K, V> {
 
     @Override
-    public <U> TransformerWithKey<K, U> map(Function<V, U> mapFunc) {
+    public <U> TransformerWithKey<K, U> map(Function<? super V, ? extends U> mapFunc) {
         return new MapTransformerWithKey<>(this, mapFunc);
     }
 

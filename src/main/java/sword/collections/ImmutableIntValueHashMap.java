@@ -159,7 +159,7 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
     }
 
     @Override
-    public <U> ImmutableHashMap<T, U> map(IntFunction<U> mapFunc) {
+    public <U> ImmutableHashMap<T, U> map(IntFunction<? extends U> mapFunc) {
         final int itemCount = _keys.length;
         final Object[] newValues = new Object[itemCount];
         for (int i = 0; i < itemCount; i++) {

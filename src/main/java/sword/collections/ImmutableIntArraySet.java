@@ -54,7 +54,7 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
     }
 
     @Override
-    public <U> ImmutableList<U> map(IntFunction<U> func) {
+    public <U> ImmutableList<U> map(IntFunction<? extends U> func) {
         final int size = _values.length;
         if (size == 0) {
             return ImmutableList.empty();
