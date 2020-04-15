@@ -67,12 +67,12 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     @Override
-    public ImmutableList<T> filter(Predicate<T> predicate) {
+    public ImmutableList<T> filter(Predicate<? super T> predicate) {
         return (ImmutableList<T>) super.filter(predicate);
     }
 
     @Override
-    public ImmutableList<T> filterNot(Predicate<T> predicate) {
+    public ImmutableList<T> filterNot(Predicate<? super T> predicate) {
         return (ImmutableList<T>) super.filterNot(predicate);
     }
 

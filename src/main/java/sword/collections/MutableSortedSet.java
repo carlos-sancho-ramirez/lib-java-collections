@@ -87,7 +87,7 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
-    public Set<T> filter(Predicate<T> predicate) {
+    public Set<T> filter(Predicate<? super T> predicate) {
         final ImmutableSortedSet.Builder<T> builder = new ImmutableSortedSet.Builder<>(_sortFunction);
         for (int i = 0; i < _size; i++) {
             T value = valueAt(i);
@@ -100,7 +100,7 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
-    public Set<T> filterNot(Predicate<T> predicate) {
+    public Set<T> filterNot(Predicate<? super T> predicate) {
         final ImmutableSortedSet.Builder<T> builder = new ImmutableSortedSet.Builder<>(_sortFunction);
         for (int i = 0; i < _size; i++) {
             T value = valueAt(i);

@@ -121,7 +121,7 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableHashMap<K, V> filter(Predicate<V> predicate) {
+    public ImmutableHashMap<K, V> filter(Predicate<? super V> predicate) {
         final Builder<K, V> builder = new Builder<>();
         final int length = _keys.length;
         boolean changed = false;
@@ -139,7 +139,7 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableHashMap<K, V> filterNot(Predicate<V> predicate) {
+    public ImmutableHashMap<K, V> filterNot(Predicate<? super V> predicate) {
         final Builder<K, V> builder = new Builder<>();
         final int length = _keys.length;
         boolean changed = false;

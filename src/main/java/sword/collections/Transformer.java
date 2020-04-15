@@ -34,7 +34,7 @@ public interface Transformer<T> extends Traverser<T> {
      * @param predicate Only value returning true for the given this predicate will be present
      *                  in the resulting Transformer.
      */
-    Transformer<T> filter(Predicate<T> predicate);
+    Transformer<T> filter(Predicate<? super T> predicate);
 
     /**
      * Composes a new Transformer that filters this one by applying the given predicate to the
@@ -42,7 +42,7 @@ public interface Transformer<T> extends Traverser<T> {
      * @param predicate Only value returning false for the given this predicate will be present
      *                  in the resulting Transformer.
      */
-    Transformer<T> filterNot(Predicate<T> predicate);
+    Transformer<T> filterNot(Predicate<? super T> predicate);
 
     /**
      * Applies the given function to each of the

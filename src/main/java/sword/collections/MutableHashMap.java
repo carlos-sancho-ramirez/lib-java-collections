@@ -201,7 +201,7 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
-    public Map<K, V> filter(Predicate<V> predicate) {
+    public Map<K, V> filter(Predicate<? super V> predicate) {
         final ImmutableHashMap.Builder<K, V> builder = new ImmutableHashMap.Builder<>();
         for (int i = 0; i < _size; i++) {
             final V value = valueAt(i);
@@ -214,7 +214,7 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
-    public Map<K, V> filterNot(Predicate<V> predicate) {
+    public Map<K, V> filterNot(Predicate<? super V> predicate) {
         final ImmutableHashMap.Builder<K, V> builder = new ImmutableHashMap.Builder<>();
         for (int i = 0; i < _size; i++) {
             final V value = valueAt(i);

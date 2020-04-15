@@ -57,7 +57,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    public ImmutableSortedSet<T> filter(Predicate<T> predicate) {
+    public ImmutableSortedSet<T> filter(Predicate<? super T> predicate) {
         boolean somethingRemoved = false;
         final ImmutableSortedSet.Builder<T> builder = new Builder<>(_sortFunction);
         for (T item : this) {
@@ -73,7 +73,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    public ImmutableSortedSet<T> filterNot(Predicate<T> predicate) {
+    public ImmutableSortedSet<T> filterNot(Predicate<? super T> predicate) {
         boolean somethingRemoved = false;
         final ImmutableSortedSet.Builder<T> builder = new Builder<>(_sortFunction);
         for (T item : this) {

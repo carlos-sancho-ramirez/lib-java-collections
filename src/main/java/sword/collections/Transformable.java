@@ -40,7 +40,7 @@ public interface Transformable<T> extends Traversable<T> {
      * @param predicate Only value returning true for the given predicate will be present
      *                  in the resulting Transformable.
      */
-    Transformable<T> filter(Predicate<T> predicate);
+    Transformable<T> filter(Predicate<? super T> predicate);
 
     /**
      * Composes a new Transformer that filters this one by applying the given predicate to the
@@ -48,7 +48,7 @@ public interface Transformable<T> extends Traversable<T> {
      * @param predicate Only value returning false for the given predicate will be present
      *                  in the resulting Transformable.
      */
-    Transformable<T> filterNot(Predicate<T> predicate);
+    Transformable<T> filterNot(Predicate<? super T> predicate);
 
     default IntTransformable mapToInt(IntResultFunction<T> func) {
         return iterator().mapToInt(func).toList();

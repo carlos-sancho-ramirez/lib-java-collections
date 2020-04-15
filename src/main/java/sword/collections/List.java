@@ -7,12 +7,12 @@ package sword.collections;
 public interface List<T> extends Transformable<T> {
 
     @Override
-    default List<T> filter(Predicate<T> predicate) {
+    default List<T> filter(Predicate<? super T> predicate) {
         return iterator().filter(predicate).toList();
     }
 
     @Override
-    default List<T> filterNot(Predicate<T> predicate) {
+    default List<T> filterNot(Predicate<? super T> predicate) {
         return iterator().filterNot(predicate).toList();
     }
 

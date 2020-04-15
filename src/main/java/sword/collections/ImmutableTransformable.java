@@ -21,7 +21,7 @@ public interface ImmutableTransformable<T> extends Transformable<T> {
      *
      * @param predicate To be applied to each element in order to filter.
      */
-    ImmutableTransformable<T> filter(Predicate<T> predicate);
+    ImmutableTransformable<T> filter(Predicate<? super T> predicate);
 
     /**
      * Applies the given predicate to each of the items within the list and
@@ -30,7 +30,7 @@ public interface ImmutableTransformable<T> extends Transformable<T> {
      *
      * @param predicate To be applied to each element in order to filter.
      */
-    ImmutableTransformable<T> filterNot(Predicate<T> predicate);
+    ImmutableTransformable<T> filterNot(Predicate<? super T> predicate);
 
     /**
      * Applies the given function to each element on the collection and composes a

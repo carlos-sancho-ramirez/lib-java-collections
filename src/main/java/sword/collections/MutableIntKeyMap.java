@@ -54,7 +54,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
-    public IntKeyMap<T> filter(Predicate<T> predicate) {
+    public IntKeyMap<T> filter(Predicate<? super T> predicate) {
         final ImmutableIntKeyMap.Builder<T> builder = new ImmutableIntKeyMap.Builder<>();
         for (int i = 0; i < _size; i++) {
             T value = valueAt(i);
@@ -67,7 +67,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
-    public IntKeyMap<T> filterNot(Predicate<T> predicate) {
+    public IntKeyMap<T> filterNot(Predicate<? super T> predicate) {
         final ImmutableIntKeyMap.Builder<T> builder = new ImmutableIntKeyMap.Builder<>();
         for (int i = 0; i < _size; i++) {
             T value = valueAt(i);

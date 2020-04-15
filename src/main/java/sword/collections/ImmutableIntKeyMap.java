@@ -119,7 +119,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     @Override
-    public ImmutableIntKeyMap<T> filter(Predicate<T> predicate) {
+    public ImmutableIntKeyMap<T> filter(Predicate<? super T> predicate) {
         final Builder<T> builder = new Builder<>();
         final int length = _values.length;
         boolean changed = false;
@@ -137,7 +137,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     @Override
-    public ImmutableIntKeyMap<T> filterNot(Predicate<T> predicate) {
+    public ImmutableIntKeyMap<T> filterNot(Predicate<? super T> predicate) {
         final Builder<T> builder = new Builder<>();
         final int length = _values.length;
         boolean changed = false;

@@ -20,12 +20,12 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTransformable<T>
     }
 
     @Override
-    public AbstractImmutableSet<T> filter(Predicate<T> predicate) {
+    public AbstractImmutableSet<T> filter(Predicate<? super T> predicate) {
         return (AbstractImmutableSet<T>) super.filter(predicate);
     }
 
     @Override
-    public AbstractImmutableSet<T> filterNot(Predicate<T> predicate) {
+    public AbstractImmutableSet<T> filterNot(Predicate<? super T> predicate) {
         return (AbstractImmutableSet<T>) super.filterNot(predicate);
     }
 

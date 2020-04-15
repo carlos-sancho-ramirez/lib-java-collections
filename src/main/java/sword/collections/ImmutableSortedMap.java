@@ -109,7 +109,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableSortedMap<K, V> filter(Predicate<V> predicate) {
+    public ImmutableSortedMap<K, V> filter(Predicate<? super V> predicate) {
         final Builder<K, V> builder = new Builder<>(_sortFunction);
         final int length = _keys.length;
         boolean changed = false;
@@ -127,7 +127,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableSortedMap<K, V> filterNot(Predicate<V> predicate) {
+    public ImmutableSortedMap<K, V> filterNot(Predicate<? super V> predicate) {
         final Builder<K, V> builder = new Builder<>(_sortFunction);
         final int length = _keys.length;
         boolean changed = false;

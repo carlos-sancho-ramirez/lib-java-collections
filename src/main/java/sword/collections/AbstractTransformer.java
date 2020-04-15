@@ -13,12 +13,12 @@ public abstract class AbstractTransformer<E> implements Transformer<E> {
     }
 
     @Override
-    public Transformer<E> filter(Predicate<E> predicate) {
+    public Transformer<E> filter(Predicate<? super E> predicate) {
         return new FilterTransformer<>(this, predicate);
     }
 
     @Override
-    public Transformer<E> filterNot(Predicate<E> predicate) {
+    public Transformer<E> filterNot(Predicate<? super E> predicate) {
         return new FilterTransformer<>(this, v -> !predicate.apply(v));
     }
 

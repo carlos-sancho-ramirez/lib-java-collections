@@ -3,12 +3,12 @@ package sword.collections;
 final class FilterTransformer<T> extends AbstractTransformer<T> {
 
     private final Transformer<T> _source;
-    private final Predicate<T> _func;
+    private final Predicate<? super T> _func;
 
     private boolean _hasNext;
     private T _next;
 
-    FilterTransformer(Transformer<T> source, Predicate<T> func) {
+    FilterTransformer(Transformer<T> source, Predicate<? super T> func) {
         if (source == null || func == null) {
             throw new IllegalArgumentException();
         }

@@ -69,10 +69,10 @@ public interface Map<K, V> extends Transformable<V> {
     Set<Entry<K, V>> entries();
 
     @Override
-    Map<K, V> filter(Predicate<V> predicate);
+    Map<K, V> filter(Predicate<? super V> predicate);
 
     @Override
-    Map<K, V> filterNot(Predicate<V> predicate);
+    Map<K, V> filterNot(Predicate<? super V> predicate);
 
     @Override
     <E> Map<K, E> map(Function<V, E> func);

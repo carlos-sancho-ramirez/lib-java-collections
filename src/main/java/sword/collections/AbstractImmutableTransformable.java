@@ -5,7 +5,7 @@ abstract class AbstractImmutableTransformable<T> extends AbstractTraversable<T> 
     abstract <U> ImmutableTransformableBuilder<U> newBuilder();
 
     @Override
-    public ImmutableTransformable<T> filter(Predicate<T> predicate) {
+    public ImmutableTransformable<T> filter(Predicate<? super T> predicate) {
         boolean somethingRemoved = false;
         ImmutableTransformableBuilder<T> builder = newBuilder();
         for (T item : this) {
@@ -21,7 +21,7 @@ abstract class AbstractImmutableTransformable<T> extends AbstractTraversable<T> 
     }
 
     @Override
-    public ImmutableTransformable<T> filterNot(Predicate<T> predicate) {
+    public ImmutableTransformable<T> filterNot(Predicate<? super T> predicate) {
         boolean somethingRemoved = false;
         ImmutableTransformableBuilder<T> builder = newBuilder();
         for (T item : this) {

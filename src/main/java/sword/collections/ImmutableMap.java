@@ -22,10 +22,10 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
     ImmutableMap<K, V> put(K key, V value);
 
     @Override
-    ImmutableMap<K, V> filter(Predicate<V> predicate);
+    ImmutableMap<K, V> filter(Predicate<? super V> predicate);
 
     @Override
-    ImmutableMap<K, V> filterNot(Predicate<V> predicate);
+    ImmutableMap<K, V> filterNot(Predicate<? super V> predicate);
 
     @Override
     ImmutableIntValueMap<K> mapToInt(IntResultFunction<V> mapFunc);

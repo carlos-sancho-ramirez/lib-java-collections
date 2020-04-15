@@ -5,10 +5,10 @@ import static sword.collections.SortUtils.equal;
 public interface IntKeyMap<T> extends Transformable<T> {
 
     @Override
-    IntKeyMap<T> filter(Predicate<T> predicate);
+    IntKeyMap<T> filter(Predicate<? super T> predicate);
 
     @Override
-    IntKeyMap<T> filterNot(Predicate<T> predicate);
+    IntKeyMap<T> filterNot(Predicate<? super T> predicate);
 
     @Override
     <E> IntKeyMap<E> map(Function<T, E> func);

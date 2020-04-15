@@ -13,10 +13,10 @@ package sword.collections;
 public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
 
     @Override
-    ImmutableSet<T> filter(Predicate<T> predicate);
+    ImmutableSet<T> filter(Predicate<? super T> predicate);
 
     @Override
-    ImmutableSet<T> filterNot(Predicate<T> predicate);
+    ImmutableSet<T> filterNot(Predicate<? super T> predicate);
 
     @Override
     ImmutableIntList mapToInt(IntResultFunction<T> func);

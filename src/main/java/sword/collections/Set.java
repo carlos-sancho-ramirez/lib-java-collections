@@ -16,12 +16,12 @@ package sword.collections;
 public interface Set<T> extends Transformable<T> {
 
     @Override
-    default Set<T> filter(Predicate<T> predicate) {
+    default Set<T> filter(Predicate<? super T> predicate) {
         return iterator().filter(predicate).toSet();
     }
 
     @Override
-    default Set<T> filterNot(Predicate<T> predicate) {
+    default Set<T> filterNot(Predicate<? super T> predicate) {
         return iterator().filterNot(predicate).toSet();
     }
 
