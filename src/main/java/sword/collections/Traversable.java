@@ -4,6 +4,11 @@ public interface Traversable<T> extends Iterable<T>, Sizable {
 
     Traverser<T> iterator();
 
+    @Override
+    default int size() {
+        return iterator().size();
+    }
+
     /**
      * Return true if an equivalent item is found in the collection, this means
      * that it will be true if calling {@link Object#equals(Object)} with
@@ -81,17 +86,5 @@ public interface Traversable<T> extends Iterable<T>, Sizable {
      */
     default T reduce(ReduceFunction<T> func, T defaultValue) {
         return iterator().reduce(func, defaultValue);
-    }
-
-    @Override
-    default int size() {
-        int count = 0;
-        final Traverser<T> it = iterator();
-        while (it.hasNext()) {
-            it.next();
-            count++;
-        }
-
-        return count;
     }
 }

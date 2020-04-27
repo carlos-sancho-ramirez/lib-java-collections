@@ -140,4 +140,18 @@ public interface Traverser<T> extends Iterator<T> {
 
         return result;
     }
+
+    /**
+     * Count the amount of elements from the given point until the end is reached.
+     * @return 0 or a positive number indicating the amount of items.
+     */
+    default int size() {
+        int count = 0;
+        while (hasNext()) {
+            ++count;
+            next();
+        }
+
+        return count;
+    }
 }

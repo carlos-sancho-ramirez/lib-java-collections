@@ -19,6 +19,19 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> {
     abstract void withReduceFunction(Procedure<ReduceFunction<T>> procedure);
 
     @Test
+    void testSizeForNoElements() {
+        withBuilder(builder -> assertEquals(0, builder.build().iterator().size()));
+    }
+
+    @Test
+    void testSizeForOneElement() {
+        withValue(value -> withBuilder(builder -> {
+            final Traversable<T> iterable = builder.add(value).build();
+            assertEquals(1, iterable.iterator().size());
+        }));
+    }
+
+    @Test
     void testContainsWhenEmpty() {
         withValue(value -> withBuilder(builder -> {
             if (builder.build().iterator().contains(value)) {
