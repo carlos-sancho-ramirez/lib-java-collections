@@ -5,6 +5,11 @@ public interface IntTraversable extends Iterable<Integer>, Sizable {
     @Override
     IntTraverser iterator();
 
+    @Override
+    default int size() {
+        return iterator().size();
+    }
+
     /**
      * Return true if the given value is found in the collection.
      * @param value Value to check
@@ -102,17 +107,5 @@ public interface IntTraversable extends Iterable<Integer>, Sizable {
      */
     default int sum() {
         return iterator().sum();
-    }
-
-    @Override
-    default int size() {
-        int count = 0;
-        final IntTraverser it = iterator();
-        while (it.hasNext()) {
-            it.next();
-            count++;
-        }
-
-        return count;
     }
 }

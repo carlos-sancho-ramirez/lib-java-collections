@@ -386,4 +386,32 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
             assertEquals(result, iterable.iterator().sum());
         }))));
     }
+
+    @Test
+    void testSizeForNoElements() {
+        withBuilder(builder -> assertEquals(0, builder.build().iterator().size()));
+    }
+
+    @Test
+    void testSizeForOneElement() {
+        withValue(value -> withBuilder(builder -> {
+            final IntTraversable traversable = builder.add(value).build();
+            assertEquals(1, traversable.iterator().size());
+        }));
+    }
+
+    @Test
+    void testSizeForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final IntTraversable traversable = builder.add(a).add(b).add(c).build();
+            final IntTraverser traverser = traversable.iterator();
+            int count = 0;
+            while (traverser.hasNext()) {
+                count++;
+                traverser.next();
+            }
+
+            assertEquals(count, traversable.iterator().size());
+        }))));
+    }
 }
