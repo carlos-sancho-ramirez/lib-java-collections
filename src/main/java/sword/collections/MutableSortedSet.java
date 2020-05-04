@@ -20,26 +20,31 @@ import static sword.collections.SortUtils.findValue;
  */
 public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
 
-    public static <E> MutableSortedSet<E> empty(SortFunction<E> sortFunction) {
-        return new MutableSortedSet<>(sortFunction, new Object[suitableArrayLength(0)], 0);
+    public static <E> MutableSortedSet<E> empty(ArrayLengthFunction arrayLengthFunction, SortFunction<? super E> sortFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, 0);
+        return new MutableSortedSet<>(arrayLengthFunction, sortFunction, new Object[length], 0);
+    }
+
+    public static <E> MutableSortedSet<E> empty(SortFunction<? super E> sortFunction) {
+        return empty(GranularityBasedArrayLengthFunction.getInstance(), sortFunction);
     }
 
     private final SortFunction<? super T> _sortFunction;
 
-    MutableSortedSet(SortFunction<? super T> sortFunction, Object[] keys, int size) {
-        super(keys, size);
+    MutableSortedSet(ArrayLengthFunction arrayLengthFunction, SortFunction<? super T> sortFunction, Object[] keys, int size) {
+        super(arrayLengthFunction, keys, size);
         _sortFunction = sortFunction;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T valueAt(int index) {
-        return (T) values[index];
+        return (T) _values[index];
     }
 
     @Override
     public int indexOf(T value) {
-        return findValue(_sortFunction, values, _size, value);
+        return findValue(_sortFunction, _values, _size, value);
     }
 
     @Override
@@ -75,15 +80,21 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     @Override
     public ImmutableSortedSet<T> toImmutable() {
         Object[] keys = new Object[_size];
-        System.arraycopy(values, 0, keys, 0, _size);
+        System.arraycopy(_values, 0, keys, 0, _size);
         return new ImmutableSortedSet<>(_sortFunction, keys);
     }
 
     @Override
+    public MutableSortedSet<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, _size);
+        Object[] keys = new Object[length];
+        System.arraycopy(_values, 0, keys, 0, _size);
+        return new MutableSortedSet<>(arrayLengthFunction, _sortFunction, keys, _size);
+    }
+
+    @Override
     public MutableSortedSet<T> mutate() {
-        Object[] keys = new Object[values.length];
-        System.arraycopy(values, 0, keys, 0, _size);
-        return new MutableSortedSet<>(_sortFunction, keys, _size);
+        return mutate(_arrayLengthFunction);
     }
 
     @Override
@@ -128,32 +139,33 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
         return (function == _sortFunction)? this : super.sort(function);
     }
 
-    private void enlargeArrays() {
-        Object[] oldKeys = values;
-
-        values = new Object[_size + GRANULARITY];
-
-        for (int i = 0; i < _size; i++) {
-            values[i] = oldKeys[i];
-        }
-    }
-
     @Override
     int findSuitableIndex(T key) {
-        return SortUtils.findSuitableIndex(_sortFunction, values, _size, key);
+        return SortUtils.findSuitableIndex(_sortFunction, _values, _size, key);
     }
 
     @Override
     void insertAt(int index, T value) {
-        if (_size != 0 && _size % GRANULARITY == 0) {
-            enlargeArrays();
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
+        if (desiredLength != _values.length) {
+            Object[] oldKeys = _values;
+            _values = new Object[desiredLength];
+
+            if (index > 0) {
+                System.arraycopy(oldKeys, 0, _values, 0, index);
+            }
+
+            if (_size > index) {
+                System.arraycopy(oldKeys, index, _values, index + 1, _size - index);
+            }
+        }
+        else {
+            for (int i = _size; i > index; i--) {
+                _values[i] = _values[i - 1];
+            }
         }
 
-        for (int i = _size; i > index; i--) {
-            values[i] = values[i - 1];
-        }
-
-        values[index] = value;
+        _values[index] = value;
         _size++;
     }
 
@@ -163,35 +175,36 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
             throw new IndexOutOfBoundsException();
         }
 
-        if (_size != 1 && (_size % GRANULARITY) == 1) {
-            Object[] oldKeys = values;
-            values = new Object[--_size];
+        --_size;
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size);
+        if (desiredLength != _values.length) {
+            Object[] oldKeys = _values;
+            _values = new Object[desiredLength];
 
             if (index > 0) {
-                System.arraycopy(oldKeys, 0, values, 0, index);
+                System.arraycopy(oldKeys, 0, _values, 0, index);
             }
 
             if (_size > index) {
-                System.arraycopy(oldKeys, index + 1, values, index, _size - index);
+                System.arraycopy(oldKeys, index + 1, _values, index, _size - index);
             }
         }
         else {
-            --_size;
             for (int i = index; i < _size; i++) {
-                values[i] = values[i + 1];
+                _values[i] = _values[i + 1];
             }
         }
     }
 
     @Override
     public boolean clear() {
-        final int suitableLength = suitableArrayLength(0);
-        if (values.length != suitableLength) {
-            values = new Object[suitableLength];
+        final int suitableLength = _arrayLengthFunction.suitableArrayLength(_values.length, 0);
+        if (_values.length != suitableLength) {
+            _values = new Object[suitableLength];
         }
         else {
             for (int i = 0; i < _size; i++) {
-                values[i] = null;
+                _values[i] = null;
             }
         }
 
@@ -204,8 +217,12 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     public static class Builder<E> implements MutableSet.Builder<E> {
         private final MutableSortedSet<E> _set;
 
-        Builder(SortFunction<E> sortFunction) {
-            _set = new MutableSortedSet<>(sortFunction, new Object[suitableArrayLength(0)], 0);
+        public Builder(ArrayLengthFunction arrayLengthFunction, SortFunction<E> sortFunction) {
+            _set = empty(arrayLengthFunction, sortFunction);
+        }
+
+        public Builder(SortFunction<E> sortFunction) {
+            _set = empty(sortFunction);
         }
 
         @Override

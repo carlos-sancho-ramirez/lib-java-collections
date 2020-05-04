@@ -25,14 +25,19 @@ import static sword.collections.SortUtils.findSuitableIndex;
  */
 public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
 
+    public static <K, V> MutableHashMap<K, V> empty(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, 0);
+        return new MutableHashMap<>(arrayLengthFunction, new Object[length], new int[length], new Object[length], 0);
+    }
+
     public static <K, V> MutableHashMap<K, V> empty() {
-        return new MutableHashMap<>(new Object[GRANULARITY], new int[GRANULARITY], new Object[GRANULARITY], 0);
+        return empty(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     private int[] _hashCodes;
 
-    MutableHashMap(Object[] keys, int[] hashCodes, Object[] values, int size) {
-        super(keys, values, size);
+    MutableHashMap(ArrayLengthFunction arrayLengthFunction, Object[] keys, int[] hashCodes, Object[] values, int size) {
+        super(arrayLengthFunction, keys, values, size);
         _hashCodes = hashCodes;
     }
 
@@ -78,10 +83,11 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
-    public MutableHashMap<K, V> mutate() {
-        Object[] keys = new Object[_keys.length];
-        int[] hashCodes = new int[_hashCodes.length];
-        Object[] values = new Object[_values.length];
+    public MutableHashMap<K, V> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int desiredLength = arrayLengthFunction.suitableArrayLength(0, _size);
+        Object[] keys = new Object[desiredLength];
+        int[] hashCodes = new int[desiredLength];
+        Object[] values = new Object[desiredLength];
 
         if (_size > 0) {
             System.arraycopy(_keys, 0, keys, 0, _size);
@@ -89,29 +95,18 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
             System.arraycopy(_values, 0, values, 0, _size);
         }
 
-        return new MutableHashMap<>(keys, hashCodes, values, _size);
+        return new MutableHashMap<>(arrayLengthFunction, keys, hashCodes, values, _size);
     }
 
-    private void enlargeArrays() {
-        Object[] oldKeys = _keys;
-        int[] oldHashCodes = _hashCodes;
-        Object[] oldValues = _values;
-
-        _keys = new Object[_size + GRANULARITY];
-        _hashCodes = new int[_size + GRANULARITY];
-        _values = new Object[_size + GRANULARITY];
-
-        for (int i = 0; i < _size; i++) {
-            _keys[i] = oldKeys[i];
-            _hashCodes[i] = oldHashCodes[i];
-            _values[i] = oldValues[i];
-        }
+    @Override
+    public MutableHashMap<K, V> mutate() {
+        return mutate(_arrayLengthFunction);
     }
 
     @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
-        final int suitableLength = suitableArrayLength(0);
+        final int suitableLength = _arrayLengthFunction.suitableArrayLength(_values.length, 0);
         if (_keys.length != suitableLength) {
             _keys = new Object[suitableLength];
             _hashCodes = new int[suitableLength];
@@ -132,16 +127,37 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
     public boolean put(K key, V value) {
         int index = findKey(_hashCodes, _keys, _size, key);
         if (index < 0) {
-            if (_size != 0 && _size % GRANULARITY == 0) {
-                enlargeArrays();
-            }
-
+            final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
             final int hashCode = SortUtils.hashCode(key);
             index = findSuitableIndex(_hashCodes, _size, hashCode);
-            for (int i = _size; i > index; i--) {
-                _keys[i] = _keys[i - 1];
-                _hashCodes[i] = _hashCodes[i - 1];
-                _values[i] = _values[i - 1];
+
+            if (desiredLength != _values.length) {
+                Object[] oldKeys = _keys;
+                int[] oldHashCodes = _hashCodes;
+                Object[] oldValues = _values;
+
+                _keys = new Object[desiredLength];
+                _hashCodes = new int[desiredLength];
+                _values = new Object[desiredLength];
+
+                if (index > 0) {
+                    System.arraycopy(oldKeys, 0, _keys, 0, index);
+                    System.arraycopy(oldHashCodes, 0, _hashCodes, 0, index);
+                    System.arraycopy(oldValues, 0, _values, 0, index);
+                }
+
+                if (_size > index) {
+                    System.arraycopy(oldKeys, index, _keys, index + 1, _size - index);
+                    System.arraycopy(oldHashCodes, index, _hashCodes, index + 1, _size - index);
+                    System.arraycopy(oldValues, index, _values, index + 1, _size - index);
+                }
+            }
+            else {
+                for (int i = _size; i > index; i--) {
+                    _keys[i] = _keys[i - 1];
+                    _hashCodes[i] = _hashCodes[i - 1];
+                    _values[i] = _values[i - 1];
+                }
             }
 
             _keys[index] = key;
@@ -169,14 +185,15 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
             throw new IndexOutOfBoundsException();
         }
 
-        if (_size != 1 && (_size % GRANULARITY) == 1) {
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, --_size);
+        if (desiredLength != _values.length) {
             Object[] oldKeys = _keys;
             int[] oldHashCodes = _hashCodes;
             Object[] oldValues = _values;
 
-            _keys = new Object[--_size];
-            _hashCodes = new int[_size];
-            _values = new Object[_size];
+            _keys = new Object[desiredLength];
+            _hashCodes = new int[desiredLength];
+            _values = new Object[desiredLength];
 
             if (index > 0) {
                 System.arraycopy(oldKeys, 0, _keys, 0, index);
@@ -191,7 +208,6 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
             }
         }
         else {
-            --_size;
             for (int i = index; i < _size; i++) {
                 _keys[i] = _keys[i + 1];
                 _hashCodes[i] = _hashCodes[i + 1];
@@ -257,7 +273,15 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     public static class Builder<K, V> implements MapBuilder<K, V> {
-        private final MutableHashMap<K, V> _map = MutableHashMap.empty();
+        private final MutableHashMap<K, V> _map;
+
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _map = empty(arrayLengthFunction);
+        }
+
+        public Builder() {
+            _map = empty();
+        }
 
         @Override
         public Builder<K, V> put(K key, V value) {

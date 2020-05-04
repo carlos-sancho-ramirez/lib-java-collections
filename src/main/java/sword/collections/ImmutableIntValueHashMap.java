@@ -93,17 +93,23 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
     }
 
     @Override
+    public MutableIntValueHashMap<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _keys.length;
+        final int length = arrayLengthFunction.suitableArrayLength(0, size);
+        Object[] newKeys = new Object[length];
+        int[] newHashCodes = new int[length];
+        int[] newValues = new int[length];
+
+        System.arraycopy(_keys, 0, newKeys, 0, size);
+        System.arraycopy(_hashCodes, 0, newHashCodes, 0, size);
+        System.arraycopy(_values, 0, newValues, 0, size);
+
+        return new MutableIntValueHashMap<>(arrayLengthFunction, newKeys, newHashCodes, newValues, size);
+    }
+
+    @Override
     public MutableIntValueHashMap<T> mutate() {
-        final int newLength = MutableIntValueHashMap.suitableArrayLength(_keys.length);
-        Object[] newKeys = new Object[newLength];
-        int[] newHashCodes = new int[newLength];
-        int[] newValues = new int[newLength];
-
-        System.arraycopy(_keys, 0, newKeys, 0, _keys.length);
-        System.arraycopy(_hashCodes, 0, newHashCodes, 0, _hashCodes.length);
-        System.arraycopy(_values, 0, newValues, 0, _values.length);
-
-        return new MutableIntValueHashMap<>(newKeys, newHashCodes, newValues, _keys.length);
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     @Override
@@ -196,7 +202,15 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
     }
 
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {
-        final MutableIntValueHashMap<E> _map = MutableIntValueHashMap.empty();
+        final MutableIntValueHashMap<E> _map;
+
+        public Builder() {
+            _map = MutableIntValueHashMap.empty();
+        }
+
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _map = MutableIntValueHashMap.empty(arrayLengthFunction);
+        }
 
         public Builder<E> put(E key, int value) {
             _map.put(key, value);

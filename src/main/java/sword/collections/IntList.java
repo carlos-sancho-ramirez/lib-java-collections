@@ -45,4 +45,10 @@ public interface IntList extends IntTransformable {
      * This method will always generate a new instance in order to avoid affecting the state of its original collection.
      */
     MutableIntList mutate();
+
+    /**
+     * Return a new mutable list with the given {@link ArrayLengthFunction}.
+     * This method will always generate a new instance in order to avoid affecting the state of its original collection.
+     */
+    MutableIntList mutate(ArrayLengthFunction arrayLengthFunction);
 }

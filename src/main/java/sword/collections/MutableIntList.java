@@ -1,24 +1,22 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
-
 public final class MutableIntList extends AbstractIntTraversable implements IntList, MutableIntTransformable {
 
-    private static final int GRANULARITY = DEFAULT_GRANULARITY;
+    public static MutableIntList empty(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, 0);
+        return new MutableIntList(arrayLengthFunction, new int[length], 0);
+    }
 
+    public static MutableIntList empty() {
+        return empty(GranularityBasedArrayLengthFunction.getInstance());
+    }
+
+    private final ArrayLengthFunction _arrayLengthFunction;
     private int[] _values;
     private int _size;
 
-    public static MutableIntList empty() {
-        return new MutableIntList(new int[GRANULARITY], 0);
-    }
-
-    static int suitableArrayLength(int size) {
-        int s = ((size + GRANULARITY - 1) / GRANULARITY) * GRANULARITY;
-        return (s > 0)? s : GRANULARITY;
-    }
-
-    MutableIntList(int[] values, int size) {
+    MutableIntList(ArrayLengthFunction arrayLengthFunction, int[] values, int size) {
+        _arrayLengthFunction = arrayLengthFunction;
         _values = values;
         _size = size;
     }
@@ -92,14 +90,19 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
     }
 
     @Override
-    public MutableIntList mutate() {
-        final int[] newValues = new int[_values.length];
+    public MutableIntList mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int[] newValues = new int[arrayLengthFunction.suitableArrayLength(0, _size)];
         System.arraycopy(_values, 0, newValues, 0, _size);
-        return new MutableIntList(newValues, _size);
+        return new MutableIntList(arrayLengthFunction, newValues, _size);
+    }
+
+    @Override
+    public MutableIntList mutate() {
+        return mutate(_arrayLengthFunction);
     }
 
     public void append(int value) {
-        final int length = suitableArrayLength(_size + 1);
+        final int length = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
         if (length != _values.length) {
             final int[] values = new int[length];
             System.arraycopy(_values, 0, values, 0, _size);
@@ -121,7 +124,7 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
             throw new IndexOutOfBoundsException();
         }
 
-        final int length = suitableArrayLength(--_size);
+        final int length = _arrayLengthFunction.suitableArrayLength(_values.length, --_size);
         if (length != _values.length) {
             final int[] values = new int[length];
             if (index > 0) {
@@ -142,7 +145,7 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
 
     @Override
     public boolean clear() {
-        final int suitableLength = suitableArrayLength(0);
+        final int suitableLength = _arrayLengthFunction.suitableArrayLength(_values.length, 0);
         if (_values.length != suitableLength) {
             _values = new int[suitableLength];
         }

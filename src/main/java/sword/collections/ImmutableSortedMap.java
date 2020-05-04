@@ -51,17 +51,22 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
+    public MutableMap<K, V> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _keys.length;
+        final int length = arrayLengthFunction.suitableArrayLength(0, size);
+
+        Object[] keys = new Object[length];
+        Object[] values = new Object[length];
+
+        System.arraycopy(_keys, 0, keys, 0, size);
+        System.arraycopy(_values, 0, values, 0, size);
+
+        return new MutableSortedMap<>(arrayLengthFunction, _sortFunction, keys, values, size);
+    }
+
+    @Override
     public MutableMap<K, V> mutate() {
-        final int length = _keys.length;
-        final int newLength = MutableSortedMap.suitableArrayLength(length);
-
-        Object[] keys = new Object[newLength];
-        Object[] values = new Object[newLength];
-
-        System.arraycopy(_keys, 0, keys, 0, length);
-        System.arraycopy(_values, 0, values, 0, length);
-
-        return new MutableSortedMap<>(_sortFunction, keys, values, length);
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     @Override
@@ -192,9 +197,12 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
         private final MutableSortedMap<K, V> _map;
 
-        Builder(SortFunction<? super K> sortFunction) {
-            final int length = MutableSortedMap.suitableArrayLength(0);
-            _map = new MutableSortedMap<>(sortFunction, new Object[length], new Object[length], 0);
+        public Builder(SortFunction<? super K> sortFunction) {
+            _map = MutableSortedMap.empty(sortFunction);
+        }
+
+        public Builder(ArrayLengthFunction arrayLengthFunction, SortFunction<? super K> sortFunction) {
+            _map = MutableSortedMap.empty(arrayLengthFunction, sortFunction);
         }
 
         @Override

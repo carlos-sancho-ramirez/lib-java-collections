@@ -174,17 +174,22 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     @Override
+    public MutableIntPairMap mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _keys.length;
+        final int length = arrayLengthFunction.suitableArrayLength(0, size);
+
+        final int[] keys = new int[length];
+        final int[] values = new int[length];
+
+        System.arraycopy(_keys, 0, keys, 0, size);
+        System.arraycopy(_values, 0, values, 0, size);
+
+        return new MutableIntPairMap(arrayLengthFunction, keys, values, size);
+    }
+
+    @Override
     public MutableIntPairMap mutate() {
-        final int length = _keys.length;
-        final int newLength = MutableIntPairMap.suitableArrayLength(length);
-
-        final int[] keys = new int[newLength];
-        final int[] values = new int[newLength];
-
-        System.arraycopy(_keys, 0, keys, 0, length);
-        System.arraycopy(_values, 0, values, 0, length);
-
-        return new MutableIntPairMap(keys, values, length);
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     public ImmutableIntPairMap put(int key, int value) {
@@ -290,66 +295,23 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     public static class Builder implements IntPairMapBuilder {
-        private static final int GRANULARITY = 12;
-        private int _size;
+        private final MutableIntPairMap _map;
 
-        private int[] _keys = new int[GRANULARITY];
-        private int[] _values = new int[GRANULARITY];
+        public Builder() {
+            _map = MutableIntPairMap.empty();
+        }
 
-        private void enlargeArrays() {
-            int[] oldKeys = _keys;
-            int[] oldValues = _values;
-
-            _keys = new int[_size + GRANULARITY];
-            _values = new int[_size + GRANULARITY];
-
-            for (int i = 0; i < _size; i++) {
-                _keys[i] = oldKeys[i];
-                _values[i] = oldValues[i];
-            }
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _map = MutableIntPairMap.empty(arrayLengthFunction);
         }
 
         public Builder put(int key, int value) {
-            int index = findKey(_keys, _size, key);
-            if (index >= 0) {
-                _values[index] = value;
-            }
-            else {
-                if (_size != 0 && _size % GRANULARITY == 0) {
-                    enlargeArrays();
-                }
-
-                index = findSuitableIndex(_keys, _size, key);
-                for (int i = _size; i > index; i--) {
-                    _keys[i] = _keys[i - 1];
-                    _values[i] = _values[i - 1];
-                }
-
-                _keys[index] = key;
-                _values[index] = value;
-
-                _size++;
-            }
-
+            _map.put(key, value);
             return this;
         }
 
         public ImmutableIntPairMap build() {
-            final int length = _size;
-            if (length == 0) {
-                return empty();
-            }
-            else {
-                final int[] keys = new int[length];
-                final int[] values = new int[length];
-
-                for (int i = 0; i < length; i++) {
-                    keys[i] = _keys[i];
-                    values[i] = _values[i];
-                }
-
-                return new ImmutableIntPairMap(keys, values);
-            }
+            return _map.toImmutable();
         }
     }
 
@@ -369,7 +331,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
 
     @Override
     public boolean equals(Object other) {
-        if (other == null || !(other instanceof ImmutableIntPairMap)) {
+        if (!(other instanceof ImmutableIntPairMap)) {
             return super.equals(other);
         }
 

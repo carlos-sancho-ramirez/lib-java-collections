@@ -247,14 +247,17 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     @Override
+    public MutableList<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _values.length;
+        final int length = arrayLengthFunction.suitableArrayLength(0, size);
+        final Object[] values = new Object[length];
+        System.arraycopy(_values, 0, values, 0, size);
+        return new MutableList<>(arrayLengthFunction, values, size);
+    }
+
+    @Override
     public MutableList<T> mutate() {
-        final int length = _values.length;
-        final int newLength = MutableList.suitableArrayLength(length);
-
-        Object[] values = new Object[newLength];
-        System.arraycopy(_values, 0, values, 0, length);
-
-        return new MutableList<>(values, length);
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     /**
@@ -357,33 +360,18 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     public static class Builder<E> implements ListBuilder<E>, ImmutableTransformableBuilder<E> {
-        private static final int DEFAULT_GRANULARITY = 12;
-        private final int _granularity;
-        private int _size;
-        private Object[] _values;
+        private final MutableList<E> _list;
 
         public Builder() {
-            _granularity = DEFAULT_GRANULARITY;
-            _values = new Object[_granularity];
+            _list = MutableList.empty();
         }
 
-        public Builder(int length) {
-            _granularity = (length >= 0)? length : DEFAULT_GRANULARITY;
-            _values = new Object[(length != 0)? _granularity : 0];
-        }
-
-        private void enlargeArray() {
-            Object[] oldValues = _values;
-            _values = new Object[_size + _granularity];
-            System.arraycopy(oldValues, 0, _values, 0, _size);
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _list = MutableList.empty(arrayLengthFunction);
         }
 
         public Builder<E> append(E item) {
-            if (_size == _values.length) {
-                enlargeArray();
-            }
-
-            _values[_size++] = item;
+            _list.append(item);
             return this;
         }
 
@@ -394,20 +382,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
 
         @Override
         public ImmutableList<E> build() {
-            if (_size == 0) {
-                return empty();
-            }
-
-            final Object[] values;
-            if (_size == _values.length) {
-                values = _values;
-            }
-            else {
-                values = new Object[_size];
-                System.arraycopy(_values, 0, values, 0, _size);
-            }
-
-            return new ImmutableList<E>(values);
+            return _list.toImmutable();
         }
     }
 
@@ -428,12 +403,14 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     public static <E> ImmutableList<E> from(Collection<E> collection) {
-        final ImmutableList.Builder<E> builder = new ImmutableList.Builder<>(collection.size());
+        final int size = collection.size();
+        final Object[] values = new Object[size];
+        int index = 0;
         for (E token : collection) {
-            builder.append(token);
+            values[index++] = token;
         }
 
-        return builder.build();
+        return new ImmutableList<>(values);
     }
 
     /**

@@ -43,6 +43,12 @@ public interface List<T> extends Transformable<T> {
      */
     MutableList<T> mutate();
 
+    /**
+     * Return a new mutable list with the given {@link ArrayLengthFunction}.
+     * This method will always generate a new instance in order to avoid affecting the state of its original collection.
+     */
+    MutableList<T> mutate(ArrayLengthFunction arrayLengthFunction);
+
     default List<T> sort(SortFunction<? super T> function) {
         return new SortedList<>(this, function);
     }

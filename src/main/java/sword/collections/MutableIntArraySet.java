@@ -2,35 +2,28 @@ package sword.collections;
 
 import java.util.Arrays;
 
-import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 
 public final class MutableIntArraySet extends AbstractIntTraversable implements MutableIntSet {
 
-    private static final int GRANULARITY = DEFAULT_GRANULARITY;
+    public static MutableIntArraySet empty(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, 0);
+        return new MutableIntArraySet(arrayLengthFunction, new int[length], 0);
+    }
 
     public static MutableIntArraySet empty() {
-        return new MutableIntArraySet(new int[GRANULARITY], 0);
+        return empty(GranularityBasedArrayLengthFunction.getInstance());
     }
 
-    private static int suitableArrayLength(int size) {
-        int s = ((size + GRANULARITY - 1) / GRANULARITY) * GRANULARITY;
-        return (s > 0)? s : GRANULARITY;
-    }
-
+    private final ArrayLengthFunction _arrayLengthFunction;
     private int _size;
     private int[] _values;
 
-    private MutableIntArraySet(int[] values, int size) {
+    private MutableIntArraySet(ArrayLengthFunction arrayLengthFunction, int[] values, int size) {
+        _arrayLengthFunction = arrayLengthFunction;
         _values = values;
         _size = size;
-    }
-
-    private void enlargeArrays() {
-        int[] oldKeys = _values;
-        _values = new int[_size + GRANULARITY];
-        System.arraycopy(oldKeys, 0, _values, 0, _size);
     }
 
     @Override
@@ -45,9 +38,10 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
 
     @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
-        if (_size != 1 && (_size % GRANULARITY) == 1) {
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, --_size);
+        if (desiredLength != _values.length) {
             int[] oldValues = _values;
-            _values = new int[--_size];
+            _values = new int[_size];
 
             if (index > 0) {
                 System.arraycopy(oldValues, 0, _values, 0, index);
@@ -58,7 +52,6 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
             }
         }
         else {
-            --_size;
             for (int i = index; i < _size; i++) {
                 _values[i] = _values[i + 1];
             }
@@ -130,8 +123,9 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
     @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
-        if (_size > GRANULARITY) {
-            _values = new int[GRANULARITY];
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, 0);
+        if (desiredLength != _values.length) {
+            _values = new int[desiredLength];
         }
 
         _size = 0;
@@ -142,13 +136,23 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
     public boolean add(int value) {
         int index = findKey(_values, _size, value);
         if (index < 0) {
-            if (_size != 0 && _size % GRANULARITY == 0) {
-                enlargeArrays();
-            }
-
+            final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
             index = findSuitableIndex(_values, _size, value);
-            for (int i = _size; i > index; i--) {
-                _values[i] = _values[i - 1];
+            if (desiredLength != _values.length) {
+                int[] oldKeys = _values;
+                _values = new int[desiredLength];
+                if (index > 0) {
+                    System.arraycopy(oldKeys, 0, _values, 0, index);
+                }
+
+                if (_size > index) {
+                    System.arraycopy(oldKeys, index, _values, index + 1, _size - index);
+                }
+            }
+            else {
+                for (int i = _size; i > index; i--) {
+                    _values[i] = _values[i - 1];
+                }
             }
 
             _values[index] = value;
@@ -244,13 +248,14 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
 
     static MutableIntArraySet fromIntRange(ImmutableIntRange range) {
         final int size = range.size();
-        final int[] values = new int[suitableArrayLength(size)];
+        final ArrayLengthFunction arrayLengthFunction = GranularityBasedArrayLengthFunction.getInstance();
+        final int[] values = new int[arrayLengthFunction.suitableArrayLength(0, size)];
         final int min = range.min();
         for (int i = 0; i < size; i++) {
             values[i] = min + i;
         }
 
-        return new MutableIntArraySet(values, size);
+        return new MutableIntArraySet(arrayLengthFunction, values, size);
     }
 
     public static class Builder implements MutableIntSet.Builder {

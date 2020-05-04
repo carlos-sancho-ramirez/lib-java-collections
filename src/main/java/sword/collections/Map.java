@@ -93,6 +93,12 @@ public interface Map<K, V> extends Transformable<V> {
     MutableMap<K, V> mutate();
 
     /**
+     * Return a new mutable map with the given {@link ArrayLengthFunction}.
+     * This method will always generate a new instance in order to avoid affecting the state of its original map.
+     */
+    MutableMap<K, V> mutate(ArrayLengthFunction arrayLengthFunction);
+
+    /**
      * Creates a new map where all current elements and future elements will be
      * sorted following the given function.
      *

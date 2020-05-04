@@ -2,7 +2,7 @@ package sword.collections;
 
 import java.util.Iterator;
 
-class SortedList<T> implements List<T> {
+final class SortedList<T> implements List<T> {
 
     private final List<T> _source;
     private final SortFunction<? super T> _sortFunction;
@@ -38,17 +38,18 @@ class SortedList<T> implements List<T> {
     }
 
     @Override
-    public MutableList<T> mutate() {
-        final int length = _source.size();
-        if (length < 2) {
+    public MutableList<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _source.size();
+        if (size < 2) {
             return _source.mutate();
         }
 
-        final Object[] newValues = new Object[MutableList.suitableArrayLength(length)];
+        final int desiredLength = arrayLengthFunction.suitableArrayLength(0, size);
+        final Object[] newValues = new Object[desiredLength];
         final Iterator<T> it = _source.iterator();
         newValues[0] = it.next();
 
-        for (int i = 1; i < length; i++) {
+        for (int i = 1; i < size; i++) {
             final T value = it.next();
             final int index = SortUtils.findSuitableIndex(_sortFunction, newValues, i, value);
             for (int j = i; j > index; j--) {
@@ -57,7 +58,12 @@ class SortedList<T> implements List<T> {
             newValues[index] = value;
         }
 
-        return new MutableList<>(newValues, length);
+        return new MutableList<>(arrayLengthFunction, newValues, size);
+    }
+
+    @Override
+    public MutableList<T> mutate() {
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     @Override

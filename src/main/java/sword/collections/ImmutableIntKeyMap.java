@@ -209,17 +209,21 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     @Override
+    public MutableIntKeyMap<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _keys.length;
+        final int length = arrayLengthFunction.suitableArrayLength(0, size);
+        final int[] keys = new int[length];
+        final Object[] values = new Object[length];
+
+        System.arraycopy(_keys, 0, keys, 0, size);
+        System.arraycopy(_values, 0, values, 0, size);
+
+        return new MutableIntKeyMap<>(arrayLengthFunction, keys, values, size);
+    }
+
+    @Override
     public MutableIntKeyMap<T> mutate() {
-        final int length = _keys.length;
-        final int newLength = MutableIntKeyMap.suitableArrayLength(length);
-
-        final int[] keys = new int[newLength];
-        final Object[] values = new Object[newLength];
-
-        System.arraycopy(_keys, 0, keys, 0, length);
-        System.arraycopy(_values, 0, values, 0, length);
-
-        return new MutableIntKeyMap<>(keys, values, length);
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     public ImmutableIntKeyMap<T> put(int key, T value) {
@@ -311,7 +315,15 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     public static class Builder<E> implements IntKeyMapBuilder<E> {
-        private final MutableIntKeyMap<E> _map = new MutableIntKeyMap<>();
+        private final MutableIntKeyMap<E> _map;
+
+        public Builder() {
+            _map = MutableIntKeyMap.empty();
+        }
+
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _map = MutableIntKeyMap.empty(arrayLengthFunction);
+        }
 
         @Override
         public Builder<E> put(int key, E value) {
@@ -321,21 +333,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
 
         @Override
         public ImmutableIntKeyMap<E> build() {
-            final int length = _map.size();
-            if (length == 0) {
-                return empty();
-            }
-            else {
-                final int[] keys = new int[length];
-                final Object[] values = new Object[length];
-
-                for (int i = 0; i < length; i++) {
-                    keys[i] = _map.keyAt(i);
-                    values[i] = _map.valueAt(i);
-                }
-
-                return new ImmutableIntKeyMap<>(keys, values);
-            }
+            return _map.toImmutable();
         }
     }
 

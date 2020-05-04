@@ -149,13 +149,18 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
-    public MutableSortedSet<T> mutate() {
-        final int length = _values.length;
-        final int newLength = MutableHashSet.suitableArrayLength(length);
+    public MutableSortedSet<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _values.length;
+        final int length = arrayLengthFunction.suitableArrayLength(0, size);
 
-        Object[] keys = new Object[newLength];
-        System.arraycopy(_values, 0, keys, 0, length);
-        return new MutableSortedSet<>(_sortFunction, keys, length);
+        Object[] keys = new Object[length];
+        System.arraycopy(_values, 0, keys, 0, size);
+        return new MutableSortedSet<>(arrayLengthFunction, _sortFunction, keys, size);
+    }
+
+    @Override
+    public MutableSortedSet<T> mutate() {
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     @Override
@@ -186,8 +191,12 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableSortedSet<E> _set;
 
-        Builder(SortFunction<? super E> sortFunction) {
-            _set = new MutableSortedSet<>(sortFunction, new Object[AbstractMutableSet.suitableArrayLength(0)], 0);
+        public Builder(SortFunction<? super E> sortFunction) {
+            _set = MutableSortedSet.empty(sortFunction);
+        }
+
+        public Builder(ArrayLengthFunction arrayLengthFunction, SortFunction<? super E> sortFunction) {
+            _set = MutableSortedSet.empty(arrayLengthFunction, sortFunction);
         }
 
         @Override

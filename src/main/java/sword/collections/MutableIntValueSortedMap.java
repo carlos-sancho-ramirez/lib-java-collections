@@ -24,15 +24,19 @@ import static sword.collections.SortUtils.findValue;
  */
 public final class MutableIntValueSortedMap<T> extends AbstractMutableIntValueMap<T> {
 
-    public static <E> MutableIntValueSortedMap<E> empty(SortFunction<E> sortFunction) {
-        final int length = suitableArrayLength(0);
-        return new MutableIntValueSortedMap<>(sortFunction, new Object[length], new int[length], 0);
+    public static <E> MutableIntValueSortedMap<E> empty(ArrayLengthFunction arrayLengthFunction, SortFunction<? super E> sortFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, 0);
+        return new MutableIntValueSortedMap<>(arrayLengthFunction, sortFunction, new Object[length], new int[length], 0);
+    }
+
+    public static <E> MutableIntValueSortedMap<E> empty(SortFunction<? super E> sortFunction) {
+        return empty(GranularityBasedArrayLengthFunction.getInstance(), sortFunction);
     }
 
     private SortFunction<? super T> _sortFunction;
 
-    MutableIntValueSortedMap(SortFunction<? super T> sortFunction, Object[] keys, int[] values, int size) {
-        super(keys, values, size);
+    MutableIntValueSortedMap(ArrayLengthFunction arrayLengthFunction, SortFunction<? super T> sortFunction, Object[] keys, int[] values, int size) {
+        super(arrayLengthFunction, keys, values, size);
         _sortFunction = sortFunction;
     }
 
@@ -93,21 +97,27 @@ public final class MutableIntValueSortedMap<T> extends AbstractMutableIntValueMa
     }
 
     @Override
-    public MutableIntValueSortedMap<T> mutate() {
-        Object[] keys = new Object[_keys.length];
-        int[] values = new int[_values.length];
+    public MutableIntValueSortedMap<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, _size);
+        Object[] keys = new Object[length];
+        int[] values = new int[length];
 
         if (_size > 0) {
             System.arraycopy(_keys, 0, keys, 0, _size);
             System.arraycopy(_values, 0, values, 0, _size);
         }
 
-        return new MutableIntValueSortedMap<>(_sortFunction, keys, values, _size);
+        return new MutableIntValueSortedMap<>(arrayLengthFunction, _sortFunction, keys, values, _size);
+    }
+
+    @Override
+    public MutableIntValueSortedMap<T> mutate() {
+        return mutate(_arrayLengthFunction);
     }
 
     @Override
     public boolean clear() {
-        final int suitableLength = suitableArrayLength(0);
+        final int suitableLength = _arrayLengthFunction.suitableArrayLength(_values.length, 0);
         final boolean somethingRemoved = _size > 0;
         if (_keys.length != suitableLength) {
             _keys = new Object[suitableLength];
@@ -129,7 +139,7 @@ public final class MutableIntValueSortedMap<T> extends AbstractMutableIntValueMa
         if (index < 0) {
             index = findSuitableIndex(_sortFunction, _keys, _size, key);
 
-            final int newLength = suitableArrayLength(_size + 1);
+            final int newLength = _arrayLengthFunction.suitableArrayLength(_keys.length, _size + 1);
             if (newLength != _keys.length) {
                 Object[] newKeys = new Object[newLength];
                 int[] newValues = new int[newLength];
@@ -176,11 +186,12 @@ public final class MutableIntValueSortedMap<T> extends AbstractMutableIntValueMa
             throw new IndexOutOfBoundsException();
         }
 
-        if (_size != 1 && (_size % GRANULARITY) == 1) {
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_keys.length, --_size);
+        if (desiredLength != _keys.length) {
             Object[] oldKeys = _keys;
             int[] oldValues = _values;
 
-            _keys = new Object[--_size];
+            _keys = new Object[_size];
             _values = new int[_size];
 
             if (index > 0) {
@@ -194,7 +205,6 @@ public final class MutableIntValueSortedMap<T> extends AbstractMutableIntValueMa
             }
         }
         else {
-            --_size;
             for (int i = index; i < _size; i++) {
                 _keys[i] = _keys[i + 1];
                 _values[i] = _values[i + 1];
@@ -205,9 +215,12 @@ public final class MutableIntValueSortedMap<T> extends AbstractMutableIntValueMa
     public static class Builder<E> implements MutableIntValueMap.Builder<E> {
         private final MutableIntValueSortedMap<E> _map;
 
-        Builder(SortFunction<E> sortFunction) {
-            final int length = MutableIntValueSortedMap.suitableArrayLength(0);
-            _map = new MutableIntValueSortedMap<>(sortFunction, new Object[length], new int[length], 0);
+        public Builder(ArrayLengthFunction arrayLengthFunction, SortFunction<E> sortFunction) {
+            _map = empty(arrayLengthFunction, sortFunction);
+        }
+
+        public Builder(SortFunction<E> sortFunction) {
+            _map = empty(sortFunction);
         }
 
         public Builder<E> put(E key, int value) {

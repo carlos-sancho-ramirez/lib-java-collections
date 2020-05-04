@@ -1,21 +1,14 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
-
 abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements MutableSet<T> {
 
-    static final int GRANULARITY = DEFAULT_GRANULARITY;
-
-    static int suitableArrayLength(int size) {
-        int s = ((size + GRANULARITY - 1) / GRANULARITY) * GRANULARITY;
-        return (s > 0)? s : GRANULARITY;
-    }
-
-    Object[] values;
+    ArrayLengthFunction _arrayLengthFunction;
+    Object[] _values;
     int _size;
 
-    AbstractMutableSet(Object[] keys, int size) {
-        values = keys;
+    AbstractMutableSet(ArrayLengthFunction arrayLengthFunction, Object[] keys, int size) {
+        _arrayLengthFunction = arrayLengthFunction;
+        _values = keys;
         _size = size;
     }
 
@@ -32,7 +25,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     @Override
     @SuppressWarnings("unchecked")
     public T valueAt(int index) {
-        return (T) values[index];
+        return (T) _values[index];
     }
 
     private class Iterator extends AbstractTransformer<T> {
@@ -47,7 +40,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         @Override
         @SuppressWarnings("unchecked")
         public T next() {
-            return (T) values[_index++];
+            return (T) _values[_index++];
         }
 
         @Override
@@ -65,7 +58,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     public List<T> toList() {
         final Object[] values = new Object[_size];
         for (int i = 0; i < _size; i++) {
-            values[i] = this.values[i];
+            values[i] = this._values[i];
         }
         return new ImmutableList<>(values);
     }
@@ -114,7 +107,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     }
 
     int itemHashCode(int index) {
-        return SortUtils.hashCode(values[index]);
+        return SortUtils.hashCode(_values[index]);
     }
 
     @Override
@@ -136,7 +129,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         }
 
         for (int index = 0; index < _size; index++) {
-            if (!that.contains(values[index])) {
+            if (!that.contains(_values[index])) {
                 return false;
             }
         }

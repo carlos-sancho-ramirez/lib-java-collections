@@ -1,21 +1,14 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
-
 abstract class AbstractMutableMap<K, V> extends AbstractMap<K, V> implements MutableMap<K, V> {
 
-    static final int GRANULARITY = DEFAULT_GRANULARITY;
-
-    static int suitableArrayLength(int size) {
-        int s = ((size + GRANULARITY - 1) / GRANULARITY) * GRANULARITY;
-        return (s > 0)? s : GRANULARITY;
-    }
-
+    ArrayLengthFunction _arrayLengthFunction;
     Object[] _keys;
     Object[] _values;
     int _size;
 
-    AbstractMutableMap(Object[] keys, Object[] values, int size) {
+    AbstractMutableMap(ArrayLengthFunction arrayLengthFunction, Object[] keys, Object[] values, int size) {
+        _arrayLengthFunction = arrayLengthFunction;
         _keys = keys;
         _size = size;
         _values = values;

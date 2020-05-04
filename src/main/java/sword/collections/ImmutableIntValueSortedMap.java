@@ -83,18 +83,23 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
     }
 
     @Override
-    public MutableIntValueSortedMap<T> mutate() {
-        final int length = _keys.length;
-        final int newLength = MutableIntValueSortedMap.suitableArrayLength(length);
-        Object[] newKeys = new Object[newLength];
-        int[] newValues = new int[newLength];
+    public MutableIntValueSortedMap<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _keys.length;
+        final int length = arrayLengthFunction.suitableArrayLength(0, size);
+        Object[] newKeys = new Object[length];
+        int[] newValues = new int[length];
 
-        if (length > 0) {
-            System.arraycopy(_keys, 0, newKeys, 0, length);
-            System.arraycopy(_values, 0, newValues, 0, length);
+        if (size > 0) {
+            System.arraycopy(_keys, 0, newKeys, 0, size);
+            System.arraycopy(_values, 0, newValues, 0, size);
         }
 
-        return new MutableIntValueSortedMap<>(_sortFunction, newKeys, newValues, length);
+        return new MutableIntValueSortedMap<>(arrayLengthFunction, _sortFunction, newKeys, newValues, size);
+    }
+
+    @Override
+    public MutableIntValueSortedMap<T> mutate() {
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     @Override
@@ -184,11 +189,14 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
     }
 
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {
-        final MutableIntValueSortedMap<E> _map;
+        private final MutableIntValueSortedMap<E> _map;
 
-        Builder(SortFunction<? super E> sortFunction) {
-            final int length = MutableIntValueSortedMap.suitableArrayLength(0);
-            _map = new MutableIntValueSortedMap<>(sortFunction, new Object[length], new int[length], 0);
+        public Builder(SortFunction<? super E> sortFunction) {
+            _map = MutableIntValueSortedMap.empty(sortFunction);
+        }
+
+        public Builder(ArrayLengthFunction arrayLengthFunction, SortFunction<? super E> sortFunction) {
+            _map = MutableIntValueSortedMap.empty(arrayLengthFunction, sortFunction);
         }
 
         public Builder<E> put(E key, int value) {

@@ -25,6 +25,11 @@ final class MapResultList<S, T> extends AbstractTraversable<T> implements List<T
     }
 
     @Override
+    public MutableList<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        return iterator().toList().mutate(arrayLengthFunction);
+    }
+
+    @Override
     public Transformer<T> iterator() {
         return new MapTransformer<>(_transformable.iterator(), _function);
     }

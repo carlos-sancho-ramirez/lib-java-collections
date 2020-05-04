@@ -58,19 +58,24 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
+    public MutableHashMap<K, V> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _keys.length;
+        final int length = arrayLengthFunction.suitableArrayLength(0, size);
+
+        Object[] keys = new Object[length];
+        int[] hashCodes = new int[length];
+        Object[] values = new Object[length];
+
+        System.arraycopy(_keys, 0, keys, 0, size);
+        System.arraycopy(_hashCodes, 0, hashCodes, 0, size);
+        System.arraycopy(_values, 0, values, 0, size);
+
+        return new MutableHashMap<>(arrayLengthFunction, keys, hashCodes, values, size);
+    }
+
+    @Override
     public MutableHashMap<K, V> mutate() {
-        final int length = _keys.length;
-        final int newLength = MutableHashMap.suitableArrayLength(length);
-
-        Object[] keys = new Object[newLength];
-        int[] hashCodes = new int[newLength];
-        Object[] values = new Object[newLength];
-
-        System.arraycopy(_keys, 0, keys, 0, length);
-        System.arraycopy(_hashCodes, 0, hashCodes, 0, length);
-        System.arraycopy(_values, 0, values, 0, length);
-
-        return new MutableHashMap<>(keys, hashCodes, values, length);
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     @Override
@@ -205,7 +210,15 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
-        private final MutableHashMap<K, V> _map = MutableHashMap.empty();
+        private final MutableHashMap<K, V> _map;
+
+        public Builder() {
+            _map = MutableHashMap.empty();
+        }
+
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _map = MutableHashMap.empty(arrayLengthFunction);
+        }
 
         @Override
         public Builder<K, V> put(K key, V value) {

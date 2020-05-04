@@ -25,15 +25,19 @@ import static sword.collections.SortUtils.findValue;
  */
 public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
 
-    public static <K, V> MutableSortedMap<K, V> empty(SortFunction<K> sortFunction) {
-        final int length = suitableArrayLength(0);
-        return new MutableSortedMap<>(sortFunction, new Object[length], new Object[length], 0);
+    public static <K, V> MutableSortedMap<K, V> empty(ArrayLengthFunction arrayLengthFunction, SortFunction<? super K> sortFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, 0);
+        return new MutableSortedMap<>(arrayLengthFunction, sortFunction, new Object[length], new Object[length], 0);
+    }
+
+    public static <K, V> MutableSortedMap<K, V> empty(SortFunction<? super K> sortFunction) {
+        return empty(GranularityBasedArrayLengthFunction.getInstance(), sortFunction);
     }
 
     private final SortFunction<? super K> _sortFunction;
 
-    MutableSortedMap(SortFunction<? super K> sortFunction, Object[] keys, Object[] values, int size) {
-        super(keys, values, size);
+    MutableSortedMap(ArrayLengthFunction arrayLengthFunction, SortFunction<? super K> sortFunction, Object[] keys, Object[] values, int size) {
+        super(arrayLengthFunction, keys, values, size);
         _sortFunction = sortFunction;
     }
 
@@ -85,35 +89,28 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
-    public MutableSortedMap<K, V> mutate() {
-        Object[] keys = new Object[_keys.length];
-        Object[] values = new Object[_values.length];
+    public MutableSortedMap<K, V> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, _size);
+        Object[] keys = new Object[length];
+        Object[] values = new Object[length];
 
         if (_size > 0) {
             System.arraycopy(_keys, 0, keys, 0, _size);
             System.arraycopy(_values, 0, values, 0, _size);
         }
 
-        return new MutableSortedMap<>(_sortFunction, keys, values, _size);
+        return new MutableSortedMap<>(arrayLengthFunction, _sortFunction, keys, values, _size);
     }
 
-    private void enlargeArrays() {
-        Object[] oldKeys = _keys;
-        Object[] oldValues = _values;
-
-        _keys = new Object[_size + GRANULARITY];
-        _values = new Object[_size + GRANULARITY];
-
-        for (int i = 0; i < _size; i++) {
-            _keys[i] = oldKeys[i];
-            _values[i] = oldValues[i];
-        }
+    @Override
+    public MutableSortedMap<K, V> mutate() {
+        return mutate(_arrayLengthFunction);
     }
 
     @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
-        final int suitableLength = suitableArrayLength(0);
+        final int suitableLength = _arrayLengthFunction.suitableArrayLength(_values.length, 0);
         if (_keys.length != suitableLength) {
             _keys = new Object[suitableLength];
             _values = new Object[suitableLength];
@@ -133,19 +130,34 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
     public boolean put(K key, V value) {
         int index = findValue(_sortFunction, _keys, _size, key);
         if (index < 0) {
-            if (_size != 0 && _size % GRANULARITY == 0) {
-                enlargeArrays();
-            }
-
+            final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
             index = findSuitableIndex(_sortFunction, _keys, _size, key);
-            for (int i = _size; i > index; i--) {
-                _keys[i] = _keys[i - 1];
-                _values[i] = _values[i - 1];
+            if (desiredLength != _values.length) {
+                Object[] oldKeys = _keys;
+                Object[] oldValues = _values;
+
+                _keys = new Object[desiredLength];
+                _values = new Object[desiredLength];
+
+                if (index > 0) {
+                    System.arraycopy(oldKeys, 0, _keys, 0, index);
+                    System.arraycopy(oldValues, 0, _values, 0, index);
+                }
+
+                if (_size > index) {
+                    System.arraycopy(oldKeys, index, _keys, index + 1, _size - index);
+                    System.arraycopy(oldValues, index, _values, index + 1, _size - index);
+                }
+            }
+            else {
+                for (int i = _size; i > index; i--) {
+                    _keys[i] = _keys[i - 1];
+                    _values[i] = _values[i - 1];
+                }
             }
 
             _keys[index] = key;
             _values[index] = value;
-
             _size++;
             return true;
         }
@@ -167,11 +179,12 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
             throw new IndexOutOfBoundsException();
         }
 
-        if (_size != 1 && (_size % GRANULARITY) == 1) {
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, --_size);
+        if (desiredLength != _values.length) {
             Object[] oldKeys = _keys;
             Object[] oldValues = _values;
 
-            _keys = new Object[--_size];
+            _keys = new Object[_size];
             _values = new Object[_size];
 
             if (index > 0) {
@@ -185,7 +198,6 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
             }
         }
         else {
-            --_size;
             for (int i = index; i < _size; i++) {
                 _keys[i] = _keys[i + 1];
                 _values[i] = _values[i + 1];
@@ -248,8 +260,12 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
     public static class Builder<K, V> implements MapBuilder<K, V> {
         private final MutableSortedMap<K, V> _map;
 
+        Builder(ArrayLengthFunction arrayLengthFunction, SortFunction<K> sortFunction) {
+            _map = empty(arrayLengthFunction, sortFunction);
+        }
+
         Builder(SortFunction<K> sortFunction) {
-            _map = new MutableSortedMap<>(sortFunction, new Object[GRANULARITY], new Object[GRANULARITY], 0);
+            _map = empty(sortFunction);
         }
 
         @Override

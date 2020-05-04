@@ -2,7 +2,6 @@ package sword.collections;
 
 import sword.collections.SortUtils.SwapMethod;
 
-import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 import static sword.collections.SortUtils.quickSort;
@@ -17,40 +16,25 @@ import static sword.collections.SortUtils.quickSort;
  */
 public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements MutableTransformable<T> {
 
-    private static final int GRANULARITY = DEFAULT_GRANULARITY;
-
+    private final ArrayLengthFunction _arrayLengthFunction;
     private int[] _keys;
     private Object[] _values;
     private int _size;
 
+    public static <E> MutableIntKeyMap<E> empty(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, 0);
+        return new MutableIntKeyMap<>(arrayLengthFunction, new int[length], new Object[length], 0);
+    }
+
     public static <E> MutableIntKeyMap<E> empty() {
-        return new MutableIntKeyMap<>();
+        return empty(GranularityBasedArrayLengthFunction.getInstance());
     }
 
-    static int suitableArrayLength(int size) {
-        int s = ((size + GRANULARITY - 1) / GRANULARITY) * GRANULARITY;
-        return (s > 0)? s : GRANULARITY;
-    }
-
-    MutableIntKeyMap() {
-        _keys = new int[GRANULARITY];
-        _values = new Object[GRANULARITY];
-    }
-
-    MutableIntKeyMap(int[] keys, Object[] values, int size) {
+    MutableIntKeyMap(ArrayLengthFunction arrayLengthFunction, int[] keys, Object[] values, int size) {
+        _arrayLengthFunction = arrayLengthFunction;
         _keys = keys;
         _values = values;
         _size = size;
-    }
-
-    private void enlargeArrays() {
-        int[] oldKeys = _keys;
-        _keys = new int[_size + GRANULARITY];
-        System.arraycopy(oldKeys, 0, _keys, 0, _size);
-
-        Object[] oldValues = _values;
-        _values = new Object[_size + GRANULARITY];
-        System.arraycopy(oldValues, 0, _values, 0, _size);
     }
 
     @Override
@@ -149,13 +133,13 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
             throw new IndexOutOfBoundsException();
         }
 
-        --_size;
-        if (_size != 0 && (_size % GRANULARITY) == 0) {
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, --_size);
+        if (desiredLength != _values.length) {
             int[] oldKeys = _keys;
-            _keys = new int[_size];
-
             Object[] oldValues = _values;
-            _values = new Object[_size];
+
+            _keys = new int[desiredLength];
+            _values = new Object[desiredLength];
 
             if (index > 0) {
                 System.arraycopy(oldKeys, 0, _keys, 0, index);
@@ -209,6 +193,10 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
 
     @Override
     public ImmutableIntKeyMap<T> toImmutable() {
+        if (_size == 0) {
+            return ImmutableIntKeyMap.empty();
+        }
+
         final int[] keys = new int[_size];
         final Object[] values = new Object[_size];
 
@@ -219,25 +207,34 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
-    public MutableIntKeyMap<T> mutate() {
-        final int[] keys = new int[_keys.length];
-        final Object[] values = new Object[_values.length];
+    public MutableIntKeyMap<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, _size);
+        final int[] keys = new int[length];
+        final Object[] values = new Object[length];
 
         System.arraycopy(_keys, 0, keys, 0, _size);
         System.arraycopy(_values, 0, values, 0, _size);
 
-        return new MutableIntKeyMap<>(keys, values, _size);
+        return new MutableIntKeyMap<>(arrayLengthFunction, keys, values, _size);
+    }
+
+    @Override
+    public MutableIntKeyMap<T> mutate() {
+        return mutate(_arrayLengthFunction);
     }
 
     @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
-        if (_size > GRANULARITY) {
-            _keys = new int[GRANULARITY];
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, 0);
+        if (desiredLength != _keys.length) {
+            _keys = new int[desiredLength];
+            _values = new Object[desiredLength];
         }
-
-        if (somethingRemoved) {
-            _values = new Object[GRANULARITY];
+        else if (somethingRemoved) {
+            for (int i = 0; i < _size; i++) {
+                _values[i] = null;
+            }
         }
 
         _size = 0;
@@ -257,14 +254,30 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     public boolean put(int key, T value) {
         int index = findKey(_keys, _size, key);
         if (index < 0) {
-            if (_size != 0 && _size % GRANULARITY == 0) {
-                enlargeArrays();
-            }
-
+            final int desiredLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
             index = findSuitableIndex(_keys, _size, key);
-            for (int i = _size; i > index; i--) {
-                _keys[i] = _keys[i - 1];
-                _values[i] = _values[i - 1];
+            if (desiredLength != _values.length) {
+                int[] oldKeys = _keys;
+                Object[] oldValues = _values;
+
+                _keys = new int[desiredLength];
+                _values = new Object[desiredLength];
+
+                if (index > 0) {
+                    System.arraycopy(oldKeys, 0, _keys, 0, index);
+                    System.arraycopy(oldValues, 0, _values, 0, index);
+                }
+
+                if (_size > index) {
+                    System.arraycopy(oldKeys, index, _keys, index + 1, _size - index);
+                    System.arraycopy(oldValues, index, _values, index + 1, _size - index);
+                }
+            }
+            else {
+                for (int i = _size; i > index; i--) {
+                    _keys[i] = _keys[i - 1];
+                    _values[i] = _values[i - 1];
+                }
             }
 
             _keys[index] = key;
@@ -341,7 +354,15 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     public static class Builder<E> implements IntKeyMapBuilder<E> {
-        private final MutableIntKeyMap<E> _map = new MutableIntKeyMap<>();
+        private final MutableIntKeyMap<E> _map;
+
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _map = empty(arrayLengthFunction);
+        }
+
+        public Builder() {
+            _map = empty();
+        }
 
         @Override
         public Builder<E> put(int key, E value) {

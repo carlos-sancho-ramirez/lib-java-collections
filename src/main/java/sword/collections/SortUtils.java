@@ -2,8 +2,6 @@ package sword.collections;
 
 public final class SortUtils {
 
-    static final int DEFAULT_GRANULARITY = 4;
-
     /**
      * Internal value used as hashcode for null key, as null key is allowed.
      */

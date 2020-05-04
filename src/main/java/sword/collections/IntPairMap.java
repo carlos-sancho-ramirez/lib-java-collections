@@ -66,6 +66,12 @@ public interface IntPairMap extends IntTransformable {
     MutableIntPairMap mutate();
 
     /**
+     * Return a new mutable map with the given {@link ArrayLengthFunction}.
+     * This method will always generate a new instance in order to avoid affecting the state of its original map.
+     */
+    MutableIntPairMap mutate(ArrayLengthFunction arrayLengthFunction);
+
+    /**
      * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
      *
      * Note that the order of the key-value pair within the map and the collection mutability is irrelevant.

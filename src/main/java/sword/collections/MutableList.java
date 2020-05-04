@@ -1,26 +1,24 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.equal;
 
 public final class MutableList<T> extends AbstractTraversable<T> implements List<T>, MutableTraversable<T> {
 
-    private static final int GRANULARITY = DEFAULT_GRANULARITY;
+    public static <E> MutableList<E> empty(ArrayLengthFunction arrayLengthFunction) {
+        final int arrayLength = arrayLengthFunction.suitableArrayLength(0, 0);
+        return new MutableList<>(arrayLengthFunction, new Object[arrayLength], 0);
+    }
 
     public static <E> MutableList<E> empty() {
-        final Object[] values = new Object[suitableArrayLength(0)];
-        return new MutableList<>(values, 0);
+        return empty(GranularityBasedArrayLengthFunction.getInstance());
     }
 
-    static int suitableArrayLength(int size) {
-        int s = ((size + GRANULARITY - 1) / GRANULARITY) * GRANULARITY;
-        return (s > 0)? s : GRANULARITY;
-    }
-
+    private final ArrayLengthFunction _arrayLengthFunction;
     private Object[] _values;
     private int _size;
 
-    MutableList(Object[] values, int size) {
+    MutableList(ArrayLengthFunction arrayLengthFunction, Object[] values, int size) {
+        _arrayLengthFunction = arrayLengthFunction;
         _values = values;
         _size = size;
     }
@@ -99,10 +97,15 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
     }
 
     @Override
-    public MutableList<T> mutate() {
-        final Object[] newValues = new Object[_values.length];
+    public MutableList<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final Object[] newValues = new Object[arrayLengthFunction.suitableArrayLength(0, _size)];
         System.arraycopy(_values, 0, newValues, 0, _size);
-        return new MutableList<>(newValues, _size);
+        return new MutableList<>(arrayLengthFunction, newValues, _size);
+    }
+
+    @Override
+    public MutableList<T> mutate() {
+        return mutate(_arrayLengthFunction);
     }
 
     /**
@@ -135,7 +138,15 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
     }
 
     public static class Builder<E> implements ListBuilder<E>, MutableTraversableBuilder<E> {
-        private final MutableList<E> _list = MutableList.empty();
+        private final MutableList<E> _list;
+
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _list = MutableList.empty(arrayLengthFunction);
+        }
+
+        public Builder() {
+            _list = MutableList.empty();
+        }
 
         @Override
         public Builder<E> add(E item) {
@@ -155,7 +166,7 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
             throw new IndexOutOfBoundsException();
         }
 
-        final int arrayLength = suitableArrayLength(--_size);
+        final int arrayLength = _arrayLengthFunction.suitableArrayLength(_values.length, --_size);
         if (arrayLength != _values.length) {
             Object[] newValues = new Object[arrayLength];
 
@@ -177,7 +188,7 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
 
     @Override
     public boolean clear() {
-        final int suitableLength = suitableArrayLength(0);
+        final int suitableLength = _arrayLengthFunction.suitableArrayLength(_values.length, 0);
         if (_values.length != suitableLength) {
             _values = new Object[suitableLength];
         }
@@ -227,7 +238,7 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
             throw new IndexOutOfBoundsException();
         }
 
-        final int arrayLength = suitableArrayLength(_size + 1);
+        final int arrayLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
         if (arrayLength != _values.length) {
             Object[] newValues = new Object[arrayLength];
             if (index > 0) {
@@ -260,7 +271,7 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
             return;
         }
 
-        final int arrayLength = suitableArrayLength(_size + that.size());
+        final int arrayLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + that.size());
         if (arrayLength != _values.length) {
             Object[] newValues = new Object[arrayLength];
             System.arraycopy(_values, 0, newValues, 0, _values.length);

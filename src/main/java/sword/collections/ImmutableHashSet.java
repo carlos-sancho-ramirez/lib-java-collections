@@ -115,17 +115,22 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
+    public MutableHashSet<T> mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int size = _values.length;
+        final int length = arrayLengthFunction.suitableArrayLength(0, size);
+
+        Object[] keys = new Object[length];
+        int[] hashCodes = new int[length];
+
+        System.arraycopy(_values, 0, keys, 0, size);
+        System.arraycopy(_hashCodes, 0, hashCodes, 0, size);
+
+        return new MutableHashSet<>(arrayLengthFunction, keys, hashCodes, size);
+    }
+
+    @Override
     public MutableHashSet<T> mutate() {
-        final int length = _values.length;
-        final int newLength = MutableHashSet.suitableArrayLength(length);
-
-        Object[] keys = new Object[newLength];
-        int[] hashCodes = new int[newLength];
-
-        System.arraycopy(_values, 0, keys, 0, length);
-        System.arraycopy(_hashCodes, 0, hashCodes, 0, length);
-
-        return new MutableHashSet<>(keys, hashCodes, length);
+        return mutate(GranularityBasedArrayLengthFunction.getInstance());
     }
 
     @Override
@@ -239,7 +244,15 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
     }
 
     public static class Builder<E> implements ImmutableSet.Builder<E> {
-        private final MutableHashSet<E> _set = MutableHashSet.empty();
+        private final MutableHashSet<E> _set;
+
+        public Builder() {
+            _set = MutableHashSet.empty();
+        }
+
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _set = MutableHashSet.empty(arrayLengthFunction);
+        }
 
         @Override
         public Builder<E> add(E key) {

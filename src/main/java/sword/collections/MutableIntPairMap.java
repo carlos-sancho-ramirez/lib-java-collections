@@ -1,6 +1,5 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.DEFAULT_GRANULARITY;
 import static sword.collections.SortUtils.findKey;
 import static sword.collections.SortUtils.findSuitableIndex;
 
@@ -14,40 +13,25 @@ import static sword.collections.SortUtils.findSuitableIndex;
  */
 public final class MutableIntPairMap extends AbstractIntPairMap implements MutableIntTransformable {
 
-    private static final int GRANULARITY = DEFAULT_GRANULARITY;
-
+    private final ArrayLengthFunction _arrayLengthFunction;
     private int[] _keys;
     private int[] _values;
     private int _size;
 
+    public static MutableIntPairMap empty(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, 0);
+        return new MutableIntPairMap(arrayLengthFunction, new int[length], new int[length], 0);
+    }
+
     public static MutableIntPairMap empty() {
-        return new MutableIntPairMap();
+        return empty(GranularityBasedArrayLengthFunction.getInstance());
     }
 
-    static int suitableArrayLength(int size) {
-        int s = ((size + GRANULARITY - 1) / GRANULARITY) * GRANULARITY;
-        return (s > 0)? s : GRANULARITY;
-    }
-
-    MutableIntPairMap() {
-        _keys = new int[GRANULARITY];
-        _values = new int[GRANULARITY];
-    }
-
-    MutableIntPairMap(int[] keys, int[] values, int size) {
+    MutableIntPairMap(ArrayLengthFunction arrayLengthFunction, int[] keys, int[] values, int size) {
+        _arrayLengthFunction = arrayLengthFunction;
         _keys = keys;
         _values = values;
         _size = size;
-    }
-
-    private void enlargeArrays() {
-        int[] oldKeys = _keys;
-        _keys = new int[_size + GRANULARITY];
-        System.arraycopy(oldKeys, 0, _keys, 0, _size);
-
-        int[] oldValues = _values;
-        _values = new int[_size + GRANULARITY];
-        System.arraycopy(oldValues, 0, _values, 0, _size);
     }
 
     @Override
@@ -138,14 +122,20 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     }
 
     @Override
-    public MutableIntPairMap mutate() {
-        final int[] keys = new int[_keys.length];
-        final int[] values = new int[_values.length];
+    public MutableIntPairMap mutate(ArrayLengthFunction arrayLengthFunction) {
+        final int length = arrayLengthFunction.suitableArrayLength(0, _size);
+        final int[] keys = new int[length];
+        final int[] values = new int[length];
 
         System.arraycopy(_keys, 0, keys, 0, _size);
         System.arraycopy(_values, 0, values, 0, _size);
 
-        return new MutableIntPairMap(keys, values, _size);
+        return new MutableIntPairMap(arrayLengthFunction, keys, values, _size);
+    }
+
+    @Override
+    public MutableIntPairMap mutate() {
+        return mutate(_arrayLengthFunction);
     }
 
     @Override
@@ -154,13 +144,13 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
             throw new IndexOutOfBoundsException();
         }
 
-        --_size;
-        if (_size != 0 && (_size % GRANULARITY) == 0) {
+        final int desiredLength = _arrayLengthFunction.suitableArrayLength(_keys.length, --_size);
+        if (desiredLength != _keys.length) {
             int[] oldKeys = _keys;
-            _keys = new int[_size];
-
             int[] oldValues = _values;
-            _values = new int[_size];
+
+            _keys = new int[desiredLength];
+            _values = new int[desiredLength];
 
             if (index > 0) {
                 System.arraycopy(oldKeys, 0, _keys, 0, index);
@@ -183,9 +173,10 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     @Override
     public boolean clear() {
         final boolean somethingRemoved = _size > 0;
-        if (_size > GRANULARITY) {
-            _keys = new int[GRANULARITY];
-            _values = new int[GRANULARITY];
+        final int length = _arrayLengthFunction.suitableArrayLength(_values.length, 0);
+        if (length != _values.length) {
+            _keys = new int[length];
+            _values = new int[length];
         }
 
         _size = 0;
@@ -215,14 +206,30 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     public boolean put(int key, int value) {
         int index = findKey(_keys, _size, key);
         if (index < 0) {
-            if (_size != 0 && _size % GRANULARITY == 0) {
-                enlargeArrays();
-            }
-
+            final int desiredLength = _arrayLengthFunction.suitableArrayLength(_keys.length, _size + 1);
             index = findSuitableIndex(_keys, _size, key);
-            for (int i = _size; i > index; i--) {
-                _keys[i] = _keys[i - 1];
-                _values[i] = _values[i - 1];
+            if (desiredLength != _keys.length) {
+                int[] oldKeys = _keys;
+                int[] oldValues = _values;
+
+                _keys = new int[desiredLength];
+                _values = new int[desiredLength];
+
+                if (index > 0) {
+                    System.arraycopy(oldKeys, 0, _keys, 0, _size);
+                    System.arraycopy(oldValues, 0, _values, 0, _size);
+                }
+
+                if (_size > index) {
+                    System.arraycopy(oldKeys, index, _keys, index + 1, _size - index);
+                    System.arraycopy(oldValues, index, _values, index + 1, _size - index);
+                }
+            }
+            else {
+                for (int i = _size; i > index; i--) {
+                    _keys[i] = _keys[i - 1];
+                    _values[i] = _values[i - 1];
+                }
             }
 
             _keys[index] = key;
@@ -296,7 +303,15 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     }
 
     public static class Builder implements IntPairMapBuilder {
-        private final MutableIntPairMap _map = new MutableIntPairMap();
+        private final MutableIntPairMap _map;
+
+        public Builder() {
+            _map = empty();
+        }
+
+        public Builder(ArrayLengthFunction arrayLengthFunction) {
+            _map = empty(arrayLengthFunction);
+        }
 
         @Override
         public Builder put(int key, int value) {

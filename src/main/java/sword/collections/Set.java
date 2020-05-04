@@ -67,6 +67,12 @@ public interface Set<T> extends Transformable<T> {
     MutableSet<T> mutate();
 
     /**
+     * Return a new mutable set with the given {@link ArrayLengthFunction}.
+     * This method will always generate a new instance in order to avoid affecting the state of its original set.
+     */
+    MutableSet<T> mutate(ArrayLengthFunction arrayLengthFunction);
+
+    /**
      * Creates a new set where all current elements and future elements will be
      * sorted following the given function.
      *
