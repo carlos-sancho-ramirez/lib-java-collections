@@ -99,12 +99,30 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
 
     @Override
     public <U> ImmutableList<U> map(IntFunction<? extends U> func) {
-        return (ImmutableList<U>) super.map(func);
+        final int size = _values.length;
+        if (size == 0) {
+            return ImmutableList.empty();
+        }
+
+        final Object[] newValues = new Object[size];
+        for (int i = 0; i < size; i++) {
+            newValues[i] = func.apply(_values[i]);
+        }
+        return new ImmutableList<>(newValues);
     }
 
     @Override
     public ImmutableIntList mapToInt(IntToIntFunction func) {
-        return (ImmutableIntList) super.mapToInt(func);
+        final int size = _values.length;
+        if (size == 0) {
+            return empty();
+        }
+
+        final int[] newValues = new int[size];
+        for (int i = 0; i < size; i++) {
+            newValues[i] = func.apply(_values[i]);
+        }
+        return new ImmutableIntList(newValues);
     }
 
     /**
