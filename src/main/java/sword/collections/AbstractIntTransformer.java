@@ -1,6 +1,10 @@
 package sword.collections;
 
-abstract class AbstractIntTransformer implements IntTransformer {
+/**
+ * Base class for all iterators for immutable int collections.
+ * All immutable collections should not allow modifications, so calling remove should be considered an error.
+ */
+public abstract class AbstractIntTransformer implements IntTransformer {
 
     @Override
     public IntList toList() {
