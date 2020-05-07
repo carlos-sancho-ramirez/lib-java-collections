@@ -12,7 +12,15 @@ package sword.collections;
  */
 public final class ImmutableIntSetCreator implements ImmutableIntSet.Builder {
 
-    private final MutableIntArraySet _set = MutableIntArraySet.empty();
+    private final MutableIntArraySet _set;
+
+    public ImmutableIntSetCreator() {
+        _set = MutableIntArraySet.empty();
+    }
+
+    public ImmutableIntSetCreator(ArrayLengthFunction arrayLengthFunction) {
+        _set = MutableIntArraySet.empty(arrayLengthFunction);
+    }
 
     @Override
     public ImmutableIntSet.Builder add(int value) {
