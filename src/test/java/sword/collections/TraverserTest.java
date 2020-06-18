@@ -332,6 +332,107 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
+    void testSkipZeroForNoElements() {
+        withBuilder(builder -> {
+            final Traverser<T> traverser = builder.build().iterator();
+            assertSame(traverser, traverser.skip(0));
+            assertFalse(traverser.hasNext());
+        });
+    }
+
+    @Test
+    void testSkipOneForNoElements() {
+        withBuilder(builder -> {
+            final Traverser<T> traverser = builder.build().iterator();
+            assertSame(traverser, traverser.skip(1));
+            assertFalse(traverser.hasNext());
+        });
+    }
+
+    @Test
+    void testSkipZeroForOneElement() {
+        withValue(value -> withBuilder(builder -> {
+            final Traverser<T> traverser = builder.add(value).build().iterator();
+            assertSame(traverser, traverser.skip(0));
+            assertTrue(traverser.hasNext());
+            assertSame(value, traverser.next());
+            assertFalse(traverser.hasNext());
+        }));
+    }
+
+    @Test
+    void testSkipOneForOneElement() {
+        withValue(value -> withBuilder(builder -> {
+            final Traverser<T> traverser = builder.add(value).build().iterator();
+            assertSame(traverser, traverser.skip(1));
+            assertFalse(traverser.hasNext());
+        }));
+    }
+
+    @Test
+    void testSkipTwoForOneElement() {
+        withValue(value -> withBuilder(builder -> {
+            final Traverser<T> traverser = builder.add(value).build().iterator();
+            assertSame(traverser, traverser.skip(2));
+            assertFalse(traverser.hasNext());
+        }));
+    }
+
+    @Test
+    void testSkipZeroForTwoElements() {
+        withValue(a -> withValue(b -> withBuilder(builder -> {
+            final Traversable<T> traversable = builder.add(a).add(b).build();
+            if (traversable.size() == 2) {
+                final Traverser<T> traverser = traversable.iterator();
+                assertSame(traverser, traverser.skip(0));
+                assertTrue(traverser.hasNext());
+                final T first = traverser.next();
+                final boolean reversed = first == b;
+                if (!reversed) {
+                    assertSame(a, first);
+                }
+
+                assertTrue(traverser.hasNext());
+                final T expectedSecond = reversed? a : b;
+                assertSame(expectedSecond, traverser.next());
+                assertFalse(traverser.hasNext());
+            }
+        })));
+    }
+
+    @Test
+    void testSkipOneForTwoElements() {
+        withValue(a -> withValue(b -> withBuilder(builder -> {
+            final Traversable<T> traversable = builder.add(a).add(b).build();
+            if (traversable.size() == 2) {
+                final Traverser<T> traverser = traversable.iterator();
+                assertSame(traverser, traverser.skip(1));
+                assertTrue(traverser.hasNext());
+                assertSame(traversable.valueAt(1), traverser.next());
+                assertFalse(traverser.hasNext());
+            }
+        })));
+    }
+
+    @Test
+    void testSkipTwoForTwoElements() {
+        withValue(a -> withValue(b -> withBuilder(builder -> {
+            final Traverser<T> traverser = builder.add(a).add(b).build().iterator();
+            assertSame(traverser, traverser.skip(2));
+            assertFalse(traverser.hasNext());
+        })));
+    }
+
+    @Test
+    void testSkipThreeForTwoElements() {
+        withValue(a -> withValue(b -> withBuilder(builder -> {
+            final Traverser<T> traverser = builder.add(a).add(b).build().iterator();
+            assertSame(traverser, traverser.skip(3));
+            assertFalse(traverser.hasNext());
+        })));
+    }
+
+    @Test
     void testEqualTraverserWhenEmpty() {
         withBuilder(builder -> {
             final Traversable<T> empty = builder.build();
