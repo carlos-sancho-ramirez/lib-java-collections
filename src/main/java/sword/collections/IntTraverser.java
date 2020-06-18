@@ -206,6 +206,28 @@ public interface IntTraverser extends Iterator<Integer> {
     }
 
     /**
+     * Skip the following <pre>length</pre> elements from this traverser.
+     * <p>
+     * This will skip all the remaining elements if the given parameter matches
+     * or exceeds the size of this traverser.
+     *
+     * @param length the amount of elements to be skipped.
+     * @return The same instance of this traverser.
+     * @throws IllegalArgumentException if length is a negative number.
+     */
+    default IntTraverser skip(int length) throws IllegalArgumentException {
+        if (length < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        for (int i = 0; i < length && hasNext(); i++) {
+            next();
+        }
+
+        return this;
+    }
+
+    /**
      * Iterates over this and the given collection in order to compare one by one the elements retrieved by both traversers.
      * @param traverser Traverser to contrast.
      * @return Whether both traversers returned equivalent values in the same order, matching also in length.
