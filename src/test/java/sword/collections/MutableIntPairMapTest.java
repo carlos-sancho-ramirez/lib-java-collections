@@ -135,7 +135,7 @@ public final class MutableIntPairMapTest extends IntPairMapTest<MutableIntTransf
         })));
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder {
+    static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder {
         private final MutableIntPairMap map = MutableIntPairMap.empty();
 
         @Override

@@ -54,7 +54,7 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
         withInt(procedure);
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {
+    static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {
         private final ImmutableIntValueHashMap.Builder<String> builder = new ImmutableIntValueHashMap.Builder<>();
 
         @Override

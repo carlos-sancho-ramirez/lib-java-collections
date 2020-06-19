@@ -86,7 +86,7 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
         })));
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder {
+    static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder {
         private final MutableIntValueHashMap<String> map = MutableIntValueHashMap.empty();
 
         @Override

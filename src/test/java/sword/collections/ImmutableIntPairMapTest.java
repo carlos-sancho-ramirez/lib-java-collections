@@ -186,7 +186,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest<ImmutableIntTr
         }));
     }
 
-    private static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {
+    static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {
         private final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
 
         @Override
