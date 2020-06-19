@@ -1,9 +1,9 @@
 package sword.collections;
 
-final class ImmutableIntValueSortedMapTransformerTest extends IntTransformerTest<ImmutableIntTransformableBuilder> {
+final class MutableIntValueSortedMapTransformerTest extends IntTransformerTest<MutableIntTransformableBuilder> {
 
     @Override
-    void withBuilder(Procedure<ImmutableIntTransformableBuilder> procedure) {
+    void withBuilder(Procedure<MutableIntTransformableBuilder> procedure) {
         procedure.apply(new SameKeyAndValueBuilder());
         procedure.apply(new IndexedKeyBuilder());
     }
@@ -20,8 +20,8 @@ final class ImmutableIntValueSortedMapTransformerTest extends IntTransformerTest
         procedure.apply(Integer::toString);
     }
 
-    private static final class SameKeyAndValueBuilder implements ImmutableIntTransformableBuilder {
-        private final ImmutableIntValueSortedMap.Builder<String> builder = new ImmutableIntValueSortedMap.Builder<>(SortUtils::compareCharSequenceByUnicode);
+    private static final class SameKeyAndValueBuilder implements MutableIntTransformableBuilder {
+        private final MutableIntValueSortedMap.Builder<String> builder = new MutableIntValueSortedMap.Builder<>(SortUtils::compareCharSequenceByUnicode);
 
         @Override
         public SameKeyAndValueBuilder add(int element) {
@@ -30,13 +30,13 @@ final class ImmutableIntValueSortedMapTransformerTest extends IntTransformerTest
         }
 
         @Override
-        public ImmutableIntValueSortedMap build() {
+        public MutableIntValueSortedMap build() {
             return builder.build();
         }
     }
 
-    private static final class IndexedKeyBuilder implements ImmutableIntTransformableBuilder {
-        private final ImmutableIntValueSortedMap.Builder<Integer> builder = new ImmutableIntValueSortedMap.Builder<>((a, b) -> a > b);
+    private static final class IndexedKeyBuilder implements MutableIntTransformableBuilder {
+        private final MutableIntValueSortedMap.Builder<Integer> builder = new MutableIntValueSortedMap.Builder<>((a, b) -> a > b);
         private int key;
 
         @Override
@@ -46,7 +46,7 @@ final class ImmutableIntValueSortedMapTransformerTest extends IntTransformerTest
         }
 
         @Override
-        public ImmutableIntValueSortedMap build() {
+        public MutableIntValueSortedMap build() {
             return builder.build();
         }
     }

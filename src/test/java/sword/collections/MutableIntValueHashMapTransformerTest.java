@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<ImmutableIntTransformableBuilder> {
+final class MutableIntValueHashMapTransformerTest extends IntTransformerTest<MutableIntTransformableBuilder> {
 
     @Override
-    void withBuilder(Procedure<ImmutableIntTransformableBuilder> procedure) {
+    void withBuilder(Procedure<MutableIntTransformableBuilder> procedure) {
         procedure.apply(new SameKeyAndValueBuilder());
         procedure.apply(new IndexedKeyBuilder());
     }
@@ -26,13 +26,13 @@ final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<I
     }
 
     @Test
-    public void testToMapWhenEmpty() {
+    void testToMapWhenEmpty() {
         final ImmutableIntValueHashMap map = new ImmutableIntValueHashMap.Builder().build();
         assertTrue(map.iterator().toMap().isEmpty());
     }
 
     @Test
-    public void testToMapForSingleElement() {
+    void testToMapForSingleElement() {
         withValue(value -> {
             final ImmutableIntValueHashMap<String> transformable = new ImmutableIntValueHashMap.Builder<String>()
                     .put(Integer.toString(value), value)
@@ -43,7 +43,7 @@ final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<I
     }
 
     @Test
-    public void testToMapForMultipleElements() {
+    void testToMapForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntValueHashMap<String> transformable = new ImmutableIntValueHashMap.Builder<String>()
                     .put(Integer.toString(a), a)
@@ -55,8 +55,8 @@ final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<I
         })));
     }
 
-    private static final class SameKeyAndValueBuilder implements ImmutableIntTransformableBuilder {
-        private final ImmutableIntValueHashMap.Builder<String> builder = new ImmutableIntValueHashMap.Builder<>();
+    private static final class SameKeyAndValueBuilder implements MutableIntTransformableBuilder {
+        private final MutableIntValueHashMap.Builder<String> builder = new MutableIntValueHashMap.Builder<>();
 
         @Override
         public SameKeyAndValueBuilder add(int element) {
@@ -65,13 +65,13 @@ final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<I
         }
 
         @Override
-        public ImmutableIntValueHashMap build() {
+        public MutableIntValueHashMap build() {
             return builder.build();
         }
     }
 
-    private static final class IndexedKeyBuilder implements ImmutableIntTransformableBuilder {
-        private final ImmutableIntValueHashMap.Builder<Integer> builder = new ImmutableIntValueHashMap.Builder<>();
+    private static final class IndexedKeyBuilder implements MutableIntTransformableBuilder {
+        private final MutableIntValueHashMap.Builder<Integer> builder = new MutableIntValueHashMap.Builder<>();
         private int key;
 
         @Override
@@ -81,7 +81,7 @@ final class ImmutableIntValueHashMapTransformerTest extends IntTransformerTest<I
         }
 
         @Override
-        public ImmutableIntValueHashMap build() {
+        public MutableIntValueHashMap build() {
             return builder.build();
         }
     }

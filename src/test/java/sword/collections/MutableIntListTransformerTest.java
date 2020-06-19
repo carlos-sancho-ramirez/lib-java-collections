@@ -1,10 +1,10 @@
 package sword.collections;
 
-final class ImmutableIntListTransformerTest extends IntTransformerTest<ImmutableIntList.Builder> {
+final class MutableIntListTransformerTest extends IntTransformerTest<MutableIntList.Builder> {
 
     @Override
-    void withBuilder(Procedure<ImmutableIntList.Builder> procedure) {
-        procedure.apply(new ImmutableIntList.Builder());
+    void withBuilder(Procedure<MutableIntList.Builder> procedure) {
+        procedure.apply(new MutableIntList.Builder());
     }
 
     @Override
