@@ -18,6 +18,17 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> {
     abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
     abstract void withReduceFunction(Procedure<ReduceFunction<T>> procedure);
 
+    private void withArbitraryBuilder(Procedure<TraversableBuilder<T>> procedure) {
+        procedure.apply(new ImmutableList.Builder<>());
+        procedure.apply(new ImmutableHashSet.Builder<>());
+        procedure.apply(new ImmutableHashMapTest.HashCodeKeyTraversableBuilder<>());
+        procedure.apply(new ImmutableIntKeyMapTest.HashCodeKeyTraversableBuilder<>());
+        procedure.apply(new MutableList.Builder<>());
+        procedure.apply(new MutableHashSet.Builder<>());
+        procedure.apply(new MutableHashMapTest.HashCodeKeyTraversableBuilder<>());
+        procedure.apply(new MutableIntKeyMapTest.HashCodeKeyTraversableBuilder<>());
+    }
+
     @Test
     void testSizeForNoElements() {
         withBuilder(builder -> assertEquals(0, builder.build().iterator().size()));
@@ -318,5 +329,52 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> {
                 withValue(defValue -> assertEquals(expected, iterable.iterator().reduce(func, defValue)));
             });
         }))));
+    }
+
+    @Test
+    void testEqualTraverserWhenEmpty() {
+        withBuilder(builder -> {
+            final Traversable<T> empty = builder.build();
+            assertTrue(empty.iterator().equalTraverser(empty.iterator()));
+            assertFalse(empty.iterator().equalTraverser(null));
+
+            withArbitraryBuilder(thatBuilder -> assertTrue(empty.iterator().equalTraverser(thatBuilder.build().iterator())));
+
+            withValue(a -> withArbitraryBuilder(thatBuilder -> {
+                assertFalse(empty.iterator().equalTraverser(thatBuilder.add(a).build().iterator()));
+            }));
+        });
+    }
+
+    @Test
+    void testEqualTraverser() {
+        withArbitraryBuilder(builderForEmpty -> {
+            final Traversable<T> empty = builderForEmpty.build();
+            withValue(a -> withValue(b -> withBuilder(builder -> {
+                final Traversable<T> traversable = builder.add(a).add(b).build();
+                assertTrue(traversable.iterator().equalTraverser(traversable.iterator()));
+                assertFalse(traversable.iterator().equalTraverser(empty.iterator()));
+
+                withArbitraryBuilder(thatBuilder -> {
+                    for (T value : traversable) {
+                        thatBuilder.add(value);
+                    }
+
+                    final Traversable<T> that = thatBuilder.build();
+                    final int size = traversable.size();
+                    boolean expectedResult = size == that.size();
+                    if (expectedResult) {
+                        for (int i = 0; i < size; i++) {
+                            if (!equal(traversable.valueAt(i), that.valueAt(i))) {
+                                expectedResult = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    assertEquals(expectedResult, traversable.iterator().equalTraverser(that.iterator()));
+                });
+            })));
+        });
     }
 }

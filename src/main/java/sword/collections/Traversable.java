@@ -1,7 +1,5 @@
 package sword.collections;
 
-import static sword.collections.SortUtils.equal;
-
 public interface Traversable<T> extends Iterable<T>, Sizable {
 
     Traverser<T> iterator();
@@ -96,17 +94,6 @@ public interface Traversable<T> extends Iterable<T>, Sizable {
      * @return Whether both collections have equivalent values in the same order.
      */
     default boolean equalTraversable(Traversable traversable) {
-        if (traversable == null) {
-            return false;
-        }
-
-        final Traverser thatIt = traversable.iterator();
-        for (T value : this) {
-            if (!thatIt.hasNext() || !equal(value, thatIt.next())) {
-                return false;
-            }
-        }
-
-        return !thatIt.hasNext();
+        return traversable != null && iterator().equalTraverser(traversable.iterator());
     }
 }

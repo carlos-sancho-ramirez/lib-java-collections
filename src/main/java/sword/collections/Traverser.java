@@ -154,4 +154,23 @@ public interface Traverser<T> extends Iterator<T> {
 
         return count;
     }
+
+    /**
+     * Iterates over this and the given collection in order to compare one by one the elements retrieved by both traversers.
+     * @param traverser Traverser to contrast.
+     * @return Whether both traversers returned equivalent values in the same order, matching also in length.
+     */
+    default boolean equalTraverser(Traverser traverser) {
+        if (traverser == null) {
+            return false;
+        }
+
+        while (hasNext()) {
+            if (!traverser.hasNext() || !equal(next(), traverser.next())) {
+                return false;
+            }
+        }
+
+        return !traverser.hasNext();
+    }
 }

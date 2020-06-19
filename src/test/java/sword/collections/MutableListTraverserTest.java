@@ -2,11 +2,11 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-final class ImmutableListTraverserTest extends TraverserTest<String, ImmutableList.Builder<String>> {
+final class MutableListTraverserTest extends TraverserTest<String, MutableList.Builder<String>> {
 
     @Override
-    void withBuilder(Procedure<ImmutableList.Builder<String>> procedure) {
-        procedure.apply(new ImmutableList.Builder<>());
+    void withBuilder(Procedure<MutableList.Builder<String>> procedure) {
+        procedure.apply(new MutableList.Builder<>());
     }
 
     @Override
@@ -25,6 +25,6 @@ final class ImmutableListTraverserTest extends TraverserTest<String, ImmutableLi
 
     @Override
     void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
-        procedure.apply(ImmutableListTraverserTest::reduceFunc);
+        procedure.apply(MutableListTraverserTest::reduceFunc);
     }
 }
