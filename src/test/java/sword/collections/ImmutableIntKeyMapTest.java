@@ -327,17 +327,17 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
         }));
     }
 
-    private static final class HashCodeKeyTraversableBuilder implements ImmutableTransformableBuilder<String> {
-        private final ImmutableIntKeyMap.Builder<String> builder = new ImmutableIntKeyMap.Builder<>();
+    static final class HashCodeKeyTraversableBuilder<E> implements ImmutableTransformableBuilder<E> {
+        private final ImmutableIntKeyMap.Builder<E> builder = new ImmutableIntKeyMap.Builder<>();
 
         @Override
-        public HashCodeKeyTraversableBuilder add(String element) {
+        public HashCodeKeyTraversableBuilder<E> add(E element) {
             builder.put(SortUtils.hashCode(element), element);
             return this;
         }
 
         @Override
-        public ImmutableTransformable<String> build() {
+        public ImmutableTransformable<E> build() {
             return builder.build();
         }
     }

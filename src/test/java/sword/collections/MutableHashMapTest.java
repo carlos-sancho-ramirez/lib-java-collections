@@ -150,17 +150,17 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
         })));
     }
 
-    private static final class HashCodeKeyTraversableBuilder implements MutableTransformableBuilder<String> {
-        private final MutableHashMap<Integer, String> map = MutableHashMap.empty();
+    static final class HashCodeKeyTraversableBuilder<E> implements MutableTransformableBuilder<E> {
+        private final MutableHashMap<Integer, E> map = MutableHashMap.empty();
 
         @Override
-        public HashCodeKeyTraversableBuilder add(String element) {
+        public HashCodeKeyTraversableBuilder<E> add(E element) {
             map.put(SortUtils.hashCode(element), element);
             return this;
         }
 
         @Override
-        public MutableHashMap<Integer, String> build() {
+        public MutableHashMap<Integer, E> build() {
             return map;
         }
     }

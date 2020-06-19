@@ -178,17 +178,17 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
         })));
     }
 
-    private static final class HashCodeKeyTraversableBuilder implements MutableTransformableBuilder<String> {
-        private final MutableIntKeyMap<String> map = MutableIntKeyMap.empty();
+    static final class HashCodeKeyTraversableBuilder<E> implements MutableTransformableBuilder<E> {
+        private final MutableIntKeyMap<E> map = MutableIntKeyMap.empty();
 
         @Override
-        public HashCodeKeyTraversableBuilder add(String element) {
+        public HashCodeKeyTraversableBuilder<E> add(E element) {
             map.put(SortUtils.hashCode(element), element);
             return this;
         }
 
         @Override
-        public MutableTransformable<String> build() {
+        public MutableTransformable<E> build() {
             return map;
         }
     }

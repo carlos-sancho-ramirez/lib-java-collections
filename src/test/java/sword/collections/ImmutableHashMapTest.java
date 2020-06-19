@@ -137,17 +137,17 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
         procedure.apply((a, b) -> a + b);
     }
 
-    private static final class HashCodeKeyTraversableBuilder implements ImmutableTransformableBuilder<String> {
-        private final ImmutableHashMap.Builder<Integer, String> builder = new ImmutableHashMap.Builder<>();
+    static final class HashCodeKeyTraversableBuilder<E> implements ImmutableTransformableBuilder<E> {
+        private final ImmutableHashMap.Builder<Integer, E> builder = new ImmutableHashMap.Builder<>();
 
         @Override
-        public HashCodeKeyTraversableBuilder add(String element) {
+        public HashCodeKeyTraversableBuilder<E> add(E element) {
             builder.put(SortUtils.hashCode(element), element);
             return this;
         }
 
         @Override
-        public ImmutableTransformable<String> build() {
+        public ImmutableTransformable<E> build() {
             return builder.build();
         }
     }
