@@ -61,9 +61,10 @@ javadoc {
   classpath = configurations.compileClasspath
 
   options {
+    source '8'
     setMemberLevel JavadocMemberLevel.PUBLIC
     setAuthor false
 
-    links "https://docs.oracle.com/javase/7/docs/api/"
+    links "https://docs.oracle.com/javase/8/docs/api/"
   }
 }
