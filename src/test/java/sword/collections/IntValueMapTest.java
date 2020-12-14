@@ -334,4 +334,40 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> extends Int
             });
         })));
     }
+
+    @Test
+    void testMapResultingKeysForMultipleElements() {
+        withMapFunc(f -> withKey(keyA -> withKey(keyB -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap<K> map = supplier.newBuilder()
+                    .put(keyA, valueFromKey(keyA))
+                    .put(keyB, valueFromKey(keyB))
+                    .build();
+            final Map<K, String> mapped = map.map(f);
+
+            final int size = map.size();
+            assertEquals(size, mapped.size());
+
+            for (int i = 0; i < size; i++) {
+                assertSame(map.keyAt(i), mapped.keyAt(i));
+            }
+        }))));
+    }
+
+    @Test
+    void testMapToIntForMultipleElements() {
+        withMapToIntFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap<K> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final IntValueMap<K> mapped = map.mapToInt(f);
+
+            final int size = map.size();
+            assertEquals(size, mapped.size());
+
+            for (int i = 0; i < size; i++) {
+                assertSame(map.keyAt(i), mapped.keyAt(i));
+            }
+        }))));
+    }
 }

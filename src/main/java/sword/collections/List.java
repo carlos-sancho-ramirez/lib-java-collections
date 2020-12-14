@@ -16,9 +16,29 @@ public interface List<T> extends Transformable<T> {
         return iterator().filterNot(predicate).toList();
     }
 
+    /**
+     * Applies the given function to each element on the collection and composes a
+     * new {@link List} of the same size with the results of each
+     * function execution in the same index.
+     *
+     * @param func Function to be applied to each element in the list
+     * @param <E> New type for the elements in the new created collection.
+     */
     @Override
     default <E> List<E> map(Function<? super T, ? extends E> func) {
         return iterator().<E>map(func).toList();
+    }
+
+    /**
+     * Applies the given function to each element on the collection and composes a
+     * new {@link IntList} of the same size with the results of each
+     * function execution in the same index.
+     *
+     * @param func Function to be applied to each element in this collection.
+     */
+    @Override
+    default IntList mapToInt(IntResultFunction<? super T> func) {
+        return iterator().mapToInt(func).toList();
     }
 
     /**

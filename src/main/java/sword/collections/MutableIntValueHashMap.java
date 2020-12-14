@@ -67,6 +67,36 @@ public final class MutableIntValueHashMap<T> extends AbstractMutableIntValueMap<
     }
 
     @Override
+    public <U> Map<T, U> map(IntFunction<? extends U> func) {
+        final Object[] newKeys = new Object[_size];
+        final int[] newHashCodes = new int[_size];
+        final Object[] newValues = new Object[_size];
+
+        for (int i = 0; i < _size; i++) {
+            newKeys[i] = _keys[i];
+            newHashCodes[i] = _hashCodes[i];
+            newValues[i] = func.apply(valueAt(i));
+        }
+
+        return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
+    @Override
+    public IntValueMap<T> mapToInt(IntToIntFunction func) {
+        final Object[] newKeys = new Object[_size];
+        final int[] newHashCodes = new int[_size];
+        final int[] newValues = new int[_size];
+
+        for (int i = 0; i < _size; i++) {
+            newKeys[i] = _keys[i];
+            newHashCodes[i] = _hashCodes[i];
+            newValues[i] = func.apply(valueAt(i));
+        }
+
+        return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
+    @Override
     public int indexOfKey(T key) {
         return findKey(_hashCodes, _keys, _size, key);
     }

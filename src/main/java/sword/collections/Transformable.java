@@ -50,10 +50,25 @@ public interface Transformable<T> extends Traversable<T> {
      */
     Transformable<T> filterNot(Predicate<? super T> predicate);
 
+    /**
+     * Applies the given function to each element on the collection and composes a
+     * new {@link IntTransformable} of the same size with the results of each
+     * function execution in the same index.
+     *
+     * @param func Function to be applied to each element in this collection.
+     */
     default IntTransformable mapToInt(IntResultFunction<? super T> func) {
         return iterator().mapToInt(func).toList();
     }
 
+    /**
+     * Applies the given function to each element on the collection and composes a
+     * new {@link Transformable} of the same size with the results of each
+     * function execution in the same index.
+     *
+     * @param func Function to be applied to each element in this collection.
+     * @param <E> New type for the elements in the new created collection.
+     */
     default <E> Transformable<E> map(Function<? super T, ? extends E> func) {
         return iterator().<E>map(func).toList();
     }

@@ -60,6 +60,12 @@ public interface IntValueMap<T> extends IntTransformable {
     @Override
     IntValueMap<T> filterNot(IntPredicate predicate);
 
+    @Override
+    <U> Map<T, U> map(IntFunction<? extends U> func);
+
+    @Override
+    IntValueMap<T> mapToInt(IntToIntFunction func);
+
     /**
      * Returns the index for which {@link #keyAt(int)} would return the specified key,
      * or -1 if the specified key is not mapped.
