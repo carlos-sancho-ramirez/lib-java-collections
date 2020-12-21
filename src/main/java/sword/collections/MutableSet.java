@@ -18,6 +18,26 @@ public interface MutableSet<T> extends Set<T>, MutableTraversable<T> {
     boolean add(T key);
     boolean remove(T key);
 
+    /**
+     * Add all the items from the given iterable into this set.
+     *
+     * As this is a set, any item that is already included, or repeated in the
+     * given collection will be ignored. Thus, the resulting collection size
+     * can be increased by less than the iterable size.
+     *
+     * @param iterable Iterable collection from where items will be read.
+     * @return Whether this operation performed any change in this set or not.
+     *         This will be true if at least one of the items has been included.
+     */
+    default boolean addAll(Iterable<? extends T> iterable) {
+        boolean somethingChanged = false;
+        for (T item : iterable) {
+            somethingChanged |= add(item);
+        }
+
+        return somethingChanged;
+    }
+
     interface Builder<E> extends Set.Builder<E>, MutableTraversableBuilder<E> {
         @Override
         Builder<E> add(E element);

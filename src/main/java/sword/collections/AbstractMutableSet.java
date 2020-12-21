@@ -86,6 +86,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     abstract int findSuitableIndex(T key);
     abstract void insertAt(int index, T value);
 
+    @Override
     public boolean add(T key) {
         int index = indexOf(key);
         if (index < 0) {
@@ -96,6 +97,7 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         return false;
     }
 
+    @Override
     public boolean remove(T key) {
         int index = indexOf(key);
         if (index >= 0) {

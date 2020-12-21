@@ -7,6 +7,7 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
@@ -224,6 +225,187 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
                 assertFalse(set.equalSet(sortedSet));
                 assertFalse(sortedSet.equalSet(set));
             });
+        })));
+    }
+
+    @Test
+    void testAddAllWhenEmptyAndGivenIsEmpty() {
+        final MutableSet<T> set = newBuilder().build();
+        assertFalse(set.addAll(ImmutableList.empty()));
+        assertTrue(set.isEmpty());
+    }
+
+    @Test
+    void testAddAllWhenEmptyAndGivenHasOneElement() {
+        withValue(a -> {
+            final MutableList<T> list = MutableList.empty();
+            list.append(a);
+
+            final MutableSet<T> set = newBuilder().build();
+
+            assertTrue(set.addAll(list));
+            assertEquals(1, set.size());
+            assertSame(a, set.valueAt(0));
+
+            assertFalse(set.addAll(set));
+            assertEquals(1, set.size());
+            assertSame(a, set.valueAt(0));
+        });
+    }
+
+    @Test
+    void testAddAllWhenEmptyAndGivenHasMultipleElements() {
+        withValue(a -> withValue(b -> {
+            final int expectedSize = equal(a, b)? 1 : 2;
+
+            final MutableList<T> list = MutableList.empty();
+            list.append(a);
+            list.append(b);
+
+            final MutableSet<T> set = newBuilder().build();
+
+            assertTrue(set.addAll(list));
+            assertEquals(expectedSize, set.size());
+            final T first = set.valueAt(0);
+            if (expectedSize == 1) {
+                assertSame(a, first);
+            }
+            else if (first == a) {
+                assertSame(b, set.valueAt(1));
+            }
+            else {
+                assertSame(b, first);
+                assertSame(a, set.valueAt(1));
+            }
+
+            assertFalse(set.addAll(set));
+        }));
+    }
+
+    @Test
+    void testAddAllWhenHasOneElementAndGivenIsEmpty() {
+        withValue(a -> {
+            final MutableSet<T> set = newBuilder().add(a).build();
+
+            assertFalse(set.addAll(ImmutableList.empty()));
+            assertEquals(1, set.size());
+            assertSame(a, set.valueAt(0));
+        });
+    }
+
+    @Test
+    void testAddAllWhenHasOneElementAndGivenHasOneElement() {
+        withValue(a -> withValue(b -> {
+            final MutableSet<T> set = newBuilder().add(a).build();
+            final ImmutableList<T> list = ImmutableList.<T>empty().append(b);
+
+            final boolean included = !equal(a, b);
+            assertEquals(included, set.addAll(list));
+
+            final T first = set.valueAt(0);
+            if (included) {
+                assertEquals(2, set.size());
+                final T second = set.valueAt(1);
+                if (first == a) {
+                    assertSame(b, second);
+                }
+                else {
+                    assertSame(b, first);
+                    assertSame(a, second);
+                }
+            }
+            else {
+                assertEquals(1, set.size());
+                assertSame(a, set.valueAt(0));
+            }
+        }));
+    }
+
+    private void checkContainsOnlyAfterAddAll(T a, T b, T c, MutableSet<T> set) {
+        final T first = set.valueAt(0);
+        if (equal(a, b)) {
+            if (equal(a, c)) {
+                assertEquals(1, set.size());
+                assertSame(a, first);
+            }
+            else {
+                assertEquals(2, set.size());
+                if (a == first) {
+                    assertSame(c, set.valueAt(1));
+                }
+                else {
+                    assertSame(c, first);
+                    assertSame(a, set.valueAt(1));
+                }
+            }
+        }
+        else if (equal(a, c) || equal(b, c)) {
+            assertEquals(2, set.size());
+            if (a == first) {
+                assertSame(b, set.valueAt(1));
+            }
+            else {
+                assertSame(b, first);
+                assertSame(a, set.valueAt(1));
+            }
+        }
+        else {
+            assertEquals(3, set.size());
+            final T second = set.valueAt(1);
+            final T third = set.valueAt(2);
+
+            if (a == first) {
+                if (b == second) {
+                    assertSame(c, third);
+                }
+                else {
+                    assertSame(c, second);
+                    assertSame(b, third);
+                }
+            }
+            else if (b == first) {
+                if (a == second) {
+                    assertSame(c, third);
+                }
+                else {
+                    assertSame(c, second);
+                    assertSame(a, third);
+                }
+            }
+            else {
+                assertSame(c, first);
+                if (a == second) {
+                    assertSame(b, third);
+                }
+                else {
+                    assertSame(b, second);
+                    assertSame(a, third);
+                }
+            }
+        }
+    }
+
+    @Test
+    void testAddAllWhenHasOneElementAndGivenHasMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final MutableSet<T> set = newBuilder().add(a).build();
+            final ImmutableList<T> list = ImmutableList.<T>empty().append(b).append(c);
+
+            final boolean setChanged = !equal(a, b) || !equal(a, c);
+            assertEquals(setChanged, set.addAll(list));
+            checkContainsOnlyAfterAddAll(a, b, c, set);
+        })));
+    }
+
+    @Test
+    void testAddAllWhenHasMultipleElementsAndGivenHasOneElement() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final MutableSet<T> set = newBuilder().add(a).add(b).build();
+            final ImmutableList<T> list = ImmutableList.<T>empty().append(c);
+
+            final boolean setChanged = !equal(a, c) && !equal(b, c);
+            assertEquals(setChanged, set.addAll(list));
+            checkContainsOnlyAfterAddAll(a, b, c, set);
         })));
     }
 }
