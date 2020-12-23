@@ -110,6 +110,12 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
+    public ImmutableHashSet<T> remove(T value) {
+        final int index = indexOf(value);
+        return (index < 0)? this : removeAt(index);
+    }
+
+    @Override
     public ImmutableHashSet<T> toImmutable() {
         return this;
     }

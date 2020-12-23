@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
@@ -236,5 +237,31 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
                 assertFalse(sortedSet.equalSet(set));
             });
         }))));
+    }
+
+    @Test
+    void testRemoveForEmptySet() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().build();
+            withValue(value -> assertSame(set, set.remove(value), "Removing on an empty set should always return the same set"));
+        });
+    }
+
+    @Test
+    void testRemoveForASingleElement() {
+        withValue(included -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(included).build();
+            withValue(value -> {
+                if (equal(included, value)) {
+                    final ImmutableSet<T> emptySet = set.remove(value);
+                    final String msg = "Removing value " + value + " from set containing only that value should return an empty set";
+                    assertNotSame(set, emptySet, msg);
+                    assertTrue(emptySet.isEmpty(), msg);
+                }
+                else {
+                    assertSame(set, set.remove(value), "Removing an element that is not included in the set should always return the same set");
+                }
+            });
+        }));
     }
 }

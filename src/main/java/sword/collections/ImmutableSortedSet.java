@@ -188,6 +188,12 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableSortedSet<>(_sortFunction, newValues);
     }
 
+    @Override
+    public ImmutableSortedSet<T> remove(T value) {
+        final int index = indexOf(value);
+        return (index < 0)? this : removeAt(index);
+    }
+
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableSortedSet<E> _set;
 

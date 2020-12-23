@@ -34,6 +34,19 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     ImmutableSet<T> removeAt(int index);
 
     /**
+     * Remove the given value from the current set if included.
+     *
+     * As this class is immutable, this method do not affect in the
+     * current values of this set, but a new set is returned instead.
+     *
+     * @param value Value to be removed.
+     * @return A new set containing all elements included in this set
+     *         less the one given, or this same instance if the value
+     *         was not already present.
+     */
+    ImmutableSet<T> remove(T value);
+
+    /**
      * Creates a new {@link ImmutableSet} of the same type where the given
      * value is included.
      *
