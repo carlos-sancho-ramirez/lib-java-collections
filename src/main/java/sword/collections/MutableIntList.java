@@ -143,6 +143,24 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         }
     }
 
+    /**
+     * Replace the value in the given index by the one provided here.
+     *
+     * This method will never modify the size of this collection.
+     *
+     * @param index Index where this value must be replaced.
+     *              Index must be between zero (included) and the value returned by {@link #size()} (excluded).
+     * @param value Value to be set in that position.
+     * @return True if this operation modified the collection values.
+     *         False if the value provided matches the one it was there before.
+     * @throws IndexOutOfBoundsException if the given index is not within the expected range.
+     */
+    public boolean put(int index, int value) {
+        final boolean result = _values[index] != value;
+        _values[index] = value;
+        return result;
+    }
+
     @Override
     public boolean clear() {
         final int suitableLength = _arrayLengthFunction.suitableArrayLength(_values.length, 0);

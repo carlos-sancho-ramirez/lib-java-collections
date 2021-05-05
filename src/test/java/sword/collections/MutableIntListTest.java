@@ -139,6 +139,27 @@ public final class MutableIntListTest extends IntListTest<MutableIntList.Builder
     }
 
     @Test
+    void testPut() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            for (int i = 0; i < 2; i++) {
+                final MutableIntList list = new MutableIntList.Builder().add(a).add(b).build();
+                final MutableIntList expectedList = new MutableIntList.Builder()
+                        .add((i == 0) ? c : a)
+                        .add((i == 1) ? c : b)
+                        .build();
+                if (i == 0 && a == c || i == 1 && b == c) {
+                    assertFalse(list.put(i, c));
+                }
+                else {
+                    assertTrue(list.put(i, c));
+                }
+
+                assertEquals(expectedList, list);
+            }
+        })));
+    }
+
+    @Test
     void testToImmutableForEmpty() {
         assertTrue(newIntBuilder().build().toImmutable().isEmpty());
     }
