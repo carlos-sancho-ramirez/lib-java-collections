@@ -164,6 +164,22 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
+    void testSkipLast() {
+        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
+
+            assertSame(list, list.skipLast(0));
+            assertEquals(newBuilder().add(a).add(b).build(), list.skipLast(1));
+            assertEquals(newBuilder().add(a).build(), list.skipLast(2));
+
+            final ImmutableList<String> emptyList = ImmutableList.empty();
+            assertSame(emptyList, list.skipLast(3));
+            assertSame(emptyList, list.skipLast(4));
+            assertSame(emptyList, list.skipLast(24));
+        }))));
+    }
+
+    @Test
     void testReverseWhenEmpty() {
         final ImmutableList empty = ImmutableList.empty();
         assertSame(empty, empty.reverse());

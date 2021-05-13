@@ -107,6 +107,36 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     /**
+     * Returns a new ImmutableList of the same type where the
+     * <code>length</code> amount of last elements has been removed.
+     * <p>
+     * This will return an empty list if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the end of the list.
+     * @return A new ImmutableList instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance of the given length is equal or greater
+     *         than the actual length of the list.
+     */
+    public ImmutableList<T> skipLast(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0) {
+            return this;
+        }
+        else if (length >= _values.length) {
+            return empty();
+        }
+
+        final int remain = _values.length - length;
+        Object[] newValues = new Object[remain];
+        System.arraycopy(_values, 0, newValues, 0, remain);
+        return new ImmutableList<>(newValues);
+    }
+
+    /**
      * Returns a new instance of a list, where all the items from this list has
      * been copied but in the reversed traversable order.
      *
