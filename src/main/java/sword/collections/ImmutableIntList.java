@@ -127,6 +127,36 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
         return new ImmutableIntList(newValues);
     }
 
+    /**
+     * Returns a new ImmutableIntList where the <code>length</code>
+     * amount of last elements has been removed.
+     * <p>
+     * This will return an empty list if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the end of the list.
+     * @return A new ImmutableIntList instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance of the given length is equal or greater
+     *         than the actual length of the list.
+     */
+    public ImmutableIntList skipLast(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0) {
+            return this;
+        }
+        else if (length >= _values.length) {
+            return empty();
+        }
+
+        final int remain = _values.length - length;
+        int[] newValues = new int[remain];
+        System.arraycopy(_values, 0, newValues, 0, remain);
+        return new ImmutableIntList(newValues);
+    }
+
     @Override
     public <U> ImmutableList<U> map(IntFunction<? extends U> func) {
         final int size = _values.length;
