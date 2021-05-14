@@ -300,6 +300,39 @@ public final class MutableListTest extends ListTest<String, MutableList.Builder<
     }
 
     @Test
+    void testPrependWhenEmpty() {
+        withValue(value -> {
+            final MutableList<String> list = newBuilder().build();
+            list.prepend(value);
+            assertEquals(1, list.size());
+            assertEquals(value, list.get(0));
+        });
+    }
+
+    @Test
+    void testPrependForASingleElement() {
+        withValue(a -> withValue(value -> {
+            final MutableList<String> list = newBuilder().append(a).build();
+            list.prepend(value);
+            assertEquals(2, list.size());
+            assertEquals(value, list.get(0));
+            assertEquals(a, list.get(1));
+        }));
+    }
+
+    @Test
+    void testPrependForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(value -> {
+            final MutableList<String> list = newBuilder().append(a).append(b).build();
+            list.prepend(value);
+            assertEquals(3, list.size());
+            assertEquals(value, list.get(0));
+            assertEquals(a, list.get(1));
+            assertEquals(b, list.get(2));
+        })));
+    }
+
+    @Test
     void testRemoveAtForSingleElementList() {
         withString(a -> {
             final MutableList<String> list = new MutableList.Builder<String>().add(a).build();

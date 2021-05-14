@@ -149,9 +149,14 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
         }
 
         @Override
-        public Builder<E> add(E item) {
+        public Builder<E> append(E item) {
             _list.append(item);
             return this;
+        }
+
+        @Override
+        public Builder<E> add(E item) {
+            return append(item);
         }
 
         @Override

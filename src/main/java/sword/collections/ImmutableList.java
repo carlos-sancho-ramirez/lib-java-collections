@@ -400,6 +400,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
             _list = MutableList.empty(arrayLengthFunction);
         }
 
+        @Override
         public Builder<E> append(E item) {
             _list.append(item);
             return this;
