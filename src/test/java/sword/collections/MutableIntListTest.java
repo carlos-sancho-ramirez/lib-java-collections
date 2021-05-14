@@ -70,6 +70,62 @@ public final class MutableIntListTest extends IntListTest<MutableIntList.Builder
     }
 
     @Test
+    void testInsertForEmptyList() {
+        withValue(a -> {
+            final MutableIntList list = MutableIntList.empty();
+            list.insert(0, a);
+            assertEquals(1, list.size());
+            assertEquals(a, list.get(0));
+        });
+    }
+
+    @Test
+    void testInsertFirstForSingleElementList() {
+        withValue(a -> withValue(b -> {
+            final MutableIntList list = new MutableIntList.Builder().add(a).build();
+            list.insert(0, b);
+            assertEquals(2, list.size());
+            assertEquals(b, list.get(0));
+            assertEquals(a, list.get(1));
+        }));
+    }
+
+    @Test
+    void testInsertLastForSingleElementList() {
+        withValue(a -> withValue(b -> {
+            final MutableIntList list = new MutableIntList.Builder().add(a).build();
+            list.insert(1, b);
+            assertEquals(2, list.size());
+            assertEquals(a, list.get(0));
+            assertEquals(b, list.get(1));
+        }));
+    }
+
+    @Test
+    void testInsert() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            for (int i = 0; i <= 4; i++) {
+                final MutableIntList list = new MutableIntList.Builder().add(a).add(b).add(b).add(a).build();
+
+                final MutableIntList.Builder builder = new MutableIntList.Builder();
+                for (int j = 0; j < 4; j++) {
+                    if (j == i) {
+                        builder.add(c);
+                    }
+                    builder.add(list.get(j));
+                }
+
+                if (i == 4) {
+                    builder.add(c);
+                }
+
+                list.insert(i, c);
+                assertEquals(builder.build(), list);
+            }
+        })));
+    }
+
+    @Test
     void testAppendWhenEmpty() {
         withValue(value -> {
             final ImmutableIntList empty = ImmutableIntList.empty();

@@ -101,6 +101,41 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         return mutate(_arrayLengthFunction);
     }
 
+    /**
+     * Inserts the given value in the given position.
+     *
+     * This will shift all elements with higher index or equal index in one,
+     * in order to make space for the new value.
+     * @param index Index where this value wants to be included.
+     *              Index must be between zero and the value returned by {@link #size()}, both included.
+     * @param value Value to be inserted in that position.
+     * @throws IndexOutOfBoundsException if the given index is not within the expected range.
+     */
+    public void insert(int index, int value) {
+        if (index < 0 || index > _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final int arrayLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
+        if (arrayLength != _values.length) {
+            int[] newValues = new int[arrayLength];
+            if (index > 0) {
+                System.arraycopy(_values, 0, newValues, 0, index);
+            }
+            if (_size > index) {
+                System.arraycopy(_values, index, newValues, index + 1, _size - index);
+            }
+            _values = newValues;
+        }
+        else {
+            for (int i = _size; i > index; i--) {
+                _values[i] = _values[i - 1];
+            }
+        }
+        _values[index] = value;
+        ++_size;
+    }
+
     public void append(int value) {
         final int length = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
         if (length != _values.length) {
