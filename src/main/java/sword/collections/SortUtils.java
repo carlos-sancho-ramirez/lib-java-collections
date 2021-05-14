@@ -183,15 +183,23 @@ public final class SortUtils {
         return -1;
     }
 
-    static boolean equal(Object a, Object b) {
+    public static boolean equal(Object a, Object b) {
         return a == b || a != null && a.equals(b);
     }
 
-    static boolean isEmpty(String string) {
+    public static boolean isEmpty(String string) {
         return string == null || string.length() == 0;
     }
 
-    static int hashCode(Object object) {
+    public static boolean isNull(Object reference) {
+        return reference == null;
+    }
+
+    public static boolean nonNull(Object reference) {
+        return reference != null;
+    }
+
+    public static int hashCode(Object object) {
         return (object != null)? object.hashCode() : HASH_FOR_NULL;
     }
 
