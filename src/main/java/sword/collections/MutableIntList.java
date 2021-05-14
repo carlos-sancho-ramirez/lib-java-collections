@@ -136,6 +136,10 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         ++_size;
     }
 
+    public void prepend(int item) {
+        insert(0, item);
+    }
+
     public void append(int value) {
         final int length = _arrayLengthFunction.suitableArrayLength(_values.length, _size + 1);
         if (length != _values.length) {
