@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -576,5 +577,38 @@ public final class MutableListTest extends ListTest<String, MutableList.Builder<
                 }
             }
         }))));
+    }
+
+    @Test
+    void testDonateWhenEmpty() {
+        final MutableList<String> list = newBuilder().build();
+        final MutableList<String> list2 = list.donate();
+        assertTrue(list.isEmpty());
+        assertTrue(list2.isEmpty());
+        assertNotSame(list, list2);
+    }
+
+    @Test
+    void testDonateForSingleElement() {
+        withValue(value -> {
+            final MutableList<String> list = newBuilder().add(value).build();
+            final MutableList<String> list2 = list.donate();
+            assertTrue(list.isEmpty());
+            assertEquals(1, list2.size());
+            assertSame(value, list2.valueAt(0));
+        });
+    }
+
+    @Test
+    void testDonateForSingleMultipleElements() {
+        withValue(a -> withValue(b -> {
+            final MutableList<String> list = newBuilder().add(a).add(b).build();
+            final MutableList<String> list2 = list.donate();
+            assertTrue(list.isEmpty());
+
+            assertEquals(2, list2.size());
+            assertSame(a, list2.valueAt(0));
+            assertSame(b, list2.valueAt(1));
+        }));
     }
 }

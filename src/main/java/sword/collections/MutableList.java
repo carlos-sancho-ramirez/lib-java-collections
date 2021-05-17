@@ -64,6 +64,25 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
         return this;
     }
 
+    /**
+     * Create a new mutable list instance and copy from this collection the actual data references. After it, this collection gets cleared.
+     * <p>
+     * This is a more efficient alternative to the following code:
+     * <code>
+     * <br>MutableList newList = list.mutate();
+     * <br>list.clear();
+     * </code>
+     *
+     * @return A new mutable list that contains the actual data of this map.
+     */
+    public MutableList<T> donate() {
+        final MutableList<T> newList = new MutableList<>(_arrayLengthFunction, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _values = new Object[length];
+        _size = 0;
+        return newList;
+    }
+
     private class Iterator extends AbstractTransformer<T> {
         private int _index;
 
