@@ -180,6 +180,17 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
+    public MutableHashMap<K, V> donate() {
+        final MutableHashMap<K, V> newMap = new MutableHashMap<>(_arrayLengthFunction, _keys, _hashCodes, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _keys = new Object[length];
+        _hashCodes = new int[length];
+        _values = new Object[length];
+        _size = 0;
+        return newMap;
+    }
+
+    @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
             throw new IndexOutOfBoundsException();
@@ -272,7 +283,7 @@ public final class MutableHashMap<K, V> extends AbstractMutableMap<K, V> {
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
-    public static class Builder<K, V> implements MapBuilder<K, V> {
+    public static class Builder<K, V> implements MutableMap.Builder<K, V> {
         private final MutableHashMap<K, V> _map;
 
         public Builder(ArrayLengthFunction arrayLengthFunction) {

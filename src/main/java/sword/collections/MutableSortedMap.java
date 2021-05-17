@@ -174,6 +174,16 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
+    public MutableSortedMap<K, V> donate() {
+        final MutableSortedMap<K, V> newMap = new MutableSortedMap<>(_arrayLengthFunction, _sortFunction, _keys, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _keys = new Object[length];
+        _values = new Object[length];
+        _size = 0;
+        return newMap;
+    }
+
+    @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
             throw new IndexOutOfBoundsException();
@@ -257,7 +267,7 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
         return new ImmutableIntValueSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
-    public static class Builder<K, V> implements MapBuilder<K, V> {
+    public static class Builder<K, V> implements MutableMap.Builder<K, V> {
         private final MutableSortedMap<K, V> _map;
 
         Builder(ArrayLengthFunction arrayLengthFunction, SortFunction<K> sortFunction) {

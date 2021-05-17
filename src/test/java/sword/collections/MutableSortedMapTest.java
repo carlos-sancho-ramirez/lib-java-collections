@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableSortedMapTest extends MapTest<Integer, String, MutableTransformableBuilder<String>> implements MutableTraversableTest<String, MutableTransformableBuilder<String>> {
+public final class MutableSortedMapTest extends MapTest<Integer, String, MutableTransformableBuilder<String>> implements MutableTraversableTest<String, MutableTransformableBuilder<String>>, MutableMapTest<Integer, String> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
@@ -23,7 +23,12 @@ public final class MutableSortedMapTest extends MapTest<Integer, String, Mutable
     }
 
     @Override
-    void withKey(Procedure<Integer> procedure) {
+    public MutableSortedMap.Builder<Integer, String> newMapBuilder() {
+        return newBuilder();
+    }
+
+    @Override
+    public void withKey(Procedure<Integer> procedure) {
         withInt(procedure::apply);
     }
 
@@ -88,7 +93,7 @@ public final class MutableSortedMapTest extends MapTest<Integer, String, Mutable
     }
 
     @Override
-    String valueFromKey(Integer key) {
+    public String valueFromKey(Integer key) {
         return (key == null)? null : Integer.toString(key);
     }
 

@@ -21,6 +21,23 @@ public interface MutableMap<K, V> extends Map<K, V>, MutableTransformable<V> {
     boolean put(K key, V value);
     boolean remove(K key);
 
+    /**
+     * Create a new mutable map instance and copy from this collection the actual data references. After it, this collection gets cleared.
+     * <p>
+     * This is a more efficient alternative to the following code:
+     * <code>
+     * <br>MutableMap newMap = map.mutate();
+     * <br>map.clear();
+     * </code>
+     *
+     * @return A new mutable map that contains the actual data of this map.
+     */
+    default MutableMap<K, V> donate() {
+        final MutableMap<K, V> mutated = mutate();
+        clear();
+        return mutated;
+    }
+
     interface Builder<K, V> extends MapBuilder<K, V> {
         @Override
         Builder<K, V> put(K key, V value);
