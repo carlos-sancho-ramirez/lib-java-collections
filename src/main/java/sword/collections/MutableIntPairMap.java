@@ -248,6 +248,26 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     }
 
     /**
+     * Create a new mutable map instance and copy from this collection the actual data references. After it, this collection gets cleared.
+     * <p>
+     * This is a more efficient alternative to the following code:
+     * <code>
+     * <br>MutableIntPairMap newMap = map.mutate();
+     * <br>map.clear();
+     * </code>
+     *
+     * @return A new mutable map that contains the actual data of this map.
+     */
+    public MutableIntPairMap donate() {
+        final MutableIntPairMap newMap = new MutableIntPairMap(_arrayLengthFunction, _keys, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _keys = new int[length];
+        _values = new int[length];
+        _size = 0;
+        return newMap;
+    }
+
+    /**
      * Remove the key-value pair matching the given key from the map.
      * @return True if something was removed, false otherwise.
      */

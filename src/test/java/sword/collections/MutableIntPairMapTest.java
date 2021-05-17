@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
 public final class MutableIntPairMapTest extends IntPairMapTest<MutableIntTransformableBuilder> implements MutableIntTraversableTest<MutableIntTransformableBuilder> {
@@ -133,6 +134,56 @@ public final class MutableIntPairMapTest extends IntPairMapTest<MutableIntTransf
             assertEquals(mutable, immutable);
             assertEquals(immutable, mutable);
         })));
+    }
+
+    @Test
+    void testDonateWhenEmpty() {
+        final MutableIntPairMap map = newBuilder().build();
+        final MutableIntPairMap map2 = map.donate();
+        assertTrue(map.isEmpty());
+        assertTrue(map2.isEmpty());
+        assertNotSame(map, map2);
+    }
+
+    @Test
+    void testDonateForSingleElement() {
+        withInt(a -> {
+            final MutableIntPairMap map = newBuilder().put(a, a).build();
+            final MutableIntPairMap map2 = map.donate();
+            assertTrue(map.isEmpty());
+            assertEquals(1, map2.size());
+            assertEquals(a, map2.keyAt(0));
+            assertEquals(a, map2.valueAt(0));
+        });
+    }
+
+    @Test
+    void testDonateForSingleMultipleElements() {
+        withInt(a -> withInt(b -> {
+            final MutableIntPairMap map = newBuilder().put(a, a).put(b, b).build();
+            final MutableIntPairMap map2 = map.donate();
+            assertTrue(map.isEmpty());
+
+            if (equal(a, b)) {
+                assertEquals(1, map2.size());
+                assertEquals(a, map2.keyAt(0));
+                assertEquals(a, map2.valueAt(0));
+            }
+            else {
+                assertEquals(2, map2.size());
+                if (a == map2.keyAt(0)) {
+                    assertEquals(a, map2.valueAt(0));
+                    assertEquals(b, map2.keyAt(1));
+                    assertEquals(b, map2.valueAt(1));
+                }
+                else {
+                    assertEquals(b, map2.keyAt(0));
+                    assertEquals(b, map2.valueAt(0));
+                    assertEquals(a, map2.keyAt(1));
+                    assertEquals(a, map2.valueAt(1));
+                }
+            }
+        }));
     }
 
     static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder {
