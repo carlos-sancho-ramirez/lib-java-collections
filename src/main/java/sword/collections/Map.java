@@ -7,7 +7,7 @@ import static sword.collections.SortUtils.equal;
  * @param <K> Type of key items within the map.
  * @param <V> Type of value items within the map.
  */
-public interface Map<K, V> extends Transformable<V> {
+public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
 
     TransformerWithKey<K, V> iterator();
 
@@ -19,10 +19,7 @@ public interface Map<K, V> extends Transformable<V> {
         return indexOfKey(key) >= 0;
     }
 
-    /**
-     * Return the value assigned to the given key.
-     * @throws UnmappedKeyException if the given key is not found within the map.
-     */
+    @Override
     default V get(K key) throws UnmappedKeyException {
         final int index = indexOfKey(key);
         if (index < 0) {

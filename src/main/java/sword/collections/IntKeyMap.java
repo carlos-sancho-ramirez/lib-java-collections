@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.SortUtils.equal;
 
-public interface IntKeyMap<T> extends Transformable<T> {
+public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
 
     @Override
     IntKeyMap<T> filter(Predicate<? super T> predicate);
@@ -16,10 +16,7 @@ public interface IntKeyMap<T> extends Transformable<T> {
     @Override
     IntPairMap mapToInt(IntResultFunction<? super T> func);
 
-    /**
-     * Return the value assigned to the given key.
-     * @throws UnmappedKeyException if the given key is not found within the map.
-     */
+    @Override
     T get(int key);
 
     /**

@@ -6,7 +6,7 @@ import static sword.collections.SortUtils.equal;
  * Root for both variants of Map where values are integer values, immutable and mutable.
  * @param <T> Type of key items within the map.
  */
-public interface IntValueMap<T> extends IntTransformable {
+public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
 
     /**
      * Check whether the given key is contained in the map
@@ -16,10 +16,7 @@ public interface IntValueMap<T> extends IntTransformable {
         return indexOfKey(key) >= 0;
     }
 
-    /**
-     * Return the value assigned to the given key.
-     * @throws UnmappedKeyException if the given key is not found within the map.
-     */
+    @Override
     default int get(T key) throws UnmappedKeyException {
         final int index = indexOfKey(key);
         if (index < 0) {

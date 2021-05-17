@@ -2,13 +2,10 @@ package sword.collections;
 
 import static sword.collections.SortUtils.equal;
 
-public interface IntPairMap extends IntTransformable {
+public interface IntPairMap extends IntTransformable, IntPairMapGetter {
 
-    /**
-     * Return the value assigned to the given key.
-     * @throws UnmappedKeyException if the given key is not found within the map.
-     */
-    int get(int key);
+    @Override
+    int get(int key) throws UnmappedKeyException;
 
     /**
      * Return the value assigned to the given key. Or <pre>defaultValue</pre> if that key is not in the map.
