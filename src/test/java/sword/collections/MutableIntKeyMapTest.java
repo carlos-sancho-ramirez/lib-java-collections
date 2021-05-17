@@ -233,6 +233,25 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
         }));
     }
 
+    @Test
+    void testPick() {
+        withInt(k1 -> withInt(k2 -> {
+            final String v1 = valueFromKey(k1);
+            if (equal(k1, k2)) {
+                final MutableIntKeyMap<String> map = newMapBuilder().put(k1, v1).build();
+                assertSame(v1, map.pick(k1));
+                assertTrue(map.isEmpty());
+            }
+            else {
+                final String v2 = valueFromKey(k2);
+                final MutableIntKeyMap<String> map = newMapBuilder().put(k1, v1).put(k2, v2).build();
+                assertSame(v1, map.pick(k1));
+                assertEquals(1, map.size());
+                assertSame(v2, map.get(k2));
+            }
+        }));
+    }
+
     static final class HashCodeKeyTraversableBuilder<E> implements MutableTransformableBuilder<E> {
         private final MutableIntKeyMap<E> map = MutableIntKeyMap.empty();
 

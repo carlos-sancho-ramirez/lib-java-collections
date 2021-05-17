@@ -147,6 +147,34 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
         return newMap;
     }
 
+    /**
+     * Removes from this map the entry whose key matches the given key, returning its matching value.
+     *
+     * This method will shrink the size of this map in one, except if the given key is not present.
+     * In case the given key is not present, an {@link UnmappedKeyException} will be thrown.
+     *
+     * This method is exactly the same as executing the following snippet:
+     * <pre>
+     *     V value = map.get(key);
+     *     map.remove(key);
+     *     return value;
+     * </pre>
+     *
+     * @param key Key expected to be found within this map.
+     * @return The value associated with the given key.
+     * @throws UnmappedKeyException if the given key is not present in this map.
+     */
+    public T pick(int key) throws UnmappedKeyException {
+        final int index = indexOfKey(key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        final T value = valueAt(index);
+        removeAt(index);
+        return value;
+    }
+
     @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
