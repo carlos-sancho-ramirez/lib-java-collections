@@ -197,4 +197,23 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
             }
         }));
     }
+
+    @Test
+    void testPick() {
+        withKey(k1 -> withKey(k2 -> {
+            final int v1 = valueFromKey(k1);
+            if (k1 == k2) {
+                final MutableIntValueMap<K> map = newBuilder().put(k1, v1).build();
+                assertEquals(v1, map.pick(k1));
+                assertTrue(map.isEmpty());
+            }
+            else {
+                final int v2 = valueFromKey(k2);
+                final MutableIntValueMap<K> map = newBuilder().put(k1, v1).put(k2, v2).build();
+                assertEquals(v1, map.pick(k1));
+                assertEquals(1, map.size());
+                assertEquals(v2, map.get(k2));
+            }
+        }));
+    }
 }

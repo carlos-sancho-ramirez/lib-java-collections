@@ -36,6 +36,34 @@ public interface MutableIntValueMap<T> extends IntValueMap<T>, MutableIntTransfo
         return mutated;
     }
 
+    /**
+     * Removes from this map the entry whose key matches the given key, returning its matching value.
+     *
+     * This method will shrink the size of this map in one, except if the given key is not present.
+     * In case the given key is not present, an {@link UnmappedKeyException} will be thrown.
+     *
+     * This method is exactly the same as executing the following snippet:
+     * <pre>
+     *     int value = map.get(key);
+     *     map.remove(key);
+     *     return value;
+     * </pre>
+     *
+     * @param key Key expected to be found within this map.
+     * @return The value associated with the given key.
+     * @throws UnmappedKeyException if the given key is not present in this map.
+     */
+    default int pick(T key) throws UnmappedKeyException {
+        final int index = indexOfKey(key);
+        if (index < 0) {
+            throw new UnmappedKeyException();
+        }
+
+        final int value = valueAt(index);
+        removeAt(index);
+        return value;
+    }
+
     interface Builder<E> extends IntValueMap.Builder<E> {
 
         @Override
