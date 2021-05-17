@@ -3,6 +3,13 @@ package sword.collections;
 public final class MutableIntTreeSet extends AbstractIntTraversable implements MutableIntSet {
     private Node _root;
 
+    public MutableIntTreeSet() {
+    }
+
+    private MutableIntTreeSet(Node root) {
+        _root = root;
+    }
+
     public boolean contains(int value) {
         return _root != null && _root.contains(value);
     }
@@ -41,6 +48,13 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
         }
 
         return _root.add(value);
+    }
+
+    @Override
+    public MutableIntTreeSet donate() {
+        final MutableIntTreeSet newSet = new MutableIntTreeSet(_root);
+        _root = null;
+        return newSet;
     }
 
     @Override

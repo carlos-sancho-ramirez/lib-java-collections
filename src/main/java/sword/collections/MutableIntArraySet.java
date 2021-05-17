@@ -164,6 +164,15 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
     }
 
     @Override
+    public MutableIntArraySet donate() {
+        final MutableIntArraySet newSet = new MutableIntArraySet(_arrayLengthFunction, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _values = new int[length];
+        _size = 0;
+        return newSet;
+    }
+
+    @Override
     public int size() {
         return _size;
     }

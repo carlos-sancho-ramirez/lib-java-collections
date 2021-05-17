@@ -28,6 +28,23 @@ public interface MutableIntSet extends IntSet, MutableIntTransformable {
         return changed;
     }
 
+    /**
+     * Create a new mutable map instance and copy from this collection the actual data references. After it, this collection gets cleared.
+     * <p>
+     * This is a more efficient alternative to the following code:
+     * <code>
+     * <br>MutableIntSet newSet = set.mutate();
+     * <br>set.clear();
+     * </code>
+     *
+     * @return A new mutable map that contains the actual data of this map.
+     */
+    default MutableIntSet donate() {
+        final MutableIntSet mutated = mutate();
+        clear();
+        return mutated;
+    }
+
     default boolean remove(int value) {
         int index = indexOf(value);
         if (index >= 0) {

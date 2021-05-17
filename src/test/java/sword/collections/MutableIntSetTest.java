@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface MutableIntSetTest<B extends MutableIntSet.Builder> extends MutableIntTraversableTest<B> {
@@ -91,5 +92,51 @@ public interface MutableIntSetTest<B extends MutableIntSet.Builder> extends Muta
                 assertTrue(set.contains(b));
             }
         }))));
+    }
+
+    @Test
+    default void testDonateWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final MutableIntSet set = supplier.newBuilder().build();
+            final MutableIntSet set2 = set.donate();
+            assertTrue(set.isEmpty());
+            assertTrue(set2.isEmpty());
+            assertNotSame(set, set2);
+        });
+    }
+
+    @Test
+    default void testDonateForSingleElement() {
+        withValue(value -> withBuilderSupplier(supplier -> {
+            final MutableIntSet set = supplier.newBuilder().add(value).build();
+            final MutableIntSet set2 = set.donate();
+            assertTrue(set.isEmpty());
+            assertEquals(1, set2.size());
+            assertEquals(value, set2.valueAt(0));
+        }));
+    }
+
+    @Test
+    default void testDonateForSingleMultipleElements() {
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final MutableIntSet map = supplier.newBuilder().add(a).add(b).build();
+            final MutableIntSet map2 = map.donate();
+            assertTrue(map.isEmpty());
+
+            if (a == b) {
+                assertEquals(1, map2.size());
+                assertEquals(a, map2.valueAt(0));
+            }
+            else {
+                assertEquals(2, map2.size());
+                if (a == map2.valueAt(0)) {
+                    assertEquals(b, map2.valueAt(1));
+                }
+                else {
+                    assertEquals(b, map2.valueAt(0));
+                    assertEquals(a, map2.valueAt(1));
+                }
+            }
+        })));
     }
 }
