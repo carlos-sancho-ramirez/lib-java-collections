@@ -19,6 +19,23 @@ public interface MutableIntValueMap<T> extends IntValueMap<T>, MutableIntTransfo
 
     boolean put(T key, int value);
 
+    /**
+     * Create a new mutable map instance and copy from this collection the actual data references. After it, this collection gets cleared.
+     * <p>
+     * This is a more efficient alternative to the following code:
+     * <code>
+     * <br>MutableIntValueMap newMap = map.mutate();
+     * <br>map.clear();
+     * </code>
+     *
+     * @return A new mutable map that contains the actual data of this map.
+     */
+    default MutableIntValueMap<T> donate() {
+        final MutableIntValueMap<T> mutated = mutate();
+        clear();
+        return mutated;
+    }
+
     interface Builder<E> extends IntValueMap.Builder<E> {
 
         @Override

@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -142,5 +143,58 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
                 assertEquals(map, filtered);
             }
         })));
+    }
+
+    @Test
+    void testDonateWhenEmpty() {
+        final MutableIntValueMap<K> map = newBuilder().build();
+        final MutableIntValueMap<K> map2 = map.donate();
+        assertTrue(map.isEmpty());
+        assertTrue(map2.isEmpty());
+        assertNotSame(map, map2);
+    }
+
+    @Test
+    void testDonateForSingleElement() {
+        withKey(key -> {
+            final int value = valueFromKey(key);
+            final MutableIntValueMap<K> map = newBuilder().put(key, value).build();
+            final MutableIntValueMap<K> map2 = map.donate();
+            assertTrue(map.isEmpty());
+            assertEquals(1, map2.size());
+            assertSame(key, map2.keyAt(0));
+            assertEquals(value, map2.valueAt(0));
+        });
+    }
+
+    @Test
+    void testDonateForSingleMultipleElements() {
+        withKey(a -> withKey(b -> {
+            final int aValue = valueFromKey(a);
+            final int bValue = valueFromKey(b);
+            final MutableIntValueMap<K> map = newBuilder().put(a, aValue).put(b, bValue).build();
+            final MutableIntValueMap<K> map2 = map.donate();
+            assertTrue(map.isEmpty());
+
+            if (equal(a, b)) {
+                assertEquals(1, map2.size());
+                assertSame(a, map2.keyAt(0));
+                assertEquals(aValue, map2.valueAt(0));
+            }
+            else {
+                assertEquals(2, map2.size());
+                if (a == map2.keyAt(0)) {
+                    assertEquals(aValue, map2.valueAt(0));
+                    assertSame(b, map2.keyAt(1));
+                    assertEquals(bValue, map2.valueAt(1));
+                }
+                else {
+                    assertSame(b, map2.keyAt(0));
+                    assertEquals(bValue, map2.valueAt(0));
+                    assertSame(a, map2.keyAt(1));
+                    assertEquals(aValue, map2.valueAt(1));
+                }
+            }
+        }));
     }
 }

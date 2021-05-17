@@ -207,6 +207,16 @@ public final class MutableIntValueSortedMap<T> extends AbstractMutableIntValueMa
     }
 
     @Override
+    public MutableIntValueSortedMap<T> donate() {
+        final MutableIntValueSortedMap<T> newMap = new MutableIntValueSortedMap<>(_arrayLengthFunction, _sortFunction, _keys, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _keys = new Object[length];
+        _values = new int[length];
+        _size = 0;
+        return newMap;
+    }
+
+    @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
             throw new IndexOutOfBoundsException();

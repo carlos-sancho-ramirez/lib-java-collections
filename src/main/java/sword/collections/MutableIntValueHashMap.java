@@ -230,6 +230,17 @@ public final class MutableIntValueHashMap<T> extends AbstractMutableIntValueMap<
     }
 
     @Override
+    public MutableIntValueHashMap<T> donate() {
+        final MutableIntValueHashMap<T> newMap = new MutableIntValueHashMap<>(_arrayLengthFunction, _keys, _hashCodes, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _keys = new Object[length];
+        _hashCodes = new int[length];
+        _values = new int[length];
+        _size = 0;
+        return newMap;
+    }
+
+    @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
             throw new IndexOutOfBoundsException();
