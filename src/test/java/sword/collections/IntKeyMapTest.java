@@ -148,7 +148,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> extends Trans
         withInt(a -> withInt(b -> withInt(c -> {
             final T value = getTestValue();
             final IntKeyMapBuilder<T> builder = newMapBuilder();
-            final IntKeyMap map = builder
+            final IntKeyMap<T> map = builder
                     .put(a, value)
                     .put(b, value)
                     .put(c, value)
@@ -157,6 +157,26 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> extends Trans
             assertEquals(a, map.keyAt(map.indexOfKey(a)));
             assertEquals(b, map.keyAt(map.indexOfKey(b)));
             assertEquals(c, map.keyAt(map.indexOfKey(c)));
+        })));
+    }
+
+    @Test
+    void testContainsKeyWhenEmpty() {
+        final IntKeyMap<T> map = newMapBuilder().build();
+        withInt(key -> assertFalse(map.containsKey(key)));
+    }
+
+    @Test
+    void testContainsKey() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final T value = getTestValue();
+            final IntKeyMap<T> map = newMapBuilder()
+                    .put(a, value)
+                    .put(b, value)
+                    .build();
+
+            final boolean expectedResult = c == a || c == b;
+            assertEquals(expectedResult, map.containsKey(c));
         })));
     }
 

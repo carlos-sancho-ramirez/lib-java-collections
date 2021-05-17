@@ -113,7 +113,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     void testIndexOfKey() {
         final V value = getTestValue();
         withKey(a -> withKey(b -> withKey(c -> {
-            final Map map = newBuilder()
+            final Map<K, V> map = newBuilder()
                     .put(a, value)
                     .put(b, value)
                     .put(c, value)
@@ -122,6 +122,26 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
             assertEquals(a, map.keyAt(map.indexOfKey(a)));
             assertEquals(b, map.keyAt(map.indexOfKey(b)));
             assertEquals(c, map.keyAt(map.indexOfKey(c)));
+        })));
+    }
+
+    @Test
+    void testContainsKeyWhenEmpty() {
+        final Map<K, V> map = newBuilder().build();
+        withKey(key -> assertFalse(map.containsKey(key)));
+    }
+
+    @Test
+    void testContainsKey() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final V value = getTestValue();
+            final Map<K, V> map = newBuilder()
+                    .put(a, value)
+                    .put(b, value)
+                    .build();
+
+            final boolean expectedResult = equal(c, a) || equal(c, b);
+            assertEquals(expectedResult, map.containsKey(c));
         })));
     }
 
