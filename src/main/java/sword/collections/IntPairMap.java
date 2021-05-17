@@ -31,6 +31,14 @@ public interface IntPairMap extends IntTransformable {
     int indexOfKey(int key);
 
     /**
+     * Check whether the given key is contained in the map.
+     * @param key Key to be found.
+     */
+    default boolean containsKey(int key) {
+        return indexOfKey(key) >= 0;
+    }
+
+    /**
      * Return the set of all keys
      */
     IntSet keySet();

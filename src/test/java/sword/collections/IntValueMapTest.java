@@ -175,6 +175,25 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> extends Int
     }
 
     @Test
+    void testContainsKeyWhenEmpty() {
+        final IntValueMap<K> map = newBuilder().build();
+        withKey(key -> assertFalse(map.containsKey(key)));
+    }
+
+    @Test
+    void testContainsKey() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final IntValueMap<K> map = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final boolean expectedResult = equal(c, a) || equal(c, b);
+            assertEquals(expectedResult, map.containsKey(c));
+        })));
+    }
+
+    @Test
     void testEntryIterator() {
         withKey(a -> withKey(b -> withKey(c -> {
             IntValueMap<K> map = newBuilder()

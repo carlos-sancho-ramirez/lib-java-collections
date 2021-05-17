@@ -132,6 +132,25 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> extends IntTran
     }
 
     @Test
+    void testContainsKeyWhenEmpty() {
+        final IntPairMap map = newBuilder().build();
+        withInt(key -> assertFalse(map.containsKey(key)));
+    }
+
+    @Test
+    void testContainsKey() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final IntPairMap map = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            final boolean expectedResult = c == a || c == b;
+            assertEquals(expectedResult, map.containsKey(c));
+        })));
+    }
+
+    @Test
     void testEntryIterator() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntPairMap array = newBuilder()
