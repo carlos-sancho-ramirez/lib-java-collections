@@ -157,6 +157,25 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         }
     }
 
+    /**
+     * Create a new mutable instance and copy from this collection the actual data references. After it, this collection gets cleared.
+     * <p>
+     * This is a more efficient alternative to the following code:
+     * <code>
+     * <br>MutableIntList newList = list.mutate();
+     * <br>list.clear();
+     * </code>
+     *
+     * @return A new mutable map that contains the actual data of this map.
+     */
+    public MutableIntList donate() {
+        final MutableIntList newList = new MutableIntList(_arrayLengthFunction, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _values = new int[length];
+        _size = 0;
+        return newList;
+    }
+
     @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {

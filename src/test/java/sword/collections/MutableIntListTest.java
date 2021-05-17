@@ -299,4 +299,39 @@ public final class MutableIntListTest extends IntListTest<MutableIntList.Builder
             assertEquals(immutable, mutable);
         })));
     }
+
+    @Test
+    void testDonateWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final MutableIntList list = supplier.newBuilder().build();
+            final MutableIntList list2 = list.donate();
+            assertTrue(list.isEmpty());
+            assertTrue(list2.isEmpty());
+            assertNotSame(list, list2);
+        });
+    }
+
+    @Test
+    void testDonateForSingleElement() {
+        withValue(value -> withBuilderSupplier(supplier -> {
+            final MutableIntList list = supplier.newBuilder().add(value).build();
+            final MutableIntList list2 = list.donate();
+            assertTrue(list.isEmpty());
+            assertEquals(1, list2.size());
+            assertEquals(value, list2.valueAt(0));
+        }));
+    }
+
+    @Test
+    void testDonateForSingleMultipleElements() {
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final MutableIntList list = supplier.newBuilder().add(a).add(b).build();
+            final MutableIntList list2 = list.donate();
+            assertTrue(list.isEmpty());
+
+            assertEquals(2, list2.size());
+            assertEquals(a, list2.valueAt(0));
+            assertEquals(b, list2.valueAt(1));
+        })));
+    }
 }
