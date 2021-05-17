@@ -186,6 +186,25 @@ public final class MutableIntPairMapTest extends IntPairMapTest<MutableIntTransf
         }));
     }
 
+    @Test
+    void testPick() {
+        withInt(k1 -> withInt(k2 -> withInt(v1 -> {
+            if (k1 == k2) {
+                final MutableIntPairMap map = newBuilder().put(k1, v1).build();
+                assertEquals(v1, map.pick(k1));
+                assertTrue(map.isEmpty());
+            }
+            else {
+                withInt(v2 -> {
+                    final MutableIntPairMap map = newBuilder().put(k1, v1).put(k2, v2).build();
+                    assertEquals(v1, map.pick(k1));
+                    assertEquals(1, map.size());
+                    assertEquals(v2, map.get(k2));
+                });
+            }
+        })));
+    }
+
     static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder {
         private final MutableIntPairMap map = MutableIntPairMap.empty();
 
