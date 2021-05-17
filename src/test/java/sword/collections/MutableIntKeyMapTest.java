@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
@@ -176,6 +178,59 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
             assertEquals(mutable, immutable);
             assertEquals(immutable, mutable);
         })));
+    }
+
+    @Test
+    void testDonateWhenEmpty() {
+        final MutableIntKeyMap<String> map = newMapBuilder().build();
+        final MutableIntKeyMap<String> map2 = map.donate();
+        assertTrue(map.isEmpty());
+        assertTrue(map2.isEmpty());
+        assertNotSame(map, map2);
+    }
+
+    @Test
+    void testDonateForSingleElement() {
+        withInt(key -> {
+            final String value = valueFromKey(key);
+            final MutableIntKeyMap<String> map = newMapBuilder().put(key, value).build();
+            final MutableIntKeyMap<String> map2 = map.donate();
+            assertTrue(map.isEmpty());
+            assertEquals(1, map2.size());
+            assertEquals(key, map2.keyAt(0));
+            assertSame(value, map2.valueAt(0));
+        });
+    }
+
+    @Test
+    void testDonateForMultipleElements() {
+        withInt(a -> withInt(b -> {
+            final String aValue = valueFromKey(a);
+            final String bValue = valueFromKey(b);
+            final MutableIntKeyMap<String> map = newMapBuilder().put(a, aValue).put(b, bValue).build();
+            final MutableIntKeyMap<String> map2 = map.donate();
+            assertTrue(map.isEmpty());
+
+            if (equal(a, b)) {
+                assertEquals(1, map2.size());
+                assertEquals(a, map2.keyAt(0));
+                assertSame(aValue, map2.valueAt(0));
+            }
+            else {
+                assertEquals(2, map2.size());
+                if (a == map2.keyAt(0)) {
+                    assertSame(aValue, map2.valueAt(0));
+                    assertEquals(b, map2.keyAt(1));
+                    assertSame(bValue, map2.valueAt(1));
+                }
+                else {
+                    assertEquals(b, map2.keyAt(0));
+                    assertSame(bValue, map2.valueAt(0));
+                    assertEquals(a, map2.keyAt(1));
+                    assertSame(aValue, map2.valueAt(1));
+                }
+            }
+        }));
     }
 
     static final class HashCodeKeyTraversableBuilder<E> implements MutableTransformableBuilder<E> {

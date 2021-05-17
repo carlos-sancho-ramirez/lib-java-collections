@@ -127,6 +127,26 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
         return findKey(_keys, _size, key);
     }
 
+    /**
+     * Create a new mutable map instance and copy from this collection the actual data references. After it, this collection gets cleared.
+     * <p>
+     * This is a more efficient alternative to the following code:
+     * <code>
+     * <br>MutableIntKeyMap newMap = map.mutate();
+     * <br>map.clear();
+     * </code>
+     *
+     * @return A new mutable map that contains the actual data of this map.
+     */
+    public MutableIntKeyMap<T> donate() {
+        final MutableIntKeyMap<T> newMap = new MutableIntKeyMap<>(_arrayLengthFunction, _keys, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _keys = new int[length];
+        _values = new Object[length];
+        _size = 0;
+        return newMap;
+    }
+
     @Override
     public void removeAt(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= _size) {
