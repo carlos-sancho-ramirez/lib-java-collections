@@ -214,6 +214,15 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
         return changed;
     }
 
+    @Override
+    public MutableSortedSet<T> donate() {
+        final MutableSortedSet<T> newSet = new MutableSortedSet<>(_arrayLengthFunction, _sortFunction, _values, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _values = new Object[length];
+        _size = 0;
+        return newSet;
+    }
+
     public static class Builder<E> implements MutableSet.Builder<E> {
         private final MutableSortedSet<E> _set;
 

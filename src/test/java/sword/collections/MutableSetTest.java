@@ -408,4 +408,48 @@ abstract class MutableSetTest<T, B extends MutableSet.Builder<T>> extends SetTes
             checkContainsOnlyAfterAddAll(a, b, c, set);
         })));
     }
+
+    @Test
+    void testDonateWhenEmpty() {
+        final MutableSet<T> set = newBuilder().build();
+        final MutableSet<T> set2 = set.donate();
+        assertTrue(set.isEmpty());
+        assertTrue(set2.isEmpty());
+        assertNotSame(set, set2);
+    }
+
+    @Test
+    void testDonateForSingleElement() {
+        withValue(value -> {
+            final MutableSet<T> set = newBuilder().add(value).build();
+            final MutableSet<T> set2 = set.donate();
+            assertTrue(set.isEmpty());
+            assertEquals(1, set2.size());
+            assertSame(value, set2.valueAt(0));
+        });
+    }
+
+    @Test
+    void testDonateForSingleMultipleElements() {
+        withValue(a -> withValue(b -> {
+            final MutableSet<T> set = newBuilder().add(a).add(b).build();
+            final MutableSet<T> set2 = set.donate();
+            assertTrue(set.isEmpty());
+
+            if (equal(a, b)) {
+                assertEquals(1, set2.size());
+                assertSame(a, set2.valueAt(0));
+            }
+            else {
+                assertEquals(2, set2.size());
+                if (a == set2.valueAt(0)) {
+                    assertSame(b, set2.valueAt(1));
+                }
+                else {
+                    assertSame(b, set2.valueAt(0));
+                    assertSame(a, set2.valueAt(1));
+                }
+            }
+        }));
+    }
 }

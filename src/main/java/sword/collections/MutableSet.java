@@ -19,6 +19,23 @@ public interface MutableSet<T> extends Set<T>, MutableTraversable<T> {
     boolean remove(T key);
 
     /**
+     * Create a new mutable set instance and copy from this collection the actual data references. After it, this collection gets cleared.
+     * <p>
+     * This is a more efficient alternative to the following code:
+     * <code>
+     * <br>MutableSet newSet = set.mutate();
+     * <br>set.clear();
+     * </code>
+     *
+     * @return A new mutable map that contains the actual data of this map.
+     */
+    default MutableSet<T> donate() {
+        final MutableSet<T> mutated = mutate();
+        clear();
+        return mutated;
+    }
+
+    /**
      * Add all the items from the given iterable into this set.
      *
      * As this is a set, any item that is already included, or repeated in the

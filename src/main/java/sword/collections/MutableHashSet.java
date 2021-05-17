@@ -198,6 +198,16 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
         return changed;
     }
 
+    @Override
+    public MutableHashSet<T> donate() {
+        final MutableHashSet<T> newSet = new MutableHashSet<>(_arrayLengthFunction, _values, _hashCodes, _size);
+        final int length = _arrayLengthFunction.suitableArrayLength(0, 0);
+        _hashCodes = new int[length];
+        _values = new Object[length];
+        _size = 0;
+        return newSet;
+    }
+
     public static class Builder<E> implements MutableSet.Builder<E> {
         private final MutableHashSet<E> _set;
 
