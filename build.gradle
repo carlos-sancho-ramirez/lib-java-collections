@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'checkstyle'
 
-group = 'sword'
+group = 'com.github.carlos-sancho-ramirez'
 version = '1.2.0'
 
 sourceCompatibility = 1.8
@@ -47,7 +47,7 @@ task packageJavadoc(type: Jar) {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId 'collections-library'
+            artifactId 'lib-java-collections'
             from components.java
 
             artifact sourceJar
