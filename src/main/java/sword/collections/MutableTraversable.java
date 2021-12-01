@@ -19,4 +19,20 @@ public interface MutableTraversable<T> extends Traversable<T> {
      * @return Whether the collection has changed, false if it was already empty.
      */
     boolean clear();
+
+    /**
+     * Remove the last element in this traversable and returns it.
+     * @return The last element in this traversable.
+     * @throws EmptyCollectionException in case this traversable is empty.
+     */
+    default T pickLast() throws EmptyCollectionException {
+        final int size = size();
+        if (size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        final T result = valueAt(size - 1);
+        removeAt(size - 1);
+        return result;
+    }
 }
