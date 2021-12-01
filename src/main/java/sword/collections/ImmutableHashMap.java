@@ -114,6 +114,24 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
         }
     }
 
+    /**
+     * Creates a new map containing all the current elements and the ones given in the map.
+     *
+     * As this is a map, duplicated keys will not be allowed.
+     * Than means that elements within the given map will replace any value in this map if
+     * there is an equivalent key already included in this map.
+     *
+     * @param other Map from where new items will be added.
+     */
+    public ImmutableHashMap<K, V> putAll(Map<K, ? extends V> other) {
+        ImmutableHashMap<K, V> result = this;
+        for (Map.Entry<K, ? extends V> entry : other.entries()) {
+            result = result.put(entry.key(), entry.value());
+        }
+
+        return result;
+    }
+
     @Override
     public ImmutableSet<V> toSet() {
         return toList().toSet();
