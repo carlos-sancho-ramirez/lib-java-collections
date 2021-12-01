@@ -19,4 +19,35 @@ public interface MutableIntTraversable extends IntTraversable {
      * @return Whether the collection has changed, false if it was already empty.
      */
     boolean clear();
+
+    /**
+     * Remove the first element in this traversable and returns it.
+     * @return The first element in this traversable.
+     * @throws EmptyCollectionException in case this traversable is empty.
+     */
+    default int pickFirst() throws EmptyCollectionException {
+        if (isEmpty()) {
+            throw new EmptyCollectionException();
+        }
+
+        final int result = valueAt(0);
+        removeAt(0);
+        return result;
+    }
+
+    /**
+     * Remove the last element in this traversable and returns it.
+     * @return The last element in this traversable.
+     * @throws EmptyCollectionException in case this traversable is empty.
+     */
+    default int pickLast() throws EmptyCollectionException {
+        final int size = size();
+        if (size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        final int result = valueAt(size - 1);
+        removeAt(size - 1);
+        return result;
+    }
 }
