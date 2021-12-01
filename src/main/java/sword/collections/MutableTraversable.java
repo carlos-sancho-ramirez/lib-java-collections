@@ -21,6 +21,21 @@ public interface MutableTraversable<T> extends Traversable<T> {
     boolean clear();
 
     /**
+     * Remove the first element in this traversable and returns it.
+     * @return The first element in this traversable.
+     * @throws EmptyCollectionException in case this traversable is empty.
+     */
+    default T pickFirst() throws EmptyCollectionException {
+        if (isEmpty()) {
+            throw new EmptyCollectionException();
+        }
+
+        final T result = valueAt(0);
+        removeAt(0);
+        return result;
+    }
+
+    /**
      * Remove the last element in this traversable and returns it.
      * @return The last element in this traversable.
      * @throws EmptyCollectionException in case this traversable is empty.

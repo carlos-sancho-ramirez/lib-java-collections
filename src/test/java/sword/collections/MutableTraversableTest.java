@@ -40,6 +40,50 @@ public interface MutableTraversableTest<T, B extends MutableTraversableBuilder<T
     }
 
     @Test
+    default void testPickFirstWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final MutableTraversable<T> traversable = supplier.newBuilder().build();
+            try {
+                traversable.pickFirst();
+                fail();
+            }
+            catch (EmptyCollectionException e) {
+                // This is the expected path
+            }
+        });
+    }
+
+    @Test
+    default void testPickFirstForSingleElement() {
+        withValue(value -> withBuilderSupplier(supplier -> {
+            final MutableTraversable<T> traversable = supplier.newBuilder().add(value).build();
+            assertSame(value, traversable.pickFirst());
+            assertTrue(traversable.isEmpty());
+        }));
+    }
+
+    @Test
+    default void testPickFirstForMultipleElements() {
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final MutableTraversable<T> traversable = supplier.newBuilder().add(a).add(b).build();
+            final int initialSize = traversable.size();
+            final T first = traversable.pickFirst();
+            if (first == a) {
+                if (initialSize > 1) {
+                    assertSame(b, traversable.pickFirst());
+                }
+            }
+            else {
+                assertSame(b, first);
+                if (initialSize > 1) {
+                    assertSame(a, traversable.pickFirst());
+                }
+            }
+            assertTrue(traversable.isEmpty());
+        })));
+    }
+
+    @Test
     default void testPickLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final MutableTraversable<T> traversable = supplier.newBuilder().build();
