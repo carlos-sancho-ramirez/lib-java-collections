@@ -53,12 +53,6 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public V valueAt(int index) {
-        return (V) _values[index];
-    }
-
-    @Override
     public int indexOfKey(K key) {
         return findValue(_sortFunction, _keys, _size, key);
     }

@@ -37,12 +37,6 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T valueAt(int index) {
-        return (T) _values[index];
-    }
-
-    @Override
     public int indexOf(T value) {
         return findValue(_sortFunction, _values, _size, value);
     }
