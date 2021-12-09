@@ -13,7 +13,7 @@ public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<
 
     @Test
     default void testPutAllMethodForMultipleElementsInThisMap() {
-        withKey(a -> withKey(b -> withValue(value -> {
+        withKey(a -> withKey(b -> {
             final ImmutableMap<K, V> thisMap = newBuilder().build();
             final ImmutableMap<K, V> thatMap = newBuilder()
                     .put(a, valueFromKey(a))
@@ -21,24 +21,24 @@ public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<
                     .build();
 
             assertEquals(thatMap, thisMap.putAll(thatMap));
-        })));
+        }));
     }
 
     @Test
     default void testPutAllMethodForEmptyGivenMap() {
-        withKey(a -> withKey(b -> withValue(value -> {
+        withKey(a -> withKey(b -> {
             final ImmutableMap<K, V> thisMap = newBuilder()
                     .put(a, valueFromKey(a))
                     .put(b, valueFromKey(b))
                     .build();
 
             assertSame(thisMap, thisMap.putAll(newBuilder().build()));
-        })));
+        }));
     }
 
     @Test
     default void testPutAllMethodForMultipleElementsInTheGivenMap() {
-        withKey(a -> withKey(b -> withKey(c -> withKey(d -> withValue(value -> {
+        withKey(a -> withKey(b -> withKey(c -> withKey(d -> {
             final ImmutableMap<K, V> thisMap = newBuilder()
                     .put(a, valueFromKey(a))
                     .put(b, valueFromKey(b))
@@ -59,6 +59,6 @@ public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<
             }
 
             assertEquals(builder.build(), thisMap.putAll(thatMap));
-        })))));
+        }))));
     }
 }

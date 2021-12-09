@@ -3,6 +3,7 @@ package sword.collections;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
@@ -12,6 +13,63 @@ public interface MutableMapTest<K, V> {
     MutableMap.Builder<K, V> newMapBuilder();
     void withKey(Procedure<K> procedure);
     V valueFromKey(K value);
+
+    @Test
+    default void testPutAllMethodForMultipleElementsInThisMap() {
+        withKey(a -> withKey(b -> {
+            final MutableMap<K, V> thisMap = newMapBuilder().build();
+            final MutableMap<K, V> thatMap = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            assertTrue(thisMap.putAll(thatMap));
+            assertEquals(thatMap, thisMap);
+        }));
+    }
+
+    @Test
+    default void testPutAllMethodForEmptyGivenMap() {
+        withKey(a -> withKey(b -> {
+            final MutableMap<K, V> thisMap = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final int size = thisMap.size();
+            assertFalse(thisMap.putAll(newMapBuilder().build()));
+            assertEquals(size, thisMap.size());
+        }));
+    }
+
+    @Test
+    default void testPutAllMethodForMultipleElementsInTheGivenMap() {
+        withKey(a -> withKey(b -> withKey(c -> withKey(d -> {
+            final MutableMap<K, V> thisMap = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final MutableMap<K, V> thatMap = newMapBuilder()
+                    .put(c, valueFromKey(c))
+                    .put(d, valueFromKey(d))
+                    .build();
+
+            final MutableMap.Builder<K, V> builder = newMapBuilder();
+            for (Map.Entry<K, V> entry : thisMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            for (Map.Entry<K, V> entry : thatMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            final int originalSize = thisMap.size();
+            final MutableMap<K, V> expected = builder.build();
+            assertEquals(originalSize != expected.size(), thisMap.putAll(thatMap));
+            assertEquals(expected, thisMap);
+        }))));
+    }
 
     @Test
     default void testDonateWhenEmpty() {

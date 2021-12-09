@@ -18,8 +18,36 @@ package sword.collections;
  */
 public interface MutableMap<K, V> extends Map<K, V>, MutableTransformable<V> {
 
+    /**
+     * Inserts the given key-value pair into this map.
+     *
+     * @param key Key to be compared with any existing one.
+     * @param value Value to be placed within this map.
+     * @return Whether this operation has increased by one the size of this map.
+     */
     boolean put(K key, V value);
     boolean remove(K key);
+
+    /**
+     * Inserts into this map all the data found in the given map.
+     *
+     * As this is a map, duplicated keys will not be allowed.
+     * Than means that elements within the given map will replace any value in
+     * this map if there is an equivalent key already included in this map.
+     *
+     * @param other Map from where new items will be added.
+     * @return Whether this operation has increased the size of this map or not.
+     */
+    default boolean putAll(Map<K, ? extends V> other) {
+        boolean changed = false;
+        final TransformerWithKey<K, ? extends V> transformer = other.iterator();
+        while (transformer.hasNext()) {
+            final V value = transformer.next();
+            changed |= put(transformer.key(), value);
+        }
+
+        return changed;
+    }
 
     /**
      * Create a new mutable map instance and copy from this collection the actual data references. After it, this collection gets cleared.
