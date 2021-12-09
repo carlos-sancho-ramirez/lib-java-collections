@@ -43,7 +43,9 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
     ImmutableMap<K, V> filter(Predicate<? super V> predicate);
 
     @Override
-    ImmutableMap<K, V> filterNot(Predicate<? super V> predicate);
+    default ImmutableMap<K, V> filterNot(Predicate<? super V> predicate) {
+        return filter(v -> !predicate.apply(v));
+    }
 
     @Override
     ImmutableIntValueMap<K> mapToInt(IntResultFunction<? super V> mapFunc);

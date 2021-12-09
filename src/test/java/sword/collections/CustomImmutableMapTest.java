@@ -141,12 +141,6 @@ public final class CustomImmutableMapTest implements ImmutableMapTest<Integer, S
         }
 
         @Override
-        public ImmutableMap<K, V> filterNot(Predicate<? super V> predicate) {
-            final ImmutableHashMap<K, V> newMap = mMap.filterNot(predicate);
-            return (newMap == mMap)? this : new CustomImmutableMap<>(newMap);
-        }
-
-        @Override
         public ImmutableIntValueMap<K> mapToInt(IntResultFunction<? super V> mapFunc) {
             return mMap.mapToInt(mapFunc);
         }
