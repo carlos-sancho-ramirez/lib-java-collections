@@ -237,6 +237,57 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     }
 
     @Test
+    void testPutAllMethodForMultipleElementsInThisMap() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntKeyMap<String> thisMap = newMapBuilder().build();
+            final ImmutableIntKeyMap<String> thatMap = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            assertEquals(thatMap, thisMap.putAll(thatMap));
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForEmptyGivenMap() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntKeyMap<String> thisMap = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            assertSame(thisMap, thisMap.putAll(newMapBuilder().build()));
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForMultipleElementsInTheGivenMap() {
+        withInt(a -> withInt(b -> withInt(c -> withInt(d -> {
+            final ImmutableIntKeyMap<String> thisMap = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final ImmutableIntKeyMap<String> thatMap = newMapBuilder()
+                    .put(c, valueFromKey(c))
+                    .put(d, valueFromKey(d))
+                    .build();
+
+            final ImmutableIntKeyMap.Builder<String> builder = newMapBuilder();
+            for (IntKeyMap.Entry<String> entry : thisMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            for (IntKeyMap.Entry<String> entry : thatMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            assertEquals(builder.build(), thisMap.putAll(thatMap));
+        }))));
+    }
+
+    @Test
     void testInvertMethod() {
         withImmutableIntKeyMap(array -> {
             if (array != null) {

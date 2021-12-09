@@ -258,6 +258,24 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         }
     }
 
+    /**
+     * Creates a new map containing all the current elements and the ones given in the map.
+     *
+     * As this is a map, duplicated keys will not be allowed.
+     * Than means that elements within the given map will replace any value in this map if
+     * there is an equivalent key already included in this map.
+     *
+     * @param other Map from where new items will be added.
+     */
+    public ImmutableIntKeyMap<T> putAll(IntKeyMap<? extends T> other) {
+        ImmutableIntKeyMap<T> result = this;
+        for (IntKeyMap.Entry<? extends T> entry : other.entries()) {
+            result = result.put(entry.key(), entry.value());
+        }
+
+        return result;
+    }
+
     @Override
     public ImmutableIntValueMap<T> count() {
         final MutableIntValueMap<T> result = MutableIntValueHashMap.empty();
