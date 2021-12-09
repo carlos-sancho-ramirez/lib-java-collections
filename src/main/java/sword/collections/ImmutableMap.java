@@ -21,6 +21,24 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
 
     ImmutableMap<K, V> put(K key, V value);
 
+    /**
+     * Creates a new map containing all the current elements and the ones given in the map.
+     *
+     * As this is a map, duplicated keys will not be allowed.
+     * Than means that elements within the given map will replace any value in this map if
+     * there is an equivalent key already included in this map.
+     *
+     * @param other Map from where new items will be added.
+     */
+    default ImmutableMap<K, V> putAll(Map<K, ? extends V> other) {
+        ImmutableMap<K, V> result = this;
+        for (Map.Entry<K, ? extends V> entry : other.entries()) {
+            result = result.put(entry.key(), entry.value());
+        }
+
+        return result;
+    }
+
     @Override
     ImmutableMap<K, V> filter(Predicate<? super V> predicate);
 

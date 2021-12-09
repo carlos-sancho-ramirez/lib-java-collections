@@ -8,15 +8,15 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableHashMapTest extends MapTest<Integer, String, ImmutableTransformableBuilder<String>> implements ImmutableTransformableTest<String, ImmutableTransformableBuilder<String>> {
+public final class ImmutableHashMapTest extends MapTest<Integer, String, ImmutableTransformableBuilder<String>> implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>> {
 
     @Override
-    ImmutableHashMap.Builder<Integer, String> newBuilder() {
+    public ImmutableHashMap.Builder<Integer, String> newBuilder() {
         return new ImmutableHashMap.Builder<>();
     }
 
     @Override
-    void withKey(Procedure<Integer> procedure) {
+    public void withKey(Procedure<Integer> procedure) {
         withInt(procedure::apply);
     }
 
@@ -67,7 +67,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Override
-    String valueFromKey(Integer key) {
+    public String valueFromKey(Integer key) {
         return (key == null)? null : Integer.toString(key);
     }
 
@@ -124,54 +124,10 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Test
-    void testPutAllMethodForMultipleElementsInThisMap() {
-        withKey(a -> withKey(b -> withValue(value -> {
-            final ImmutableHashMap<Integer, String> thisMap = newBuilder().build();
-            final ImmutableHashMap<Integer, String> thatMap = newBuilder()
-                    .put(a, valueFromKey(a))
-                    .put(b, valueFromKey(b))
-                    .build();
-
-            assertEquals(thatMap, thisMap.putAll(thatMap));
-        })));
-    }
-
-    @Test
-    void testPutAllMethodForEmptyGivenMap() {
-        withKey(a -> withKey(b -> withValue(value -> {
-            final ImmutableHashMap<Integer, String> thisMap = newBuilder()
-                    .put(a, valueFromKey(a))
-                    .put(b, valueFromKey(b))
-                    .build();
-
-            assertSame(thisMap, thisMap.putAll(newBuilder().build()));
-        })));
-    }
-
-    @Test
-    void testPutAllMethodForMultipleElementsInTheGivenMap() {
-        withKey(a -> withKey(b -> withKey(c -> withKey(d -> withValue(value -> {
-            final ImmutableHashMap<Integer, String> thisMap = newBuilder()
-                    .put(a, valueFromKey(a))
-                    .put(b, valueFromKey(b))
-                    .build();
-
-            final ImmutableHashMap<Integer, String> thatMap = newBuilder()
-                    .put(c, valueFromKey(c))
-                    .put(d, valueFromKey(d))
-                    .build();
-
-            final MutableHashMap<Integer, String> expectedMap = MutableHashMap.empty();
-            for (Map.Entry<Integer, String> entry : thisMap.entries()) {
-                expectedMap.put(entry.key(), entry.value());
-            }
-
-            for (Map.Entry<Integer, String> entry : thatMap.entries()) {
-                expectedMap.put(entry.key(), entry.value());
-            }
-
-            assertEquals(expectedMap.toImmutable(), thisMap.putAll(thatMap));
-        })))));
+    void testPutAllMustReturnAnImmutableHashMap() {
+        final ImmutableHashMap<Integer, String> map = newBuilder().build();
+        final ImmutableHashMap<Integer, String> result = map.putAll(map);
+        assertSame(result, map);
     }
 
     private boolean hashCodeIsEven(String value) {

@@ -103,6 +103,11 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
+    public ImmutableSortedMap<K, V> putAll(Map<K, ? extends V> other) {
+        return (ImmutableSortedMap<K, V>) super.putAll(other);
+    }
+
+    @Override
     public ImmutableSet<V> toSet() {
         return toList().toSet();
     }

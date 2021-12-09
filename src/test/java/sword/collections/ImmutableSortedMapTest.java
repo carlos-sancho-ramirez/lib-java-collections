@@ -8,19 +8,19 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableSortedMapTest extends MapTest<Integer, String, ImmutableTransformableBuilder<String>> implements ImmutableTransformableTest<String, ImmutableTransformableBuilder<String>> {
+public final class ImmutableSortedMapTest extends MapTest<Integer, String, ImmutableTransformableBuilder<String>> implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
     }
 
     @Override
-    ImmutableMap.Builder<Integer, String> newBuilder() {
+    public ImmutableSortedMap.Builder<Integer, String> newBuilder() {
         return new ImmutableSortedMap.Builder<>(ImmutableSortedMapTest::sortInDescendantOrder);
     }
 
     @Override
-    void withKey(Procedure<Integer> procedure) {
+    public void withKey(Procedure<Integer> procedure) {
         withInt(procedure::apply);
     }
 
@@ -76,7 +76,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
     }
 
     @Override
-    String valueFromKey(Integer key) {
+    public String valueFromKey(Integer key) {
         return (key == null)? null : Integer.toString(key);
     }
 
@@ -130,6 +130,13 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
                 }
             }
         }))));
+    }
+
+    @Test
+    void testPutAllMustReturnAnImmutableHashMap() {
+        final ImmutableSortedMap<Integer, String> map = newBuilder().build();
+        final ImmutableSortedMap<Integer, String> result = map.putAll(map);
+        assertSame(result, map);
     }
 
     private boolean hashCodeIsEven(String value) {
