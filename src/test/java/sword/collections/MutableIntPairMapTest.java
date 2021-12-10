@@ -205,6 +205,63 @@ public final class MutableIntPairMapTest extends IntPairMapTest<MutableIntTransf
         })));
     }
 
+    @Test
+    void testPutAllMethodForMultipleElementsInThisMap() {
+        withInt(a -> withInt(b -> {
+            final MutableIntPairMap thisMap = newBuilder().build();
+            final MutableIntPairMap thatMap = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            assertTrue(thisMap.putAll(thatMap));
+            assertEquals(thatMap, thisMap);
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForEmptyGivenMap() {
+        withInt(a -> withInt(b -> {
+            final MutableIntPairMap thisMap = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            final int size = thisMap.size();
+            assertFalse(thisMap.putAll(newBuilder().build()));
+            assertEquals(size, thisMap.size());
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForMultipleElementsInTheGivenMap() {
+        withInt(a -> withInt(b -> withInt(c -> withInt(d -> {
+            final MutableIntPairMap thisMap = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            final MutableIntPairMap thatMap = newBuilder()
+                    .put(c, c)
+                    .put(d, d)
+                    .build();
+
+            final MutableIntPairMap.Builder builder = newBuilder();
+            for (IntPairMap.Entry entry : thisMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            for (IntPairMap.Entry entry : thatMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            final int originalSize = thisMap.size();
+            final MutableIntPairMap expected = builder.build();
+            assertEquals(originalSize != expected.size(), thisMap.putAll(thatMap));
+            assertEquals(expected, thisMap);
+        }))));
+    }
+
     static final class SameKeyAndValueTraversableBuilder implements MutableIntTransformableBuilder {
         private final MutableIntPairMap map = MutableIntPairMap.empty();
 
