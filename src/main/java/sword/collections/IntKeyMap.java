@@ -1,8 +1,14 @@
 package sword.collections;
 
+import sword.annotations.ToBeSubtyped;
+
 import static sword.collections.SortUtils.equal;
 
 public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
+
+    @Override
+    @ToBeSubtyped(TransformerWithIntKey.class)
+    Transformer<T> iterator();
 
     @Override
     IntKeyMap<T> filter(Predicate<? super T> predicate);

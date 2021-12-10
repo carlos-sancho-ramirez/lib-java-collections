@@ -328,7 +328,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     @Override
-    public Transformer<T> iterator() {
+    public TransformerWithIntKey<T> iterator() {
         return new Iterator();
     }
 
@@ -355,7 +355,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         }
     }
 
-    private class Iterator extends AbstractTransformer<T> {
+    private final class Iterator extends AbstractTransformer<T> implements TransformerWithIntKey<T> {
 
         private int _index;
 
@@ -368,6 +368,11 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         @SuppressWarnings("unchecked")
         public T next() {
             return (T) _values[_index++];
+        }
+
+        @Override
+        public int key() {
+            return _keys[_index - 1];
         }
     }
 

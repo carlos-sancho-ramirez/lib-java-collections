@@ -9,6 +9,7 @@ import static sword.collections.SortUtils.equal;
  */
 public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
 
+    @Override
     TransformerWithKey<K, V> iterator();
 
     /**

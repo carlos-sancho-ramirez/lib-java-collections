@@ -345,6 +345,25 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     /**
+     * Inserts into this map all the data found in the given map.
+     *
+     * As this is a map, duplicated keys will not be allowed.
+     * That means that elements within the given map will replace any value in
+     * this map if there is an equivalent key already included in this map.
+     *
+     * @param other Map from where new items will be added.
+     * @return Whether this operation has increased the size of this map or not.
+     */
+    public boolean putAll(IntKeyMap<? extends T> other) {
+        boolean changed = false;
+        for (IntKeyMap.Entry<? extends T> entry : other.entries()) {
+            changed |= put(entry.key(), entry.value());
+        }
+
+        return changed;
+    }
+
+    /**
      * Remove the key-value pair matching the given key from the map.
      * @return True if something was removed, false otherwise.
      */
@@ -397,7 +416,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
-    public Transformer<T> iterator() {
+    public TransformerWithIntKey<T> iterator() {
         return new Iterator();
     }
 
@@ -424,7 +443,7 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
         }
     }
 
-    private class Iterator extends AbstractTransformer<T> {
+    private final class Iterator extends AbstractTransformer<T> implements TransformerWithIntKey<T> {
 
         private int _index;
 
@@ -442,6 +461,11 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
         @Override
         public void remove() {
             removeAt(--_index);
+        }
+
+        @Override
+        public int key() {
+            return _keys[_index - 1];
         }
     }
 

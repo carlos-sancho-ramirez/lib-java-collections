@@ -252,6 +252,63 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
         }));
     }
 
+    @Test
+    void testPutAllMethodForMultipleElementsInThisMap() {
+        withInt(a -> withInt(b -> {
+            final MutableIntKeyMap<String> thisMap = newMapBuilder().build();
+            final MutableIntKeyMap<String> thatMap = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            assertTrue(thisMap.putAll(thatMap));
+            assertEquals(thatMap, thisMap);
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForEmptyGivenMap() {
+        withInt(a -> withInt(b -> {
+            final MutableIntKeyMap<String> thisMap = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final int size = thisMap.size();
+            assertFalse(thisMap.putAll(newMapBuilder().build()));
+            assertEquals(size, thisMap.size());
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForMultipleElementsInTheGivenMap() {
+        withInt(a -> withInt(b -> withInt(c -> withInt(d -> {
+            final MutableIntKeyMap<String> thisMap = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final MutableIntKeyMap<String> thatMap = newMapBuilder()
+                    .put(c, valueFromKey(c))
+                    .put(d, valueFromKey(d))
+                    .build();
+
+            final MutableIntKeyMap.Builder<String> builder = newMapBuilder();
+            for (IntKeyMap.Entry<String> entry : thisMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            for (IntKeyMap.Entry<String> entry : thatMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            final int originalSize = thisMap.size();
+            final MutableIntKeyMap<String> expected = builder.build();
+            assertEquals(originalSize != expected.size(), thisMap.putAll(thatMap));
+            assertEquals(expected, thisMap);
+        }))));
+    }
+
     static final class HashCodeKeyTraversableBuilder<E> implements MutableTransformableBuilder<E> {
         private final MutableIntKeyMap<E> map = MutableIntKeyMap.empty();
 
