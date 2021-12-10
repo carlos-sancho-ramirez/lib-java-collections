@@ -20,6 +20,24 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
 
     ImmutableIntValueMap<T> put(T key, int value);
 
+    /**
+     * Creates a new map containing all the current elements and the ones given in the map.
+     *
+     * As this is a map, duplicated keys will not be allowed.
+     * Than means that elements within the given map will replace any value in this map if
+     * there is an equivalent key already included in this map.
+     *
+     * @param other Map from where new items will be added.
+     */
+    default ImmutableIntValueMap<T> putAll(IntValueMap<? extends T> other) {
+        ImmutableIntValueMap<T> result = this;
+        for (IntValueMap.Entry<? extends T> entry : other.entries()) {
+            result = result.put(entry.key(), entry.value());
+        }
+
+        return result;
+    }
+
     @Override
     MutableIntValueMap<T> mutate();
 

@@ -30,9 +30,9 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
      *
      * @param other Map from where new items will be added.
      */
-    default ImmutableMap<K, V> putAll(Map<K, ? extends V> other) {
+    default ImmutableMap<K, V> putAll(Map<? extends K, ? extends V> other) {
         ImmutableMap<K, V> result = this;
-        for (Map.Entry<K, ? extends V> entry : other.entries()) {
+        for (Map.Entry<? extends K, ? extends V> entry : other.entries()) {
             result = result.put(entry.key(), entry.value());
         }
 

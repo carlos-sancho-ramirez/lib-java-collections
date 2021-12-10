@@ -266,4 +266,55 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
             }
         }))));
     }
+
+    @Test
+    void testPutAllMethodForMultipleElementsInThisMap() {
+        withKey(a -> withKey(b -> {
+            final ImmutableIntValueMap<T> thisMap = newBuilder().build();
+            final ImmutableIntValueMap<T> thatMap = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            assertEquals(thatMap, thisMap.putAll(thatMap));
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForEmptyGivenMap() {
+        withKey(a -> withKey(b -> {
+            final ImmutableIntValueMap<T> thisMap = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            assertSame(thisMap, thisMap.putAll(newBuilder().build()));
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForMultipleElementsInTheGivenMap() {
+        withKey(a -> withKey(b -> withKey(c -> withKey(d -> {
+            final ImmutableIntValueMap<T> thisMap = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final ImmutableIntValueMap<T> thatMap = newBuilder()
+                    .put(c, valueFromKey(c))
+                    .put(d, valueFromKey(d))
+                    .build();
+
+            final ImmutableIntValueMap.Builder<T> builder = newBuilder();
+            for (IntValueMap.Entry<T> entry : thisMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            for (IntValueMap.Entry<T> entry : thatMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            assertEquals(builder.build(), thisMap.putAll(thatMap));
+        }))));
+    }
 }

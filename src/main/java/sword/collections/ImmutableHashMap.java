@@ -115,7 +115,7 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
-    public ImmutableHashMap<K, V> putAll(Map<K, ? extends V> other) {
+    public ImmutableHashMap<K, V> putAll(Map<? extends K, ? extends V> other) {
         return (ImmutableHashMap<K, V>) super.putAll(other);
     }
 
