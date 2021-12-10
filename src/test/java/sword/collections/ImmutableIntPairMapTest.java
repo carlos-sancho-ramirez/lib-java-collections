@@ -99,6 +99,57 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest<ImmutableIntTr
     }
 
     @Test
+    void testPutAllMethodForMultipleElementsInThisMap() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntPairMap thisMap = newBuilder().build();
+            final ImmutableIntPairMap thatMap = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            assertEquals(thatMap, thisMap.putAll(thatMap));
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForEmptyGivenMap() {
+        withInt(a -> withInt(b -> {
+            final ImmutableIntPairMap thisMap = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            assertSame(thisMap, thisMap.putAll(newBuilder().build()));
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForMultipleElementsInTheGivenMap() {
+        withInt(a -> withInt(b -> withInt(c -> withInt(d -> {
+            final ImmutableIntPairMap thisMap = newBuilder()
+                    .put(a, a)
+                    .put(b, b)
+                    .build();
+
+            final ImmutableIntPairMap thatMap = newBuilder()
+                    .put(c, c)
+                    .put(d, d)
+                    .build();
+
+            final ImmutableIntPairMap.Builder builder = newBuilder();
+            for (IntPairMap.Entry entry : thisMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            for (IntPairMap.Entry entry : thatMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            assertEquals(builder.build(), thisMap.putAll(thatMap));
+        }))));
+    }
+
+    @Test
     public void testReverseMethod() {
         withImmutableSparseIntArray(array -> {
             if (array != null) {
