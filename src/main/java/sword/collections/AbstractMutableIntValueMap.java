@@ -62,7 +62,7 @@ abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> impl
         return new ImmutableSortedSet<>(this::entryLessThan, entries);
     }
 
-    private class Iterator extends AbstractIntTransformer {
+    private final class Iterator extends AbstractIntTransformerWithKey<T> {
 
         private int _index;
 
@@ -80,10 +80,15 @@ abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> impl
         public void remove() {
             removeAt(--_index);
         }
+
+        @Override
+        public T key() {
+            return keyAt(_index - 1);
+        }
     }
 
     @Override
-    public IntTransformer iterator() {
+    public IntTransformerWithKey<T> iterator() {
         return new Iterator();
     }
 }

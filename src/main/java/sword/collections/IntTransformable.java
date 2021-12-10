@@ -1,6 +1,9 @@
 package sword.collections;
 
+import sword.annotations.ToBeSubtyped;
+
 public interface IntTransformable extends IntTraversable {
+    @ToBeSubtyped(IntTransformerWithKey.class)
     IntTransformer iterator();
 
     /**

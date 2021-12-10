@@ -146,6 +146,63 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
+    void testPutAllMethodForMultipleElementsInThisMap() {
+        withKey(a -> withKey(b -> {
+            final MutableIntValueMap<K> thisMap = newBuilder().build();
+            final MutableIntValueMap<K> thatMap = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            assertTrue(thisMap.putAll(thatMap));
+            assertEquals(thatMap, thisMap);
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForEmptyGivenMap() {
+        withKey(a -> withKey(b -> {
+            final MutableIntValueMap<K> thisMap = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final int size = thisMap.size();
+            assertFalse(thisMap.putAll(newBuilder().build()));
+            assertEquals(size, thisMap.size());
+        }));
+    }
+
+    @Test
+    void testPutAllMethodForMultipleElementsInTheGivenMap() {
+        withKey(a -> withKey(b -> withKey(c -> withKey(d -> {
+            final MutableIntValueMap<K> thisMap = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+
+            final MutableIntValueMap<K> thatMap = newBuilder()
+                    .put(c, valueFromKey(c))
+                    .put(d, valueFromKey(d))
+                    .build();
+
+            final MutableIntValueMap.Builder<K> builder = newBuilder();
+            for (IntValueMap.Entry<K> entry : thisMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            for (IntValueMap.Entry<K> entry : thatMap.entries()) {
+                builder.put(entry.key(), entry.value());
+            }
+
+            final int originalSize = thisMap.size();
+            final MutableIntValueMap<K> expected = builder.build();
+            assertEquals(originalSize != expected.size(), thisMap.putAll(thatMap));
+            assertEquals(expected, thisMap);
+        }))));
+    }
+
+    @Test
     void testDonateWhenEmpty() {
         final MutableIntValueMap<K> map = newBuilder().build();
         final MutableIntValueMap<K> map2 = map.donate();

@@ -20,6 +20,25 @@ public interface MutableIntValueMap<T> extends IntValueMap<T>, MutableIntTransfo
     boolean put(T key, int value);
 
     /**
+     * Inserts into this map all the data found in the given map.
+     *
+     * As this is a map, duplicated keys will not be allowed.
+     * Than means that elements within the given map will replace any value in
+     * this map if there is an equivalent key already included in this map.
+     *
+     * @param other Map from where new items will be added.
+     * @return Whether this operation has increased the size of this map or not.
+     */
+    default boolean putAll(IntValueMap<? extends T> other) {
+        boolean changed = false;
+        for (IntValueMap.Entry<? extends T> entry : other.entries()) {
+            changed |= put(entry.key(), entry.value());
+        }
+
+        return changed;
+    }
+
+    /**
      * Create a new mutable map instance and copy from this collection the actual data references. After it, this collection gets cleared.
      * <p>
      * This is a more efficient alternative to the following code:

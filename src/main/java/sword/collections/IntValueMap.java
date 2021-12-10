@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.ToBeSubtyped;
+
 import static sword.collections.SortUtils.equal;
 
 /**
@@ -7,6 +9,10 @@ import static sword.collections.SortUtils.equal;
  * @param <T> Type of key items within the map.
  */
 public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
+
+    @Override
+    @ToBeSubtyped(IntTransformerWithKey.class)
+    IntTransformer iterator();
 
     /**
      * Check whether the given key is contained in the map
