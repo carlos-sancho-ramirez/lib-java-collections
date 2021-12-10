@@ -1,5 +1,8 @@
 package sword.collections;
 
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
@@ -52,6 +55,13 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
     @Override
     public void withValue(IntProcedure procedure) {
         withInt(procedure);
+    }
+
+    @Test
+    void testPutAllMustReturnAnImmutableHashMap() {
+        final ImmutableIntValueSortedMap<String> map = newBuilder().build();
+        final ImmutableIntValueSortedMap<String> result = map.putAll(map);
+        assertSame(result, map);
     }
 
     private static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {

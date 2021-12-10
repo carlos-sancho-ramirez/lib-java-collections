@@ -83,6 +83,11 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
     }
 
     @Override
+    public ImmutableIntValueHashMap<T> putAll(IntValueMap<? extends T> other) {
+        return (ImmutableIntValueHashMap<T>) super.putAll(other);
+    }
+
+    @Override
     boolean entryLessThan(Entry<T> a, Entry<T> b) {
         return b != null && (a == null || SortUtils.compareByHashCode(a.key(), b.key()));
     }

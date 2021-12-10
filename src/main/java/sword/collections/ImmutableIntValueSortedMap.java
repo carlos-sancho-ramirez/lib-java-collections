@@ -73,6 +73,11 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
     }
 
     @Override
+    public ImmutableIntValueSortedMap<T> putAll(IntValueMap<? extends T> other) {
+        return (ImmutableIntValueSortedMap<T>) super.putAll(other);
+    }
+
+    @Override
     boolean entryLessThan(Entry<T> a, Entry<T> b) {
         return b != null && (a == null || _sortFunction.lessThan(a.key(), b.key()));
     }
