@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
+
 import static sword.collections.SortUtils.equal;
 
 /**
@@ -71,6 +73,25 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
 
     @Override
     Map<K, V> filterNot(Predicate<? super V> predicate);
+
+    /**
+     * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.
+     * @param predicate Only key returning true for the given predicate will be present
+     *                  in the resulting Map.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default Map<K, V> filterByKey(Predicate<? super K> predicate) {
+        final MapBuilder<K, V> builder = new ImmutableHashMap.Builder<>();
+        final TransformerWithKey<K, V> transformer = iterator();
+        while (transformer.hasNext()) {
+            final V value = transformer.next();
+            final K key = transformer.key();
+            if (predicate.apply(key)) {
+                builder.put(key, value);
+            }
+        }
+        return builder.build();
+    }
 
     @Override
     <E> Map<K, E> map(Function<? super V, ? extends E> func);

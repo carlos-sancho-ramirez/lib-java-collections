@@ -14,7 +14,7 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
 
     abstract MapBuilder<K, V> newBuilder();
     abstract void withKey(Procedure<K> procedure);
-    abstract void withFilterFunc(Procedure<Predicate<V>> procedure);
+    abstract void withFilterByKeyFunc(Procedure<Predicate<K>> procedure);
     abstract void withSortFunc(Procedure<SortFunction<K>> procedure);
     abstract V getTestValue();
     abstract K keyFromInt(int value);
@@ -383,6 +383,53 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
             for (int i = 0; i < size; i++) {
                 assertSame(map.keyAt(i), mapped.keyAt(i));
             }
+        }))));
+    }
+
+    @Test
+    void testFilterByKeyWhenEmpty() {
+        final Predicate<K> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filterByKey(f).iterator().hasNext());
+        });
+    }
+
+    @Test
+    public void testFilterByKeyForSingleElement() {
+        withFilterByKeyFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder().put(key, valueFromKey(key)).build();
+            final Map<K, V> filtered = map.filterByKey(f);
+
+            if (f.apply(key)) {
+                assertEquals(map, filtered);
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    public void testFilterByKeyForMultipleElements() {
+        withFilterByKeyFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final Map<K, V> filtered = map.filterByKey(f);
+
+            final TransformerWithKey<K, V> tr = filtered.iterator();
+            for (K key : map.keySet()) {
+                if (f.apply(key)) {
+                    assertTrue(tr.hasNext());
+                    assertSame(map.get(key), tr.next());
+                    assertSame(key, tr.key());
+                }
+            }
+            assertFalse(tr.hasNext());
         }))));
     }
 }

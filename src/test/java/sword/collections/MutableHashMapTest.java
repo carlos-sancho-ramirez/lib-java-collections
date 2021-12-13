@@ -44,12 +44,17 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
         procedure.apply((a, b) -> a > b);
     }
 
-    private boolean hashCodeIsEven(String value) {
+    private boolean hashCodeIsEven(Object value) {
         return value == null || (value.hashCode() & 1) == 0;
     }
 
     @Override
     void withFilterFunc(Procedure<Predicate<String>> procedure) {
+        procedure.apply(this::hashCodeIsEven);
+    }
+
+    @Override
+    void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
         procedure.apply(this::hashCodeIsEven);
     }
 

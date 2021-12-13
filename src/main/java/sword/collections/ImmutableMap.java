@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
+
 /**
  * Immutable version of a Map.
  *
@@ -45,6 +47,12 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
     @Override
     default ImmutableMap<K, V> filterNot(Predicate<? super V> predicate) {
         return filter(v -> !predicate.apply(v));
+    }
+
+    @Override
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default ImmutableMap<K, V> filterByKey(Predicate<? super K> predicate) {
+        return (ImmutableMap<K, V>) Map.super.filterByKey(predicate);
     }
 
     @Override

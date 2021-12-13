@@ -236,6 +236,19 @@ public final class MutableSortedMap<K, V> extends AbstractMutableMap<K, V> {
     }
 
     @Override
+    public Map<K, V> filterByKey(Predicate<? super K> predicate) {
+        final ImmutableSortedMap.Builder<K, V> builder = new ImmutableSortedMap.Builder<>(_sortFunction);
+        for (int i = 0; i < _size; i++) {
+            final K key = keyAt(i);
+            if (predicate.apply(key)) {
+                builder.put(key, valueAt(i));
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
     public <E> Map<K, E> map(Function<? super V, ? extends E> func) {
         final Object[] newKeys = new Object[_size];
         final Object[] newValues = new Object[_size];

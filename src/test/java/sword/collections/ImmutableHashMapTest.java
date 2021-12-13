@@ -130,7 +130,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
         assertSame(result, map);
     }
 
-    private boolean hashCodeIsEven(String value) {
+    private boolean hashCodeIsEven(Object value) {
         return value == null || (value.hashCode() & 1) == 0;
     }
 
@@ -140,8 +140,24 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Override
+    void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
+        procedure.apply(this::hashCodeIsEven);
+    }
+
+    @Override
     void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply((a, b) -> a + b);
+    }
+
+    @Test
+    void testFilterByKeyReturnTheSameInstanceAndType() {
+        final Predicate<Integer> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        final ImmutableHashMap<Integer, String> map = newBuilder().build();
+        final ImmutableHashMap<Integer, String> filtered = map.filterByKey(f);
+        assertSame(map, filtered);
     }
 
     static final class HashCodeKeyTraversableBuilder<E> implements ImmutableTransformableBuilder<E> {
