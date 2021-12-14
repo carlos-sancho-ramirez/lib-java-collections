@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> extends TransformableTest<T, B> {
+abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements TransformableTest<T, B> {
 
     abstract IntKeyMapBuilder<T> newMapBuilder();
     abstract T getTestValue();

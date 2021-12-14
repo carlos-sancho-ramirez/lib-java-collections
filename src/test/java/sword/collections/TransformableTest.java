@@ -10,10 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
-abstract class TransformableTest<T, B extends TransformableBuilder<T>> implements TraversableTest<T, B> {
+interface TransformableTest<T, B extends TransformableBuilder<T>> extends TraversableTest<T, B> {
 
     @Test
-    void testToListWhenEmpty() {
+    default void testToListWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().build();
             assertTrue(transformable.isEmpty());
@@ -22,7 +22,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testToList() {
+    default void testToList() {
         withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).build();
             final List<T> list = transformable.toList();
@@ -37,12 +37,12 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testToSetWhenEmpty() {
+    default void testToSetWhenEmpty() {
         withBuilderSupplier(supplier -> assertTrue(supplier.newBuilder().build().toSet().isEmpty()));
     }
 
     @Test
-    void testToSetForASingleElement() {
+    default void testToSetForASingleElement() {
         withValue(a -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(a).build();
             final Set<T> set = transformable.toSet();
@@ -52,7 +52,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testToSetForMultipleElements() {
+    default void testToSetForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).add(c).build();
             final Set<T> set = transformable.toSet();
@@ -73,12 +73,12 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testIndexesWhenEmpty() {
+    default void testIndexesWhenEmpty() {
         withBuilderSupplier(supplier -> assertTrue(supplier.newBuilder().build().indexes().isEmpty()));
     }
 
     @Test
-    void testIndexesForSingleValue() {
+    default void testIndexesForSingleValue() {
         withValue(value -> withBuilderSupplier(supplier -> {
             final Iterator<Integer> indexIterator = supplier.newBuilder().add(value).build().indexes().iterator();
             assertTrue(indexIterator.hasNext());
@@ -88,7 +88,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testIndexesForMultipleValues() {
+    default void testIndexesForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).add(c).build();
             final Iterator<T> it = transformable.iterator();
@@ -108,7 +108,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testFilterWhenEmpty() {
+    default void testFilterWhenEmpty() {
         final Predicate<T> f = unused -> {
             throw new AssertionError("This function should not be called");
         };
@@ -119,7 +119,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    public void testFilterForSingleElement() {
+    default void testFilterForSingleElement() {
         withFilterFunc(f -> withValue(value -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(value).build();
             final Transformable<T> filtered = transformable.filter(f);
@@ -134,7 +134,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    public void testFilterForMultipleElements() {
+    default void testFilterForMultipleElements() {
         withFilterFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final Transformable<T> iterable = supplier.newBuilder().add(a).add(b).build();
             final Transformable<T> filtered = iterable.filter(f);
@@ -151,7 +151,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testFilterNotWhenEmpty() {
+    default void testFilterNotWhenEmpty() {
         final Predicate<T> f = unused -> {
             throw new AssertionError("This function should not be called");
         };
@@ -162,7 +162,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    public void testFilterNotForSingleElement() {
+    default void testFilterNotForSingleElement() {
         withFilterFunc(f -> withValue(value -> withBuilderSupplier(supplier -> {
             final Transformable<T> collection = supplier.newBuilder().add(value).build();
             final Transformable<T> filtered = collection.filterNot(f);
@@ -177,7 +177,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    public void testFilterNotForMultipleElements() {
+    default void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final Transformable<T> iterable = supplier.newBuilder().add(a).add(b).build();
             final Transformable<T> filtered = iterable.filterNot(f);
@@ -207,7 +207,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testCountWhenEmpty() {
+    default void testCountWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final IntValueMap<T> map = supplier.newBuilder().build().count();
             assertTrue(map.isEmpty());
@@ -215,7 +215,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testCountForSingleElement() {
+    default void testCountForSingleElement() {
         withValue(value -> withBuilderSupplier(supplier -> {
             final IntValueMap<T> map = supplier.newBuilder().add(value).build().count();
             assertEquals(1, map.size());
@@ -225,7 +225,7 @@ abstract class TransformableTest<T, B extends TransformableBuilder<T>> implement
     }
 
     @Test
-    void testCountForMultipleElements() {
+    default void testCountForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).add(c).build();
             final IntValueMap<T> map = transformable.count();

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
-abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends TransformableTest<V, B> {
+abstract class MapTest<K, V, B extends TransformableBuilder<V>> implements TransformableTest<V, B> {
 
     abstract MapBuilder<K, V> newBuilder();
     abstract void withKey(Procedure<K> procedure);

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-abstract class SetTest<T, B extends Set.Builder<T>> extends TransformableTest<T, B> {
+abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest<T, B> {
 
     @Test
     void testAssignWhenEmpty() {
