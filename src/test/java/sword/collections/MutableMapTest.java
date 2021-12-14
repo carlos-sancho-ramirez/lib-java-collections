@@ -12,7 +12,7 @@ public interface MutableMapTest<K, V> {
 
     MutableMap.Builder<K, V> newMapBuilder();
     void withKey(Procedure<K> procedure);
-    V valueFromKey(K value);
+    V valueFromKey(K key);
 
     @Test
     default void testPutAllMethodForMultipleElementsInThisMap() {

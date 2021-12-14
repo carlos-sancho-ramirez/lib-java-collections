@@ -72,7 +72,9 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
     Map<K, V> filter(Predicate<? super V> predicate);
 
     @Override
-    Map<K, V> filterNot(Predicate<? super V> predicate);
+    default Map<K, V> filterNot(Predicate<? super V> predicate) {
+        return filter(v -> !predicate.apply(v));
+    }
 
     /**
      * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.

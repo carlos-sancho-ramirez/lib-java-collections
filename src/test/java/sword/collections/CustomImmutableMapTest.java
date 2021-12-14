@@ -16,7 +16,7 @@ public final class CustomImmutableMapTest implements ImmutableMapTest<Integer, S
 
     @Override
     public String valueFromKey(Integer key) {
-        return null;
+        return "_" + key;
     }
 
     @Override
