@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableHashMapTest extends MapTest<Integer, String, MutableTransformableBuilder<String>> implements MutableTraversableTest<String, MutableTransformableBuilder<String>>, MutableMapTest<Integer, String> {
+public final class MutableHashMapTest implements MutableMapTest<Integer, String, MutableTransformableBuilder<String>> {
 
     @Override
-    MutableHashMap.Builder<Integer, String> newBuilder() {
+    public MutableHashMap.Builder<Integer, String> newBuilder() {
         return new MutableHashMap.Builder<>();
     }
 
@@ -39,7 +39,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
     }
 
     @Override
-    void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
+    public void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
         procedure.apply((a, b) -> a < b);
         procedure.apply((a, b) -> a > b);
     }
@@ -54,7 +54,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
     }
 
     @Override
-    void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
+    public void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
         procedure.apply(this::hashCodeIsEven);
     }
 
@@ -79,7 +79,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
         procedure.apply(MutableHashMap.Builder::new);
     }
 
@@ -89,12 +89,12 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
     }
 
     @Override
-    String getTestValue() {
+    public String getTestValue() {
         return "value";
     }
 
     @Override
-    Integer keyFromInt(int value) {
+    public Integer keyFromInt(int value) {
         return value;
     }
 

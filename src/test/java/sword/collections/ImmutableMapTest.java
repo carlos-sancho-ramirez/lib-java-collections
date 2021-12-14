@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<V>> extends ImmutableTransformableTest<V, B> {
+public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<V>> extends MapTest<K, V, B>, ImmutableTransformableTest<V, B> {
 
     ImmutableMap.Builder<K, V> newBuilder();
     void withKey(Procedure<K> procedure);

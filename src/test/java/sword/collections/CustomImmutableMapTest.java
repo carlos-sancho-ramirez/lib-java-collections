@@ -14,9 +14,39 @@ public final class CustomImmutableMapTest implements ImmutableMapTest<Integer, S
         withInt(procedure::apply);
     }
 
+    private boolean hashCodeIsEven(Object value) {
+        return value == null || (value.hashCode() & 1) == 0;
+    }
+
+    @Override
+    public void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
+        procedure.apply(this::hashCodeIsEven);
+    }
+
+    @Override
+    public void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
+        procedure.apply((a, b) -> a < b);
+        procedure.apply((a, b) -> a > b);
+    }
+
+    @Override
+    public String getTestValue() {
+        return "value";
+    }
+
+    @Override
+    public Integer keyFromInt(int value) {
+        return value;
+    }
+
     @Override
     public String valueFromKey(Integer key) {
         return "_" + key;
+    }
+
+    @Override
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+        procedure.apply(CustomImmutableMapBuilder::new);
     }
 
     @Override
@@ -27,6 +57,16 @@ public final class CustomImmutableMapTest implements ImmutableMapTest<Integer, S
     @Override
     public void withValue(Procedure<String> procedure) {
         withString(procedure);
+    }
+
+    @Override
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
+        procedure.apply(this::hashCodeIsEven);
+    }
+
+    @Override
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+        procedure.apply((a, b) -> a + b);
     }
 
     private String prefixUnderscore(String value) {

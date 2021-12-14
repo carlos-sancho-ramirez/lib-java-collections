@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
-public interface MutableMapTest<K, V> {
+public interface MutableMapTest<K, V, B extends MutableTransformableBuilder<V>> extends MapTest<K, V, B>, MutableTraversableTest<V, B> {
 
     MutableMap.Builder<K, V> newMapBuilder();
     void withKey(Procedure<K> procedure);

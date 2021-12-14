@@ -1,10 +1,16 @@
 package sword.collections;
 
 import static sword.collections.TestUtils.withInt;
+import static sword.collections.TestUtils.withString;
 
-public final class CustomMutableMapTest implements MutableMapTest<Integer, String> {
+public final class CustomMutableMapTest implements MutableMapTest<Integer, String, MutableTransformableBuilder<String>> {
     @Override
     public MutableMap.Builder<Integer, String> newMapBuilder() {
+        return new CustomMutableMapBuilder<>();
+    }
+
+    @Override
+    public MapBuilder<Integer, String> newBuilder() {
         return new CustomMutableMapBuilder<>();
     }
 
@@ -13,9 +19,79 @@ public final class CustomMutableMapTest implements MutableMapTest<Integer, Strin
         withInt(procedure::apply);
     }
 
+    private boolean hashCodeIsEven(Object value) {
+        return value == null || (value.hashCode() & 1) == 0;
+    }
+
+    @Override
+    public void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
+        procedure.apply(this::hashCodeIsEven);
+    }
+
+    @Override
+    public void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
+        procedure.apply((a, b) -> a < b);
+        procedure.apply((a, b) -> a > b);
+    }
+
+    @Override
+    public String getTestValue() {
+        return "value";
+    }
+
+    @Override
+    public Integer keyFromInt(int value) {
+        return value;
+    }
+
     @Override
     public String valueFromKey(Integer key) {
         return "_" + key;
+    }
+
+    @Override
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+        procedure.apply(MutableHashMap.Builder::new);
+    }
+
+    @Override
+    public void withBuilderSupplier(Procedure<BuilderSupplier<String, MutableTransformableBuilder<String>>> procedure) {
+        procedure.apply(MutableHashMapTest.HashCodeKeyTraversableBuilder::new);
+    }
+
+    @Override
+    public void withValue(Procedure<String> procedure) {
+        withString(procedure);
+    }
+
+    @Override
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
+        procedure.apply(this::hashCodeIsEven);
+    }
+
+    @Override
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+        procedure.apply((a, b) -> a + b);
+    }
+
+    private String prefixUnderscore(String value) {
+        return "_" + value;
+    }
+
+    private String charCounter(String value) {
+        final int length = (value != null)? value.length() : 0;
+        return Integer.toString(length);
+    }
+
+    @Override
+    public void withMapFunc(Procedure<Function<String, String>> procedure) {
+        procedure.apply(this::prefixUnderscore);
+        procedure.apply(this::charCounter);
+    }
+
+    @Override
+    public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+        procedure.apply(str -> (str == null)? 0 : str.hashCode());
     }
 
     private static final class CustomMutableMapBuilder<K, V> implements MutableMap.Builder<K, V> {

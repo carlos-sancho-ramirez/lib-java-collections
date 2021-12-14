@@ -8,7 +8,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableHashMapTest extends MapTest<Integer, String, ImmutableTransformableBuilder<String>> implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>> {
+public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>> {
 
     @Override
     public ImmutableHashMap.Builder<Integer, String> newBuilder() {
@@ -51,18 +51,18 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Override
-    void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
+    public void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
         procedure.apply((a, b) -> a < b);
         procedure.apply((a, b) -> a > b);
     }
 
     @Override
-    String getTestValue() {
+    public String getTestValue() {
         return "value";
     }
 
     @Override
-    Integer keyFromInt(int value) {
+    public Integer keyFromInt(int value) {
         return value;
     }
 
@@ -72,7 +72,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
         procedure.apply(ImmutableHashMap.Builder::new);
     }
 
@@ -140,7 +140,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Override
-    void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
+    public void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
         procedure.apply(this::hashCodeIsEven);
     }
 

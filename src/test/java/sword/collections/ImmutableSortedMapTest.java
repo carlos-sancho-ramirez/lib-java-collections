@@ -8,7 +8,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableSortedMapTest extends MapTest<Integer, String, ImmutableTransformableBuilder<String>> implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>> {
+public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
@@ -55,7 +55,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
     }
 
     @Override
-    void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
+    public void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
         procedure.apply((a, b) -> a < b);
         procedure.apply((a, b) -> a > b);
     }
@@ -66,12 +66,12 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
     }
 
     @Override
-    String getTestValue() {
+    public String getTestValue() {
         return "value";
     }
 
     @Override
-    Integer keyFromInt(int value) {
+    public Integer keyFromInt(int value) {
         return value;
     }
 
@@ -81,7 +81,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
         withSortFunc(sortFunc -> procedure.apply(() -> new ImmutableSortedMap.Builder<>(sortFunc)));
     }
 
@@ -149,7 +149,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
     }
 
     @Override
-    void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
+    public void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
         procedure.apply(this::hashCodeIsEven);
     }
 

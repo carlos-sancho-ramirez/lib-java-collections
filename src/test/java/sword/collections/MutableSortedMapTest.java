@@ -11,14 +11,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableSortedMapTest extends MapTest<Integer, String, MutableTransformableBuilder<String>> implements MutableTraversableTest<String, MutableTransformableBuilder<String>>, MutableMapTest<Integer, String> {
+public final class MutableSortedMapTest implements MutableMapTest<Integer, String, MutableTransformableBuilder<String>> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
     }
 
     @Override
-    MutableSortedMap.Builder<Integer, String> newBuilder() {
+    public MutableSortedMap.Builder<Integer, String> newBuilder() {
         return new MutableSortedMap.Builder<>(MutableSortedMapTest::sortInDescendantOrder);
     }
 
@@ -43,7 +43,7 @@ public final class MutableSortedMapTest extends MapTest<Integer, String, Mutable
     }
 
     @Override
-    void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
+    public void withSortFunc(Procedure<SortFunction<Integer>> procedure) {
         procedure.apply((a, b) -> a < b);
         procedure.apply((a, b) -> a > b);
     }
@@ -58,7 +58,7 @@ public final class MutableSortedMapTest extends MapTest<Integer, String, Mutable
     }
 
     @Override
-    void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
+    public void withFilterByKeyFunc(Procedure<Predicate<Integer>> procedure) {
         procedure.apply(this::hashCodeIsEven);
     }
 
@@ -88,12 +88,12 @@ public final class MutableSortedMapTest extends MapTest<Integer, String, Mutable
     }
 
     @Override
-    String getTestValue() {
+    public String getTestValue() {
         return "value";
     }
 
     @Override
-    Integer keyFromInt(int value) {
+    public Integer keyFromInt(int value) {
         return value;
     }
 
@@ -103,7 +103,7 @@ public final class MutableSortedMapTest extends MapTest<Integer, String, Mutable
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
         withSortFunc(sortFunc -> procedure.apply(() -> new MutableSortedMap.Builder<>(sortFunc)));
     }
 
