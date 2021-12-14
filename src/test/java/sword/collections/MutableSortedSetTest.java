@@ -19,11 +19,11 @@ public final class MutableSortedSetTest extends MutableSetTest<String, MutableSo
     }
 
     private String reduceFunc(String left, String right) {
-        return String.valueOf(left) + '-' + String.valueOf(right);
+        return String.valueOf(left) + '-' + right;
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply(this::reduceFunc);
     }
 
@@ -37,7 +37,7 @@ public final class MutableSortedSetTest extends MutableSetTest<String, MutableSo
     }
 
     @Override
-    void withMapFunc(Procedure<Function<String, String>> procedure) {
+    public void withMapFunc(Procedure<Function<String, String>> procedure) {
         procedure.apply(this::prefixUnderscore);
         procedure.apply(this::charCounter);
     }
@@ -52,7 +52,7 @@ public final class MutableSortedSetTest extends MutableSetTest<String, MutableSo
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::filterFunc);
     }
 

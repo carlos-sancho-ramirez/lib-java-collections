@@ -41,7 +41,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply(this::reduceFunc);
     }
 
@@ -70,7 +70,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::filterFunc);
     }
 

@@ -49,7 +49,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::hashCodeIsEven);
     }
 
@@ -84,7 +84,7 @@ public final class MutableHashMapTest extends MapTest<Integer, String, MutableTr
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply((a, b) -> a + b);
     }
 

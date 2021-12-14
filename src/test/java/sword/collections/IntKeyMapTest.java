@@ -16,7 +16,9 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> extends Trans
     abstract T getTestValue2();
     abstract T valueFromKey(int key);
     abstract void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure);
-    abstract void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
+
+    @Override
+    public abstract void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
 
     private void withArbitraryMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure) {
         procedure.apply(ImmutableIntKeyMap.Builder::new);

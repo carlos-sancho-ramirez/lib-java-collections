@@ -44,7 +44,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply(this::reduceFunc);
     }
 
@@ -73,7 +73,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::filterFunc);
     }
 

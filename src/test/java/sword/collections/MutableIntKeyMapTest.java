@@ -36,16 +36,16 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::filterFunc);
     }
 
     private String reduceFunc(String left, String right) {
-        return String.valueOf(left) + '-' + String.valueOf(right);
+        return String.valueOf(left) + '-' + right;
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply(this::reduceFunc);
     }
 
@@ -59,13 +59,13 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
     }
 
     @Override
-    void withMapFunc(Procedure<Function<String, String>> procedure) {
+    public void withMapFunc(Procedure<Function<String, String>> procedure) {
         procedure.apply(this::prefixUnderscore);
         procedure.apply(this::charCounter);
     }
 
     @Override
-    void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
+    public void withMapToIntFunc(Procedure<IntResultFunction<String>> procedure) {
         procedure.apply(SortUtils::hashCode);
     }
 

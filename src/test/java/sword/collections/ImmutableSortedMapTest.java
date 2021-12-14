@@ -61,7 +61,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply((a, b) -> a + b);
     }
 
@@ -144,7 +144,7 @@ public final class ImmutableSortedMapTest extends MapTest<Integer, String, Immut
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::hashCodeIsEven);
     }
 

@@ -135,7 +135,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::hashCodeIsEven);
     }
 
@@ -145,7 +145,7 @@ public final class ImmutableHashMapTest extends MapTest<Integer, String, Immutab
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply((a, b) -> a + b);
     }
 

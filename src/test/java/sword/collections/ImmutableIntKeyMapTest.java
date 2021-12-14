@@ -39,7 +39,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::stringIsEmpty);
         procedure.apply(this::hashCodeIsEven);
     }
@@ -49,7 +49,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply(this::reduceFunc);
     }
 

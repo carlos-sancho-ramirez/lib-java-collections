@@ -33,7 +33,7 @@ public final class MutableHashSetTest extends MutableSetTest<String, MutableHash
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply(this::reduceFunc);
     }
 
@@ -47,7 +47,7 @@ public final class MutableHashSetTest extends MutableSetTest<String, MutableHash
     }
 
     @Override
-    void withMapFunc(Procedure<Function<String, String>> procedure) {
+    public void withMapFunc(Procedure<Function<String, String>> procedure) {
         procedure.apply(this::prefixUnderscore);
         procedure.apply(this::charCounter);
     }
@@ -62,7 +62,7 @@ public final class MutableHashSetTest extends MutableSetTest<String, MutableHash
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::filterFunc);
     }
 

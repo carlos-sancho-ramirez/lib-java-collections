@@ -25,7 +25,7 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
     }
 
     @Override
-    void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
+    public void withReduceFunction(Procedure<ReduceFunction<String>> procedure) {
         procedure.apply(this::reduceFunc);
     }
 
@@ -54,7 +54,7 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
     }
 
     @Override
-    void withFilterFunc(Procedure<Predicate<String>> procedure) {
+    public void withFilterFunc(Procedure<Predicate<String>> procedure) {
         procedure.apply(this::filterFunc);
     }
 

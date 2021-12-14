@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
-abstract class TransformableTest<T, B extends TransformableBuilder<T>> extends TraversableTest<T, B> {
+abstract class TransformableTest<T, B extends TransformableBuilder<T>> implements TraversableTest<T, B> {
 
     @Test
     void testToListWhenEmpty() {

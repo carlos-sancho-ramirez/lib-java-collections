@@ -20,8 +20,12 @@ abstract class MapTest<K, V, B extends TransformableBuilder<V>> extends Transfor
     abstract K keyFromInt(int value);
     abstract V valueFromKey(K key);
     abstract void withMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure);
-    abstract void withMapFunc(Procedure<Function<V, String>> procedure);
-    abstract void withMapToIntFunc(Procedure<IntResultFunction<V>> procedure);
+
+    @Override
+    public abstract void withMapFunc(Procedure<Function<V, String>> procedure);
+
+    @Override
+    public abstract void withMapToIntFunc(Procedure<IntResultFunction<V>> procedure);
 
     private void withArbitraryMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure) {
         procedure.apply(ImmutableHashMap.Builder::new);

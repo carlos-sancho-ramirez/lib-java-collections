@@ -11,16 +11,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static sword.collections.SortUtils.equal;
 
-abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
+interface TraversableTest<T, B extends TraversableBuilder<T>> {
 
-    abstract void withBuilderSupplier(Procedure<BuilderSupplier<T, B>> procedure);
-    abstract void withValue(Procedure<T> procedure);
-    abstract void withFilterFunc(Procedure<Predicate<T>> procedure);
-    abstract void withReduceFunction(Procedure<ReduceFunction<T>> procedure);
-    abstract void withMapFunc(Procedure<Function<T, String>> procedure);
-    abstract void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
+    void withBuilderSupplier(Procedure<BuilderSupplier<T, B>> procedure);
+    void withValue(Procedure<T> procedure);
+    void withFilterFunc(Procedure<Predicate<T>> procedure);
+    void withReduceFunction(Procedure<ReduceFunction<T>> procedure);
+    void withMapFunc(Procedure<Function<T, String>> procedure);
+    void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
 
-    private void withArbitraryBuilder(Procedure<TraversableBuilder<T>> procedure) {
+    default void withArbitraryBuilder(Procedure<TraversableBuilder<T>> procedure) {
         procedure.apply(new ImmutableList.Builder<>());
         procedure.apply(new ImmutableHashSet.Builder<>());
         procedure.apply(new ImmutableHashMapTest.HashCodeKeyTraversableBuilder<>());
@@ -32,12 +32,12 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testSizeForNoElements() {
+    default void testSizeForNoElements() {
         withBuilderSupplier(supplier -> assertEquals(0, supplier.newBuilder().build().size()));
     }
 
     @Test
-    void testSizeForOneElement() {
+    default void testSizeForOneElement() {
         withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> iterable = supplier.newBuilder().add(value).build();
             assertEquals(1, iterable.size());
@@ -45,26 +45,26 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testIsEmptyForNoElements() {
+    default void testIsEmptyForNoElements() {
         withBuilderSupplier(supplier -> assertTrue(supplier.newBuilder().build().isEmpty()));
     }
 
     @Test
-    void testIsEmptyForASingleElement() {
+    default void testIsEmptyForASingleElement() {
         withValue(value -> withBuilderSupplier(supplier -> {
             assertFalse(supplier.newBuilder().add(value).build().isEmpty());
         }));
     }
 
     @Test
-    void testIteratingForEmptyList() {
+    default void testIteratingForEmptyList() {
         withBuilderSupplier(supplier -> {
             assertFalse(supplier.newBuilder().build().iterator().hasNext());
         });
     }
 
     @Test
-    void testIteratingForASingleElement() {
+    default void testIteratingForASingleElement() {
         withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> list = supplier.newBuilder().add(value).build();
             final Iterator<T> iterator = list.iterator();
@@ -75,7 +75,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testContainsForEmptyList() {
+    default void testContainsForEmptyList() {
         withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> list = supplier.newBuilder().build();
             assertFalse(list.contains(value));
@@ -83,7 +83,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testContainsForASingleElement() {
+    default void testContainsForASingleElement() {
         withValue(valueIncluded -> withBuilderSupplier(supplier -> {
             final Traversable<T> list = supplier.newBuilder().add(valueIncluded).build();
             withValue(otherValue -> {
@@ -98,7 +98,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testContainsForMultipleElements() {
+    default void testContainsForMultipleElements() {
         withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final Traversable<T> traversable = supplier.newBuilder().add(a).add(b).build();
             boolean aIncluded = false;
@@ -123,7 +123,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testAnyMatchWhenEmpty() {
+    default void testAnyMatchWhenEmpty() {
         final Predicate<T> func = v -> {
             fail("This method should never be called in empty collections");
             return true;
@@ -133,7 +133,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testAnyMatchForSingleElement() {
+    default void testAnyMatchForSingleElement() {
         withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> iterable = supplier.newBuilder().add(value).build();
             withFilterFunc(f -> {
@@ -148,7 +148,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testAnyMatchForMultipleElements() {
+    default void testAnyMatchForMultipleElements() {
         withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final Traversable<T> iterable = supplier.newBuilder().add(a).add(b).build();
             withFilterFunc(f -> {
@@ -163,14 +163,14 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testIndexOfWhenEmpty() {
+    default void testIndexOfWhenEmpty() {
         withValue(value -> withBuilderSupplier(supplier -> {
             assertEquals(-1, supplier.newBuilder().build().indexOf(value));
         }));
     }
 
     @Test
-    void testIndexOfForSingleElement() {
+    default void testIndexOfForSingleElement() {
         withValue(a -> withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> traversable = supplier.newBuilder().add(a).build();
             final int index = traversable.indexOf(value);
@@ -185,7 +185,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testIndexOfForMultipleElements() {
+    default void testIndexOfForMultipleElements() {
         withValue(a -> withValue(b -> withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> traversable = supplier.newBuilder().add(a).add(b).build();
 
@@ -202,7 +202,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testIndexWhereWhenEmpty() {
+    default void testIndexWhereWhenEmpty() {
         final Predicate<T> predicate = v -> {
             throw new AssertionError("This method should not be called");
         };
@@ -211,7 +211,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testIndexWhereForSingleElement() {
+    default void testIndexWhereForSingleElement() {
         withFilterFunc(predicate -> withValue(a -> withBuilderSupplier(supplier -> {
             final Traversable<T> collection = supplier.newBuilder().add(a).build();
             final int expected = predicate.apply(a)? 0 : -1;
@@ -220,7 +220,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testIndexWhereForMultipleElements() {
+    default void testIndexWhereForMultipleElements() {
         withFilterFunc(predicate -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final Traversable<T> collection = supplier.newBuilder().add(a).add(b).build();
             int expected = -1;
@@ -237,14 +237,14 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testFindFirstWhenEmpty() {
+    default void testFindFirstWhenEmpty() {
         withFilterFunc(f -> withValue(defaultValue -> withBuilderSupplier(supplier -> {
             assertEquals(defaultValue, supplier.newBuilder().build().findFirst(f, defaultValue));
         })));
     }
 
     @Test
-    void testFindFirstForSingleElement() {
+    default void testFindFirstForSingleElement() {
         withFilterFunc(f -> withValue(defaultValue -> withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> collection = supplier.newBuilder().add(value).build();
             final T first = collection.findFirst(f, defaultValue);
@@ -259,7 +259,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testFindFirstForMultipleElements() {
+    default void testFindFirstForMultipleElements() {
         withFilterFunc(f -> withValue(defaultValue -> withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
             final Traversable<T> collection = supplier.newBuilder().add(a).add(b).build();
 
@@ -278,21 +278,17 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
         })))));
     }
 
-    private T unexpectedReduceFunction(T left, T right) {
-        fail("Unexpected call to the reduce function");
-        return null;
-    }
-
     @Test
-    void testReduceForSingleElement() {
+    default void testReduceForSingleElement() {
+        final ReduceFunction<T> f = (left, right) -> fail("Unexpected call to the reduce function");
         withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> iterable = supplier.newBuilder().add(value).build();
-            assertSame(value, iterable.reduce(this::unexpectedReduceFunction));
+            assertSame(value, iterable.reduce(f));
         }));
     }
 
     @Test
-    void testReduceForMultipleElements() {
+    default void testReduceForMultipleElements() {
         withReduceFunction(func -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Traversable<T> iterable = supplier.newBuilder().add(a).add(b).add(c).build();
             final Iterator<T> it = iterable.iterator();
@@ -306,23 +302,25 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testReduceWithValueWhenEmpty() {
+    default void testReduceWithValueWhenEmpty() {
+        final ReduceFunction<T> f = (left, right) -> fail("Unexpected call to the reduce function");
         withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> iterable = supplier.newBuilder().build();
-            assertSame(value, iterable.reduce(this::unexpectedReduceFunction, value));
+            assertSame(value, iterable.reduce(f, value));
         }));
     }
 
     @Test
-    void testReduceWithValueForSingleElement() {
+    default void testReduceWithValueForSingleElement() {
+        final ReduceFunction<T> f = (left, right) -> fail("Unexpected call to the reduce function");
         withValue(value -> withBuilderSupplier(supplier -> {
             final Traversable<T> iterable = supplier.newBuilder().add(value).build();
-            assertSame(value, iterable.reduce(this::unexpectedReduceFunction, null));
+            assertSame(value, iterable.reduce(f, null));
         }));
     }
 
     @Test
-    void testReduceWithValueForMultipleElements() {
+    default void testReduceWithValueForMultipleElements() {
         withReduceFunction(func -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Traversable<T> iterable = supplier.newBuilder().add(a).add(b).add(c).build();
             final Iterator<T> it = iterable.iterator();
@@ -336,7 +334,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testEqualTraversableWhenEmpty() {
+    default void testEqualTraversableWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final Traversable<T> empty = supplier.newBuilder().build();
             assertTrue(empty.equalTraversable(empty));
@@ -351,7 +349,7 @@ abstract class TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
-    void testEqualTraversable() {
+    default void testEqualTraversable() {
         withArbitraryBuilder(builderForEmpty -> {
             final Traversable<T> empty = builderForEmpty.build();
             withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
