@@ -6,34 +6,37 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements TransformableTest<T, B> {
+interface IntKeyMapTest<T, B extends TransformableBuilder<T>> extends TransformableTest<T, B> {
 
-    abstract IntKeyMapBuilder<T> newMapBuilder();
-    abstract T getTestValue();
-    abstract T getTestValue2();
-    abstract T valueFromKey(int key);
-    abstract void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure);
+    IntKeyMapBuilder<T> newMapBuilder();
+    T getTestValue();
+    T getTestValue2();
+    T valueFromKey(int key);
+    void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure);
 
-    @Override
-    public abstract void withMapToIntFunc(Procedure<IntResultFunction<T>> procedure);
+    default void withFilterByKeyFunc(Procedure<IntPredicate> procedure) {
+        procedure.apply(a -> (a & 1) == 0);
+        procedure.apply(a -> a < 0);
+    }
 
-    private void withArbitraryMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure) {
+    default void withArbitraryMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure) {
         procedure.apply(ImmutableIntKeyMap.Builder::new);
         procedure.apply(MutableIntKeyMap.Builder::new);
     }
 
     @Test
-    void testEmptyBuilderBuildsEmptyArray() {
+    default void testEmptyBuilderBuildsEmptyArray() {
         IntKeyMapBuilder<T> builder = newMapBuilder();
         IntKeyMap<T> array = builder.build();
         assertEquals(0, array.size());
     }
 
     @Test
-    void testSize() {
+    default void testSize() {
         final T value = getTestValue();
         withInt(a -> withInt(b -> withInt(c -> withInt(d -> {
             IntKeyMapBuilder<T> builder = newMapBuilder();
@@ -62,7 +65,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testGet() {
+    default void testGet() {
         final T value = getTestValue();
         final T defValue = getTestValue2();
         withInt(a -> withInt(b -> {
@@ -80,7 +83,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testKeyAtMethod() {
+    default void testKeyAtMethod() {
         final T value = getTestValue();
         withInt(a -> withInt(b -> withInt(c -> {
             IntKeyMapBuilder<T> builder = newMapBuilder();
@@ -105,7 +108,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testValueAtMethod() {
+    default void testValueAtMethod() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntKeyMapBuilder<T> builder = newMapBuilder();
             IntKeyMap<T> array = builder
@@ -123,14 +126,14 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testKeySetWhenEmpty() {
+    default void testKeySetWhenEmpty() {
         final IntKeyMapBuilder<T> builder = newMapBuilder();
         final IntKeyMap<T> map = builder.build();
         assertTrue(map.keySet().isEmpty());
     }
 
     @Test
-    void testKeySet() {
+    default void testKeySet() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntKeyMapBuilder<T> builder = newMapBuilder();
             final IntKeyMap<T> map = builder
@@ -146,7 +149,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testIndexOfKey() {
+    default void testIndexOfKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final T value = getTestValue();
             final IntKeyMapBuilder<T> builder = newMapBuilder();
@@ -163,13 +166,13 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testContainsKeyWhenEmpty() {
+    default void testContainsKeyWhenEmpty() {
         final IntKeyMap<T> map = newMapBuilder().build();
         withInt(key -> assertFalse(map.containsKey(key)));
     }
 
     @Test
-    void testContainsKey() {
+    default void testContainsKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final T value = getTestValue();
             final IntKeyMap<T> map = newMapBuilder()
@@ -183,7 +186,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testEntryIterator() {
+    default void testEntryIterator() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntKeyMapBuilder<T> builder = newMapBuilder();
             IntKeyMap<T> array = builder
@@ -208,7 +211,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testEqualMapReturnsFalseWhenAPairIsMissing() {
+    default void testEqualMapReturnsFalseWhenAPairIsMissing() {
         withInt(a -> withInt(b -> withInt(c -> withMapBuilderSupplier(supplier -> {
             final IntKeyMap<T> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -229,7 +232,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
+    default void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
         withInt(a -> withInt(b -> withInt(c -> withMapBuilderSupplier(supplier -> {
             final IntKeyMap<T> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -253,7 +256,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
+    default void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
         withInt(a -> withInt(b -> withInt(c -> withMapBuilderSupplier(supplier -> {
             final IntKeyMap<T> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -274,7 +277,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testMapResultingKeysForMultipleElements() {
+    default void testMapResultingKeysForMultipleElements() {
         withMapFunc(f -> withInt(keyA -> withInt(keyB -> withMapBuilderSupplier(supplier -> {
             final IntKeyMap<T> map = supplier.newBuilder()
                     .put(keyA, valueFromKey(keyA))
@@ -292,7 +295,7 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
     }
 
     @Test
-    void testMapToIntForMultipleElements() {
+    default void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withInt(a -> withInt(b -> withMapBuilderSupplier(supplier -> {
             final IntKeyMap<T> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -306,6 +309,54 @@ abstract class IntKeyMapTest<T, B extends TransformableBuilder<T>> implements Tr
             for (int i = 0; i < size; i++) {
                 assertEquals(map.keyAt(i), mapped.keyAt(i));
             }
+        }))));
+    }
+
+    @Test
+    default void testFilterByKeyWhenEmpty() {
+        final IntPredicate f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filterByKey(f).iterator().hasNext());
+        });
+    }
+
+    @Test
+    default void testFilterByKeyForSingleElement() {
+        withFilterByKeyFunc(f -> withInt(key -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap<T> map = supplier.newBuilder().put(key, valueFromKey(key)).build();
+            final IntKeyMap<T> filtered = map.filterByKey(f);
+
+            if (f.apply(key)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    default void testFilterByKeyForMultipleElements() {
+        withFilterByKeyFunc(f -> withInt(a -> withInt(b -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap<T> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final IntKeyMap<T> filtered = map.filterByKey(f);
+
+            final Transformer<IntKeyMap.Entry<T>> tr = filtered.entries().iterator();
+            for (int key : map.keySet()) {
+                if (f.apply(key)) {
+                    assertTrue(tr.hasNext());
+                    final IntKeyMap.Entry<T> entry = tr.next();
+                    assertSame(map.get(key), entry.value());
+                    assertEquals(key, entry.key());
+                }
+            }
+            assertFalse(tr.hasNext());
         }))));
     }
 }

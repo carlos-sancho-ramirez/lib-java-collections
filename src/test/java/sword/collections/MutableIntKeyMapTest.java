@@ -14,10 +14,10 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTransformableBuilder<String>> implements MutableTraversableTest<String, MutableTransformableBuilder<String>> {
+public final class MutableIntKeyMapTest implements IntKeyMapTest<String, MutableTransformableBuilder<String>>, MutableTraversableTest<String, MutableTransformableBuilder<String>> {
 
     @Override
-    MutableIntKeyMap.Builder<String> newMapBuilder() {
+    public MutableIntKeyMap.Builder<String> newMapBuilder() {
         return new MutableIntKeyMap.Builder<>();
     }
 
@@ -70,22 +70,22 @@ public final class MutableIntKeyMapTest extends IntKeyMapTest<String, MutableTra
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, IntKeyMapBuilder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, IntKeyMapBuilder<String>>> procedure) {
         procedure.apply(MutableIntKeyMap.Builder::new);
     }
 
     @Override
-    String getTestValue() {
+    public String getTestValue() {
         return "value";
     }
 
     @Override
-    String getTestValue2() {
+    public String getTestValue2() {
         return "value2";
     }
 
     @Override
-    String valueFromKey(int key) {
+    public String valueFromKey(int key) {
         return Integer.toString(key);
     }
 

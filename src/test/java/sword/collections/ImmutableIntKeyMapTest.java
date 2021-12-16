@@ -13,10 +13,10 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, ImmutableTransformableBuilder<String>> implements ImmutableTransformableTest<String, ImmutableTransformableBuilder<String>> {
+public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, ImmutableTransformableBuilder<String>>, ImmutableTransformableTest<String, ImmutableTransformableBuilder<String>> {
 
     @Override
-    ImmutableIntKeyMap.Builder<String> newMapBuilder() {
+    public ImmutableIntKeyMap.Builder<String> newMapBuilder() {
         return new ImmutableIntKeyMap.Builder<>();
     }
 
@@ -74,22 +74,22 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, IntKeyMapBuilder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, IntKeyMapBuilder<String>>> procedure) {
         procedure.apply(ImmutableIntKeyMap.Builder::new);
     }
 
     @Override
-    String getTestValue() {
+    public String getTestValue() {
         return "value";
     }
 
     @Override
-    String getTestValue2() {
+    public String getTestValue2() {
         return "value2";
     }
 
     @Override
-    String valueFromKey(int key) {
+    public String valueFromKey(int key) {
         return Integer.toString(key);
     }
 
@@ -320,7 +320,7 @@ public final class ImmutableIntKeyMapTest extends IntKeyMapTest<String, Immutabl
     }
 
     @Test
-    void testKeySetWhenEmpty() {
+    public void testKeySetWhenEmpty() {
         final ImmutableIntKeyMap<String> empty = ImmutableIntKeyMap.empty();
         assertSame(ImmutableIntArraySet.empty(), empty.keySet());
     }

@@ -16,6 +16,25 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
     @Override
     IntKeyMap<T> filterNot(Predicate<? super T> predicate);
 
+    /**
+     * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.
+     * @param predicate Only key returning true for the given predicate will be present
+     *                  in the resulting Map.
+     */
+    default IntKeyMap<T> filterByKey(IntPredicate predicate) {
+        final IntKeyMapBuilder<T> builder = new ImmutableIntKeyMap.Builder<T>();
+        final Transformer<Entry<T>> transformer = entries().iterator();
+        while (transformer.hasNext()) {
+            final Entry<T> entry = transformer.next();
+            final int key = entry.key();
+            if (predicate.apply(key)) {
+                builder.put(key, entry.value());
+            }
+        }
+
+        return builder.build();
+    }
+
     @Override
     <E> IntKeyMap<E> map(Function<? super T, ? extends E> func);
 
