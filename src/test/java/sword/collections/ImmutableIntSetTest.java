@@ -12,14 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> implements ImmutableIntTransformableTest<ImmutableIntSet.Builder> {
 
-    abstract ImmutableIntSet.Builder newIntBuilder();
+    @Override
+    public abstract ImmutableIntSet.Builder newIntBuilder();
 
     private boolean isPositiveValue(int value) {
         return value >= 0;
     }
 
     @Override
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::isPositiveValue);
     }
 

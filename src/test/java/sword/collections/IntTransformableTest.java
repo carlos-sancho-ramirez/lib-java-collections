@@ -8,9 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-abstract class IntTransformableTest<B extends IntTransformableBuilder> extends IntTraversableTest<B> {
+abstract class IntTransformableTest<B extends IntTransformableBuilder> implements IntTraversableTest<B> {
 
-    abstract IntTransformableBuilder newIntBuilder();
+    @Override
+    public abstract IntTransformableBuilder newIntBuilder();
     abstract void withMapFunc(Procedure<IntFunction<String>> procedure);
     abstract void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
 

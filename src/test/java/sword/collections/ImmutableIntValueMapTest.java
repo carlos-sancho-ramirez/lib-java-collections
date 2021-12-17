@@ -65,7 +65,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
         return (value & 1) == 0;
     }
 
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::valueIsEven);
     }
 

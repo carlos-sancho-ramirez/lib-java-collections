@@ -14,7 +14,7 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
     }
 
     @Override
-    ImmutableBitSetImpl.Builder newIntBuilder() {
+    public ImmutableBitSetImpl.Builder newIntBuilder() {
         return new ImmutableBitSetImpl.Builder();
     }
 

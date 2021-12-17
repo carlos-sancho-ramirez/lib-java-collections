@@ -23,12 +23,12 @@ public final class MutableIntPairMapTest extends IntPairMapTest<MutableIntTransf
     }
 
     @Override
-    IntTransformableBuilder newIntBuilder() {
+    public IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder();
     }
 
     @Override
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::valueIsEven);
     }
 

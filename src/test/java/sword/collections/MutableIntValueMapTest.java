@@ -16,7 +16,6 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
 
     @Override
     abstract MutableIntValueMap.Builder<K> newBuilder();
-    abstract void withFilterFunc(Procedure<IntPredicate> procedure);
 
     @Test
     void testFilterWhenEmpty() {

@@ -12,7 +12,6 @@ import static sword.collections.TestUtils.withInt;
 abstract class IntPairMapTest<B extends IntTransformableBuilder> extends IntTransformableTest<B> {
 
     abstract IntPairMapBuilder newBuilder();
-    abstract void withFilterFunc(Procedure<IntPredicate> procedure);
     abstract void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure);
 
     private void withArbitraryMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
@@ -21,7 +20,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> extends IntTran
     }
 
     @Override
-    void withValue(IntProcedure procedure) {
+    public void withValue(IntProcedure procedure) {
         withInt(procedure);
     }
 

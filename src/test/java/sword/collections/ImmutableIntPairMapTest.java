@@ -49,12 +49,12 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest<ImmutableIntTr
     }
 
     @Override
-    IntTransformableBuilder newIntBuilder() {
+    public IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder();
     }
 
     @Override
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::valueIsEven);
     }
 

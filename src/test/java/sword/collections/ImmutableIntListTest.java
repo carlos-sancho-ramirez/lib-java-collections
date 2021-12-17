@@ -44,7 +44,7 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Override
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::isPositiveValue);
     }
 
@@ -61,7 +61,7 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Override
-    ImmutableIntList.Builder newIntBuilder() {
+    public ImmutableIntList.Builder newIntBuilder() {
         return new ImmutableIntList.Builder();
     }
 

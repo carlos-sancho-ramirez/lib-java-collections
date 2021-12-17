@@ -39,12 +39,12 @@ public final class MutableIntListTest extends IntListTest<MutableIntList.Builder
     }
 
     @Override
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::isPositiveValue);
     }
 
     @Override
-    MutableIntList.Builder newIntBuilder() {
+    public MutableIntList.Builder newIntBuilder() {
         return new MutableIntList.Builder();
     }
 

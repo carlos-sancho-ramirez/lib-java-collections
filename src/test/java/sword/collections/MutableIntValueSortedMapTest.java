@@ -33,12 +33,12 @@ public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<S
     }
 
     @Override
-    IntTransformableBuilder newIntBuilder() {
+    public IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder(SortUtils::compareByHashCode);
     }
 
     @Override
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(v -> (v & 1) == 0);
     }
 

@@ -7,7 +7,7 @@ public final class ImmutableIntArraySetTest extends ImmutableIntSetTest {
     };
 
     @Override
-    ImmutableIntArraySet.Builder newIntBuilder() {
+    public ImmutableIntArraySet.Builder newIntBuilder() {
         return new ImmutableIntArraySet.Builder();
     }
 

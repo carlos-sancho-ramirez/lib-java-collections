@@ -18,7 +18,7 @@ public final class MutableIntTreeSetTest extends IntSetTest<MutableIntTreeSet.Bu
     }
 
     @Override
-    IntTransformableBuilder newIntBuilder() {
+    public IntTransformableBuilder newIntBuilder() {
         return new MutableIntTreeSet.Builder();
     }
 
@@ -34,7 +34,7 @@ public final class MutableIntTreeSetTest extends IntSetTest<MutableIntTreeSet.Bu
     }
 
     @Override
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(MutableIntTreeSetTest::evenIntFilter);
     }
 

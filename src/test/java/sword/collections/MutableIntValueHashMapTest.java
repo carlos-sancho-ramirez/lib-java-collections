@@ -33,7 +33,7 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
     }
 
     @Override
-    IntTransformableBuilder newIntBuilder() {
+    public IntTransformableBuilder newIntBuilder() {
         return new SameKeyAndValueTraversableBuilder();
     }
 
@@ -43,7 +43,7 @@ public final class MutableIntValueHashMapTest extends MutableIntValueMapTest<Str
     }
 
     @Override
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(v -> (v & 1) == 0);
     }
 

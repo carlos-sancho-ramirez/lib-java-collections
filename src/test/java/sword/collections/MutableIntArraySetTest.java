@@ -15,7 +15,7 @@ public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.
     };
 
     @Override
-    MutableIntArraySet.Builder newIntBuilder() {
+    public MutableIntArraySet.Builder newIntBuilder() {
         return new MutableIntArraySet.Builder();
     }
 
@@ -31,7 +31,7 @@ public final class MutableIntArraySetTest extends IntSetTest<MutableIntArraySet.
     }
 
     @Override
-    void withFilterFunc(Procedure<IntPredicate> procedure) {
+    public void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::isPositiveValue);
     }
 
