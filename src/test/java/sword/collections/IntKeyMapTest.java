@@ -118,9 +118,9 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>> extends Transforma
                     .build();
 
             final int size = array.size();
-            for (int i = 1; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 final int key = array.keyAt(i);
-                assertEquals(Integer.toString(key), array.valueAt(i));
+                assertEquals(valueFromKey(key), array.valueAt(i));
             }
         })));
     }
