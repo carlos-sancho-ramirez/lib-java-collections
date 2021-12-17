@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformableBuilder> {
+public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformableBuilder> extends IntTransformableTest<B> {
 
     void withBuilderSupplier(Procedure<IntBuilderSupplier<B>> procedure);
     void withValue(IntProcedure procedure);

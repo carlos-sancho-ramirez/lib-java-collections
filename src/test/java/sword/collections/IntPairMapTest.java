@@ -9,40 +9,40 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntTransformableTest<B> {
+interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransformableTest<B> {
 
-    abstract IntPairMapBuilder newBuilder();
-    abstract void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure);
+    IntPairMapBuilder newBuilder();
+    void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure);
 
-    private void withArbitraryMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
+    default void withArbitraryMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
         procedure.apply(ImmutableIntPairMap.Builder::new);
         procedure.apply(MutableIntPairMap.Builder::new);
     }
 
     @Override
-    public void withValue(IntProcedure procedure) {
+    default void withValue(IntProcedure procedure) {
         withInt(procedure);
     }
 
     @Override
-    public void withMapFunc(Procedure<IntFunction<String>> procedure) {
+    default void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);
     }
 
     @Override
-    public void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+    default void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
         procedure.apply(v -> v * v);
         procedure.apply(v -> v + 1);
     }
 
     @Test
-    void testEmptyBuilderBuildsEmptyArray() {
+    default void testEmptyBuilderBuildsEmptyArray() {
         IntPairMap array = newBuilder().build();
         assertEquals(0, array.size());
     }
 
     @Test
-    void testGet() {
+    default void testGet() {
         final int defValue = -3;
         final int value = 21;
         withInt(a -> withInt(b -> {
@@ -59,7 +59,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testKeyAtMethod() {
+    default void testKeyAtMethod() {
         withInt(value -> withInt(a -> withInt(b -> withInt(c -> {
             IntPairMap array = newBuilder()
                     .put(a, value)
@@ -82,7 +82,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testValueAtMethod() {
+    default void testValueAtMethod() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntPairMap array = newBuilder()
                     .put(a, a)
@@ -99,7 +99,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testKeySet() {
+    default void testKeySet() {
         for (int amount = 0; amount < 3; amount++) {
             final IntPairMapBuilder mapBuilder = newBuilder();
             final ImmutableIntSetCreator setBuilder = new ImmutableIntSetCreator();
@@ -115,7 +115,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testIndexOfKey() {
+    default void testIndexOfKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final int value = 34;
             final IntPairMap map = newBuilder()
@@ -131,13 +131,13 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testContainsKeyWhenEmpty() {
+    default void testContainsKeyWhenEmpty() {
         final IntPairMap map = newBuilder().build();
         withInt(key -> assertFalse(map.containsKey(key)));
     }
 
     @Test
-    void testContainsKey() {
+    default void testContainsKey() {
         withInt(a -> withInt(b -> withInt(c -> {
             final IntPairMap map = newBuilder()
                     .put(a, a)
@@ -150,7 +150,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testEntryIterator() {
+    default void testEntryIterator() {
         withInt(a -> withInt(b -> withInt(c -> {
             IntPairMap array = newBuilder()
                     .put(a, a)
@@ -174,7 +174,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testEqualMapReturnsFalseWhenAPairIsMissing() {
+    default void testEqualMapReturnsFalseWhenAPairIsMissing() {
         withInt(a -> withInt(b -> withInt(c -> withMapToIntFunc(mapFunc -> withMapBuilderSupplier(supplier -> {
             final IntPairMap map = supplier.newBuilder()
                     .put(a, mapFunc.apply(a))
@@ -195,7 +195,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
+    default void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
         withInt(a -> withInt(b -> withInt(c -> withMapToIntFunc(mapFunc -> withMapBuilderSupplier(supplier -> {
             final IntPairMap map = supplier.newBuilder()
                     .put(a, mapFunc.apply(a))
@@ -220,7 +220,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
+    default void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
         withInt(a -> withInt(b -> withInt(c -> withMapToIntFunc(mapFunc -> withMapBuilderSupplier(supplier -> {
             final IntPairMap map = supplier.newBuilder()
                     .put(a, mapFunc.apply(a))
@@ -242,7 +242,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
 
     @Test
     @Override
-    public void testFilterWhenEmpty() {
+    default void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final IntPairMap map = newBuilder().build();
             assertTrue(map.filter(f).isEmpty());
@@ -251,7 +251,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
 
     @Test
     @Override
-    public void testFilterForSingleElement() {
+    default void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final int value = key * key;
             final IntPairMap map = newBuilder().put(key, value).build();
@@ -268,7 +268,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
 
     @Test
     @Override
-    public void testFilterForMultipleElements() {
+    default void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
             final int valueA = keyA * keyA;
             final int valueB = keyB * keyB;
@@ -305,7 +305,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
 
     @Test
     @Override
-    public void testFilterNotWhenEmpty() {
+    default void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final IntPairMap map = newBuilder().build();
             assertTrue(map.filterNot(f).isEmpty());
@@ -314,7 +314,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
 
     @Test
     @Override
-    public void testFilterNotForSingleElement() {
+    default void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(key -> {
             final int value = key * key;
             final IntPairMap map = newBuilder().put(key, value).build();
@@ -331,7 +331,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
 
     @Test
     @Override
-    public void testFilterNotForMultipleElements() {
+    default void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(keyA -> withInt(keyB -> {
             final int valueA = keyA * keyA;
             final int valueB = keyB * keyB;
@@ -367,7 +367,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
     }
 
     @Test
-    void testMapResultingKeysForMultipleElements() {
+    default void testMapResultingKeysForMultipleElements() {
         withMapFunc(f -> withInt(a -> withInt(b -> {
             final IntPairMap map = newBuilder()
                     .put(a, a)
@@ -386,7 +386,7 @@ abstract class IntPairMapTest<B extends IntTransformableBuilder> implements IntT
 
     @Test
     @Override
-    public void testMapToIntForMultipleElements() {
+    default void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withInt(a -> withInt(b -> {
             final IntPairMap map = newBuilder()
                     .put(a, a)

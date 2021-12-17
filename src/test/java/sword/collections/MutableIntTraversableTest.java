@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public interface MutableIntTraversableTest<B extends MutableIntTraversableBuilder> {
+public interface MutableIntTraversableTest<B extends MutableIntTraversableBuilder> extends IntTraversableTest<B> {
 
     void withBuilderSupplier(Procedure<IntBuilderSupplier<B>> procedure);
     void withValue(IntProcedure procedure);

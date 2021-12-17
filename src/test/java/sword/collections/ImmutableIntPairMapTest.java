@@ -10,14 +10,24 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntPairMapTest extends IntPairMapTest<ImmutableIntTransformableBuilder> implements ImmutableIntTransformableTest<ImmutableIntTransformableBuilder> {
+public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIntTransformableBuilder>, ImmutableIntTransformableTest<ImmutableIntTransformableBuilder> {
 
     @Override
-    ImmutableIntPairMap.Builder newBuilder() {
+    public ImmutableIntPairMap.Builder newBuilder() {
         return new ImmutableIntPairMap.Builder();
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
+    public void withMapFunc(Procedure<IntFunction<String>> procedure) {
+        procedure.apply(Integer::toString);
+    }
+
+    @Override
+    public void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
+    }
+
     private static final ImmutableIntPairMap[] IMMUTABLE_INT_PAIR_MAP_VALUEs = new ImmutableIntPairMap[] {
             null,
             new ImmutableIntPairMap.Builder().build(),
@@ -64,7 +74,7 @@ public final class ImmutableIntPairMapTest extends IntPairMapTest<ImmutableIntTr
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
         procedure.apply(ImmutableIntPairMap.Builder::new);
     }
 
