@@ -154,6 +154,24 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         return changed? builder.build() : this;
     }
 
+    @Override
+    public ImmutableIntKeyMap<T> filterByKey(IntPredicate predicate) {
+        final Builder<T> builder = new Builder<>();
+        final int length = _values.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            final int key = _keys[i];
+            if (predicate.apply(key)) {
+                builder.put(key, valueAt(i));
+            }
+            else {
+                changed = true;
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
     /**
      * Return a new map instance where value has been transformed following the given function. Keys remain the same.
      * @param mapFunc Function the must be applied to values in order to modify them.

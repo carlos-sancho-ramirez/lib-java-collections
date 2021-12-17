@@ -212,6 +212,30 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
     }
 
     @Test
+    void testFilterByKeyReturnTheSameInstanceAndTypeWhenEmpty() {
+        final IntPredicate f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        final ImmutableIntKeyMap<String> map = newMapBuilder().build();
+        final ImmutableIntKeyMap<String> filtered = map.filterByKey(f);
+        assertSame(map, filtered);
+    }
+
+    @Test
+    void testFilterByKeyReturnTheSameInstanceAndType() {
+        final IntPredicate f = unused -> true;
+        withInt(a -> withInt(b -> {
+            final ImmutableIntKeyMap<String> map = newMapBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableIntKeyMap<String> filtered = map.filterByKey(f);
+            assertSame(map, filtered);
+        }));
+    }
+
+    @Test
     void testPutMethod() {
         withImmutableIntKeyMap(array -> withInt(key -> withString(value -> {
             if (array != null) {

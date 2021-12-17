@@ -22,7 +22,7 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
      *                  in the resulting Map.
      */
     default IntKeyMap<T> filterByKey(IntPredicate predicate) {
-        final IntKeyMapBuilder<T> builder = new ImmutableIntKeyMap.Builder<T>();
+        final IntKeyMapBuilder<T> builder = new ImmutableIntKeyMap.Builder<>();
         final Transformer<Entry<T>> transformer = entries().iterator();
         while (transformer.hasNext()) {
             final Entry<T> entry = transformer.next();
