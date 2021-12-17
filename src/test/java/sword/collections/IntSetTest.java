@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-abstract class IntSetTest<B extends IntSet.Builder> extends IntTransformableTest<B> {
+abstract class IntSetTest<B extends IntSet.Builder> implements IntTransformableTest<B> {
 
     @Test
     void testMutate() {

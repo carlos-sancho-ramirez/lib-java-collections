@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-abstract class IntListTest<B extends IntListBuilder> extends IntTransformableTest<B> {
+abstract class IntListTest<B extends IntListBuilder> implements IntTransformableTest<B> {
 
     @Test
     void testToImmutableWhenEmpty() {

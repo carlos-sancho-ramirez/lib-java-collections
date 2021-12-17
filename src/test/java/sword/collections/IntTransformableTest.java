@@ -8,22 +8,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-abstract class IntTransformableTest<B extends IntTransformableBuilder> implements IntTraversableTest<B> {
+interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTraversableTest<B> {
 
     @Override
-    public abstract IntTransformableBuilder newIntBuilder();
-    abstract void withMapFunc(Procedure<IntFunction<String>> procedure);
-    abstract void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
+    IntTransformableBuilder newIntBuilder();
+    void withMapFunc(Procedure<IntFunction<String>> procedure);
+    void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
 
     @Test
-    void testToListWhenEmpty() {
+    default void testToListWhenEmpty() {
         final IntTransformable transformable = newIntBuilder().build();
         assertTrue(transformable.isEmpty());
         assertTrue(transformable.toList().isEmpty());
     }
 
     @Test
-    void testToListForASingleElement() {
+    default void testToListForASingleElement() {
         withValue(value -> {
             final IntTransformable transformable = newIntBuilder().add(value).build();
             final IntList list = transformable.toList();
@@ -38,7 +38,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testToListForMultipleElements() {
+    default void testToListForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).add(c).build();
             final IntList list = transformable.toList();
@@ -53,12 +53,12 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testToSetWhenEmpty() {
+    default void testToSetWhenEmpty() {
         assertTrue(newIntBuilder().build().toSet().isEmpty());
     }
 
     @Test
-    void testToSetForASingleElement() {
+    default void testToSetForASingleElement() {
         withValue(a -> {
             final IntTransformable transformable = newIntBuilder().add(a).build();
             final IntSet set = transformable.toSet();
@@ -68,7 +68,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testToSetForMultipleElements() {
+    default void testToSetForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).add(c).build();
             final IntSet set = transformable.toSet();
@@ -89,12 +89,12 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testIndexesWhenEmpty() {
+    default void testIndexesWhenEmpty() {
         assertTrue(newIntBuilder().build().indexes().isEmpty());
     }
 
     @Test
-    void testIndexesForSingleValue() {
+    default void testIndexesForSingleValue() {
         withValue(value -> {
             final IntTransformer indexIterator = newIntBuilder().add(value).build().indexes().iterator();
             assertTrue(indexIterator.hasNext());
@@ -104,7 +104,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testIndexesForMultipleValues() {
+    default void testIndexesForMultipleValues() {
         withValue(a -> withValue(b -> withValue(c -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).add(c).build();
             final IntTransformer transformer = transformable.iterator();
@@ -124,7 +124,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testFilterWhenEmpty() {
+    default void testFilterWhenEmpty() {
         final IntPredicate f = unused -> {
             throw new AssertionError("This function should not be called");
         };
@@ -133,7 +133,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testFilterForSingleElement() {
+    default void testFilterForSingleElement() {
         withFilterFunc(f -> withValue(value -> {
             final IntTransformable transformable = newIntBuilder().add(value).build();
             final IntTransformable filtered = transformable.filter(f);
@@ -148,7 +148,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testFilterForMultipleElements() {
+    default void testFilterForMultipleElements() {
         withFilterFunc(f -> withValue(a -> withValue(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();
             final IntTransformable filtered = transformable.filter(f);
@@ -178,7 +178,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testFilterNotWhenEmpty() {
+    default void testFilterNotWhenEmpty() {
         final IntPredicate f = unused -> {
             throw new AssertionError("This function should not be called");
         };
@@ -187,7 +187,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testFilterNotForSingleElement() {
+    default void testFilterNotForSingleElement() {
         withFilterFunc(f -> withValue(value -> {
             final IntTransformable transformable = newIntBuilder().add(value).build();
             final IntTransformable filtered = transformable.filterNot(f);
@@ -202,7 +202,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testFilterNotForMultipleElements() {
+    default void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withValue(a -> withValue(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();
             final IntTransformable filtered = transformable.filterNot(f);
@@ -232,7 +232,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testMapWhenEmpty() {
+    default void testMapWhenEmpty() {
         final IntFunction<String> func = unused -> {
             throw new AssertionError("This function should not be called");
         };
@@ -241,7 +241,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testMapForSingleElement() {
+    default void testMapForSingleElement() {
         withMapFunc(f -> withValue(value -> {
             final Transformer<String> transformer = newIntBuilder().add(value).build().map(f).iterator();
             assertTrue(transformer.hasNext());
@@ -251,7 +251,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testMapForMultipleElements() {
+    default void testMapForMultipleElements() {
         withMapFunc(f -> withValue(a -> withValue(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();
             final IntTransformer transformer = transformable.iterator();
@@ -266,7 +266,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testMapToIntWhenEmpty() {
+    default void testMapToIntWhenEmpty() {
         final IntToIntFunction func = unused -> {
             throw new AssertionError("This function should not be called");
         };
@@ -275,7 +275,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testMapToIntForSingleElement() {
+    default void testMapToIntForSingleElement() {
         withMapToIntFunc(f -> withValue(value -> {
             final IntTransformer transformer = newIntBuilder().add(value).build().mapToInt(f).iterator();
             assertTrue(transformer.hasNext());
@@ -285,7 +285,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testMapToIntForMultipleElements() {
+    default void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withValue(a -> withValue(b -> {
             final IntTransformable transformable = newIntBuilder().add(a).add(b).build();
             final IntTransformer transformer = transformable.iterator();
@@ -300,7 +300,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testCountWhenEmpty() {
+    default void testCountWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final IntPairMap map = supplier.newBuilder().build().count();
             assertTrue(map.isEmpty());
@@ -308,7 +308,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testCountForSingleElement() {
+    default void testCountForSingleElement() {
         withValue(value -> withBuilderSupplier(supplier -> {
             final IntPairMap map = supplier.newBuilder().add(value).build().count();
             assertEquals(1, map.size());
@@ -318,7 +318,7 @@ abstract class IntTransformableTest<B extends IntTransformableBuilder> implement
     }
 
     @Test
-    void testCountForMultipleElements() {
+    default void testCountForMultipleElements() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntTransformable transformable = supplier.newBuilder().add(a).add(b).add(c).build();
             final IntPairMap map = transformable.count();

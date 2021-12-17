@@ -18,7 +18,8 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     abstract MutableIntValueMap.Builder<K> newBuilder();
 
     @Test
-    void testFilterWhenEmpty() {
+    @Override
+    public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final IntValueMap<K> map = newBuilder().build();
             assertTrue(map.filter(f).isEmpty());
@@ -26,7 +27,8 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testFilterForSingleElement() {
+    @Override
+    public void testFilterForSingleElement() {
         withFilterFunc(f -> withKey(key -> {
             final int value = valueFromKey(key);
             final IntValueMap<K> map = newBuilder().put(key, value).build();
@@ -42,7 +44,8 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testFilterForMultipleElements() {
+    @Override
+    public void testFilterForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final int valueA = valueFromKey(keyA);
             final int valueB = valueFromKey(keyB);
@@ -83,7 +86,8 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testFilterNotWhenEmpty() {
+    @Override
+    public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final IntValueMap<K> map = newBuilder().build();
             assertTrue(map.filterNot(f).isEmpty());
@@ -91,7 +95,8 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testFilterNotForSingleElement() {
+    @Override
+    public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withKey(key -> {
             final int value = valueFromKey(key);
             final IntValueMap<K> map = newBuilder().put(key, value).build();
@@ -107,7 +112,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testFilterNotForMultipleElements() {
+    public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final int valueA = valueFromKey(keyA);
             final int valueB = valueFromKey(keyB);

@@ -70,7 +70,8 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testFilterWhenEmpty() {
+    @Override
+    public void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntValueMap<T> map = newBuilder().build();
             assertSame(map, map.filter(f));
@@ -80,7 +81,8 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     abstract void assertEmpty(ImmutableIntValueMap<T> map);
 
     @Test
-    void testFilterForSingleElement() {
+    @Override
+    public void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(value -> {
             final T key = keyFromInt(value);
             final ImmutableIntValueMap<T> map = newBuilder().put(key, value).build();
@@ -96,7 +98,8 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testFilterForMultipleElements() {
+    @Override
+    public void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(valueA -> withInt(valueB -> {
             final T keyA = keyFromInt(valueA);
             final T keyB = keyFromInt(valueB);
@@ -132,7 +135,8 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testFilterNotWhenEmpty() {
+    @Override
+    public void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntValueMap<T> map = newBuilder().build();
             assertSame(map, map.filterNot(f));
@@ -140,7 +144,8 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testFilterNotForSingleElement() {
+    @Override
+    public void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(value -> {
             final T key = keyFromInt(value);
             final ImmutableIntValueMap<T> map = newBuilder().put(key, value).build();
@@ -156,7 +161,8 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testFilterNotForMultipleElements() {
+    @Override
+    public void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(valueA -> withInt(valueB -> {
             final T keyA = keyFromInt(valueA);
             final T keyB = keyFromInt(valueB);

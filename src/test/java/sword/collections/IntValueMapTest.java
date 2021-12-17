@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntValueMapTest<K, B extends IntTransformableBuilder> extends IntTransformableTest<B> {
+abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements IntTransformableTest<B> {
 
     abstract IntValueMap.Builder<K> newBuilder();
 
@@ -373,7 +373,8 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> extends Int
     }
 
     @Test
-    void testMapToIntForMultipleElements() {
+    @Override
+    public void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
             final IntValueMap<K> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
