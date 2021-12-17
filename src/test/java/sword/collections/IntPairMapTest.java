@@ -258,7 +258,7 @@ interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransform
             final IntPairMap filtered = map.filter(f);
 
             if (f.apply(value)) {
-                assertEquals(map, filtered);
+                assertTrue(map.equalMap(filtered));
             }
             else {
                 assertTrue(filtered.isEmpty());
@@ -279,7 +279,7 @@ interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransform
             final boolean bPassed = f.apply(valueB);
 
             if (aPassed && bPassed) {
-                assertEquals(map, filtered);
+                assertTrue(map.equalMap(filtered));
             }
             else if (aPassed) {
                 Iterator<IntPairMap.Entry> iterator = filtered.entries().iterator();
@@ -324,7 +324,7 @@ interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransform
                 assertTrue(filtered.isEmpty());
             }
             else {
-                assertEquals(map, filtered);
+                assertTrue(map.equalMap(filtered));
             }
         }));
     }
@@ -361,7 +361,7 @@ interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransform
                 assertFalse(iterator.hasNext());
             }
             else {
-                assertEquals(map, filtered);
+                assertTrue(map.equalMap(filtered));
             }
         })));
     }
