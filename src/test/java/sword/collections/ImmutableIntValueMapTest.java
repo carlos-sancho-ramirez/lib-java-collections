@@ -79,6 +79,11 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
         procedure.apply(this::valueIsEven);
     }
 
+    @Override
+    default void withFilterByKeyFunc(Procedure<Predicate<T>> procedure) {
+        procedure.apply(v -> v == null || (v.hashCode() & 1) == 0);
+    }
+
     @Test
     @Override
     default void testFilterWhenEmpty() {

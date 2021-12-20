@@ -19,6 +19,7 @@ interface IntValueMapTest<K, B extends IntTransformableBuilder> extends IntTrans
     void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure);
     void withKey(Procedure<K> procedure);
     void withSortFunc(Procedure<SortFunction<K>> procedure);
+    void withFilterByKeyFunc(Procedure<Predicate<K>> procedure);
     K keyFromInt(int value);
 
     default void withArbitraryMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure) {
@@ -377,6 +378,54 @@ interface IntValueMapTest<K, B extends IntTransformableBuilder> extends IntTrans
             for (int i = 0; i < size; i++) {
                 assertSame(map.keyAt(i), mapped.keyAt(i));
             }
+        }))));
+    }
+
+    @Test
+    default void testFilterByKeyWhenEmpty() {
+        final Predicate<K> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filterByKey(f).iterator().hasNext());
+        });
+    }
+
+    @Test
+    default void testFilterByKeyForSingleElement() {
+        withFilterByKeyFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap<K> map = supplier.newBuilder().put(key, valueFromKey(key)).build();
+            final IntValueMap<K> filtered = map.filterByKey(f);
+
+            if (f.apply(key)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    default void testFilterByKeyForMultipleElements() {
+        withFilterByKeyFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap<K> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final IntValueMap<K> filtered = map.filterByKey(f);
+
+            final Transformer<IntValueMap.Entry<K>> tr = filtered.entries().iterator();
+            for (K key : map.keySet()) {
+                if (f.apply(key)) {
+                    assertTrue(tr.hasNext());
+                    final IntValueMap.Entry<K> entry = tr.next();
+                    assertEquals(map.get(key), entry.value());
+                    assertSame(key, entry.key());
+                }
+            }
+            assertFalse(tr.hasNext());
         }))));
     }
 }

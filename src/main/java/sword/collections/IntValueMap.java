@@ -1,5 +1,6 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
 import sword.annotations.ToBeSubtyped;
 
 import static sword.collections.SortUtils.equal;
@@ -62,6 +63,25 @@ public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
 
     @Override
     IntValueMap<T> filterNot(IntPredicate predicate);
+
+    /**
+     * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.
+     * @param predicate Only key returning true for the given predicate will be present
+     *                  in the resulting Map.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default IntValueMap<T> filterByKey(Predicate<T> predicate) {
+        final IntValueMap.Builder<T> builder = new ImmutableIntValueHashMap.Builder<T>();
+        final Transformer<Entry<T>> transformer = entries().iterator();
+        while (transformer.hasNext()) {
+            final Entry<T> entry = transformer.next();
+            final T key = entry.key();
+            if (predicate.apply(key)) {
+                builder.put(key, entry.value());
+            }
+        }
+        return builder.build();
+    }
 
     @Override
     <U> Map<T, U> map(IntFunction<? extends U> func);

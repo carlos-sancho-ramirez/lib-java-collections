@@ -18,6 +18,11 @@ interface MutableIntValueMapTest<K, B extends MutableIntTransformableBuilder> ex
     MutableIntValueMap.Builder<K> newBuilder();
 
     @Override
+    default void withFilterByKeyFunc(Procedure<Predicate<K>> procedure) {
+        procedure.apply(v -> v == null || (v.hashCode() & 1) == 0);
+    }
+
+    @Override
     default void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);
     }
