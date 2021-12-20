@@ -116,12 +116,6 @@ public final class CustomIntPairMapTest implements IntPairMapTest<IntTransformab
         }
 
         @Override
-        public IntPairMap filterNot(IntPredicate predicate) {
-            final IntPairMap newMap = mMap.filterNot(predicate);
-            return (newMap == mMap)? this : new CustomIntPairMap(newMap);
-        }
-
-        @Override
         public <U> IntKeyMap<U> map(IntFunction<? extends U> func) {
             return mMap.map(func);
         }

@@ -50,7 +50,9 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
     IntPairMap filter(IntPredicate predicate);
 
     @Override
-    IntPairMap filterNot(IntPredicate predicate);
+    default IntPairMap filterNot(IntPredicate predicate) {
+        return filter(v -> !predicate.apply(v));
+    }
 
     /**
      * Composes a new Map containing all the key-value pairs from this map
