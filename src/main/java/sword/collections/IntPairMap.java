@@ -52,6 +52,27 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
     @Override
     IntPairMap filterNot(IntPredicate predicate);
 
+    /**
+     * Composes a new Map containing all the key-value pairs from this map
+     * where the given predicate returns true.
+     *
+     * @param predicate Only key returning true for the given predicate
+     *                  will be present in the resulting Map.
+     */
+    default IntPairMap filterByKey(IntPredicate predicate) {
+        final IntPairMapBuilder builder = new ImmutableIntPairMap.Builder();
+        final Transformer<IntPairMap.Entry> transformer = entries().iterator();
+        while (transformer.hasNext()) {
+            final IntPairMap.Entry entry = transformer.next();
+            final int key = entry.key();
+            if (predicate.apply(key)) {
+                builder.put(key, entry.value());
+            }
+        }
+
+        return builder.build();
+    }
+
     @Override
     <U> IntKeyMap<U> map(IntFunction<? extends U> func);
 

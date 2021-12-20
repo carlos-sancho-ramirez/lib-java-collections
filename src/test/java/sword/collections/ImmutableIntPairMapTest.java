@@ -84,7 +84,7 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Test
-    public void testPutMethod() {
+    void testPutMethod() {
         withImmutableSparseIntArray(array -> withInt(key -> withInt(value -> {
             if (array != null) {
                 boolean contained = false;
@@ -160,7 +160,7 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Test
-    public void testReverseMethod() {
+    void testReverseMethod() {
         withImmutableSparseIntArray(array -> {
             if (array != null) {
                 // Check if the array is reversable, so no duplicated values should be found
@@ -192,19 +192,19 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Test
-    public void testKeySetWhenEmpty() {
+    void testKeySetWhenEmpty() {
         final ImmutableIntPairMap empty = ImmutableIntPairMap.empty();
         assertSame(ImmutableIntArraySet.empty(), empty.keySet());
     }
 
     @Test
-    public void testToImmutableForEmpty() {
+    void testToImmutableForEmpty() {
         final ImmutableIntPairMap map = newBuilder().build();
         assertSame(map, map.toImmutable());
     }
 
     @Test
-    public void testMutateForEmpty() {
+    void testMutateForEmpty() {
         final ImmutableIntPairMap map1 = newBuilder().build();
         final MutableIntPairMap map2 = map1.mutate();
 
@@ -215,7 +215,7 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Test
-    public void testToImmutable() {
+    void testToImmutable() {
         withInt(a -> withInt(b -> {
             final ImmutableIntPairMap map1 = newBuilder().put(a, 1).put(b, 2).build();
             final ImmutableIntPairMap map2 = map1.toImmutable();
@@ -224,7 +224,7 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Test
-    public void testMutate() {
+    void testMutate() {
         final int defValue = -4;
         withInt(a -> withInt(b -> {
             final ImmutableIntPairMap map1 = newBuilder().put(a, 1).put(b, 2).build();
@@ -244,6 +244,30 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
             map2.remove(b);
             assertEquals(2, map1.get(b, defValue));
             assertEquals(defValue, map2.get(b, defValue));
+        }));
+    }
+
+    @Test
+    void testFilterByKeyReturnTheSameInstanceAndTypeWhenEmpty() {
+        final IntPredicate f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        final ImmutableIntPairMap map = newBuilder().build();
+        final ImmutableIntPairMap filtered = map.filterByKey(f);
+        assertSame(map, filtered);
+    }
+
+    @Test
+    void testFilterByKeyReturnTheSameInstanceAndType() {
+        final IntPredicate f = unused -> true;
+        withInt(a -> withInt(b -> {
+            final ImmutableIntPairMap map = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableIntPairMap filtered = map.filterByKey(f);
+            assertSame(map, filtered);
         }));
     }
 

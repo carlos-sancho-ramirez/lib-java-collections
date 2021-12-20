@@ -147,6 +147,24 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     @Override
+    public ImmutableIntPairMap filterByKey(IntPredicate predicate) {
+        final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
+        final int length = _values.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            final int key = _keys[i];
+            if (predicate.apply(key)) {
+                builder.put(key, _values[i]);
+            }
+            else {
+                changed = true;
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
     public ImmutableIntPairMap mapToInt(IntToIntFunction mapFunc) {
         final int size = _keys.length;
         final int[] newValues = new int[size];

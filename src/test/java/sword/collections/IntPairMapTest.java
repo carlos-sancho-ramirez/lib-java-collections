@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
@@ -13,6 +14,15 @@ interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransform
 
     IntPairMapBuilder newBuilder();
     void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure);
+
+    default int valueFromKey(int key) {
+        return key + 7;
+    }
+
+    default void withFilterByKeyFunc(Procedure<IntPredicate> procedure) {
+        procedure.apply(a -> (a & 1) == 0);
+        procedure.apply(a -> a < 0);
+    }
 
     default void withArbitraryMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
         procedure.apply(ImmutableIntPairMap.Builder::new);
@@ -364,6 +374,54 @@ interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransform
                 assertTrue(map.equalMap(filtered));
             }
         })));
+    }
+
+    @Test
+    default void testFilterByKeyWhenEmpty() {
+        final IntPredicate f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filterByKey(f).iterator().hasNext());
+        });
+    }
+
+    @Test
+    default void testFilterByKeyForSingleElement() {
+        withFilterByKeyFunc(f -> withInt(key -> withMapBuilderSupplier(supplier -> {
+            final IntPairMap map = supplier.newBuilder().put(key, valueFromKey(key)).build();
+            final IntPairMap filtered = map.filterByKey(f);
+
+            if (f.apply(key)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    default void testFilterByKeyForMultipleElements() {
+        withFilterByKeyFunc(f -> withInt(a -> withInt(b -> withMapBuilderSupplier(supplier -> {
+            final IntPairMap map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final IntPairMap filtered = map.filterByKey(f);
+
+            final Transformer<IntPairMap.Entry> tr = filtered.entries().iterator();
+            for (int key : map.keySet()) {
+                if (f.apply(key)) {
+                    assertTrue(tr.hasNext());
+                    final IntPairMap.Entry entry = tr.next();
+                    assertEquals(map.get(key), entry.value());
+                    assertEquals(key, entry.key());
+                }
+            }
+            assertFalse(tr.hasNext());
+        }))));
     }
 
     @Test
