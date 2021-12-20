@@ -159,11 +159,6 @@ public final class CustomMutableIntValueMapTest implements MutableIntValueMapTes
         }
 
         @Override
-        public IntValueMap<E> filterNot(IntPredicate predicate) {
-            return mMap.filterNot(predicate);
-        }
-
-        @Override
         public <U> Map<E, U> map(IntFunction<? extends U> func) {
             return mMap.map(func);
         }

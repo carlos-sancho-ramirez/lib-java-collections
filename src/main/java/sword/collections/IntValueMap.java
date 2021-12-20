@@ -62,7 +62,9 @@ public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
     IntValueMap<T> filter(IntPredicate predicate);
 
     @Override
-    IntValueMap<T> filterNot(IntPredicate predicate);
+    default IntValueMap<T> filterNot(IntPredicate predicate) {
+        return filter(v -> !predicate.apply(v));
+    }
 
     /**
      * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.

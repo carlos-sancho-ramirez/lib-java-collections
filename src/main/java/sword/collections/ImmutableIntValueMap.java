@@ -45,7 +45,9 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
     ImmutableIntValueMap<T> filter(IntPredicate predicate);
 
     @Override
-    ImmutableIntValueMap<T> filterNot(IntPredicate predicate);
+    default ImmutableIntValueMap<T> filterNot(IntPredicate predicate) {
+        return filter(v -> !predicate.apply(v));
+    }
 
     @Override
     ImmutableIntValueMap<T> mapToInt(IntToIntFunction mapFunc);
@@ -57,7 +59,7 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
     ImmutableIntValueMap<T> sort(SortFunction<? super T> function);
 
     @Override
-    ImmutableIntValueMap removeAt(int index);
+    ImmutableIntValueMap<T> removeAt(int index);
 
     ImmutableIntKeyMap<T> invert();
 

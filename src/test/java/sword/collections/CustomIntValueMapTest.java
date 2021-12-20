@@ -160,12 +160,6 @@ public final class CustomIntValueMapTest implements IntValueMapTest<String, IntT
         }
 
         @Override
-        public IntValueMap<E> filterNot(IntPredicate predicate) {
-            final IntValueMap<E> newMap = mMap.filterNot(predicate);
-            return (newMap == mMap)? this : new CustomIntValueMap<>(newMap);
-        }
-
-        @Override
         public <U> Map<E, U> map(IntFunction<? extends U> func) {
             return mMap.map(func);
         }
