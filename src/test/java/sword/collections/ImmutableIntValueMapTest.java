@@ -93,7 +93,9 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
         });
     }
 
-    void assertEmpty(ImmutableIntValueMap<T> map);
+    default void assertEmpty(ImmutableIntValueMap<T> map) {
+        assertTrue(map.isEmpty());
+    }
 
     @Test
     @Override
@@ -268,7 +270,7 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
                 for (IntValueMap.Entry<T> entry : map.entries()) {
                     builder.put(entry.key(), entry.value());
                 }
-                assertEquals(builder.put(key, value).build(), newMap);
+                assertTrue(builder.put(key, value).build().equalMap(newMap));
             }
             else {
                 assertSame(map, map.put(key, valueFromKey(key)));
@@ -297,7 +299,7 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
                     .put(b, valueFromKey(b))
                     .build();
 
-            assertEquals(thatMap, thisMap.putAll(thatMap));
+            assertTrue(thatMap.equalMap(thisMap.putAll(thatMap)));
         }));
     }
 
@@ -335,7 +337,7 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
                 builder.put(entry.key(), entry.value());
             }
 
-            assertEquals(builder.build(), thisMap.putAll(thatMap));
+            assertTrue(builder.build().equalMap(thisMap.putAll(thatMap)));
         }))));
     }
 }
