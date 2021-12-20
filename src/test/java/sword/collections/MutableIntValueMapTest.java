@@ -12,14 +12,25 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static sword.collections.SortUtils.equal;
 
-abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilder> extends IntValueMapTest<K, B> implements MutableIntTraversableTest<B> {
+interface MutableIntValueMapTest<K, B extends MutableIntTransformableBuilder> extends IntValueMapTest<K, B>, MutableIntTraversableTest<B> {
 
     @Override
-    abstract MutableIntValueMap.Builder<K> newBuilder();
+    MutableIntValueMap.Builder<K> newBuilder();
+
+    @Override
+    default void withMapFunc(Procedure<IntFunction<String>> procedure) {
+        procedure.apply(Integer::toString);
+    }
+
+    @Override
+    default void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
+    }
 
     @Test
     @Override
-    public void testFilterWhenEmpty() {
+    default void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final IntValueMap<K> map = newBuilder().build();
             assertTrue(map.filter(f).isEmpty());
@@ -28,7 +39,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
 
     @Test
     @Override
-    public void testFilterForSingleElement() {
+    default void testFilterForSingleElement() {
         withFilterFunc(f -> withKey(key -> {
             final int value = valueFromKey(key);
             final IntValueMap<K> map = newBuilder().put(key, value).build();
@@ -45,7 +56,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
 
     @Test
     @Override
-    public void testFilterForMultipleElements() {
+    default void testFilterForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final int valueA = valueFromKey(keyA);
             final int valueB = valueFromKey(keyB);
@@ -59,7 +70,6 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
                 if (!equal(map, filtered)) {
                     fail();
                 }
-                //assertEquals(map, filtered);
             }
             else if (aPassed) {
                 Iterator<IntValueMap.Entry<K>> iterator = filtered.entries().iterator();
@@ -87,7 +97,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
 
     @Test
     @Override
-    public void testFilterNotWhenEmpty() {
+    default void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final IntValueMap<K> map = newBuilder().build();
             assertTrue(map.filterNot(f).isEmpty());
@@ -96,7 +106,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
 
     @Test
     @Override
-    public void testFilterNotForSingleElement() {
+    default void testFilterNotForSingleElement() {
         withFilterFunc(f -> withKey(key -> {
             final int value = valueFromKey(key);
             final IntValueMap<K> map = newBuilder().put(key, value).build();
@@ -112,7 +122,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    public void testFilterNotForMultipleElements() {
+    default void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
             final int valueA = valueFromKey(keyA);
             final int valueB = valueFromKey(keyB);
@@ -150,7 +160,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testPutAllMethodForMultipleElementsInThisMap() {
+    default void testPutAllMethodForMultipleElementsInThisMap() {
         withKey(a -> withKey(b -> {
             final MutableIntValueMap<K> thisMap = newBuilder().build();
             final MutableIntValueMap<K> thatMap = newBuilder()
@@ -164,7 +174,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testPutAllMethodForEmptyGivenMap() {
+    default void testPutAllMethodForEmptyGivenMap() {
         withKey(a -> withKey(b -> {
             final MutableIntValueMap<K> thisMap = newBuilder()
                     .put(a, valueFromKey(a))
@@ -178,7 +188,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testPutAllMethodForMultipleElementsInTheGivenMap() {
+    default void testPutAllMethodForMultipleElementsInTheGivenMap() {
         withKey(a -> withKey(b -> withKey(c -> withKey(d -> {
             final MutableIntValueMap<K> thisMap = newBuilder()
                     .put(a, valueFromKey(a))
@@ -207,7 +217,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testDonateWhenEmpty() {
+    default void testDonateWhenEmpty() {
         final MutableIntValueMap<K> map = newBuilder().build();
         final MutableIntValueMap<K> map2 = map.donate();
         assertTrue(map.isEmpty());
@@ -216,7 +226,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testDonateForSingleElement() {
+    default void testDonateForSingleElement() {
         withKey(key -> {
             final int value = valueFromKey(key);
             final MutableIntValueMap<K> map = newBuilder().put(key, value).build();
@@ -229,7 +239,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testDonateForSingleMultipleElements() {
+    default void testDonateForSingleMultipleElements() {
         withKey(a -> withKey(b -> {
             final int aValue = valueFromKey(a);
             final int bValue = valueFromKey(b);
@@ -260,7 +270,7 @@ abstract class MutableIntValueMapTest<K, B extends MutableIntTransformableBuilde
     }
 
     @Test
-    void testPick() {
+    default void testPick() {
         withKey(k1 -> withKey(k2 -> {
             final int v1 = valueFromKey(k1);
             if (k1 == k2) {

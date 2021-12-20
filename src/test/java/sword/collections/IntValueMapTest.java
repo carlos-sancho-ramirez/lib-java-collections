@@ -12,16 +12,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements IntTransformableTest<B> {
+interface IntValueMapTest<K, B extends IntTransformableBuilder> extends IntTransformableTest<B> {
 
-    abstract IntValueMap.Builder<K> newBuilder();
+    IntValueMap.Builder<K> newBuilder();
 
-    abstract void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure);
-    abstract void withKey(Procedure<K> procedure);
-    abstract void withSortFunc(Procedure<SortFunction<K>> procedure);
-    abstract K keyFromInt(int value);
+    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure);
+    void withKey(Procedure<K> procedure);
+    void withSortFunc(Procedure<SortFunction<K>> procedure);
+    K keyFromInt(int value);
 
-    private void withArbitraryMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure) {
+    default void withArbitraryMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure) {
         procedure.apply(ImmutableIntValueHashMap.Builder::new);
         procedure.apply(MutableIntValueHashMap.Builder::new);
         withSortFunc(sortFunc -> {
@@ -30,26 +30,15 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
         });
     }
 
-    @Override
-    public void withMapFunc(Procedure<IntFunction<String>> procedure) {
-        procedure.apply(Integer::toString);
-    }
-
-    @Override
-    public void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
-        procedure.apply(v -> v * v);
-        procedure.apply(v -> v + 1);
-    }
-
     @Test
-    void testEmptyBuilderBuildsEmptyArray() {
+    default void testEmptyBuilderBuildsEmptyArray() {
         final IntValueMap<K> array = newBuilder().build();
         assertEquals(0, array.size());
         assertFalse(array.iterator().hasNext());
     }
 
     @Test
-    void testBuilderWithSingleElementBuildsExpectedArray() {
+    default void testBuilderWithSingleElementBuildsExpectedArray() {
         withKey(key -> withInt(value -> {
             final IntValueMap<K> array = newBuilder()
                     .put(key, value)
@@ -62,7 +51,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testGet() {
+    default void testGet() {
         final int value = 45;
         final int defValue = 3;
         withKey(a -> withKey(b -> {
@@ -79,7 +68,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testKeyAtMethod() {
+    default void testKeyAtMethod() {
         final int value = 6;
         withKey(a -> withKey(b -> withKey(c -> {
             final IntValueMap<K> array = newBuilder()
@@ -114,12 +103,12 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
         })));
     }
 
-    int valueFromKey(K str) {
+    default int valueFromKey(K str) {
         return (str != null)? str.hashCode() : 0;
     }
 
     @Test
-    void testValueAtMethod() {
+    default void testValueAtMethod() {
         withKey(a -> withKey(b -> withKey(c -> {
             IntValueMap<K> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -136,12 +125,12 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testKeySetWhenEmpty() {
+    default void testKeySetWhenEmpty() {
         assertTrue(newBuilder().build().isEmpty());
     }
 
     @Test
-    void testKeySet() {
+    default void testKeySet() {
         final int value = 125;
         for (int amount = 0; amount < 3; amount++) {
             final IntValueMap.Builder<K> mapBuilder = newBuilder();
@@ -159,7 +148,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testIndexOfKey() {
+    default void testIndexOfKey() {
         final int value = 37;
         withKey(a -> withKey(b -> withKey(c -> {
             final IntValueMap<K> map = newBuilder()
@@ -175,13 +164,13 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testContainsKeyWhenEmpty() {
+    default void testContainsKeyWhenEmpty() {
         final IntValueMap<K> map = newBuilder().build();
         withKey(key -> assertFalse(map.containsKey(key)));
     }
 
     @Test
-    void testContainsKey() {
+    default void testContainsKey() {
         withKey(a -> withKey(b -> withKey(c -> {
             final IntValueMap<K> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -194,7 +183,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testEntryIterator() {
+    default void testEntryIterator() {
         withKey(a -> withKey(b -> withKey(c -> {
             IntValueMap<K> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -218,7 +207,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testEqualMapReturnsFalseWhenAPairIsMissing() {
+    default void testEqualMapReturnsFalseWhenAPairIsMissing() {
         withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
             final IntValueMap<K> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -239,7 +228,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
+    default void testEqualMapReturnsFalseWhenKeyMatchesButNotValues() {
         withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
             final IntValueMap<K> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -264,7 +253,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
+    default void testEqualMapReturnsTrueForOtherSortingsAndMutabilities() {
         withKey(a -> withKey(b -> withKey(c -> withMapBuilderSupplier(supplier -> {
             final IntValueMap<K> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))
@@ -285,7 +274,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testMutateMethod() {
+    default void testMutateMethod() {
         withKey(a -> withKey(b -> {
             IntValueMap<K> map1 = newBuilder()
                     .put(a, valueFromKey(a))
@@ -314,7 +303,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testSortWhenEmpty() {
+    default void testSortWhenEmpty() {
         final SortFunction<K> func = (a, b) -> {
             throw new AssertionError("Should not be called");
         };
@@ -322,7 +311,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testSortForSingleElement() {
+    default void testSortForSingleElement() {
         final SortFunction<K> func = (a, b) -> {
             throw new AssertionError("Should not be called");
         };
@@ -336,7 +325,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testSort() {
+    default void testSort() {
         withKey(a -> withKey(b -> withKey(c -> {
             final IntValueMap<K> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -355,7 +344,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
     }
 
     @Test
-    void testMapResultingKeysForMultipleElements() {
+    default void testMapResultingKeysForMultipleElements() {
         withMapFunc(f -> withKey(keyA -> withKey(keyB -> withMapBuilderSupplier(supplier -> {
             final IntValueMap<K> map = supplier.newBuilder()
                     .put(keyA, valueFromKey(keyA))
@@ -374,7 +363,7 @@ abstract class IntValueMapTest<K, B extends IntTransformableBuilder> implements 
 
     @Test
     @Override
-    public void testMapToIntForMultipleElements() {
+    default void testMapToIntForMultipleElements() {
         withMapToIntFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
             final IntValueMap<K> map = supplier.newBuilder()
                     .put(a, valueFromKey(a))

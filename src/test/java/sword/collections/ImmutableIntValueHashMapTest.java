@@ -5,20 +5,20 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder> {
+public final class ImmutableIntValueHashMapTest implements ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder> {
 
     @Override
-    ImmutableIntValueHashMap.Builder<String> newBuilder() {
+    public ImmutableIntValueHashMap.Builder<String> newBuilder() {
         return new ImmutableIntValueHashMap.Builder<>();
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
         procedure.apply(ImmutableIntValueHashMap.Builder::new);
     }
 
     @Override
-    void withKey(Procedure<String> procedure) {
+    public void withKey(Procedure<String> procedure) {
         final String[] values = {null, "", " ", "abcd", "0"};
         for (String value : values) {
             procedure.apply(value);
@@ -26,18 +26,18 @@ public final class ImmutableIntValueHashMapTest extends ImmutableIntValueMapTest
     }
 
     @Override
-    void withSortFunc(Procedure<SortFunction<String>> procedure) {
+    public void withSortFunc(Procedure<SortFunction<String>> procedure) {
         procedure.apply(SortUtils::compareCharSequenceByUnicode);
         procedure.apply(SortUtils::compareByHashCode);
     }
 
     @Override
-    String keyFromInt(int value) {
+    public String keyFromInt(int value) {
         return Integer.toString(value);
     }
 
     @Override
-    void assertEmpty(ImmutableIntValueMap<String> map) {
+    public void assertEmpty(ImmutableIntValueMap<String> map) {
         assertSame(newBuilder().build(), map);
     }
 

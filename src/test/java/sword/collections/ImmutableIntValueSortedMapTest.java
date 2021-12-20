@@ -6,15 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder> {
+public final class ImmutableIntValueSortedMapTest implements ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder> {
 
     @Override
-    ImmutableIntValueSortedMap.Builder<String> newBuilder() {
+    public ImmutableIntValueSortedMap.Builder<String> newBuilder() {
         return new ImmutableIntValueSortedMap.Builder<>(SortUtils::compareCharSequenceByUnicode);
     }
 
     @Override
-    void withKey(Procedure<String> procedure) {
+    public void withKey(Procedure<String> procedure) {
         final String[] values = {null, "", " ", "abcd", "0"};
         for (String value : values) {
             procedure.apply(value);
@@ -22,18 +22,18 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
     }
 
     @Override
-    void withSortFunc(Procedure<SortFunction<String>> procedure) {
+    public void withSortFunc(Procedure<SortFunction<String>> procedure) {
         procedure.apply(SortUtils::compareCharSequenceByUnicode);
         procedure.apply(SortUtils::compareByHashCode);
     }
 
     @Override
-    String keyFromInt(int value) {
+    public String keyFromInt(int value) {
         return Integer.toString(value);
     }
 
     @Override
-    void assertEmpty(ImmutableIntValueMap<String> map) {
+    public void assertEmpty(ImmutableIntValueMap<String> map) {
         assertTrue(map.isEmpty());
     }
 
@@ -43,7 +43,7 @@ public final class ImmutableIntValueSortedMapTest extends ImmutableIntValueMapTe
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
         withSortFunc(sortFunc -> procedure.apply(() -> new ImmutableIntValueSortedMap.Builder<>(sortFunc)));
     }
 

@@ -6,15 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<String, MutableIntTransformableBuilder> {
+public final class MutableIntValueSortedMapTest implements MutableIntValueMapTest<String, MutableIntTransformableBuilder> {
 
     @Override
-    MutableIntValueSortedMap.Builder<String> newBuilder() {
+    public MutableIntValueSortedMap.Builder<String> newBuilder() {
         return new MutableIntValueSortedMap.Builder<>(SortUtils::compareCharSequenceByUnicode);
     }
 
     @Override
-    void withKey(Procedure<String> procedure) {
+    public void withKey(Procedure<String> procedure) {
         final String[] values = {null, "", " ", "abcd", "0"};
         for (String value : values) {
             procedure.apply(value);
@@ -22,13 +22,13 @@ public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<S
     }
 
     @Override
-    void withSortFunc(Procedure<SortFunction<String>> procedure) {
+    public void withSortFunc(Procedure<SortFunction<String>> procedure) {
         procedure.apply(SortUtils::compareCharSequenceByUnicode);
         procedure.apply(SortUtils::compareByHashCode);
     }
 
     @Override
-    String keyFromInt(int value) {
+    public String keyFromInt(int value) {
         return Integer.toString(value);
     }
 
@@ -48,7 +48,7 @@ public final class MutableIntValueSortedMapTest extends MutableIntValueMapTest<S
     }
 
     @Override
-    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
         withSortFunc(sortFunc -> procedure.apply(() -> new MutableIntValueSortedMap.Builder<>(sortFunc)));
     }
 

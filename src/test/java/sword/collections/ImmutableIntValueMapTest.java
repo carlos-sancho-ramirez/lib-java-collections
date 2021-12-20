@@ -11,10 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder> extends IntValueMapTest<T, B>
-        implements ImmutableIntTransformableTest<B> {
+interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder> extends IntValueMapTest<T, B>, ImmutableIntTransformableTest<B> {
 
-    private void withInvertibleArray(Procedure<ImmutableIntValueMap<T>> action) {
+    default void withInvertibleArray(Procedure<ImmutableIntValueMap<T>> action) {
         withKey(key1 -> withKey(key2 -> withKey(key3 -> {
             if (!equal(key1, key2) && !equal(key1, key3) && !equal(key2, key3)) {
                 withInt(value1 -> withInt(value2 -> withInt(value3 -> {
@@ -33,10 +32,21 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Override
-    abstract ImmutableIntValueMap.Builder<T> newBuilder();
+    ImmutableIntValueMap.Builder<T> newBuilder();
+
+    @Override
+    default void withMapFunc(Procedure<IntFunction<String>> procedure) {
+        procedure.apply(Integer::toString);
+    }
+
+    @Override
+    default void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
+    }
 
     @Test
-    void testInverted() {
+    default void testInverted() {
         withInvertibleArray(invertedArray -> {
             final ImmutableIntKeyMap<T> array = invertedArray.invert();
             assertEquals(invertedArray.size(), array.size());
@@ -48,7 +58,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testKeySet() {
+    default void testKeySet() {
         withInvertibleArray(array -> {
             final ImmutableSet<T> result = array.keySet();
 
@@ -61,28 +71,28 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
         });
     }
 
-    private boolean valueIsEven(int value) {
+    default boolean valueIsEven(int value) {
         return (value & 1) == 0;
     }
 
-    public void withFilterFunc(Procedure<IntPredicate> procedure) {
+    default void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(this::valueIsEven);
     }
 
     @Test
     @Override
-    public void testFilterWhenEmpty() {
+    default void testFilterWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntValueMap<T> map = newBuilder().build();
             assertSame(map, map.filter(f));
         });
     }
 
-    abstract void assertEmpty(ImmutableIntValueMap<T> map);
+    void assertEmpty(ImmutableIntValueMap<T> map);
 
     @Test
     @Override
-    public void testFilterForSingleElement() {
+    default void testFilterForSingleElement() {
         withFilterFunc(f -> withInt(value -> {
             final T key = keyFromInt(value);
             final ImmutableIntValueMap<T> map = newBuilder().put(key, value).build();
@@ -99,7 +109,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
 
     @Test
     @Override
-    public void testFilterForMultipleElements() {
+    default void testFilterForMultipleElements() {
         withFilterFunc(f -> withInt(valueA -> withInt(valueB -> {
             final T keyA = keyFromInt(valueA);
             final T keyB = keyFromInt(valueB);
@@ -136,7 +146,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
 
     @Test
     @Override
-    public void testFilterNotWhenEmpty() {
+    default void testFilterNotWhenEmpty() {
         withFilterFunc(f -> {
             final ImmutableIntValueMap<T> map = newBuilder().build();
             assertSame(map, map.filterNot(f));
@@ -145,7 +155,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
 
     @Test
     @Override
-    public void testFilterNotForSingleElement() {
+    default void testFilterNotForSingleElement() {
         withFilterFunc(f -> withInt(value -> {
             final T key = keyFromInt(value);
             final ImmutableIntValueMap<T> map = newBuilder().put(key, value).build();
@@ -162,7 +172,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
 
     @Test
     @Override
-    public void testFilterNotForMultipleElements() {
+    default void testFilterNotForMultipleElements() {
         withFilterFunc(f -> withInt(valueA -> withInt(valueB -> {
             final T keyA = keyFromInt(valueA);
             final T keyB = keyFromInt(valueB);
@@ -198,7 +208,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testMapToIntMethod() {
+    default void testMapToIntMethod() {
         withInt(a -> withInt(b -> {
             final ImmutableIntValueMap<T> map = newBuilder()
                     .put(keyFromInt(a), a)
@@ -218,7 +228,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testMapValues() {
+    default void testMapValues() {
         withInt(a -> withInt(b -> {
             final ImmutableIntValueMap<T> map = newBuilder()
                     .put(keyFromInt(a), a)
@@ -238,7 +248,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testPutMethod() {
+    default void testPutMethod() {
         withKey(a -> withKey(b -> withKey(key -> withValue(value -> {
             final ImmutableIntValueMap<T> map = newBuilder()
                     .put(a, valueFromKey(a))
@@ -274,7 +284,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testPutAllMethodForMultipleElementsInThisMap() {
+    default void testPutAllMethodForMultipleElementsInThisMap() {
         withKey(a -> withKey(b -> {
             final ImmutableIntValueMap<T> thisMap = newBuilder().build();
             final ImmutableIntValueMap<T> thatMap = newBuilder()
@@ -287,7 +297,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testPutAllMethodForEmptyGivenMap() {
+    default void testPutAllMethodForEmptyGivenMap() {
         withKey(a -> withKey(b -> {
             final ImmutableIntValueMap<T> thisMap = newBuilder()
                     .put(a, valueFromKey(a))
@@ -299,7 +309,7 @@ abstract class ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBu
     }
 
     @Test
-    void testPutAllMethodForMultipleElementsInTheGivenMap() {
+    default void testPutAllMethodForMultipleElementsInTheGivenMap() {
         withKey(a -> withKey(b -> withKey(c -> withKey(d -> {
             final ImmutableIntValueMap<T> thisMap = newBuilder()
                     .put(a, valueFromKey(a))
