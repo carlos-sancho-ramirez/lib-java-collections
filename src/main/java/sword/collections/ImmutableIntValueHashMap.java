@@ -159,6 +159,24 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
     }
 
     @Override
+    public ImmutableIntValueHashMap<T> filterByKey(Predicate<? super T> predicate) {
+        final Builder<T> builder = new Builder<>();
+        final int length = _keys.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            final T key = keyAt(i);
+            if (predicate.apply(key)) {
+                builder.put(key, _values[i]);
+            }
+            else {
+                changed = true;
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
     public ImmutableIntValueHashMap<T> mapToInt(IntToIntFunction mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];

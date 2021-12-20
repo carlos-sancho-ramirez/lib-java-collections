@@ -72,7 +72,7 @@ public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
      *                  in the resulting Map.
      */
     @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
-    default IntValueMap<T> filterByKey(Predicate<T> predicate) {
+    default IntValueMap<T> filterByKey(Predicate<? super T> predicate) {
         final IntValueMap.Builder<T> builder = new ImmutableIntValueHashMap.Builder<T>();
         final Transformer<Entry<T>> transformer = entries().iterator();
         while (transformer.hasNext()) {

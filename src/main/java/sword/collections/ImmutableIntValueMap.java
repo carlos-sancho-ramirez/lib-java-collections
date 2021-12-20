@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
+
 /**
  * Immutable version of a Map where values are integer values.
  *
@@ -47,6 +49,12 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
     @Override
     default ImmutableIntValueMap<T> filterNot(IntPredicate predicate) {
         return filter(v -> !predicate.apply(v));
+    }
+
+    @Override
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default ImmutableIntValueMap<T> filterByKey(Predicate<? super T> predicate) {
+        return (ImmutableIntValueMap<T>) IntValueMap.super.filterByKey(predicate);
     }
 
     @Override

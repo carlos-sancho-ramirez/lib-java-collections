@@ -57,6 +57,30 @@ public final class ImmutableIntValueHashMapTest implements ImmutableIntValueMapT
     }
 
     @Test
+    void testFilterByKeyReturnTheSameInstanceAndTypeWhenEmpty() {
+        final Predicate<String> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        final ImmutableIntValueHashMap<String> map = newBuilder().build();
+        final ImmutableIntValueHashMap<String> filtered = map.filterByKey(f);
+        assertSame(map, filtered);
+    }
+
+    @Test
+    void testFilterByKeyReturnTheSameInstanceAndType() {
+        final Predicate<String> f = unused -> true;
+        withKey(a -> withKey(b -> {
+            final ImmutableIntValueHashMap<String> map = newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableIntValueMap<String> filtered = map.filterByKey(f);
+            assertSame(map, filtered);
+        }));
+    }
+
+    @Test
     void testPutAllMustReturnAnImmutableHashMap() {
         final ImmutableIntValueHashMap<String> map = newBuilder().build();
         final ImmutableIntValueHashMap<String> result = map.putAll(map);
