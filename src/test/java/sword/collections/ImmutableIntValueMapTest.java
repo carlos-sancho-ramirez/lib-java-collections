@@ -107,7 +107,7 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
                 assertSame(map, filtered);
             }
             else {
-                assertEmpty(filtered);
+                assertTrue(filtered.isEmpty());
             }
         }));
     }

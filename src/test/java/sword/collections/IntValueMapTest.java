@@ -345,6 +345,61 @@ interface IntValueMapTest<K, B extends IntTransformableBuilder> extends IntTrans
     }
 
     @Test
+    @Override
+    default void testFilterNotForSingleElement() {
+        withFilterFunc(f -> withKey(key -> {
+            final int value = valueFromKey(key);
+            final IntValueMap<K> map = newBuilder().put(key, value).build();
+            final IntValueMap<K> filtered = map.filterNot(f);
+
+            if (f.apply(value)) {
+                assertTrue(filtered.isEmpty());
+            }
+            else {
+                assertTrue(map.equalMap(filtered));
+            }
+        }));
+    }
+
+    @Test
+    default void testFilterNotForMultipleElements() {
+        withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
+            final int valueA = valueFromKey(keyA);
+            final int valueB = valueFromKey(keyB);
+            final IntValueMap<K> map = newBuilder().put(keyA, valueA).put(keyB, valueB).build();
+            final IntValueMap<K> filtered = map.filterNot(f);
+
+            final boolean aPassed = f.apply(valueA);
+            final boolean bPassed = f.apply(valueB);
+
+            if (aPassed && bPassed) {
+                assertTrue(filtered.isEmpty());
+            }
+            else if (aPassed) {
+                Iterator<IntValueMap.Entry<K>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+
+                final IntValueMap.Entry<K> entry = iterator.next();
+                assertSame(keyB, entry.key());
+                assertEquals(valueB, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else if (bPassed) {
+                Iterator<IntValueMap.Entry<K>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+
+                final IntValueMap.Entry<K> entry = iterator.next();
+                assertSame(keyA, entry.key());
+                assertEquals(valueA, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else {
+                assertTrue(map.equalMap(filtered));
+            }
+        })));
+    }
+
+    @Test
     default void testMapResultingKeysForMultipleElements() {
         withMapFunc(f -> withKey(keyA -> withKey(keyB -> withMapBuilderSupplier(supplier -> {
             final IntValueMap<K> map = supplier.newBuilder()
@@ -379,6 +434,62 @@ interface IntValueMapTest<K, B extends IntTransformableBuilder> extends IntTrans
                 assertSame(map.keyAt(i), mapped.keyAt(i));
             }
         }))));
+    }
+
+    @Test
+    @Override
+    default void testFilterForSingleElement() {
+        withFilterFunc(f -> withInt(value -> {
+            final K key = keyFromInt(value);
+            final IntValueMap<K> map = newBuilder().put(key, value).build();
+            final IntValueMap<K> filtered = map.filter(f);
+
+            if (f.apply(value)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertTrue(filtered.isEmpty());
+            }
+        }));
+    }
+
+    @Test
+    @Override
+    default void testFilterForMultipleElements() {
+        withFilterFunc(f -> withKey(keyA -> withKey(keyB -> {
+            final int valueA = valueFromKey(keyA);
+            final int valueB = valueFromKey(keyB);
+            final IntValueMap<K> map = newBuilder().put(keyA, valueA).put(keyB, valueB).build();
+            final IntValueMap<K> filtered = map.filter(f);
+
+            final boolean aPassed = f.apply(valueA);
+            final boolean bPassed = f.apply(valueB);
+
+            if (aPassed && bPassed) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else if (aPassed) {
+                Iterator<IntValueMap.Entry<K>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+
+                final IntValueMap.Entry<K> entry = iterator.next();
+                assertSame(keyA, entry.key());
+                assertEquals(valueA, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else if (bPassed) {
+                Iterator<IntValueMap.Entry<K>> iterator = filtered.entries().iterator();
+                assertTrue(iterator.hasNext());
+
+                final IntValueMap.Entry<K> entry = iterator.next();
+                assertSame(keyB, entry.key());
+                assertEquals(valueB, entry.value());
+                assertFalse(iterator.hasNext());
+            }
+            else {
+                assertTrue(filtered.isEmpty());
+            }
+        })));
     }
 
     @Test
