@@ -123,12 +123,6 @@ public final class CustomIntKeyMapTest implements IntKeyMapTest<String, Transfor
         }
 
         @Override
-        public IntKeyMap<T> filterNot(Predicate<? super T> predicate) {
-            final IntKeyMap<T> newMap = mMap.filterNot(predicate);
-            return (newMap == mMap)? this : new CustomIntKeyMap<>(newMap);
-        }
-
-        @Override
         public <E> IntKeyMap<E> map(Function<? super T, ? extends E> func) {
             return new CustomIntKeyMap<>(mMap.map(func));
         }

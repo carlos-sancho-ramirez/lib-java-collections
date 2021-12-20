@@ -14,7 +14,9 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
     IntKeyMap<T> filter(Predicate<? super T> predicate);
 
     @Override
-    IntKeyMap<T> filterNot(Predicate<? super T> predicate);
+    default IntKeyMap<T> filterNot(Predicate<? super T> predicate) {
+        return filter(v -> !predicate.apply(v));
+    }
 
     /**
      * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.
