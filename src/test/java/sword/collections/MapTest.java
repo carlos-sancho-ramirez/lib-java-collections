@@ -21,6 +21,10 @@ interface MapTest<K, V, B extends TransformableBuilder<V>> extends Transformable
     V valueFromKey(K key);
     void withMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure);
 
+    default void withFilterByEntryFunc(Procedure<Predicate<MapEntry<K, V>>> procedure) {
+        withFilterByKeyFunc(f -> procedure.apply(entry -> f.apply(entry.key())));
+    }
+
     @Override
     void withMapFunc(Procedure<Function<V, String>> procedure);
 
@@ -434,6 +438,54 @@ interface MapTest<K, V, B extends TransformableBuilder<V>> extends Transformable
                 }
             }
             assertFalse(tr.hasNext());
+        }))));
+    }
+
+    @Test
+    default void testFilterByEntryWhenEmpty() {
+        final Predicate<MapEntry<K, V>> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filterByEntry(f).iterator().hasNext());
+        });
+    }
+
+    @Test
+    default void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final Map.Entry<K, V> entry = new Map.Entry<>(0, key, valueFromKey(key));
+            final Map<K, V> map = supplier.newBuilder().put(key, entry.value()).build();
+            final Map<K, V> filtered = map.filterByEntry(f);
+
+            if (f.apply(entry)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    default void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final Map<K, V> filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            int counter = 0;
+            for (Map.Entry<K, V> entry : map.entries()) {
+                if (f.apply(entry)) {
+                    assertSame(entry.value(), filtered.get(entry.key()));
+                    counter++;
+                }
+            }
+            assertEquals(filteredSize, counter);
         }))));
     }
 }

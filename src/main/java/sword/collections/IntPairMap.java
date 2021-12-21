@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
+
 import static sword.collections.SortUtils.equal;
 
 public interface IntPairMap extends IntTransformable, IntPairMapGetter {
@@ -125,6 +127,7 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
         return true;
     }
 
+    @ToBeAbstract("This should be an interface")
     final class Entry {
         private final int _key;
         private final int _value;

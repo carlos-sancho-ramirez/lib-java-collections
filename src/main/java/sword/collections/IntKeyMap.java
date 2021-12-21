@@ -1,5 +1,6 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
 import sword.annotations.ToBeSubtyped;
 
 import static sword.collections.SortUtils.equal;
@@ -130,6 +131,7 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
         return true;
     }
 
+    @ToBeAbstract("This should be an interface")
     final class Entry<E> {
         private final int _key;
         private final E _value;

@@ -95,6 +95,33 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
         return builder.build();
     }
 
+    /**
+     * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.
+     * @param predicate Condition to be evaluated for each key-value pair.
+     *                  Only the key-value pairs where this condition returned
+     *                  true will be present in the resulting map.
+     *                  For performance reasons, this predicate may recycle the
+     *                  same entry instance for each call to the predicate, it
+     *                  is important that the predicate does not store the
+     *                  given entry instance anywhere as it is not guaranteed
+     *                  to be immutable.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default Map<K, V> filterByEntry(Predicate<MapEntry<K, V>> predicate) {
+        final ReusableMapEntry<K, V> entry = new ReusableMapEntry<>();
+        final MapBuilder<K, V> builder = new ImmutableHashMap.Builder<>();
+        final TransformerWithKey<K, V> transformer = iterator();
+        while (transformer.hasNext()) {
+            final V value = transformer.next();
+            final K key = transformer.key();
+            entry.set(key, value);
+            if (predicate.apply(entry)) {
+                builder.put(key, value);
+            }
+        }
+        return builder.build();
+    }
+
     @Override
     <E> Map<K, E> map(Function<? super V, ? extends E> func);
 
@@ -155,7 +182,8 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
         return true;
     }
 
-    final class Entry<A, B> {
+    @ToBeAbstract("This should be an interface")
+    final class Entry<A, B> implements MapEntry<A, B> {
         private final A _key;
         private final B _value;
         private final int _index;
@@ -170,10 +198,12 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
             return _index;
         }
 
+        @Override
         public A key() {
             return _key;
         }
 
+        @Override
         public B value() {
             return _value;
         }

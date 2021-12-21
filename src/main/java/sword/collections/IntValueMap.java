@@ -162,6 +162,7 @@ public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
         return true;
     }
 
+    @ToBeAbstract("This should be an interface")
     final class Entry<E> {
         private final int _index;
         private final E _key;
