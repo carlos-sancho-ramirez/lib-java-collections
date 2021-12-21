@@ -48,7 +48,9 @@ public interface Transformable<T> extends Traversable<T> {
      * @param predicate Only value returning false for the given predicate will be present
      *                  in the resulting Transformable.
      */
-    Transformable<T> filterNot(Predicate<? super T> predicate);
+    default Transformable<T> filterNot(Predicate<? super T> predicate) {
+        return filter(v -> !predicate.apply(v));
+    }
 
     /**
      * Applies the given function to each element on the collection and composes a
