@@ -13,7 +13,10 @@ interface IntTraversableTest<B extends IntTraversableBuilder> {
     void withBuilderSupplier(Procedure<IntBuilderSupplier<B>> procedure);
     IntTraversableBuilder newIntBuilder();
     void withValue(IntProcedure procedure);
-    void withFilterFunc(Procedure<IntPredicate> procedure);
+
+    default void withFilterFunc(Procedure<IntPredicate> procedure) {
+        procedure.apply(v -> (v & 1) == 0);
+    }
 
     default void withReduceFunction(Procedure<IntReduceFunction> procedure) {
         procedure.apply((left, right) -> left * 31 + right);

@@ -8,11 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
+import static sword.collections.TestUtils.withInt;
 
 interface MutableIntValueMapTest<K, B extends MutableIntTransformableBuilder> extends IntValueMapTest<K, B>, MutableIntTraversableTest<B> {
 
     @Override
     MutableIntValueMap.Builder<K> newBuilder();
+
+    @Override
+    default void withValue(IntProcedure procedure) {
+        withInt(procedure);
+    }
 
     @Override
     default void withFilterByKeyFunc(Procedure<Predicate<K>> procedure) {

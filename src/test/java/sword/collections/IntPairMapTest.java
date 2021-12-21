@@ -28,22 +28,6 @@ interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransform
         procedure.apply(MutableIntPairMap.Builder::new);
     }
 
-    @Override
-    default void withValue(IntProcedure procedure) {
-        withInt(procedure);
-    }
-
-    @Override
-    default void withMapFunc(Procedure<IntFunction<String>> procedure) {
-        procedure.apply(Integer::toString);
-    }
-
-    @Override
-    default void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
-        procedure.apply(v -> v * v);
-        procedure.apply(v -> v + 1);
-    }
-
     @Test
     default void testEmptyBuilderBuildsEmptyArray() {
         IntPairMap array = newBuilder().build();

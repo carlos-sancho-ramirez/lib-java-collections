@@ -11,7 +11,9 @@ public interface IntTransformable extends IntTraversable {
      *
      * The order of iteration is guaranteed to be the same in the new list.
      */
-    IntList toList();
+    default IntList toList() {
+        return iterator().toList();
+    }
 
     /**
      * Converts this collection into a set.
@@ -50,7 +52,9 @@ public interface IntTransformable extends IntTraversable {
      *
      * @param predicate To be applied to each element in order to filter.
      */
-    IntTransformable filterNot(IntPredicate predicate);
+    default IntTransformable filterNot(IntPredicate predicate) {
+        return filter(v -> !predicate.apply(v));
+    }
 
     default IntTransformable mapToInt(IntToIntFunction func) {
         return iterator().mapToInt(func).toList();

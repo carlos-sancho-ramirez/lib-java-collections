@@ -109,11 +109,6 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
     }
 
     @Override
-    public IntList toList() {
-        return iterator().toList();
-    }
-
-    @Override
     public <E> IntKeyMap<E> assign(IntFunction<? extends E> function) {
         final int size = size();
         if (size == 0) {

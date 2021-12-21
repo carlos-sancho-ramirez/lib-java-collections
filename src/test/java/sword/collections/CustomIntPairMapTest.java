@@ -105,11 +105,6 @@ public final class CustomIntPairMapTest implements IntPairMapTest<IntTransformab
         }
 
         @Override
-        public IntList toList() {
-            return mMap.toList();
-        }
-
-        @Override
         public IntPairMap filter(IntPredicate predicate) {
             final IntPairMap newMap = mMap.filter(predicate);
             return (newMap == mMap)? this : new CustomIntPairMap(newMap);

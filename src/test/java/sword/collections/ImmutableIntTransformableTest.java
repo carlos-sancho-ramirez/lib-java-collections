@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public interface ImmutableIntTransformableTest<B extends ImmutableIntTransformableBuilder> extends IntTransformableTest<B> {
 
     void withBuilderSupplier(Procedure<IntBuilderSupplier<B>> procedure);
-    void withValue(IntProcedure procedure);
     void withMapFunc(Procedure<IntFunction<String>> procedure);
     void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
 

@@ -7,13 +7,26 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static sword.collections.TestUtils.withInt;
 
 interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTraversableTest<B> {
 
     @Override
     IntTransformableBuilder newIntBuilder();
-    void withMapFunc(Procedure<IntFunction<String>> procedure);
-    void withMapToIntFunc(Procedure<IntToIntFunction> procedure);
+
+    @Override
+    default void withValue(IntProcedure procedure) {
+        withInt(procedure);
+    }
+
+    default void withMapFunc(Procedure<IntFunction<String>> procedure) {
+        procedure.apply(Integer::toString);
+    }
+
+    default void withMapToIntFunc(Procedure<IntToIntFunction> procedure) {
+        procedure.apply(v -> v * v);
+        procedure.apply(v -> v + 1);
+    }
 
     @Test
     default void testToListWhenEmpty() {
@@ -139,7 +152,7 @@ interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTra
             final IntTransformable filtered = transformable.filter(f);
 
             if (f.apply(value)) {
-                assertEquals(transformable, filtered);
+                assertTrue(transformable.equalTraversable(filtered));
             }
             else {
                 assertFalse(filtered.iterator().hasNext());
@@ -157,7 +170,7 @@ interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTra
             final boolean bPassed = f.apply(b);
 
             if (aPassed && bPassed) {
-                assertEquals(transformable, filtered);
+                assertTrue(transformable.equalTraversable(filtered));
             }
             else if (aPassed) {
                 Iterator<Integer> iterator = filtered.iterator();
@@ -196,7 +209,7 @@ interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTra
                 assertFalse(filtered.iterator().hasNext());
             }
             else {
-                assertEquals(transformable, filtered);
+                assertTrue(transformable.equalTraversable(filtered));
             }
         }));
     }
@@ -226,7 +239,7 @@ interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTra
                 assertFalse(iterator.hasNext());
             }
             else {
-                assertEquals(transformable, filtered);
+                assertTrue(transformable.equalTraversable(filtered));
             }
         })));
     }

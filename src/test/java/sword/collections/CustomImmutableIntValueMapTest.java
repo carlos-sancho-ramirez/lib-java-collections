@@ -1,6 +1,5 @@
 package sword.collections;
 
-import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
 public final class CustomImmutableIntValueMapTest implements ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder> {
@@ -43,11 +42,6 @@ public final class CustomImmutableIntValueMapTest implements ImmutableIntValueMa
     @Override
     public IntTransformableBuilder newIntBuilder() {
         return new HashCodeKeyTraversableBuilder();
-    }
-
-    @Override
-    public void withValue(IntProcedure procedure) {
-        withInt(procedure);
     }
 
     @Override
