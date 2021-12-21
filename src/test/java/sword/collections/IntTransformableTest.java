@@ -7,17 +7,11 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static sword.collections.TestUtils.withInt;
 
 interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTraversableTest<B> {
 
     @Override
     IntTransformableBuilder newIntBuilder();
-
-    @Override
-    default void withValue(IntProcedure procedure) {
-        withInt(procedure);
-    }
 
     default void withMapFunc(Procedure<IntFunction<String>> procedure) {
         procedure.apply(Integer::toString);

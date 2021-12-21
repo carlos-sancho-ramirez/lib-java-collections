@@ -7,12 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static sword.collections.SortUtils.equal;
+import static sword.collections.TestUtils.withInt;
 
 interface IntTraversableTest<B extends IntTraversableBuilder> {
 
     void withBuilderSupplier(Procedure<IntBuilderSupplier<B>> procedure);
     IntTraversableBuilder newIntBuilder();
-    void withValue(IntProcedure procedure);
+
+    default void withValue(IntProcedure procedure) {
+        withInt(procedure);
+    }
 
     default void withFilterFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(v -> (v & 1) == 0);
