@@ -23,6 +23,10 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>> extends Transforma
         procedure.apply(a -> a < 0);
     }
 
+    default void withFilterByEntryFunc(Procedure<Predicate<IntKeyMapEntry<T>>> procedure) {
+        withFilterByKeyFunc(f -> procedure.apply(entry -> f.apply(entry.key())));
+    }
+
     default void withArbitraryMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure) {
         procedure.apply(ImmutableIntKeyMap.Builder::new);
         procedure.apply(MutableIntKeyMap.Builder::new);
@@ -357,6 +361,54 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>> extends Transforma
                 }
             }
             assertFalse(tr.hasNext());
+        }))));
+    }
+
+    @Test
+    default void testFilterByEntryWhenEmpty() {
+        final Predicate<IntKeyMapEntry<T>> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filterByEntry(f).iterator().hasNext());
+        });
+    }
+
+    @Test
+    default void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withInt(key -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap.Entry<T> entry = new IntKeyMap.Entry<>(0, key, valueFromKey(key));
+            final IntKeyMap<T> map = supplier.newBuilder().put(key, entry.value()).build();
+            final IntKeyMap<T> filtered = map.filterByEntry(f);
+
+            if (f.apply(entry)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    default void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withInt(a -> withInt(b -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap<T> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final IntKeyMap<T> filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            int counter = 0;
+            for (IntKeyMap.Entry<T> entry : map.entries()) {
+                if (f.apply(entry)) {
+                    assertSame(entry.value(), filtered.get(entry.key()));
+                    counter++;
+                }
+            }
+            assertEquals(filteredSize, counter);
         }))));
     }
 }

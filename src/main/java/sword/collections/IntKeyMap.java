@@ -38,6 +38,31 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
         return builder.build();
     }
 
+    /**
+     * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.
+     * @param predicate Condition to be evaluated for each key-value pair.
+     *                  Only the key-value pairs where this condition returned
+     *                  true will be present in the resulting map.
+     *                  For performance reasons, this predicate may recycle the
+     *                  same entry instance for each call to the predicate, it
+     *                  is important that the predicate does not store the
+     *                  given entry instance anywhere as it is not guaranteed
+     *                  to be immutable.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default IntKeyMap<T> filterByEntry(Predicate<IntKeyMapEntry<T>> predicate) {
+        final IntKeyMapBuilder<T> builder = new ImmutableIntKeyMap.Builder<>();
+        final Transformer<Entry<T>> transformer = entries().iterator();
+        while (transformer.hasNext()) {
+            final Entry<T> entry = transformer.next();
+            if (predicate.apply(entry)) {
+                builder.put(entry.key(), entry.value());
+            }
+        }
+
+        return builder.build();
+    }
+
     @Override
     <E> IntKeyMap<E> map(Function<? super T, ? extends E> func);
 
@@ -132,7 +157,7 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
     }
 
     @ToBeAbstract("This should be an interface")
-    final class Entry<E> {
+    final class Entry<E> implements IntKeyMapEntry<E> {
         private final int _key;
         private final E _value;
         private final int _index;
@@ -147,10 +172,12 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
             return _index;
         }
 
+        @Override
         public int key() {
             return _key;
         }
 
+        @Override
         public E value() {
             return _value;
         }
