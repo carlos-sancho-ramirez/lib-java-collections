@@ -89,7 +89,7 @@ abstract class AbstractImmutableMap<K, V> extends AbstractMap<K, V> implements I
     }
 
     @Override
-    public Iterator iterator() {
+    public TransformerWithKey<K, V> iterator() {
         return new Iterator();
     }
 }

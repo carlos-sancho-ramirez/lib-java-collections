@@ -3,6 +3,7 @@ package sword.collections;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
@@ -128,6 +129,53 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
         final ImmutableHashMap<Integer, String> map = newBuilder().build();
         final ImmutableHashMap<Integer, String> result = map.putAll(map);
         assertSame(result, map);
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final Map.Entry<Integer, String> entry = new Map.Entry<>(0, key, valueFromKey(key));
+            final ImmutableHashMap<Integer, String> map = supplier.newBuilder().put(key, entry.value()).build();
+            final ImmutableHashMap<Integer, String> filtered = map.filterByEntry(f);
+
+            if (f.apply(entry)) {
+                assertSame(map, filtered);
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final ImmutableHashMap<Integer, String> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableHashMap<Integer, String> filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            if (filteredSize == map.size()) {
+                assertSame(map, filtered);
+            }
+            else if (filteredSize == 0) {
+                assertSame(ImmutableHashMap.empty(), filtered);
+            }
+            else {
+                int counter = 0;
+                for (Map.Entry<Integer, String> entry : map.entries()) {
+                    if (f.apply(entry)) {
+                        assertSame(entry.value(), filtered.get(entry.key()));
+                        counter++;
+                    }
+                }
+                assertEquals(filteredSize, counter);
+            }
+        }))));
     }
 
     private boolean hashCodeIsEven(Object value) {
