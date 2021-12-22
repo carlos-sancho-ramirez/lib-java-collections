@@ -3,7 +3,7 @@ package sword.collections;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class CustomMapTest implements MapTest<Integer, String, TransformableBuilder<String>> {
+public final class CustomMapTest implements MapTest<Integer, String, TransformableBuilder<String>, MapBuilder<Integer, String>> {
     @Override
     public MapBuilder<Integer, String> newBuilder() {
         return new CustomMapBuilder<>();

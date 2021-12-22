@@ -3,7 +3,7 @@ package sword.collections;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class CustomImmutableMapTest implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>> {
+public final class CustomImmutableMapTest implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>, ImmutableMap.Builder<Integer, String>> {
     @Override
     public ImmutableMap.Builder<Integer, String> newBuilder() {
         return new CustomImmutableMapBuilder<>();
@@ -45,7 +45,7 @@ public final class CustomImmutableMapTest implements ImmutableMapTest<Integer, S
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, ImmutableMap.Builder<Integer, String>>> procedure) {
         procedure.apply(CustomImmutableMapBuilder::new);
     }
 

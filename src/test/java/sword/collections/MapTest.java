@@ -10,16 +10,16 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 
-interface MapTest<K, V, B extends TransformableBuilder<V>> extends TransformableTest<V, B> {
+interface MapTest<K, V, B extends TransformableBuilder<V>, MB extends MapBuilder<K, V>> extends TransformableTest<V, B> {
 
-    MapBuilder<K, V> newBuilder();
+    MB newBuilder();
     void withKey(Procedure<K> procedure);
     void withFilterByKeyFunc(Procedure<Predicate<K>> procedure);
     void withSortFunc(Procedure<SortFunction<K>> procedure);
     V getTestValue();
     K keyFromInt(int value);
     V valueFromKey(K key);
-    void withMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MapBuilder<K, V>>> procedure);
+    void withMapBuilderSupplier(Procedure<MapBuilderSupplier<K, V, MB>> procedure);
 
     default void withFilterByEntryFunc(Procedure<Predicate<MapEntry<K, V>>> procedure) {
         withFilterByKeyFunc(f -> procedure.apply(entry -> f.apply(entry.key())));

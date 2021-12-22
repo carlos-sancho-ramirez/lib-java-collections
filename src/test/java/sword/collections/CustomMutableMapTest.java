@@ -3,14 +3,14 @@ package sword.collections;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class CustomMutableMapTest implements MutableMapTest<Integer, String, MutableTransformableBuilder<String>> {
+public final class CustomMutableMapTest implements MutableMapTest<Integer, String, MutableTransformableBuilder<String>, MutableMap.Builder<Integer, String>> {
     @Override
     public MutableMap.Builder<Integer, String> newMapBuilder() {
         return new CustomMutableMapBuilder<>();
     }
 
     @Override
-    public MapBuilder<Integer, String> newBuilder() {
+    public MutableMap.Builder<Integer, String> newBuilder() {
         return new CustomMutableMapBuilder<>();
     }
 
@@ -50,7 +50,7 @@ public final class CustomMutableMapTest implements MutableMapTest<Integer, Strin
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MutableMap.Builder<Integer, String>>> procedure) {
         procedure.apply(MutableHashMap.Builder::new);
     }
 

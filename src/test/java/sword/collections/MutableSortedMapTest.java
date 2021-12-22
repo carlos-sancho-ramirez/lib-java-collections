@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableSortedMapTest implements MutableMapTest<Integer, String, MutableTransformableBuilder<String>> {
+public final class MutableSortedMapTest implements MutableMapTest<Integer, String, MutableTransformableBuilder<String>, MutableSortedMap.Builder<Integer, String>> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
@@ -103,7 +103,7 @@ public final class MutableSortedMapTest implements MutableMapTest<Integer, Strin
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MutableSortedMap.Builder<Integer, String>>> procedure) {
         withSortFunc(sortFunc -> procedure.apply(() -> new MutableSortedMap.Builder<>(sortFunc)));
     }
 

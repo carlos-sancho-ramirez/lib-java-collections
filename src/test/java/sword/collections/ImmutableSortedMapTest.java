@@ -8,7 +8,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>> {
+public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>, ImmutableSortedMap.Builder<Integer, String>> {
 
     private static boolean sortInDescendantOrder(int a, int b) {
         return b > a;
@@ -81,7 +81,7 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, ImmutableSortedMap.Builder<Integer, String>>> procedure) {
         withSortFunc(sortFunc -> procedure.apply(() -> new ImmutableSortedMap.Builder<>(sortFunc)));
     }
 

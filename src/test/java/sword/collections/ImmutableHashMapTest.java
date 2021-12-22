@@ -8,7 +8,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>> {
+public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, String, ImmutableTransformableBuilder<String>, ImmutableHashMap.Builder<Integer, String>> {
 
     @Override
     public ImmutableHashMap.Builder<Integer, String> newBuilder() {
@@ -72,7 +72,7 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, ImmutableHashMap.Builder<Integer, String>>> procedure) {
         procedure.apply(ImmutableHashMap.Builder::new);
     }
 

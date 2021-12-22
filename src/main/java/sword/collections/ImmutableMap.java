@@ -56,6 +56,23 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
     }
 
     @Override
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default ImmutableMap<K, V> filterByEntry(Predicate<MapEntry<K, V>> predicate) {
+        final ReusableMapEntry<K, V> entry = new ReusableMapEntry<>();
+        final ImmutableMap.Builder<K, V> builder = new ImmutableHashMap.Builder<>();
+        final TransformerWithKey<K, V> transformer = iterator();
+        while (transformer.hasNext()) {
+            final V value = transformer.next();
+            final K key = transformer.key();
+            entry.set(key, value);
+            if (predicate.apply(entry)) {
+                builder.put(key, value);
+            }
+        }
+        return builder.build();
+    }
+
+    @Override
     ImmutableIntValueMap<K> mapToInt(IntResultFunction<? super V> mapFunc);
 
     @Override

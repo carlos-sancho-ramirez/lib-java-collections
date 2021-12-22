@@ -3,11 +3,13 @@ package sword.collections;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<V>> extends MapTest<K, V, B>, ImmutableTransformableTest<V, B> {
+public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<V>, MB extends ImmutableMap.Builder<K, V>> extends MapTest<K, V, B, MB>, ImmutableTransformableTest<V, B> {
 
-    ImmutableMap.Builder<K, V> newBuilder();
+    MB newBuilder();
     void withKey(Procedure<K> procedure);
     V valueFromKey(K key);
 
@@ -59,6 +61,45 @@ public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<
             }
 
             assertEquals(builder.build(), thisMap.putAll(thatMap));
+        }))));
+    }
+
+    @Test
+    @Override
+    default void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final Map.Entry<K, V> entry = new Map.Entry<>(0, key, valueFromKey(key));
+            final ImmutableMap<K, V> map = supplier.newBuilder().put(key, entry.value()).build();
+            final ImmutableMap<K, V> filtered = map.filterByEntry(f);
+
+            if (f.apply(entry)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    @Override
+    default void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final ImmutableMap<K, V> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableMap<K, V> filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            int counter = 0;
+            for (Map.Entry<K, V> entry : map.entries()) {
+                if (f.apply(entry)) {
+                    assertSame(entry.value(), filtered.get(entry.key()));
+                    counter++;
+                }
+            }
+            assertEquals(filteredSize, counter);
         }))));
     }
 }

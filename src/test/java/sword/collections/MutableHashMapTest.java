@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableHashMapTest implements MutableMapTest<Integer, String, MutableTransformableBuilder<String>> {
+public final class MutableHashMapTest implements MutableMapTest<Integer, String, MutableTransformableBuilder<String>, MutableHashMap.Builder<Integer, String>> {
 
     @Override
     public MutableHashMap.Builder<Integer, String> newBuilder() {
@@ -79,7 +79,7 @@ public final class MutableHashMapTest implements MutableMapTest<Integer, String,
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MapBuilder<Integer, String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<MapBuilderSupplier<Integer, String, MutableHashMap.Builder<Integer, String>>> procedure) {
         procedure.apply(MutableHashMap.Builder::new);
     }
 
