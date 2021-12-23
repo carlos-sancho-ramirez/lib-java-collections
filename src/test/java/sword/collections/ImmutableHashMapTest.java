@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
@@ -129,6 +130,63 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
         final ImmutableHashMap<Integer, String> map = newBuilder().build();
         final ImmutableHashMap<Integer, String> result = map.putAll(map);
         assertSame(result, map);
+    }
+
+    @Test
+    @Override
+    public void testFilterByKeyNotWhenEmpty() {
+        final Predicate<Integer> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            final ImmutableHashMap<Integer, String> empty = supplier.newBuilder().build();
+            final ImmutableHashMap<Integer, String> filtered = empty.filterByKeyNot(f);
+            assertSame(empty, filtered);
+            assertTrue(filtered.isEmpty());
+        });
+    }
+
+    @Test
+    @Override
+    public void testFilterByKeyNotForSingleElement() {
+        withFilterByKeyFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final ImmutableHashMap<Integer, String> map = supplier.newBuilder().put(key, valueFromKey(key)).build();
+            final ImmutableHashMap<Integer, String> filtered = map.filterByKeyNot(f);
+            final ImmutableHashMap<Integer, String> expected = f.apply(key)? supplier.newBuilder().build() : map;
+            assertSame(expected, filtered);
+        })));
+    }
+
+    @Test
+    @Override
+    public void testFilterByKeyNotForMultipleElements() {
+        withFilterByKeyFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final ImmutableHashMap<Integer, String> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableHashMap<Integer, String> filtered = map.filterByKeyNot(f);
+            final int filteredSize = filtered.size();
+
+            if (filteredSize == 0) {
+                assertSame(supplier.newBuilder().build(), filtered);
+            }
+            else if (filteredSize == map.size()) {
+                assertSame(map, filtered);
+            }
+            else {
+                final TransformerWithKey<Integer, String> tr = filtered.iterator();
+                for (Integer key : map.keySet()) {
+                    if (!f.apply(key)) {
+                        assertTrue(tr.hasNext());
+                        assertSame(map.get(key), tr.next());
+                        assertSame(key, tr.key());
+                    }
+                }
+                assertFalse(tr.hasNext());
+            }
+        }))));
     }
 
     @Test

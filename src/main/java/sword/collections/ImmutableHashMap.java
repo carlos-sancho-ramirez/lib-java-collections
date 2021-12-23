@@ -185,6 +185,24 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
     }
 
     @Override
+    public ImmutableHashMap<K, V> filterByKeyNot(Predicate<? super K> predicate) {
+        final Builder<K, V> builder = new Builder<>();
+        final int length = _keys.length;
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            K key = keyAt(i);
+            if (!predicate.apply(key)) {
+                builder.put(key, valueAt(i));
+            }
+            else {
+                changed = true;
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
     public ImmutableHashMap<K, V> filterByEntry(Predicate<MapEntry<K, V>> predicate) {
         final Builder<K, V> builder = new Builder<>();
         final int length = _keys.length;
