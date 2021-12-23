@@ -13,7 +13,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, ImmutableTransformableBuilder<String>>, ImmutableTransformableTest<String, ImmutableTransformableBuilder<String>> {
+public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, ImmutableTransformableBuilder<String>, ImmutableIntKeyMap.Builder<String>>, ImmutableTransformableTest<String, ImmutableTransformableBuilder<String>> {
 
     @Override
     public ImmutableIntKeyMap.Builder<String> newMapBuilder() {
@@ -74,7 +74,7 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, IntKeyMapBuilder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, ImmutableIntKeyMap.Builder<String>>> procedure) {
         procedure.apply(ImmutableIntKeyMap.Builder::new);
     }
 
@@ -233,6 +233,62 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
             final ImmutableIntKeyMap<String> filtered = map.filterByKey(f);
             assertSame(map, filtered);
         }));
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryWhenEmpty() {
+        final Predicate<IntKeyMapEntry<String>> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            final ImmutableIntKeyMap<String> empty = supplier.newBuilder().build();
+            final ImmutableIntKeyMap<String> filtered = empty.filterByEntry(f);
+            assertSame(empty, filtered);
+            assertTrue(filtered.isEmpty());
+        });
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withInt(key -> withMapBuilderSupplier(supplier -> {
+            final IntKeyMap.Entry<String> entry = new IntKeyMap.Entry<>(0, key, valueFromKey(key));
+            final ImmutableIntKeyMap<String> map = supplier.newBuilder().put(key, entry.value()).build();
+            final ImmutableIntKeyMap<String> expected = f.apply(entry)? map : supplier.newBuilder().build();
+            assertSame(expected, map.filterByEntry(f));
+        })));
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withInt(a -> withInt(b -> withMapBuilderSupplier(supplier -> {
+            final ImmutableIntKeyMap<String> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableIntKeyMap<String> filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            if (filteredSize == 0) {
+                assertSame(supplier.newBuilder().build(), filtered);
+            }
+            else if (filteredSize == map.size()) {
+                assertSame(map, filtered);
+            }
+            else {
+                int counter = 0;
+                for (IntKeyMap.Entry<String> entry : map.entries()) {
+                    if (f.apply(entry)) {
+                        assertSame(entry.value(), filtered.get(entry.key()));
+                        counter++;
+                    }
+                }
+                assertEquals(filteredSize, counter);
+            }
+        }))));
     }
 
     @Test

@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
-interface IntKeyMapTest<T, B extends TransformableBuilder<T>> extends TransformableTest<T, B> {
+interface IntKeyMapTest<T, B extends TransformableBuilder<T>, MB extends IntKeyMapBuilder<T>> extends TransformableTest<T, B> {
 
-    IntKeyMapBuilder<T> newMapBuilder();
+    MB newMapBuilder();
     T getTestValue();
     T getTestValue2();
     T valueFromKey(int key);
-    void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, IntKeyMapBuilder<T>>> procedure);
+    void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<T, MB>> procedure);
 
     default void withFilterByKeyFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(a -> (a & 1) == 0);

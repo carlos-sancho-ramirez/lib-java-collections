@@ -14,7 +14,7 @@ import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class MutableIntKeyMapTest implements IntKeyMapTest<String, MutableTransformableBuilder<String>>, MutableTraversableTest<String, MutableTransformableBuilder<String>> {
+public final class MutableIntKeyMapTest implements IntKeyMapTest<String, MutableTransformableBuilder<String>, MutableIntKeyMap.Builder<String>>, MutableTraversableTest<String, MutableTransformableBuilder<String>> {
 
     @Override
     public MutableIntKeyMap.Builder<String> newMapBuilder() {
@@ -70,7 +70,7 @@ public final class MutableIntKeyMapTest implements IntKeyMapTest<String, Mutable
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, IntKeyMapBuilder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntKeyMapBuilderSupplier<String, MutableIntKeyMap.Builder<String>>> procedure) {
         procedure.apply(MutableIntKeyMap.Builder::new);
     }
 

@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-public final class CustomIntKeyMapTest implements IntKeyMapTest<String, TransformableBuilder<String>> {
+public final class CustomIntKeyMapTest implements IntKeyMapTest<String, TransformableBuilder<String>, IntKeyMapBuilder<String>> {
 
     @Override
     public IntKeyMapBuilder<String> newMapBuilder() {
