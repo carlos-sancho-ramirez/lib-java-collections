@@ -57,6 +57,12 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
 
     @Override
     @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default ImmutableMap<K, V> filterByKeyNot(Predicate<? super K> predicate) {
+        return (ImmutableMap<K, V>) Map.super.filterByKeyNot(predicate);
+    }
+
+    @Override
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
     default ImmutableMap<K, V> filterByEntry(Predicate<MapEntry<K, V>> predicate) {
         final ReusableMapEntry<K, V> entry = new ReusableMapEntry<>();
         final ImmutableMap.Builder<K, V> builder = new ImmutableHashMap.Builder<>();
