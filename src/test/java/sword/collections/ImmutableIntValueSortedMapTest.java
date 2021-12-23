@@ -2,7 +2,9 @@ package sword.collections;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
 public final class ImmutableIntValueSortedMapTest implements ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder, ImmutableIntValueSortedMap.Builder<String>> {
@@ -49,6 +51,65 @@ public final class ImmutableIntValueSortedMapTest implements ImmutableIntValueMa
     @Override
     public void withValue(IntProcedure procedure) {
         withInt(procedure);
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryWhenEmpty() {
+        final Predicate<IntValueMapEntry<String>> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            final ImmutableIntValueSortedMap<String> empty = supplier.newBuilder().build();
+            final ImmutableIntValueSortedMap<String> filtered = empty.filterByEntry(f);
+            assertSame(empty, filtered);
+            assertTrue(filtered.isEmpty());
+        });
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap.Entry<String> entry = new IntValueMap.Entry<>(0, key, valueFromKey(key));
+            final ImmutableIntValueSortedMap<String> map = supplier.newBuilder().put(key, entry.value()).build();
+            final ImmutableIntValueSortedMap<String> filtered = map.filterByEntry(f);
+
+            if (f.apply(entry)) {
+                assertSame(map, filtered);
+            }
+            else {
+                assertTrue(filtered.isEmpty());
+            }
+        })));
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final ImmutableIntValueSortedMap<String> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableIntValueSortedMap<String> filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            if (filteredSize == map.size()) {
+                assertSame(map, filtered);
+            }
+            else {
+                int counter = 0;
+                for (IntValueMap.Entry<String> entry : map.entries()) {
+                    if (f.apply(entry)) {
+                        assertEquals(entry.value(), filtered.get(entry.key()));
+                        counter++;
+                    }
+                }
+                assertEquals(filteredSize, counter);
+            }
+        }))));
     }
 
     @Test

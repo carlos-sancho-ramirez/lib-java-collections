@@ -149,6 +149,29 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
     }
 
     @Override
+    public ImmutableIntValueSortedMap<T> filterByEntry(Predicate<IntValueMapEntry<T>> predicate) {
+        final Builder<T> builder = new Builder<>(_sortFunction);
+        final int length = _keys.length;
+        boolean changed = false;
+        if (length > 0) {
+            final ReusableIntValueMapEntry<T> entry = new ReusableIntValueMapEntry<>();
+            for (int i = 0; i < length; i++) {
+                final T key = keyAt(i);
+                int value = _values[i];
+                entry.set(key, value);
+                if (predicate.apply(entry)) {
+                    builder.put(key, value);
+                }
+                else {
+                    changed = true;
+                }
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
     public ImmutableIntValueSortedMap<T> mapToInt(IntToIntFunction mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];

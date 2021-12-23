@@ -177,6 +177,30 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
     }
 
     @Override
+    public ImmutableIntValueHashMap<T> filterByEntry(Predicate<IntValueMapEntry<T>> predicate) {
+        final Builder<T> builder = new Builder<>();
+        final int length = _keys.length;
+        boolean changed = false;
+
+        if (length > 0) {
+            final ReusableIntValueMapEntry<T> entry = new ReusableIntValueMapEntry<>();
+            for (int i = 0; i < length; i++) {
+                final T key = keyAt(i);
+                final int value = valueAt(i);
+                entry.set(key, value);
+                if (predicate.apply(entry)) {
+                    builder.put(key, _values[i]);
+                }
+                else {
+                    changed = true;
+                }
+            }
+        }
+
+        return changed? builder.build() : this;
+    }
+
+    @Override
     public ImmutableIntValueHashMap<T> mapToInt(IntToIntFunction mapFunc) {
         final int itemCount = _keys.length;
         final int[] newValues = new int[itemCount];
