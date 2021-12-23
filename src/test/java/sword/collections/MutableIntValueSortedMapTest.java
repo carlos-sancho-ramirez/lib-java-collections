@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntValueSortedMapTest implements MutableIntValueMapTest<String, MutableIntTransformableBuilder> {
+public final class MutableIntValueSortedMapTest implements MutableIntValueMapTest<String, MutableIntTransformableBuilder, MutableIntValueSortedMap.Builder<String>> {
 
     @Override
     public MutableIntValueSortedMap.Builder<String> newBuilder() {
@@ -48,7 +48,7 @@ public final class MutableIntValueSortedMapTest implements MutableIntValueMapTes
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, MutableIntValueSortedMap.Builder<String>>> procedure) {
         withSortFunc(sortFunc -> procedure.apply(() -> new MutableIntValueSortedMap.Builder<>(sortFunc)));
     }
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntValueHashMapTest implements ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder> {
+public final class ImmutableIntValueHashMapTest implements ImmutableIntValueMapTest<String, ImmutableIntTransformableBuilder, ImmutableIntValueHashMap.Builder<String>> {
 
     @Override
     public ImmutableIntValueHashMap.Builder<String> newBuilder() {
@@ -13,7 +13,7 @@ public final class ImmutableIntValueHashMapTest implements ImmutableIntValueMapT
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, ImmutableIntValueHashMap.Builder<String>>> procedure) {
         procedure.apply(ImmutableIntValueHashMap.Builder::new);
     }
 

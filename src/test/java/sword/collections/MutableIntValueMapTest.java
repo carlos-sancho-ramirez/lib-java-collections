@@ -10,10 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-interface MutableIntValueMapTest<K, B extends MutableIntTransformableBuilder> extends IntValueMapTest<K, B>, MutableIntTraversableTest<B> {
-
-    @Override
-    MutableIntValueMap.Builder<K> newBuilder();
+interface MutableIntValueMapTest<K, B extends MutableIntTransformableBuilder, MB extends MutableIntValueMap.Builder<K>> extends IntValueMapTest<K, B, MB>, MutableIntTraversableTest<B> {
 
     @Override
     default void withValue(IntProcedure procedure) {

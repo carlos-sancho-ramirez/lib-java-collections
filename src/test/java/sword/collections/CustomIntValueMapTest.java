@@ -2,7 +2,7 @@ package sword.collections;
 
 import static sword.collections.TestUtils.withString;
 
-public final class CustomIntValueMapTest implements IntValueMapTest<String, IntTransformableBuilder> {
+public final class CustomIntValueMapTest implements IntValueMapTest<String, IntTransformableBuilder, IntValueMap.Builder<String>> {
 
     @Override
     public IntValueMap.Builder<String> newBuilder() {

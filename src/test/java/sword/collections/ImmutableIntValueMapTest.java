@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder> extends IntValueMapTest<T, B>, ImmutableIntTransformableTest<B> {
+interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder, MB extends ImmutableIntValueMap.Builder<T>> extends IntValueMapTest<T, B, MB>, ImmutableIntTransformableTest<B> {
 
     default void withInvertibleArray(Procedure<ImmutableIntValueMap<T>> action) {
         withKey(key1 -> withKey(key2 -> withKey(key3 -> {
@@ -30,9 +30,6 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
             }
         })));
     }
-
-    @Override
-    ImmutableIntValueMap.Builder<T> newBuilder();
 
     @Override
     default void withMapFunc(Procedure<IntFunction<String>> procedure) {
@@ -212,6 +209,45 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
                 assertSame(map, filtered);
             }
         })));
+    }
+
+    @Test
+    @Override
+    default void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap.Entry<T> entry = new IntValueMap.Entry<>(0, key, valueFromKey(key));
+            final ImmutableIntValueMap<T> map = supplier.newBuilder().put(key, entry.value()).build();
+            final ImmutableIntValueMap<T> filtered = map.filterByEntry(f);
+
+            if (f.apply(entry)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    @Override
+    default void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final ImmutableIntValueMap<T> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableIntValueMap<T> filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            int counter = 0;
+            for (IntValueMap.Entry<T> entry : map.entries()) {
+                if (f.apply(entry)) {
+                    assertEquals(entry.value(), filtered.get(entry.key()));
+                    counter++;
+                }
+            }
+            assertEquals(filteredSize, counter);
+        }))));
     }
 
     @Test

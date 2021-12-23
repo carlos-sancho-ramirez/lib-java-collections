@@ -58,6 +58,12 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
     }
 
     @Override
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default ImmutableIntValueMap<T> filterByEntry(Predicate<IntValueMapEntry<T>> predicate) {
+        return (ImmutableIntValueMap<T>) IntValueMap.super.filterByEntry(predicate);
+    }
+
+    @Override
     ImmutableIntValueMap<T> mapToInt(IntToIntFunction mapFunc);
 
     @Override

@@ -3,7 +3,7 @@ package sword.collections;
 import static sword.collections.TestUtils.withInt;
 import static sword.collections.TestUtils.withString;
 
-public final class CustomMutableIntValueMapTest implements MutableIntValueMapTest<String, MutableIntTransformableBuilder> {
+public final class CustomMutableIntValueMapTest implements MutableIntValueMapTest<String, MutableIntTransformableBuilder, MutableIntValueMap.Builder<String>> {
 
     @Override
     public MutableIntValueMap.Builder<String> newBuilder() {
@@ -11,7 +11,7 @@ public final class CustomMutableIntValueMapTest implements MutableIntValueMapTes
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, IntValueMap.Builder<String>>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<String, MutableIntValueMap.Builder<String>>> procedure) {
         procedure.apply(CustomMutableIntValueMapBuilder::new);
     }
 

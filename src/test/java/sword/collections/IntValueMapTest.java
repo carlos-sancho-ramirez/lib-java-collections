@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-interface IntValueMapTest<K, B extends IntTransformableBuilder> extends IntTransformableTest<B> {
+interface IntValueMapTest<K, B extends IntTransformableBuilder, MB extends IntValueMap.Builder<K>> extends IntTransformableTest<B> {
 
-    IntValueMap.Builder<K> newBuilder();
+    MB newBuilder();
 
-    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure);
+    void withMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, MB>> procedure);
     void withKey(Procedure<K> procedure);
     void withSortFunc(Procedure<SortFunction<K>> procedure);
     void withFilterByKeyFunc(Procedure<Predicate<K>> procedure);
