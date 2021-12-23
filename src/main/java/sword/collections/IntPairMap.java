@@ -77,6 +77,30 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
         return builder.build();
     }
 
+    /**
+     * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.
+     * @param predicate Condition to be evaluated for each key-value pair.
+     *                  Only the key-value pairs where this condition returned
+     *                  true will be present in the resulting map.
+     *                  For performance reasons, this predicate may recycle the
+     *                  same entry instance for each call to the predicate, it
+     *                  is important that the predicate does not store the
+     *                  given entry instance anywhere as it is not guaranteed
+     *                  to be immutable.
+     */
+    default IntPairMap filterByEntry(Predicate<IntPairMapEntry> predicate) {
+        final IntPairMapBuilder builder = new ImmutableIntPairMap.Builder();
+        final Transformer<IntPairMap.Entry> transformer = entries().iterator();
+        while (transformer.hasNext()) {
+            final IntPairMap.Entry entry = transformer.next();
+            if (predicate.apply(entry)) {
+                builder.put(entry.key(), entry.value());
+            }
+        }
+
+        return builder.build();
+    }
+
     @Override
     <U> IntKeyMap<U> map(IntFunction<? extends U> func);
 
@@ -128,7 +152,7 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
     }
 
     @ToBeAbstract("This should be an interface")
-    final class Entry {
+    final class Entry implements IntPairMapEntry {
         private final int _key;
         private final int _value;
         private final int _index;
@@ -143,10 +167,12 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
             return _index;
         }
 
+        @Override
         public int key() {
             return _key;
         }
 
+        @Override
         public int value() {
             return _value;
         }

@@ -18,6 +18,10 @@ interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransform
         return key + 7;
     }
 
+    default void withFilterByEntryFunc(Procedure<Predicate<IntPairMapEntry>> procedure) {
+        withFilterByKeyFunc(f -> procedure.apply(entry -> f.apply(entry.key())));
+    }
+
     default void withFilterByKeyFunc(Procedure<IntPredicate> procedure) {
         procedure.apply(a -> (a & 1) == 0);
         procedure.apply(a -> a < 0);
@@ -404,6 +408,54 @@ interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransform
                 }
             }
             assertFalse(tr.hasNext());
+        }))));
+    }
+
+    @Test
+    default void testFilterByEntryWhenEmpty() {
+        final Predicate<IntPairMapEntry> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filterByEntry(f).iterator().hasNext());
+        });
+    }
+
+    @Test
+    default void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withInt(key -> withMapBuilderSupplier(supplier -> {
+            final IntPairMap.Entry entry = new IntPairMap.Entry(0, key, valueFromKey(key));
+            final IntPairMap map = supplier.newBuilder().put(key, entry.value()).build();
+            final IntPairMap filtered = map.filterByEntry(f);
+
+            if (f.apply(entry)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    default void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withInt(a -> withInt(b -> withMapBuilderSupplier(supplier -> {
+            final IntPairMap map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final IntPairMap filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            int counter = 0;
+            for (IntPairMap.Entry entry : map.entries()) {
+                if (f.apply(entry)) {
+                    assertEquals(entry.value(), filtered.get(entry.key()));
+                    counter++;
+                }
+            }
+            assertEquals(filteredSize, counter);
         }))));
     }
 
