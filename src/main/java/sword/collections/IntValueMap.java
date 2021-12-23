@@ -85,6 +85,30 @@ public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
         return builder.build();
     }
 
+    /**
+     * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.
+     * @param predicate Condition to be evaluated for each key-value pair.
+     *                  Only the key-value pairs where this condition returned
+     *                  true will be present in the resulting map.
+     *                  For performance reasons, this predicate may recycle the
+     *                  same entry instance for each call to the predicate, it
+     *                  is important that the predicate does not store the
+     *                  given entry instance anywhere as it is not guaranteed
+     *                  to be immutable.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper map type. For example, sorted maps will always receive a hash map as response, which is not suitable")
+    default IntValueMap<T> filterByEntry(Predicate<IntValueMapEntry<T>> predicate) {
+        final IntValueMap.Builder<T> builder = new ImmutableIntValueHashMap.Builder<T>();
+        final Transformer<Entry<T>> transformer = entries().iterator();
+        while (transformer.hasNext()) {
+            final Entry<T> entry = transformer.next();
+            if (predicate.apply(entry)) {
+                builder.put(entry.key(), entry.value());
+            }
+        }
+        return builder.build();
+    }
+
     @Override
     <U> Map<T, U> map(IntFunction<? extends U> func);
 
@@ -163,7 +187,7 @@ public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
     }
 
     @ToBeAbstract("This should be an interface")
-    final class Entry<E> {
+    final class Entry<E> implements IntValueMapEntry<E> {
         private final int _index;
         private final E _key;
         private final int _value;
@@ -178,11 +202,12 @@ public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
             return _index;
         }
 
-        @SuppressWarnings("unchecked")
+        @Override
         public E key() {
             return _key;
         }
 
+        @Override
         public int value() {
             return _value;
         }

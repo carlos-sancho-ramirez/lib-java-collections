@@ -22,6 +22,10 @@ interface IntValueMapTest<K, B extends IntTransformableBuilder> extends IntTrans
     void withFilterByKeyFunc(Procedure<Predicate<K>> procedure);
     K keyFromInt(int value);
 
+    default void withFilterByEntryFunc(Procedure<Predicate<IntValueMapEntry<K>>> procedure) {
+        withFilterByKeyFunc(f -> procedure.apply(entry -> f.apply(entry.key())));
+    }
+
     default void withArbitraryMapBuilderSupplier(Procedure<IntValueMapBuilderSupplier<K, IntValueMap.Builder<K>>> procedure) {
         procedure.apply(ImmutableIntValueHashMap.Builder::new);
         procedure.apply(MutableIntValueHashMap.Builder::new);
@@ -397,6 +401,54 @@ interface IntValueMapTest<K, B extends IntTransformableBuilder> extends IntTrans
                 assertTrue(map.equalMap(filtered));
             }
         })));
+    }
+
+    @Test
+    default void testFilterByEntryWhenEmpty() {
+        final Predicate<IntValueMapEntry<K>> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filterByEntry(f).iterator().hasNext());
+        });
+    }
+
+    @Test
+    default void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap.Entry<K> entry = new IntValueMap.Entry<>(0, key, valueFromKey(key));
+            final IntValueMap<K> map = supplier.newBuilder().put(key, entry.value()).build();
+            final IntValueMap<K> filtered = map.filterByEntry(f);
+
+            if (f.apply(entry)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    default void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final IntValueMap<K> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final IntValueMap<K> filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            int counter = 0;
+            for (IntValueMap.Entry<K> entry : map.entries()) {
+                if (f.apply(entry)) {
+                    assertEquals(entry.value(), filtered.get(entry.key()));
+                    counter++;
+                }
+            }
+            assertEquals(filteredSize, counter);
+        }))));
     }
 
     @Test
