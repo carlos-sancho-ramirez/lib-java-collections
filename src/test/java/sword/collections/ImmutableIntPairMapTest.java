@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
-public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIntTransformableBuilder>, ImmutableIntTransformableTest<ImmutableIntTransformableBuilder> {
+public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIntTransformableBuilder, ImmutableIntPairMap.Builder>, ImmutableIntTransformableTest<ImmutableIntTransformableBuilder> {
 
     @Override
     public ImmutableIntPairMap.Builder newBuilder() {
@@ -74,7 +74,7 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<ImmutableIntPairMap.Builder>> procedure) {
         procedure.apply(ImmutableIntPairMap.Builder::new);
     }
 
@@ -269,6 +269,63 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
             final ImmutableIntPairMap filtered = map.filterByKey(f);
             assertSame(map, filtered);
         }));
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryWhenEmpty() {
+        final Predicate<IntPairMapEntry> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            final ImmutableIntPairMap map = supplier.newBuilder().build();
+            final ImmutableIntPairMap filtered = map.filterByEntry(f);
+            assertSame(map, filtered);
+            assertTrue(filtered.isEmpty());
+        });
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryForSingleElement() {
+        withFilterByEntryFunc(f -> withInt(key -> withMapBuilderSupplier(supplier -> {
+            final IntPairMap.Entry entry = new IntPairMap.Entry(0, key, valueFromKey(key));
+            final ImmutableIntPairMap map = supplier.newBuilder().put(key, entry.value()).build();
+            final ImmutableIntPairMap filtered = map.filterByEntry(f);
+            final ImmutableIntPairMap expected = f.apply(entry)? map : supplier.newBuilder().build();
+            assertSame(expected, filtered);
+        })));
+    }
+
+    @Test
+    @Override
+    public void testFilterByEntryForMultipleElements() {
+        withFilterByEntryFunc(f -> withInt(a -> withInt(b -> withMapBuilderSupplier(supplier -> {
+            final ImmutableIntPairMap map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final ImmutableIntPairMap filtered = map.filterByEntry(f);
+            final int filteredSize = filtered.size();
+
+            if (filteredSize == 0) {
+                assertSame(supplier.newBuilder().build(), filtered);
+            }
+            else if (filteredSize == map.size()) {
+                assertSame(map, filtered);
+            }
+            else {
+                int counter = 0;
+                for (IntPairMap.Entry entry : map.entries()) {
+                    if (f.apply(entry)) {
+                        assertEquals(entry.value(), filtered.get(entry.key()));
+                        counter++;
+                    }
+                }
+                assertEquals(filteredSize, counter);
+            }
+        }))));
     }
 
     static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {

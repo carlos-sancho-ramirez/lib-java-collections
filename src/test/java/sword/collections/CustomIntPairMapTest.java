@@ -1,6 +1,6 @@
 package sword.collections;
 
-public final class CustomIntPairMapTest implements IntPairMapTest<IntTransformableBuilder> {
+public final class CustomIntPairMapTest implements IntPairMapTest<IntTransformableBuilder, IntPairMapBuilder> {
 
     @Override
     public IntPairMapBuilder newBuilder() {

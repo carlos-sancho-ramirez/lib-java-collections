@@ -9,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
-interface IntPairMapTest<B extends IntTransformableBuilder> extends IntTransformableTest<B> {
+interface IntPairMapTest<B extends IntTransformableBuilder, MB extends IntPairMapBuilder> extends IntTransformableTest<B> {
 
-    IntPairMapBuilder newBuilder();
-    void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure);
+    MB newBuilder();
+    void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<MB>> procedure);
 
     default int valueFromKey(int key) {
         return key + 7;

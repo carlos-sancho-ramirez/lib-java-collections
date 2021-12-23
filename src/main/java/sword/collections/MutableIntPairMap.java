@@ -112,13 +112,18 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
 
     @Override
     public ImmutableIntPairMap toImmutable() {
-        final int[] keys = new int[_size];
-        final int[] values = new int[_size];
+        if (_size == 0) {
+            return ImmutableIntPairMap.empty();
+        }
+        else {
+            final int[] keys = new int[_size];
+            final int[] values = new int[_size];
 
-        System.arraycopy(_keys, 0, keys, 0, _size);
-        System.arraycopy(_values, 0, values, 0, _size);
+            System.arraycopy(_keys, 0, keys, 0, _size);
+            System.arraycopy(_values, 0, values, 0, _size);
 
-        return new ImmutableIntPairMap(keys, values);
+            return new ImmutableIntPairMap(keys, values);
+        }
     }
 
     @Override

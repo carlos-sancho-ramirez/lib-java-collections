@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.SortUtils.equal;
 import static sword.collections.TestUtils.withInt;
 
-public final class MutableIntPairMapTest implements IntPairMapTest<MutableIntTransformableBuilder>, MutableIntTraversableTest<MutableIntTransformableBuilder> {
+public final class MutableIntPairMapTest implements IntPairMapTest<MutableIntTransformableBuilder, MutableIntPairMap.Builder>, MutableIntTraversableTest<MutableIntTransformableBuilder> {
 
     @Override
     public MutableIntPairMap.Builder newBuilder() {
@@ -38,7 +38,7 @@ public final class MutableIntPairMapTest implements IntPairMapTest<MutableIntTra
     }
 
     @Override
-    public void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<IntPairMapBuilder>> procedure) {
+    public void withMapBuilderSupplier(Procedure<IntPairMapBuilderSupplier<MutableIntPairMap.Builder>> procedure) {
         procedure.apply(MutableIntPairMap.Builder::new);
     }
 
