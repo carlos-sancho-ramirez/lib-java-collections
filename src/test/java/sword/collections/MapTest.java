@@ -442,6 +442,53 @@ interface MapTest<K, V, B extends TransformableBuilder<V>, MB extends MapBuilder
     }
 
     @Test
+    default void testFilterByKeyNotWhenEmpty() {
+        final Predicate<K> f = unused -> {
+            throw new AssertionError("This function should not be called");
+        };
+
+        withMapBuilderSupplier(supplier -> {
+            assertFalse(supplier.newBuilder().build().filterByKeyNot(f).iterator().hasNext());
+        });
+    }
+
+    @Test
+    default void testFilterByKeyNotForSingleElement() {
+        withFilterByKeyFunc(f -> withKey(key -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder().put(key, valueFromKey(key)).build();
+            final Map<K, V> filtered = map.filterByKeyNot(f);
+
+            if (!f.apply(key)) {
+                assertTrue(map.equalMap(filtered));
+            }
+            else {
+                assertFalse(filtered.iterator().hasNext());
+            }
+        })));
+    }
+
+    @Test
+    default void testFilterByKeyNotForMultipleElements() {
+        withFilterByKeyFunc(f -> withKey(a -> withKey(b -> withMapBuilderSupplier(supplier -> {
+            final Map<K, V> map = supplier.newBuilder()
+                    .put(a, valueFromKey(a))
+                    .put(b, valueFromKey(b))
+                    .build();
+            final Map<K, V> filtered = map.filterByKeyNot(f);
+
+            final TransformerWithKey<K, V> tr = filtered.iterator();
+            for (K key : map.keySet()) {
+                if (!f.apply(key)) {
+                    assertTrue(tr.hasNext());
+                    assertSame(map.get(key), tr.next());
+                    assertSame(key, tr.key());
+                }
+            }
+            assertFalse(tr.hasNext());
+        }))));
+    }
+
+    @Test
     default void testFilterByEntryWhenEmpty() {
         final Predicate<MapEntry<K, V>> f = unused -> {
             throw new AssertionError("This function should not be called");

@@ -96,6 +96,15 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
     }
 
     /**
+     * Composes a new Map containing all the key-value pairs from this map where the given predicate returns false.
+     * @param predicate Only key returning false for the given predicate will be present
+     *                  in the resulting Map.
+     */
+    default Map<K, V> filterByKeyNot(Predicate<? super K> predicate) {
+        return filterByKey(k -> !predicate.apply(k));
+    }
+
+    /**
      * Composes a new Map containing all the key-value pairs from this map where the given predicate returns true.
      * @param predicate Condition to be evaluated for each key-value pair.
      *                  Only the key-value pairs where this condition returned
