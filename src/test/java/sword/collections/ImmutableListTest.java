@@ -356,7 +356,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    void testAppendAll() {
+    void testAppendAllForImmutableListArgument() {
         withString(a -> withString(b -> withString(c -> {
             final ImmutableList<String> list1 = new ImmutableList.Builder<String>().append(a).append(b).build();
             final ImmutableList<String> list2 = new ImmutableList.Builder<String>().append(c).build();
@@ -368,6 +368,28 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
             assertEquals(c, result12.get(2));
 
             final ImmutableList<String> result21 = list2.appendAll(list1);
+            assertEquals(3, result21.size());
+            assertEquals(c, result21.get(0));
+            assertEquals(a, result21.get(1));
+            assertEquals(b, result21.get(2));
+        })));
+    }
+
+    @Test
+    void testAppendAll() {
+        withString(a -> withString(b -> withString(c -> {
+            final ImmutableList<String> list1 = new ImmutableList.Builder<String>().append(a).append(b).build();
+            final MutableMap<Integer, String> arg1 = new MutableHashMap.Builder<Integer, String>().put(1, c).build();
+            final ImmutableList<String> result12 = list1.appendAll(arg1);
+            assertEquals(3, result12.size());
+            assertEquals(a, result12.get(0));
+            assertEquals(b, result12.get(1));
+            assertEquals(c, result12.get(2));
+
+            final ImmutableList<String> list2 = new ImmutableList.Builder<String>().append(c).build();
+            final MutableMap<Integer, String> arg2 = new MutableHashMap.Builder<Integer, String>().put(1, a).put(2, b).build();
+
+            final ImmutableList<String> result21 = list2.appendAll(arg2);
             assertEquals(3, result21.size());
             assertEquals(c, result21.get(0));
             assertEquals(a, result21.get(1));

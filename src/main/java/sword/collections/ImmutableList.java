@@ -472,27 +472,43 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
         return new ImmutableList<T>(newValues);
     }
 
-    public ImmutableList<T> appendAll(ImmutableList<T> that) {
-        if (that == null || that.isEmpty()) {
+    public ImmutableList<T> appendAll(Iterable<T> that) {
+        if (that == null) {
             return this;
         }
-        else if (isEmpty()) {
-            return that;
-        }
-        else {
-            final Builder<T> builder = new Builder<T>();
-            final int thisLength = _values.length;
 
-            for (int i = 0; i < thisLength; i++) {
-                builder.append(get(i));
+        final int thisLength = _values.length;
+        if (that instanceof Sizable) {
+            final int thatSize = ((Sizable) that).size();
+            if (thatSize == 0) {
+                return this;
             }
 
-            for (T item : that) {
-                builder.append(item);
+            if (that instanceof ImmutableList) {
+                final ImmutableList<T> list = (ImmutableList<T>) that;
+                if (isEmpty()) {
+                    return list;
+                }
+                else {
+                    final Object[] newValues = new Object[thisLength + thatSize];
+                    System.arraycopy(_values, 0, newValues, 0, thisLength);
+                    System.arraycopy(list._values, 0, newValues, thisLength, thatSize);
+                    return new ImmutableList<>(newValues);
+                }
             }
-
-            return builder.build();
         }
+
+        final Builder<T> builder = new Builder<T>();
+
+        for (int i = 0; i < thisLength; i++) {
+            builder.append(get(i));
+        }
+
+        for (T item : that) {
+            builder.append(item);
+        }
+
+        return builder.build();
     }
 
     @Override
