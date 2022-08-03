@@ -77,6 +77,37 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     /**
+     * Composes a new collection where the elements are extracted from this one
+     * according to the positions given in the range.
+     * <p>
+     * The size of the resulting collection should be at most the size of the given
+     * range. It can be less if the actual collection does not have enough elements.
+     *
+     * @param range Positions to be extracted from the original map. Negative numbers are not expected.
+     * @return A new collection where the elements are extracted from this collection.
+     * @throws IllegalArgumentException in case the range is invalid.
+     */
+    public ImmutableList<T> slice(ImmutableIntRange range) {
+        final int size = _values.length;
+        final int min = range.min();
+        final int max = range.max();
+        if (min >= size || max < 0) {
+            return ImmutableList.empty();
+        }
+
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        final ImmutableList.Builder<T> builder = new ImmutableList.Builder<>();
+        for (int position = min; position <= max && position < size; position++) {
+            builder.append(valueAt(position));
+        }
+
+        return builder.build();
+    }
+
+    /**
      * Returns a new ImmutableList of the same type where the
      * <code>length</code> amount of first elements has been removed.
      * <p>

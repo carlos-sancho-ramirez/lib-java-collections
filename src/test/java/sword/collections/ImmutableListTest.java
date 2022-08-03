@@ -669,4 +669,36 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
             }
         }))));
     }
+
+    @Test
+    void testSlice() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableList<String> list = newBuilder().append(a).append(b).append(c).build();
+
+            final ImmutableList<String> sliceA = list.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertSame(a, sliceA.valueAt(0));
+
+            final ImmutableList<String> sliceB = list.slice(new ImmutableIntRange(1, 1));
+            assertEquals(1, sliceB.size());
+            assertSame(b, sliceB.valueAt(0));
+
+            final ImmutableList<String> sliceC = list.slice(new ImmutableIntRange(2, 2));
+            assertEquals(1, sliceC.size());
+            assertSame(c, sliceC.valueAt(0));
+
+            final ImmutableList<String> sliceAB = list.slice(new ImmutableIntRange(0, 1));
+            assertEquals(2, sliceAB.size());
+            assertSame(a, sliceAB.valueAt(0));
+            assertSame(b, sliceAB.valueAt(1));
+
+            final ImmutableList<String> sliceBC = list.slice(new ImmutableIntRange(1, 2));
+            assertEquals(2, sliceBC.size());
+            assertSame(b, sliceBC.valueAt(0));
+            assertSame(c, sliceBC.valueAt(1));
+
+            assertSame(list, list.slice(new ImmutableIntRange(0, 2)));
+            assertSame(list, list.slice(new ImmutableIntRange(0, 3)));
+        })));
+    }
 }
