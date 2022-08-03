@@ -472,6 +472,18 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
         return new ImmutableList<T>(newValues);
     }
 
+    /**
+     * Creates a new {@link ImmutableList} instance where all items in the
+     * given {@link Iterable} are appended to the items in this collection.
+     *
+     * This method will return the same instance if the given iterable is
+     * null or empty.
+     *
+     * @param that A collection of items to be appended to the ones in this
+     *             collection. This can be null.
+     * @return A new instance with the resulting concatenation, or this
+     *         instance if nothing has been appended.
+     */
     public ImmutableList<T> appendAll(Iterable<T> that) {
         if (that == null) {
             return this;
