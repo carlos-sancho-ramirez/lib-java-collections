@@ -290,20 +290,27 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
         insert(_size, item);
     }
 
-    public void appendAll(List<T> that) {
-        if (that == null || that.isEmpty()) {
+    public void appendAll(Iterable<T> that) {
+        if (that == null) {
             return;
         }
 
-        final int arrayLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + that.size());
-        if (arrayLength != _values.length) {
-            Object[] newValues = new Object[arrayLength];
-            System.arraycopy(_values, 0, newValues, 0, _values.length);
-            _values = newValues;
-        }
+        if (that instanceof Sizable) {
+            final int arrayLength = _arrayLengthFunction.suitableArrayLength(_values.length, _size + ((Sizable) that).size());
+            if (arrayLength != _values.length) {
+                Object[] newValues = new Object[arrayLength];
+                System.arraycopy(_values, 0, newValues, 0, _values.length);
+                _values = newValues;
+            }
 
-        for (T item : that) {
-            _values[_size++] = item;
+            for (T item : that) {
+                _values[_size++] = item;
+            }
+        }
+        else {
+            for (T item : that) {
+                append(item);
+            }
         }
     }
 

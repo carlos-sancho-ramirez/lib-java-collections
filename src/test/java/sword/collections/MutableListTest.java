@@ -197,7 +197,7 @@ public final class MutableListTest extends ListTest<String, MutableList.Builder<
     void testAppendAllA() {
         withString(a -> withString(b -> withString(c -> {
             final MutableList<String> list1 = new MutableList.Builder<String>().add(a).add(b).build();
-            final MutableList<String> list2 = new MutableList.Builder<String>().add(c).build();
+            final MutableIntKeyMap<String> list2 = new MutableIntKeyMap.Builder<String>().put(1, c).build();
 
             list1.appendAll(list2);
             assertEquals(3, list1.size());
