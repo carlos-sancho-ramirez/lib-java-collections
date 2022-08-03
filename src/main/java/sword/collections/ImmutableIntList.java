@@ -340,12 +340,48 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
         return new ImmutableIntList(newValues);
     }
 
-    public ImmutableIntList appendAll(IntList that) {
-        if (that == null || that.isEmpty()) {
+    /**
+     * Creates a new {@link ImmutableIntList} instance where all items in the
+     * given {@link Iterable} are appended to the items in this collection.
+     *
+     * This method assumes that none of the items in the given collection is null.
+     *
+     * This method will return the same instance if the given iterable is
+     * null or empty.
+     *
+     * @param that A collection of numbers to be appended to the ones in this
+     *             collection. This can be null, but none of the elements can
+     *             be null.
+     * @return A new instance with the resulting concatenation, or this
+     *         instance if nothing has been appended.
+     */
+    public ImmutableIntList appendAll(Iterable<Integer> that) {
+        if (that == null) {
             return this;
         }
-        else if (isEmpty()) {
-            return that.toImmutable();
+
+        if (that instanceof Sizable) {
+            final Sizable thatSizable = (Sizable) that;
+            if (thatSizable.isEmpty()) {
+                return this;
+            }
+            else if (isEmpty() && that instanceof IntList) {
+                return ((IntList) that).toImmutable();
+            }
+            else {
+                final int thisLength = _values.length;
+                final int thatLength = thatSizable.size();
+
+                final int[] newValues = new int[thisLength + thatLength];
+                System.arraycopy(_values, 0, newValues, 0, thisLength);
+
+                final java.util.Iterator<Integer> it = that.iterator();
+                for (int index = thisLength; it.hasNext(); index++) {
+                    newValues[index] = it.next();
+                }
+
+                return new ImmutableIntList(newValues);
+            }
         }
         else {
             final Builder builder = new Builder();
