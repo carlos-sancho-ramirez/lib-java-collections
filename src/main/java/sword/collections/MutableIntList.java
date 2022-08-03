@@ -151,9 +151,11 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
         _values[_size++] = value;
     }
 
-    public void appendAll(IntList that) {
-        for (int item : that) {
-            append(item);
+    public void appendAll(Iterable<Integer> that) {
+        if (that != null) {
+            for (int item : that) {
+                append(item);
+            }
         }
     }
 

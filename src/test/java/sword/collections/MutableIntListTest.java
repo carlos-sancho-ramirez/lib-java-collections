@@ -7,7 +7,6 @@ import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static sword.collections.TestUtils.withInt;
 
@@ -161,9 +160,8 @@ public final class MutableIntListTest extends IntListTest<MutableIntList.Builder
     @Test
     void testAppendWhenEmpty() {
         withValue(value -> {
-            final ImmutableIntList empty = ImmutableIntList.empty();
-            final ImmutableIntList list = empty.append(value);
-            assertNotSame(empty, list);
+            final MutableIntList list = MutableIntList.empty();
+            list.append(value);
             assertEquals(1, list.size());
             assertEquals(value, list.get(0));
         });
@@ -172,8 +170,8 @@ public final class MutableIntListTest extends IntListTest<MutableIntList.Builder
     @Test
     void testAppendForASingleElement() {
         withValue(a -> withValue(value -> {
-            final ImmutableIntList initList = new ImmutableIntList.Builder().append(a).build();
-            final ImmutableIntList list = initList.append(value);
+            final MutableIntList list = new MutableIntList.Builder().append(a).build();
+            list.append(value);
             assertEquals(2, list.size());
             assertEquals(a, list.get(0));
             assertEquals(value, list.get(1));
@@ -182,11 +180,12 @@ public final class MutableIntListTest extends IntListTest<MutableIntList.Builder
 
     @Test
     void testAppendANonEmptyListWhenEmpty() {
-        final ImmutableIntList empty = ImmutableIntList.empty();
         withValue(value -> {
-            final ImmutableIntList list = new ImmutableIntList.Builder().append(value).build();
-            final ImmutableIntList result = empty.appendAll(list);
-            assertSame(list, result);
+            final MutableIntList list = MutableIntList.empty();
+            final ImmutableIntList arg = new ImmutableIntList.Builder().append(value).build();
+            list.appendAll(arg);
+            assertEquals(1, list.size());
+            assertEquals(value, list.get(0));
         });
     }
 
@@ -194,29 +193,38 @@ public final class MutableIntListTest extends IntListTest<MutableIntList.Builder
     void testAppendAnEmptyListWhenNoEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withValue(value -> {
-            final ImmutableIntList list = new ImmutableIntList.Builder().append(value).build();
-            final ImmutableIntList result = list.appendAll(empty);
-            assertSame(list, result);
+            final MutableIntList list = new MutableIntList.Builder().append(value).build();
+            list.appendAll(empty);
+            assertEquals(1, list.size());
+            assertEquals(value, list.get(0));
         });
     }
 
     @Test
-    void testAppendAll() {
+    void testAppendAllA() {
         withValue(a -> withValue(b -> withValue(c -> {
-            final ImmutableIntList list1 = new ImmutableIntList.Builder().append(a).append(b).build();
-            final ImmutableIntList list2 = new ImmutableIntList.Builder().append(c).build();
+            final MutableIntList list1 = new MutableIntList.Builder().append(a).build();
+            final MutableIntList list2 = new MutableIntList.Builder().append(b).append(c).build();
 
-            final ImmutableIntList result12 = list1.appendAll(list2);
-            assertEquals(3, result12.size());
-            assertEquals(a, result12.get(0));
-            assertEquals(b, result12.get(1));
-            assertEquals(c, result12.get(2));
+            list1.appendAll(list2);
+            assertEquals(3, list1.size());
+            assertEquals(a, list1.get(0));
+            assertEquals(b, list1.get(1));
+            assertEquals(c, list1.get(2));
+        })));
+    }
 
-            final ImmutableIntList result21 = list2.appendAll(list1);
-            assertEquals(3, result21.size());
-            assertEquals(c, result21.get(0));
-            assertEquals(a, result21.get(1));
-            assertEquals(b, result21.get(2));
+    @Test
+    void testAppendAllB() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final MutableIntList list1 = new MutableIntList.Builder().append(a).append(b).build();
+            final MutableIntList list2 = new MutableIntList.Builder().append(c).build();
+
+            list1.appendAll(list2);
+            assertEquals(3, list1.size());
+            assertEquals(a, list1.get(0));
+            assertEquals(b, list1.get(1));
+            assertEquals(c, list1.get(2));
         })));
     }
 
