@@ -181,13 +181,6 @@ public final class MutableIntListTest extends IntListTest<MutableIntList.Builder
     }
 
     @Test
-    void testAppendAllWhenBothEmpty() {
-        final ImmutableList<String> empty = ImmutableList.empty();
-        final ImmutableList<String> result = empty.appendAll(empty);
-        assertSame(empty, result);
-    }
-
-    @Test
     void testAppendANonEmptyListWhenEmpty() {
         final ImmutableIntList empty = ImmutableIntList.empty();
         withValue(value -> {

@@ -105,8 +105,8 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
 
     @Test
     void testAppendAllWhenBothEmpty() {
-        final ImmutableList<String> empty = ImmutableList.empty();
-        final ImmutableList<String> result = empty.appendAll(empty);
+        final ImmutableIntList empty = ImmutableIntList.empty();
+        final ImmutableIntList result = empty.appendAll(empty);
         assertSame(empty, result);
     }
 
