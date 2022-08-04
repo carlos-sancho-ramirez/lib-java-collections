@@ -271,19 +271,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableHashSet<>(newKeys, newHashCodes);
     }
 
-    /**
-     * Returns a new ImmutableSet of the same type where the
-     * <code>length</code> amount of first elements has been removed.
-     * <p>
-     * This will return an empty list if the given parameter matches
-     * or exceeds the length of this array.
-     *
-     * @param length the amount of elements to be removed from the start of the list.
-     * @return A new ImmutableSet instance without the first elements,
-     *         the same instance in case the given length is 0,
-     *         or the empty instance of the given length is equal or greater
-     *         than the actual length of the set.
-     */
+    @Override
     public ImmutableHashSet<T> skip(int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
