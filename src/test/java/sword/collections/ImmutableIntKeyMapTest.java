@@ -458,6 +458,85 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
         }));
     }
 
+    @Test
+    public void testSlice() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final String aValue = valueFromKey(a);
+            final String bValue = valueFromKey(b);
+            final String cValue = valueFromKey(c);
+            final ImmutableIntKeyMap<String> map = newMapBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+
+            final int size = map.size();
+            final int firstKey = map.keyAt(0);
+            final int secondKey = (size >= 2)? map.keyAt(1) : 0;
+            final int thirdKey = (size >= 3)? map.keyAt(2) : 0;
+            final String firstValue = map.valueAt(0);
+            final String secondValue = (size >= 2)? map.valueAt(1) : null;
+            final String thirdValue = (size >= 3)? map.valueAt(2) : null;
+
+            final ImmutableIntKeyMap<String> sliceA = map.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertEquals(firstKey, sliceA.keyAt(0));
+            assertSame(firstValue, sliceA.valueAt(0));
+
+            final ImmutableIntKeyMap<String> sliceB = map.slice(new ImmutableIntRange(1, 1));
+            if (size >= 2) {
+                assertEquals(1, sliceB.size());
+                assertEquals(secondKey, sliceB.keyAt(0));
+                assertSame(secondValue, sliceB.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceB.size());
+            }
+
+            final ImmutableIntKeyMap<String> sliceC = map.slice(new ImmutableIntRange(2, 2));
+            if (size >= 3) {
+                assertEquals(1, sliceC.size());
+                assertEquals(thirdKey, sliceC.keyAt(0));
+                assertSame(thirdValue, sliceC.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceC.size());
+            }
+
+            final ImmutableIntKeyMap<String> sliceAB = map.slice(new ImmutableIntRange(0, 1));
+            if (size >= 2) {
+                assertEquals(2, sliceAB.size());
+                assertEquals(secondKey, sliceAB.keyAt(1));
+                assertSame(secondValue, sliceAB.valueAt(1));
+            }
+            else {
+                assertEquals(1, sliceAB.size());
+            }
+            assertEquals(firstKey, sliceAB.keyAt(0));
+            assertSame(firstValue, sliceAB.valueAt(0));
+
+            final ImmutableIntKeyMap<String> sliceBC = map.slice(new ImmutableIntRange(1, 2));
+            if (size == 1) {
+                assertEquals(0, sliceBC.size());
+            }
+            else if (size == 2) {
+                assertEquals(1, sliceBC.size());
+                assertEquals(secondKey, sliceBC.keyAt(0));
+                assertSame(secondValue, sliceBC.valueAt(0));
+            }
+            else {
+                assertEquals(2, sliceBC.size());
+                assertEquals(secondKey, sliceBC.keyAt(0));
+                assertSame(secondValue, sliceBC.valueAt(0));
+                assertEquals(thirdKey, sliceBC.keyAt(1));
+                assertSame(thirdValue, sliceBC.valueAt(1));
+            }
+
+            assertSame(map, map.slice(new ImmutableIntRange(0, 2)));
+            assertSame(map, map.slice(new ImmutableIntRange(0, 3)));
+        })));
+    }
+
     static final class HashCodeKeyTraversableBuilder<E> implements ImmutableTransformableBuilder<E> {
         private final ImmutableIntKeyMap.Builder<E> builder = new ImmutableIntKeyMap.Builder<>();
 

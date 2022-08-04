@@ -368,6 +368,27 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
+    public ImmutableIntKeyMap<T> slice(ImmutableIntRange range) {
+        final int size = _values.length;
+        final int min = range.min();
+        final int max = range.max();
+        if (min >= size || max < 0) {
+            return ImmutableIntKeyMap.empty();
+        }
+
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        final int newSize = Math.min(max, size - 1) - min + 1;
+        final int[] newKeys = new int[newSize];
+        final Object[] newValues = new Object[newSize];
+        System.arraycopy(_keys, min, newKeys, 0, newSize);
+        System.arraycopy(_values, min, newValues, 0, newSize);
+
+        return new ImmutableIntKeyMap<>(newKeys, newValues);
+    }
+
     @Override
     public TransformerWithIntKey<T> iterator() {
         return new Iterator();
