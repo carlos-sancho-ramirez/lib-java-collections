@@ -128,9 +128,24 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
 
             final List<T> sliceABCD = list.slice(new ImmutableIntRange(0, 3));
             assertEquals(3, sliceABC.size());
-            assertSame(a, sliceABC.valueAt(0));
-            assertSame(b, sliceABC.valueAt(1));
-            assertSame(c, sliceABC.valueAt(2));
+            assertSame(a, sliceABCD.valueAt(0));
+            assertSame(b, sliceABCD.valueAt(1));
+            assertSame(c, sliceABCD.valueAt(2));
         }))));
+    }
+
+    @Test
+    void testSkip() {
+        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final List<T> list = supplier.newBuilder().add(a).add(b).add(c).build();
+
+            assertSame(list, list.skip(0));
+            assertEquals(supplier.newBuilder().add(b).add(c).build(), list.skip(1));
+            assertEquals(supplier.newBuilder().add(c).build(), list.skip(2));
+
+            assertTrue(list.skip(3).isEmpty());
+            assertTrue(list.skip(4).isEmpty());
+            assertTrue(list.skip(24).isEmpty());
+        })))));
     }
 }

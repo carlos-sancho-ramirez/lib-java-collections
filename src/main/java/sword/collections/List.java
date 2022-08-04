@@ -73,6 +73,20 @@ public interface List<T> extends Transformable<T> {
     }
 
     /**
+     * Returns a new List of the same type where the
+     * <code>length</code> amount of first elements has been removed.
+     * <p>
+     * This will return an empty list if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the start of the list.
+     * @return A new List instance without the first elements.
+     */
+    default List<T> skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
+    }
+
+    /**
      * Return an immutable list from the values contained in this collection.
      * The same instance will be returned in case of being already immutable.
      */
