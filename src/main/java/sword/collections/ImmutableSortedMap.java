@@ -258,6 +258,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
+    @Override
     public ImmutableSortedMap<K, V> slice(ImmutableIntRange range) {
         final int size = _values.length;
         final int min = range.min();

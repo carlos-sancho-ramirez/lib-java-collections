@@ -269,7 +269,8 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
     }
 
     @Test
-    void testSlice() {
+    @Override
+    public void testSlice() {
         withKey(a -> withKey(b -> withKey(c -> {
             final String aValue = valueFromKey(a);
             final String bValue = valueFromKey(b);

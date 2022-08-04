@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
+
 /**
  * Immutable version of a Set.
  *
@@ -83,6 +85,7 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
      * @return A new collection where the elements are extracted from this collection.
      * @throws IllegalArgumentException in case the range is invalid.
      */
+    @ToBeAbstract("This implementation is unable to provide the proper set type and iteration order for all its subtypes. Sorted sets will become hash sets, and that will modify the order of iteration")
     default ImmutableSet<T> slice(ImmutableIntRange range) {
         final int size = size();
         final int min = range.min();

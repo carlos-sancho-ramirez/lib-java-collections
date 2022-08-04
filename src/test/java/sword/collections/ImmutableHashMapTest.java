@@ -267,7 +267,8 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
     }
 
     @Test
-    void testSlice() {
+    @Override
+    public void testSlice() {
         withKey(a -> withKey(b -> withKey(c -> {
             final String aValue = valueFromKey(a);
             final String bValue = valueFromKey(b);
@@ -340,31 +341,8 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
                 assertSame(thirdValue, sliceBC.valueAt(1));
             }
 
-            final ImmutableHashMap<Integer, String> sliceABC = map.slice(new ImmutableIntRange(0, 2));
-            assertEquals(size, sliceABC.size());
-            assertSame(firstKey, sliceABC.keyAt(0));
-            assertSame(firstValue, sliceABC.valueAt(0));
-            if (size >= 2) {
-                assertSame(secondKey, sliceABC.keyAt(1));
-                assertSame(secondValue, sliceABC.valueAt(1));
-                if (size >= 3) {
-                    assertSame(thirdKey, sliceABC.keyAt(2));
-                    assertSame(thirdValue, sliceABC.valueAt(2));
-                }
-            }
-
-            final ImmutableHashMap<Integer, String> sliceABCD = map.slice(new ImmutableIntRange(0, 3));
-            assertEquals(size, sliceABCD.size());
-            assertSame(firstKey, sliceABCD.keyAt(0));
-            assertSame(firstValue, sliceABCD.valueAt(0));
-            if (size >= 2) {
-                assertSame(secondKey, sliceABCD.keyAt(1));
-                assertSame(secondValue, sliceABCD.valueAt(1));
-                if (size >= 3) {
-                    assertSame(thirdKey, sliceABCD.keyAt(2));
-                    assertSame(thirdValue, sliceABCD.valueAt(2));
-                }
-            }
+            assertSame(map, map.slice(new ImmutableIntRange(0, 2)));
+            assertSame(map, map.slice(new ImmutableIntRange(0, 3)));
         })));
     }
 

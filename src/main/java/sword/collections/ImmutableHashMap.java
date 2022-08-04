@@ -273,18 +273,7 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
     }
 
-    /**
-     * Composes a new collection where the elements are extracted from this one
-     * according to the positions given in the range.
-     * <p>
-     * The size of the resulting collection should be at most the size of the given
-     * range. It can be less if the actual collection does not have enough elements.
-     *
-     * @param range Positions to be extracted from the original collection.
-     *              Negative numbers are not expected.
-     * @return A new collection where the elements are extracted from this collection.
-     * @throws IllegalArgumentException in case the range is invalid.
-     */
+    @Override
     public ImmutableHashMap<K, V> slice(ImmutableIntRange range) {
         final int size = _values.length;
         final int min = range.min();
