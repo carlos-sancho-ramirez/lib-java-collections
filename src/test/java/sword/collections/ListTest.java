@@ -91,4 +91,45 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
             });
         })));
     }
+
+    @Test
+    void testSlice() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final List<T> list = supplier.newBuilder().append(a).append(b).append(c).build();
+
+            final List<T> sliceA = list.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertSame(a, sliceA.valueAt(0));
+
+            final List<T> sliceB = list.slice(new ImmutableIntRange(1, 1));
+            assertEquals(1, sliceB.size());
+            assertSame(b, sliceB.valueAt(0));
+
+            final List<T> sliceC = list.slice(new ImmutableIntRange(2, 2));
+            assertEquals(1, sliceC.size());
+            assertSame(c, sliceC.valueAt(0));
+
+            final List<T> sliceAB = list.slice(new ImmutableIntRange(0, 1));
+            assertEquals(2, sliceAB.size());
+            assertSame(a, sliceAB.valueAt(0));
+            assertSame(b, sliceAB.valueAt(1));
+
+            final List<T> sliceBC = list.slice(new ImmutableIntRange(1, 2));
+            assertEquals(2, sliceBC.size());
+            assertSame(b, sliceBC.valueAt(0));
+            assertSame(c, sliceBC.valueAt(1));
+
+            final List<T> sliceABC = list.slice(new ImmutableIntRange(0, 2));
+            assertEquals(3, sliceABC.size());
+            assertSame(a, sliceABC.valueAt(0));
+            assertSame(b, sliceABC.valueAt(1));
+            assertSame(c, sliceABC.valueAt(2));
+
+            final List<T> sliceABCD = list.slice(new ImmutableIntRange(0, 3));
+            assertEquals(3, sliceABC.size());
+            assertSame(a, sliceABC.valueAt(0));
+            assertSame(b, sliceABC.valueAt(1));
+            assertSame(c, sliceABC.valueAt(2));
+        }))));
+    }
 }
