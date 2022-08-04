@@ -93,7 +93,8 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
     }
 
     @Test
-    void testSlice() {
+    @Override
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final List<T> list = supplier.newBuilder().append(a).append(b).append(c).build();
 

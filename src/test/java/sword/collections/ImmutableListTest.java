@@ -672,7 +672,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
 
     @Test
     @Override
-    void testSlice() {
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().append(a).append(b).append(c).build();
 

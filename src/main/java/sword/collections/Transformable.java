@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
+
 public interface Transformable<T> extends Traversable<T> {
 
     Transformer<T> iterator();
@@ -89,5 +91,38 @@ public interface Transformable<T> extends Traversable<T> {
      */
     default IntValueMap<T> count() {
         return iterator().count();
+    }
+
+    /**
+     * Composes a new collection where the elements are extracted from this one
+     * according to the positions given in the range.
+     * <p>
+     * The size of the resulting collection should be at most the size of the given
+     * range. It can be less if the actual collection does not have enough elements.
+     *
+     * @param range Positions to be extracted from the original collection.
+     *              Negative numbers are not expected.
+     * @return A new collection where the elements are extracted from this collection.
+     * @throws IllegalArgumentException in case the range is invalid.
+     */
+    @ToBeAbstract("This implementation is unable to return the proper transformable type")
+    default Transformable<T> slice(ImmutableIntRange range) {
+        final int size = size();
+        final int min = range.min();
+        final int max = range.max();
+        if (min >= size || max < 0) {
+            return ImmutableList.empty();
+        }
+
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        final ImmutableList.Builder<T> builder = new ImmutableList.Builder<>();
+        for (int position = min; position <= max && position < size; position++) {
+            builder.append(valueAt(position));
+        }
+
+        return builder.build();
     }
 }

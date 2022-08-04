@@ -266,7 +266,8 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
-    void testSlice() {
+    @Override
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();

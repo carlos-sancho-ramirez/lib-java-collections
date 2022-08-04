@@ -537,6 +537,7 @@ interface MapTest<K, V, B extends TransformableBuilder<V>, MB extends MapBuilder
     }
 
     @Test
+    @Override
     default void testSlice() {
         withKey(a -> withKey(b -> withKey(c -> {
             final V aValue = valueFromKey(a);

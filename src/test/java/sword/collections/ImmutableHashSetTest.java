@@ -329,7 +329,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
 
     @Test
     @Override
-    void testSlice() {
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableHashSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();

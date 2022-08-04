@@ -413,6 +413,7 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>, MB extends IntKeyM
     }
 
     @Test
+    @Override
     default void testSlice() {
         withInt(a -> withInt(b -> withInt(c -> {
             final T aValue = valueFromKey(a);

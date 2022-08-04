@@ -69,7 +69,8 @@ abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest
     }
 
     @Test
-    void testSlice() {
+    @Override
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();

@@ -165,18 +165,7 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
      */
     Map<K, V> sort(SortFunction<? super K> function);
 
-    /**
-     * Composes a new collection where the elements are extracted from this one
-     * according to the positions given in the range.
-     * <p>
-     * The size of the resulting collection should be at most the size of the given
-     * range. It can be less if the actual collection does not have enough elements.
-     *
-     * @param range Positions to be extracted from the original collection.
-     *              Negative numbers are not expected.
-     * @return A new collection where the elements are extracted from this collection.
-     * @throws IllegalArgumentException in case the range is invalid.
-     */
+    @Override
     @ToBeAbstract("This implementation is unable to provide the proper map type and iteration order for all its subtypes. Sorted maps will become hash maps, and that will modify the order of iteration")
     default Map<K, V> slice(ImmutableIntRange range) {
         final int size = size();

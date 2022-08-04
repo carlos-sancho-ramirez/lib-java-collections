@@ -130,6 +130,7 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
      */
     MutableIntKeyMap<T> mutate(ArrayLengthFunction arrayLengthFunction);
 
+    @Override
     default IntKeyMap<T> slice(ImmutableIntRange range) {
         final int size = size();
         final int min = range.min();
