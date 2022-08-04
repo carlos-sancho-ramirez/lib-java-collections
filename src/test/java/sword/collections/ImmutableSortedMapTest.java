@@ -268,6 +268,85 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
         }))));
     }
 
+    @Test
+    void testSlice() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final String aValue = valueFromKey(a);
+            final String bValue = valueFromKey(b);
+            final String cValue = valueFromKey(c);
+            final ImmutableSortedMap<Integer, String> map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+
+            final int size = map.size();
+            final Integer firstKey = map.keyAt(0);
+            final Integer secondKey = (size >= 2)? map.keyAt(1) : null;
+            final Integer thirdKey = (size >= 3)? map.keyAt(2) : null;
+            final String firstValue = map.valueAt(0);
+            final String secondValue = (size >= 2)? map.valueAt(1) : null;
+            final String thirdValue = (size >= 3)? map.valueAt(2) : null;
+
+            final ImmutableSortedMap<Integer, String> sliceA = map.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertSame(firstKey, sliceA.keyAt(0));
+            assertSame(firstValue, sliceA.valueAt(0));
+
+            final ImmutableSortedMap<Integer, String> sliceB = map.slice(new ImmutableIntRange(1, 1));
+            if (size >= 2) {
+                assertEquals(1, sliceB.size());
+                assertSame(secondKey, sliceB.keyAt(0));
+                assertSame(secondValue, sliceB.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceB.size());
+            }
+
+            final ImmutableSortedMap<Integer, String> sliceC = map.slice(new ImmutableIntRange(2, 2));
+            if (size >= 3) {
+                assertEquals(1, sliceC.size());
+                assertSame(thirdKey, sliceC.keyAt(0));
+                assertSame(thirdValue, sliceC.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceC.size());
+            }
+
+            final ImmutableSortedMap<Integer, String> sliceAB = map.slice(new ImmutableIntRange(0, 1));
+            if (size >= 2) {
+                assertEquals(2, sliceAB.size());
+                assertSame(secondKey, sliceAB.keyAt(1));
+                assertSame(secondValue, sliceAB.valueAt(1));
+            }
+            else {
+                assertEquals(1, sliceAB.size());
+            }
+            assertSame(firstKey, sliceAB.keyAt(0));
+            assertSame(firstValue, sliceAB.valueAt(0));
+
+            final ImmutableSortedMap<Integer, String> sliceBC = map.slice(new ImmutableIntRange(1, 2));
+            if (size == 1) {
+                assertEquals(0, sliceBC.size());
+            }
+            else if (size == 2) {
+                assertEquals(1, sliceBC.size());
+                assertSame(secondKey, sliceBC.keyAt(0));
+                assertSame(secondValue, sliceBC.valueAt(0));
+            }
+            else {
+                assertEquals(2, sliceBC.size());
+                assertSame(secondKey, sliceBC.keyAt(0));
+                assertSame(secondValue, sliceBC.valueAt(0));
+                assertSame(thirdKey, sliceBC.keyAt(1));
+                assertSame(thirdValue, sliceBC.valueAt(1));
+            }
+
+            assertSame(map, map.slice(new ImmutableIntRange(0, 2)));
+            assertSame(map, map.slice(new ImmutableIntRange(0, 3)));
+        })));
+    }
+
     private static final class HashCodeKeyTransformableBuilder implements ImmutableTransformableBuilder<String> {
         private final ImmutableSortedMap.Builder<Integer, String> builder;
 

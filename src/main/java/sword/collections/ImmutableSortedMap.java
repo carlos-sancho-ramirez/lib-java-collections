@@ -258,6 +258,27 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
+    public ImmutableSortedMap<K, V> slice(ImmutableIntRange range) {
+        final int size = _values.length;
+        final int min = range.min();
+        final int max = range.max();
+        if (min >= size || max < 0) {
+            return new ImmutableSortedMap<>(_sortFunction, new Object[0], new Object[0]);
+        }
+
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        final int newSize = Math.min(max, size - 1) - min + 1;
+        final Object[] newKeys = new Object[newSize];
+        final Object[] newValues = new Object[newSize];
+        System.arraycopy(_keys, min, newKeys, 0, newSize);
+        System.arraycopy(_values, min, newValues, 0, newSize);
+
+        return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
         private final MutableSortedMap<K, V> _map;
 
