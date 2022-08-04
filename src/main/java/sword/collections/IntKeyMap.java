@@ -130,6 +130,27 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
      */
     MutableIntKeyMap<T> mutate(ArrayLengthFunction arrayLengthFunction);
 
+    default IntKeyMap<T> slice(ImmutableIntRange range) {
+        final int size = size();
+        final int min = range.min();
+        final int max = range.max();
+        if (min >= size || max < 0) {
+            return ImmutableIntKeyMap.empty();
+        }
+
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        final ImmutableIntKeyMap.Builder<T> builder = new ImmutableIntKeyMap.Builder<>();
+        final int maxPosition = Math.min(max, size - 1);
+        for (int position = min; position <= maxPosition; position++) {
+            builder.put(keyAt(position), valueAt(position));
+        }
+
+        return builder.build();
+    }
+
     /**
      * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
      *

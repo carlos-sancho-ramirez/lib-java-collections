@@ -459,6 +459,7 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
     }
 
     @Test
+    @Override
     public void testSlice() {
         withInt(a -> withInt(b -> withInt(c -> {
             final String aValue = valueFromKey(a);

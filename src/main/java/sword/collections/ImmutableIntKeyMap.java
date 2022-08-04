@@ -368,6 +368,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
+    @Override
     public ImmutableIntKeyMap<T> slice(ImmutableIntRange range) {
         final int size = _values.length;
         final int min = range.min();
