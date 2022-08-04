@@ -155,4 +155,39 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
             }
         }))));
     }
+
+    @Test
+    void testSkip() {
+        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableSortedSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+            final String second = (size >= 2)? set.valueAt(1) : null;
+            final String third = (size == 3)? set.valueAt(2) : null;
+
+            assertSame(set, set.skip(0));
+
+            final ImmutableSortedSet<String> skip1 = set.skip(1);
+            assertEquals(size - 1, skip1.size());
+            if (size >= 2) {
+                assertSame(second, skip1.valueAt(0));
+                if (size == 3) {
+                    assertSame(third, skip1.valueAt(1));
+                }
+            }
+
+            final ImmutableSet<String> empty = supplier.newBuilder().build();
+            final ImmutableSortedSet<String> skip2 = set.skip(2);
+            if (size == 3) {
+                assertSame(third, skip2.valueAt(0));
+                assertEquals(1, skip2.size());
+            }
+            else {
+                assertEquals(empty, skip2);
+            }
+
+            assertEquals(empty, set.skip(3));
+            assertEquals(empty, set.skip(4));
+            assertEquals(empty, set.skip(24));
+        })))));
+    }
 }
