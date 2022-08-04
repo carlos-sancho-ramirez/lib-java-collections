@@ -264,4 +264,81 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
             });
         }));
     }
+
+    @Test
+    void testSlice() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+            final T first = set.valueAt(0);
+            final T second = (size >= 2)? set.valueAt(1) : null;
+            final T third = (size >= 3)? set.valueAt(2) : null;
+
+            final ImmutableSet<T> sliceA = set.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertSame(first, sliceA.valueAt(0));
+
+            final ImmutableSet<T> sliceB = set.slice(new ImmutableIntRange(1, 1));
+            if (size >= 2) {
+                assertEquals(1, sliceB.size());
+                assertSame(second, sliceB.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceB.size());
+            }
+
+            final ImmutableSet<T> sliceC = set.slice(new ImmutableIntRange(2, 2));
+            if (size >= 3) {
+                assertEquals(1, sliceC.size());
+                assertSame(third, sliceC.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceC.size());
+            }
+
+            final ImmutableSet<T> sliceAB = set.slice(new ImmutableIntRange(0, 1));
+            if (size >= 2) {
+                assertEquals(2, sliceAB.size());
+                assertSame(second, sliceAB.valueAt(1));
+            }
+            else {
+                assertEquals(1, sliceAB.size());
+            }
+            assertEquals(first, sliceAB.valueAt(0));
+
+            final ImmutableSet<T> sliceBC = set.slice(new ImmutableIntRange(1, 2));
+            if (size == 1) {
+                assertEquals(0, sliceBC.size());
+            }
+            else if (size == 2) {
+                assertEquals(1, sliceBC.size());
+                assertSame(second, sliceBC.valueAt(0));
+            }
+            else {
+                assertEquals(2, sliceBC.size());
+                assertSame(second, sliceBC.valueAt(0));
+                assertSame(third, sliceBC.valueAt(1));
+            }
+
+            final ImmutableSet<T> sliceABC = set.slice(new ImmutableIntRange(0, 2));
+            assertEquals(size, sliceABC.size());
+            assertSame(first, sliceABC.valueAt(0));
+            if (size >= 2) {
+                assertSame(second, sliceABC.valueAt(1));
+                if (size >= 3) {
+                    assertSame(third, sliceABC.valueAt(2));
+                }
+            }
+
+            final ImmutableSet<T> sliceABCD = set.slice(new ImmutableIntRange(0, 3));
+            assertEquals(size, sliceABCD.size());
+            assertSame(first, sliceABCD.valueAt(0));
+            if (size >= 2) {
+                assertSame(second, sliceABCD.valueAt(1));
+                if (size >= 3) {
+                    assertSame(third, sliceABCD.valueAt(2));
+                }
+            }
+        }))));
+    }
 }

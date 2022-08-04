@@ -79,6 +79,7 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
     }
 
     @Test
+    @Override
     void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSortedSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();

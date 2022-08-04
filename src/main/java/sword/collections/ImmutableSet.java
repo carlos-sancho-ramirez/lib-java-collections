@@ -71,6 +71,39 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     @Override
     ImmutableSet<T> sort(SortFunction<? super T> function);
 
+    /**
+     * Composes a new collection where the elements are extracted from this one
+     * according to the positions given in the range.
+     * <p>
+     * The size of the resulting collection should be at most the size of the given
+     * range. It can be less if the actual collection does not have enough elements.
+     *
+     * @param range Positions to be extracted from the original collection.
+     *              Negative numbers are not expected.
+     * @return A new collection where the elements are extracted from this collection.
+     * @throws IllegalArgumentException in case the range is invalid.
+     */
+    default ImmutableSet<T> slice(ImmutableIntRange range) {
+        final int size = size();
+        final int min = range.min();
+        final int max = range.max();
+        if (min >= size || max < 0) {
+            return ImmutableHashSet.empty();
+        }
+
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        final ImmutableHashSet.Builder<T> builder = new ImmutableHashSet.Builder<>();
+        final int maxPosition = Math.min(max, size - 1);
+        for (int position = min; position <= maxPosition; position++) {
+            builder.add(valueAt(position));
+        }
+
+        return builder.build();
+    }
+
     interface Builder<E> extends Set.Builder<E>, ImmutableTransformableBuilder<E> {
 
         @Override
