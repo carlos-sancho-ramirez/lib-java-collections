@@ -273,6 +273,41 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
     }
 
+    /**
+     * Composes a new collection where the elements are extracted from this one
+     * according to the positions given in the range.
+     * <p>
+     * The size of the resulting collection should be at most the size of the given
+     * range. It can be less if the actual collection does not have enough elements.
+     *
+     * @param range Positions to be extracted from the original collection.
+     *              Negative numbers are not expected.
+     * @return A new collection where the elements are extracted from this collection.
+     * @throws IllegalArgumentException in case the range is invalid.
+     */
+    public ImmutableHashMap<K, V> slice(ImmutableIntRange range) {
+        final int size = _values.length;
+        final int min = range.min();
+        final int max = range.max();
+        if (min >= size || max < 0) {
+            return ImmutableHashMap.empty();
+        }
+
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        final int newSize = Math.min(max, size - 1) - min + 1;
+        final Object[] newKeys = new Object[newSize];
+        final int[] newHashCodes = new int[newSize];
+        final Object[] newValues = new Object[newSize];
+        System.arraycopy(_keys, min, newKeys, 0, newSize);
+        System.arraycopy(_hashCodes, min, newHashCodes, 0, newSize);
+        System.arraycopy(_values, min, newValues, 0, newSize);
+
+        return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
         private final MutableHashMap<K, V> _map;
 
