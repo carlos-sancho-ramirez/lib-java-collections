@@ -208,6 +208,27 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
         return newSet;
     }
 
+    @Override
+    public Set<T> slice(ImmutableIntRange range) {
+        final int min = range.min();
+        final int max = range.max();
+        if (min >= _size || max < 0) {
+            return ImmutableHashSet.empty();
+        }
+
+        if (range.min() <= 0 && range.max() >= _size - 1) {
+            return this;
+        }
+
+        final int newSize = Math.min(max, _size - 1) - min + 1;
+        final Object[] newKeys = new Object[newSize];
+        final int[] newHashCodes = new int[newSize];
+        System.arraycopy(_values, min, newKeys, 0, newSize);
+        System.arraycopy(_hashCodes, min, newHashCodes, 0, newSize);
+
+        return new ImmutableHashSet<>(newKeys, newHashCodes);
+    }
+
     public static class Builder<E> implements MutableSet.Builder<E> {
         private final MutableHashSet<E> _set;
 
