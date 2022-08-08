@@ -135,7 +135,19 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
     }
 
     @Test
-    void testSkip() {
+    @Override
+    public void testSkipWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final List<T> list = supplier.newBuilder().build();
+            assertSame(list, list.skip(0));
+            assertTrue(list.skip(1).isEmpty());
+            assertTrue(list.skip(20).isEmpty());
+        });
+    }
+
+    @Test
+    @Override
+    public void testSkip() {
         withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final List<T> list = supplier.newBuilder().add(a).add(b).add(c).build();
 

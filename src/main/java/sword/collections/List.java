@@ -56,12 +56,12 @@ public interface List<T> extends Transformable<T> {
         final int size = size();
         final int min = range.min();
         final int max = range.max();
-        if (min >= size || max < 0) {
-            return ImmutableList.empty();
+        if (min <= 0 && max >= size - 1) {
+            return this;
         }
 
-        if (range.min() <= 0 && range.max() >= size - 1) {
-            return this;
+        if (min >= size || max < 0) {
+            return ImmutableList.empty();
         }
 
         final ImmutableList.Builder<T> builder = new ImmutableList.Builder<>();
@@ -82,6 +82,7 @@ public interface List<T> extends Transformable<T> {
      * @param length the amount of elements to be removed from the start of the list.
      * @return A new List instance without the first elements.
      */
+    @Override
     default List<T> skip(int length) {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }

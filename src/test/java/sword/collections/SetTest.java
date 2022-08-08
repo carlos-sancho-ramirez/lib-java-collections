@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest<T, B> {
 
@@ -143,8 +144,20 @@ abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest
     }
 
     @Test
-    void testSkip() {
-        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+    @Override
+    public void testSkipWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final Set<T> set = supplier.newBuilder().build();
+            assertSame(set, set.skip(0));
+            assertTrue(set.skip(1).isEmpty());
+            assertTrue(set.skip(20).isEmpty());
+        });
+    }
+
+    @Test
+    @Override
+    public void testSkip() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();
             final T second = (size >= 2)? set.valueAt(1) : null;
@@ -173,6 +186,6 @@ abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest
             assertEquals(0, set.skip(3).size());
             assertEquals(0, set.skip(4).size());
             assertEquals(0, set.skip(24).size());
-        })))));
+        }))));
     }
 }

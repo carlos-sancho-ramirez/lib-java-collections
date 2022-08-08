@@ -110,12 +110,12 @@ public interface Transformable<T> extends Traversable<T> {
         final int size = size();
         final int min = range.min();
         final int max = range.max();
-        if (min >= size || max < 0) {
-            return ImmutableList.empty();
+        if (min <= 0 && max >= size - 1) {
+            return this;
         }
 
-        if (range.min() <= 0 && range.max() >= size - 1) {
-            return this;
+        if (min >= size || max < 0) {
+            return ImmutableList.empty();
         }
 
         final ImmutableList.Builder<T> builder = new ImmutableList.Builder<>();
@@ -124,5 +124,15 @@ public interface Transformable<T> extends Traversable<T> {
         }
 
         return builder.build();
+    }
+
+    /**
+     * Returns a new collection where the <code>length</code> amount of first elements has been removed.
+     *
+     * @param length the amount of elements to be removed from the start of the collection.
+     * @return A new collection without the first elements.
+     */
+    default Transformable<T> skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 }

@@ -148,7 +148,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
-    void testSkip() {
+    public void testSkip() {
         withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
 

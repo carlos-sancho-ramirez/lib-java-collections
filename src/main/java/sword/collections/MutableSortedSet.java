@@ -221,12 +221,12 @@ public final class MutableSortedSet<T> extends AbstractMutableSet<T> {
     public Set<T> slice(ImmutableIntRange range) {
         final int min = range.min();
         final int max = range.max();
-        if (min >= _size || max < 0) {
-            return new ImmutableSortedSet<>(_sortFunction, new Object[0]);
+        if (min <= 0 && max >= _size - 1) {
+            return this;
         }
 
-        if (range.min() <= 0 && range.max() >= _size - 1) {
-            return this;
+        if (min >= _size || max < 0) {
+            return new ImmutableSortedSet<>(_sortFunction, new Object[0]);
         }
 
         final int newSize = Math.min(max, _size - 1) - min + 1;

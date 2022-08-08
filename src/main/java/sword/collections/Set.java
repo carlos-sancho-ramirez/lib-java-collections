@@ -87,12 +87,12 @@ public interface Set<T> extends Transformable<T> {
         final int size = size();
         final int min = range.min();
         final int max = range.max();
-        if (min >= size || max < 0) {
-            return ImmutableHashSet.empty();
+        if (min <= 0 && max >= size - 1) {
+            return this;
         }
 
-        if (range.min() <= 0 && range.max() >= size - 1) {
-            return this;
+        if (min >= size || max < 0) {
+            return ImmutableHashSet.empty();
         }
 
         final ImmutableHashSet.Builder<T> builder = new ImmutableHashSet.Builder<>();
@@ -117,6 +117,7 @@ public interface Set<T> extends Transformable<T> {
      *         or the empty instance of the given length is equal or greater
      *         than the actual length of the set.
      */
+    @Override
     default Set<T> skip(int length) {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }

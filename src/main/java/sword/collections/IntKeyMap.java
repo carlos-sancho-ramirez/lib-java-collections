@@ -152,6 +152,7 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
         return builder.build();
     }
 
+    @Override
     default IntKeyMap<T> skip(int length) {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }

@@ -212,12 +212,12 @@ public final class MutableHashSet<T> extends AbstractMutableSet<T> {
     public Set<T> slice(ImmutableIntRange range) {
         final int min = range.min();
         final int max = range.max();
-        if (min >= _size || max < 0) {
-            return ImmutableHashSet.empty();
+        if (min <= 0 && max >= _size - 1) {
+            return this;
         }
 
-        if (range.min() <= 0 && range.max() >= _size - 1) {
-            return this;
+        if (min >= _size || max < 0) {
+            return ImmutableHashSet.empty();
         }
 
         final int newSize = Math.min(max, _size - 1) - min + 1;

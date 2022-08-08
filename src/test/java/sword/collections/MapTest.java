@@ -640,6 +640,7 @@ interface MapTest<K, V, B extends TransformableBuilder<V>, MB extends MapBuilder
     }
 
     @Test
+    @Override
     default void testSkipWhenEmpty() {
         final Map<K, V> map = newBuilder().build();
         assertSame(map, map.skip(0));
@@ -648,6 +649,7 @@ interface MapTest<K, V, B extends TransformableBuilder<V>, MB extends MapBuilder
     }
 
     @Test
+    @Override
     default void testSkip() {
         withKey(a -> withKey(b -> withKey(c -> {
             final V aValue = valueFromKey(a);

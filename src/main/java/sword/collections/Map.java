@@ -188,6 +188,7 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
         return builder.build();
     }
 
+    @Override
     default Map<K, V> skip(int length) {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
