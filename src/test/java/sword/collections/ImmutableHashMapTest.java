@@ -347,8 +347,16 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
     }
 
     @Test
+    void testSkipWhenEmpty() {
+        final ImmutableHashMap<Integer, String> set = newBuilder().build();
+        assertSame(set, set.skip(0));
+        assertSame(set, set.skip(1));
+        assertSame(set, set.skip(20));
+    }
+
+    @Test
     void testSkip() {
-        withFilterFunc(f -> withKey(a -> withKey(b -> withKey(c -> {
+        withKey(a -> withKey(b -> withKey(c -> {
             final String aValue = valueFromKey(a);
             final String bValue = valueFromKey(b);
             final String cValue = valueFromKey(c);
@@ -391,7 +399,7 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
             assertSame(empty, set.skip(3));
             assertSame(empty, set.skip(4));
             assertSame(empty, set.skip(24));
-        }))));
+        })));
     }
 
     static final class HashCodeKeyTraversableBuilder<E> implements ImmutableTransformableBuilder<E> {

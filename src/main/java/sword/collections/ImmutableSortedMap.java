@@ -280,6 +280,25 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
+    public ImmutableSortedMap<K, V> skip(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0 || _values.length == 0) {
+            return this;
+        }
+        else if (length >= _values.length) {
+            return new ImmutableSortedMap<>(_sortFunction, new Object[0], new Object[0]);
+        }
+
+        final int remain = _values.length - length;
+        final Object[] newKeys = new Object[remain];
+        final Object[] newValues = new Object[remain];
+        System.arraycopy(_keys, length, newKeys, 0, remain);
+        System.arraycopy(_values, length, newValues, 0, remain);
+        return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
         private final MutableSortedMap<K, V> _map;
 

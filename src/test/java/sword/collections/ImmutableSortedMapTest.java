@@ -348,6 +348,61 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
         })));
     }
 
+    @Test
+    void testSkipWhenEmpty() {
+        final ImmutableSortedMap<Integer, String> set = newBuilder().build();
+        assertSame(set, set.skip(0));
+        assertSame(set, set.skip(1));
+        assertSame(set, set.skip(20));
+    }
+
+    @Test
+    void testSkip() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final String aValue = valueFromKey(a);
+            final String bValue = valueFromKey(b);
+            final String cValue = valueFromKey(c);
+
+            final ImmutableSortedMap<Integer, String> set = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            final int size = set.size();
+            final Integer secondKey = (size >= 2)? set.keyAt(1) : null;
+            final String secondValue = (size >= 2)? set.valueAt(1) : null;
+            final Integer thirdKey = (size == 3)? set.keyAt(2) : null;
+            final String thirdValue = (size == 3)? set.valueAt(2) : null;
+
+            assertSame(set, set.skip(0));
+
+            final ImmutableSortedMap<Integer, String> skip1 = set.skip(1);
+            assertEquals(size - 1, skip1.size());
+            if (size >= 2) {
+                assertSame(secondKey, skip1.keyAt(0));
+                assertSame(secondValue, skip1.valueAt(0));
+                if (size == 3) {
+                    assertSame(thirdKey, skip1.keyAt(1));
+                    assertSame(thirdValue, skip1.valueAt(1));
+                }
+            }
+
+            final ImmutableSortedMap<Integer, String> skip2 = set.skip(2);
+            if (size == 3) {
+                assertSame(thirdKey, skip2.keyAt(0));
+                assertSame(thirdValue, skip2.valueAt(0));
+                assertEquals(1, skip2.size());
+            }
+            else {
+                assertTrue(skip2.isEmpty());
+            }
+
+            assertTrue(set.skip(3).isEmpty());
+            assertTrue(set.skip(4).isEmpty());
+            assertTrue(set.skip(24).isEmpty());
+        })));
+    }
+
     private static final class HashCodeKeyTransformableBuilder implements ImmutableTransformableBuilder<String> {
         private final ImmutableSortedMap.Builder<Integer, String> builder;
 
