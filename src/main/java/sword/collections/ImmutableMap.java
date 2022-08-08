@@ -93,6 +93,10 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
     @ToBeAbstract("This implementation is unable to provide the proper map type and iteration order for all its subtypes. Sorted maps will become hash maps, and that will modify the order of iteration")
     default ImmutableMap<K, V> slice(ImmutableIntRange range) {
         final int size = size();
+        if (size == 0) {
+            return this;
+        }
+
         final int min = range.min();
         final int max = range.max();
         if (min >= size || max < 0) {
@@ -110,6 +114,10 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
         }
 
         return builder.build();
+    }
+
+    default ImmutableMap<K, V> skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
     interface Builder<K, V> extends MapBuilder<K, V> {

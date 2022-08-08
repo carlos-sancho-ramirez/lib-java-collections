@@ -347,7 +347,8 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
     }
 
     @Test
-    void testSkipWhenEmpty() {
+    @Override
+    public void testSkipWhenEmpty() {
         final ImmutableHashMap<Integer, String> set = newBuilder().build();
         assertSame(set, set.skip(0));
         assertSame(set, set.skip(1));
@@ -355,7 +356,8 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
     }
 
     @Test
-    void testSkip() {
+    @Override
+    public void testSkip() {
         withKey(a -> withKey(b -> withKey(c -> {
             final String aValue = valueFromKey(a);
             final String bValue = valueFromKey(b);
