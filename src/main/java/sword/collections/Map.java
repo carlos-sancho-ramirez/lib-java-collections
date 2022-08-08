@@ -171,12 +171,12 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
         final int size = size();
         final int min = range.min();
         final int max = range.max();
-        if (min >= size || max < 0) {
-            return ImmutableHashMap.empty();
-        }
-
         if (range.min() <= 0 && range.max() >= size - 1) {
             return this;
+        }
+
+        if (min >= size || max < 0) {
+            return ImmutableHashMap.empty();
         }
 
         final ImmutableMap.Builder<K, V> builder = new ImmutableHashMap.Builder<>();
@@ -186,6 +186,10 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
         }
 
         return builder.build();
+    }
+
+    default Map<K, V> skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
     /**

@@ -116,6 +116,7 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
         return builder.build();
     }
 
+    @Override
     default ImmutableMap<K, V> skip(int length) {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
