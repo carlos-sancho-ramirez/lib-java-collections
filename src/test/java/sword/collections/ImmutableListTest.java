@@ -149,7 +149,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
 
     @Test
     public void testSkip() {
-        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
 
             assertSame(list, list.skip(0));
@@ -160,12 +160,12 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
             assertSame(emptyList, list.skip(3));
             assertSame(emptyList, list.skip(4));
             assertSame(emptyList, list.skip(24));
-        }))));
+        })));
     }
 
     @Test
     void testSkipLast() {
-        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
 
             assertSame(list, list.skipLast(0));
@@ -176,7 +176,38 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
             assertSame(emptyList, list.skipLast(3));
             assertSame(emptyList, list.skipLast(4));
             assertSame(emptyList, list.skipLast(24));
-        }))));
+        })));
+    }
+
+    @Test
+    public void testTakeWhenEmpty() {
+        final ImmutableList<String> list = newBuilder().build();
+        assertSame(list, list.take(0));
+        assertSame(list, list.take(1));
+        assertSame(list, list.take(2));
+        assertSame(list, list.take(24));
+    }
+
+    @Test
+    public void testTake() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
+
+            assertSame(ImmutableList.empty(), list.take(0));
+
+            final ImmutableList<String> take1 = list.take(1);
+            assertEquals(1, take1.size());
+            assertSame(a, take1.valueAt(0));
+
+            final ImmutableList<String> take2 = list.take(2);
+            assertEquals(2, take2.size());
+            assertSame(a, take2.valueAt(0));
+            assertSame(b, take2.valueAt(1));
+
+            assertSame(list, list.take(3));
+            assertSame(list, list.take(4));
+            assertSame(list, list.take(24));
+        })));
     }
 
     @Test
