@@ -88,6 +88,19 @@ public interface List<T> extends Transformable<T> {
     }
 
     /**
+     * Returns a new List where only the <code>length</code> amount of
+     * first elements are included, and the rest are discarded if any.
+     *
+     * @param length the maximum number of elements to be included from the
+     *               start of the list.
+     * @return A new List instance just including the first elements,
+     *         or the empty instance in case the given length is 0.
+     */
+    default List<T> take(int length) {
+        return (length == 0)? ImmutableList.empty() : slice(new ImmutableIntRange(0, length - 1));
+    }
+
+    /**
      * Return an immutable list from the values contained in this collection.
      * The same instance will be returned in case of being already immutable.
      */

@@ -134,7 +134,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
      * <p>
      * If length is equal or greater than the actual size, the same instance will be returned.
      *
-     * @param length the amount of elements to be removed from the start of the list.
+     * @param length the maximum number of elements to be included from the start of the list.
      * @return A new ImmutableList instance just including the first elements,
      *         the empty instance in case the given length is 0, or the same
      *         instance in case the given length equals or greater than the

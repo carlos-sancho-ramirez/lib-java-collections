@@ -160,4 +160,44 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
             assertTrue(list.skip(24).isEmpty());
         })))));
     }
+
+    @Test
+    public void testTakeWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final List<T> list = supplier.newBuilder().build();
+            assertSame(ImmutableList.empty(), list.take(0));
+            assertTrue(list.take(1).isEmpty());
+            assertTrue(list.take(2).isEmpty());
+            assertTrue(list.take(24).isEmpty());
+        });
+    }
+
+    @Test
+    public void testTake() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final List<T> list = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertSame(ImmutableList.empty(), list.take(0));
+
+            final List<T> take1 = list.take(1);
+            assertEquals(1, take1.size());
+            assertSame(a, take1.valueAt(0));
+
+            final List<T> take2 = list.take(2);
+            assertEquals(2, take2.size());
+            assertSame(a, take2.valueAt(0));
+            assertSame(b, take2.valueAt(1));
+
+            final List<T> take3 = list.take(3);
+            assertEquals(3, take3.size());
+            assertSame(a, take3.valueAt(0));
+            assertSame(b, take3.valueAt(1));
+            assertSame(c, take3.valueAt(2));
+
+            final List<T> take4 = list.take(3);
+            assertEquals(3, take4.size());
+            assertSame(a, take4.valueAt(0));
+            assertSame(b, take4.valueAt(1));
+            assertSame(c, take4.valueAt(2));
+        }))));
+    }
 }
