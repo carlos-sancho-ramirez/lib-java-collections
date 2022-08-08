@@ -539,6 +539,7 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
     }
 
     @Test
+    @Override
     public void testSkipWhenEmpty() {
         final ImmutableIntKeyMap<String> set = newMapBuilder().build();
         assertSame(set, set.skip(0));
@@ -547,6 +548,7 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
     }
 
     @Test
+    @Override
     public void testSkip() {
         withInt(a -> withInt(b -> withInt(c -> {
             final String aValue = valueFromKey(a);

@@ -135,12 +135,12 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
         final int size = size();
         final int min = range.min();
         final int max = range.max();
-        if (min >= size || max < 0) {
-            return ImmutableIntKeyMap.empty();
+        if (min <= 0 && max >= size - 1) {
+            return this;
         }
 
-        if (range.min() <= 0 && range.max() >= size - 1) {
-            return this;
+        if (min >= size || max < 0) {
+            return ImmutableIntKeyMap.empty();
         }
 
         final ImmutableIntKeyMap.Builder<T> builder = new ImmutableIntKeyMap.Builder<>();
@@ -150,6 +150,10 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
         }
 
         return builder.build();
+    }
+
+    default IntKeyMap<T> skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
     /**

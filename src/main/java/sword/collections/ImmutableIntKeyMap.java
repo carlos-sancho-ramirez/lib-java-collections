@@ -390,6 +390,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         return new ImmutableIntKeyMap<>(newKeys, newValues);
     }
 
+    @Override
     public ImmutableIntKeyMap<T> skip(int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");

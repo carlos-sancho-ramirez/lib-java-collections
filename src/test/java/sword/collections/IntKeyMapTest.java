@@ -491,4 +491,59 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>, MB extends IntKeyM
             assertSame(map, map.slice(new ImmutableIntRange(0, 3)));
         })));
     }
+
+    @Test
+    default void testSkipWhenEmpty() {
+        final IntKeyMap<T> map = newMapBuilder().build();
+        assertSame(map, map.skip(0));
+        assertTrue(map.skip(1).isEmpty());
+        assertTrue(map.skip(20).isEmpty());
+    }
+
+    @Test
+    default void testSkip() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final T aValue = valueFromKey(a);
+            final T bValue = valueFromKey(b);
+            final T cValue = valueFromKey(c);
+
+            final IntKeyMap<T> map = newMapBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            final int size = map.size();
+            final int secondKey = (size >= 2)? map.keyAt(1) : 0;
+            final T secondValue = (size >= 2)? map.valueAt(1) : null;
+            final int thirdKey = (size == 3)? map.keyAt(2) : 0;
+            final T thirdValue = (size == 3)? map.valueAt(2) : null;
+
+            assertSame(map, map.skip(0));
+
+            final IntKeyMap<T> skip1 = map.skip(1);
+            assertEquals(size - 1, skip1.size());
+            if (size >= 2) {
+                assertEquals(secondKey, skip1.keyAt(0));
+                assertSame(secondValue, skip1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(thirdKey, skip1.keyAt(1));
+                    assertSame(thirdValue, skip1.valueAt(1));
+                }
+            }
+
+            final IntKeyMap<T> skip2 = map.skip(2);
+            if (size == 3) {
+                assertEquals(thirdKey, skip2.keyAt(0));
+                assertSame(thirdValue, skip2.valueAt(0));
+                assertEquals(1, skip2.size());
+            }
+            else {
+                assertTrue(skip2.isEmpty());
+            }
+
+            assertTrue(map.skip(3).isEmpty());
+            assertTrue(map.skip(4).isEmpty());
+            assertTrue(map.skip(24).isEmpty());
+        })));
+    }
 }
