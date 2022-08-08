@@ -538,6 +538,62 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
         })));
     }
 
+    @Test
+    public void testSkipWhenEmpty() {
+        final ImmutableIntKeyMap<String> set = newMapBuilder().build();
+        assertSame(set, set.skip(0));
+        assertSame(set, set.skip(1));
+        assertSame(set, set.skip(20));
+    }
+
+    @Test
+    public void testSkip() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final String aValue = valueFromKey(a);
+            final String bValue = valueFromKey(b);
+            final String cValue = valueFromKey(c);
+
+            final ImmutableIntKeyMap<String> set = newMapBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            final int size = set.size();
+            final int secondKey = (size >= 2)? set.keyAt(1) : 0;
+            final String secondValue = (size >= 2)? set.valueAt(1) : null;
+            final int thirdKey = (size == 3)? set.keyAt(2) : 0;
+            final String thirdValue = (size == 3)? set.valueAt(2) : null;
+
+            assertSame(set, set.skip(0));
+
+            final ImmutableIntKeyMap<String> skip1 = set.skip(1);
+            assertEquals(size - 1, skip1.size());
+            if (size >= 2) {
+                assertEquals(secondKey, skip1.keyAt(0));
+                assertSame(secondValue, skip1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(thirdKey, skip1.keyAt(1));
+                    assertSame(thirdValue, skip1.valueAt(1));
+                }
+            }
+
+            final ImmutableIntKeyMap<String> empty = ImmutableIntKeyMap.empty();
+            final ImmutableIntKeyMap<String> skip2 = set.skip(2);
+            if (size == 3) {
+                assertEquals(thirdKey, skip2.keyAt(0));
+                assertSame(thirdValue, skip2.valueAt(0));
+                assertEquals(1, skip2.size());
+            }
+            else {
+                assertSame(empty, skip2);
+            }
+
+            assertSame(empty, set.skip(3));
+            assertSame(empty, set.skip(4));
+            assertSame(empty, set.skip(24));
+        })));
+    }
+
     static final class HashCodeKeyTraversableBuilder<E> implements ImmutableTransformableBuilder<E> {
         private final ImmutableIntKeyMap.Builder<E> builder = new ImmutableIntKeyMap.Builder<>();
 

@@ -390,6 +390,25 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         return new ImmutableIntKeyMap<>(newKeys, newValues);
     }
 
+    public ImmutableIntKeyMap<T> skip(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0) {
+            return this;
+        }
+        else if (length >= _values.length) {
+            return empty();
+        }
+
+        final int remain = _values.length - length;
+        final int[] newKeys = new int[remain];
+        final Object[] newValues = new Object[remain];
+        System.arraycopy(_keys, length, newKeys, 0, remain);
+        System.arraycopy(_values, length, newValues, 0, remain);
+        return new ImmutableIntKeyMap<>(newKeys, newValues);
+    }
+
     @Override
     public TransformerWithIntKey<T> iterator() {
         return new Iterator();
