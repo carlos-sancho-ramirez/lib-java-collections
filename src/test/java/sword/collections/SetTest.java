@@ -188,4 +188,60 @@ abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest
             assertEquals(0, set.skip(24).size());
         }))));
     }
+
+    @Test
+    public void testTakeWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final Set<T> set = supplier.newBuilder().build();
+            assertTrue(set.take(0).isEmpty());
+            assertTrue(set.take(1).isEmpty());
+            assertTrue(set.take(2).isEmpty());
+            assertTrue(set.take(24).isEmpty());
+        });
+    }
+
+    @Test
+    public void testTake() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+            final T first = set.valueAt(0);
+
+            assertTrue(set.take(0).isEmpty());
+
+            final Set<T> take1 = set.take(1);
+            assertEquals(1, take1.size());
+            assertSame(first, take1.valueAt(0));
+
+            final Set<T> take2 = set.take(2);
+            if (size == 1) {
+                assertEquals(1, take2.size());
+            }
+            else {
+                assertEquals(2, take2.size());
+                assertSame(set.valueAt(1), take2.valueAt(1));
+            }
+            assertSame(first, take2.valueAt(0));
+
+            final Set<T> take3 = set.take(3);
+            assertEquals(size, take3.size());
+            assertSame(first, take3.valueAt(0));
+            if (size >= 2) {
+                assertSame(set.valueAt(1), take3.valueAt(1));
+                if (size == 3) {
+                    assertSame(set.valueAt(2), take3.valueAt(2));
+                }
+            }
+
+            final Set<T> take4 = set.take(4);
+            assertEquals(size, take4.size());
+            assertSame(first, take4.valueAt(0));
+            if (size >= 2) {
+                assertSame(set.valueAt(1), take4.valueAt(1));
+                if (size == 3) {
+                    assertSame(set.valueAt(2), take4.valueAt(2));
+                }
+            }
+        }))));
+    }
 }

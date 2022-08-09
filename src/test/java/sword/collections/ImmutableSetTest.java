@@ -380,6 +380,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
+    @Override
     public void testTakeWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().build();
@@ -391,6 +392,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
+    @Override
     public void testTake() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();

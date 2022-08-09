@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
+
 /**
  * Root for both variants of Sets, immutable and mutable.
  *
@@ -120,6 +122,23 @@ public interface Set<T> extends Transformable<T> {
     @Override
     default Set<T> skip(int length) {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
+    }
+
+    /**
+     * Returns a new Set where only the <code>length</code> amount of
+     * first elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the start of the set in iteration order.
+     * @return A new Set instance just including the first elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length is equal or greater than the
+     *         actual size of this set.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper set type in case of sorted set. So the iteration order gets broken")
+    default Set<T> take(int length) {
+        return (length == 0)? ImmutableHashSet.empty() : slice(new ImmutableIntRange(0, length - 1));
     }
 
     /**
