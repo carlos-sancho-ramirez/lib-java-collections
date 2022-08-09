@@ -442,6 +442,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Test
+    @Override
     public void testTakeWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableHashSet<String> set = supplier.newBuilder().build();
@@ -453,6 +454,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Test
+    @Override
     public void testTake() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableHashSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();

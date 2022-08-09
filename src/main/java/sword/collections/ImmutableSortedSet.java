@@ -244,6 +244,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
      *         given length is equal or greater than the actual size of this
      *         set.
      */
+    @Override
     public ImmutableSortedSet<T> take(int length) {
         final int size = _values.length;
         if (length >= size) {

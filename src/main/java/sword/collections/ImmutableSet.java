@@ -112,6 +112,23 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
+    /**
+     * Returns a new ImmutableSet where only the <code>length</code> amount of
+     * first elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the start of the set in iteration order.
+     * @return A new ImmutableSet instance just including the first elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length is equal or greater than the
+     *         actual size of this set.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper set type in case of sorted set. So the iteration order gets broken")
+    default ImmutableSet<T> take(int length) {
+        return (length == 0)? ImmutableHashSet.empty() : slice(new ImmutableIntRange(0, length - 1));
+    }
+
     interface Builder<E> extends Set.Builder<E>, ImmutableTransformableBuilder<E> {
 
         @Override
