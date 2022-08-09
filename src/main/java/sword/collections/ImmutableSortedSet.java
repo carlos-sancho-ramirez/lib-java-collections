@@ -232,6 +232,33 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableSortedSet<>(_sortFunction, newValues);
     }
 
+    /**
+     * Returns a new ImmutableSortedSet where only the <code>length</code> amount of
+     * first elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the start of the set in iteration order.
+     * @return A new ImmutableSortedSet instance just including the first
+     *         elements and in the same order, or the same instance in case the
+     *         given length is equal or greater than the actual size of this
+     *         set.
+     */
+    public ImmutableSortedSet<T> take(int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return new ImmutableSortedSet<>(_sortFunction, new Object[0]);
+        }
+
+        final Object[] newValues = new Object[length];
+        System.arraycopy(_values, 0, newValues, 0, length);
+        return new ImmutableSortedSet<>(_sortFunction, newValues);
+    }
+
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableSortedSet<E> _set;
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class ImmutableSortedSetTest extends ImmutableSetTest<String, ImmutableSortedSet.Builder<String>> {
 
@@ -159,7 +160,7 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
     @Test
     @Override
     public void testSkip() {
-        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSortedSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();
             final String second = (size >= 2)? set.valueAt(1) : null;
@@ -189,6 +190,51 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
             assertEquals(empty, set.skip(3));
             assertEquals(empty, set.skip(4));
             assertEquals(empty, set.skip(24));
-        })))));
+        }))));
+    }
+
+    @Test
+    public void testTakeWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableSortedSet<String> set = supplier.newBuilder().build();
+            assertSame(set, set.take(0));
+            assertSame(set, set.take(1));
+            assertSame(set, set.take(2));
+            assertSame(set, set.take(24));
+        });
+    }
+
+    @Test
+    public void testTake() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableSortedSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+            final String first = set.valueAt(0);
+
+            assertTrue(set.take(0).isEmpty());
+
+            final ImmutableSortedSet<String> take1 = set.take(1);
+            if (size > 1) {
+                assertEquals(1, take1.size());
+                assertSame(first, take1.valueAt(0));
+            }
+            else {
+                assertSame(set, take1);
+            }
+
+            final ImmutableSortedSet<String> take2 = set.take(2);
+            if (size > 2) {
+                assertEquals(2, take2.size());
+                assertSame(first, take2.valueAt(0));
+                assertSame(set.valueAt(1), take2.valueAt(1));
+            }
+            else {
+                assertSame(set, take2);
+            }
+
+            assertSame(set, set.take(3));
+            assertSame(set, set.take(4));
+            assertSame(set, set.take(24));
+        }))));
     }
 }
