@@ -291,6 +291,35 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableHashSet<>(newValues, newHashCodes);
     }
 
+    /**
+     * Returns a new ImmutableHashSet where only the <code>length</code> amount of
+     * first elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the start of the set in iteration order.
+     * @return A new ImmutableHashSet instance just including the first elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length is equal or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableHashSet<T> take(int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableHashSet.empty();
+        }
+
+        final Object[] newValues = new Object[length];
+        final int[] newHashCodes = new int[length];
+        System.arraycopy(_values, 0, newValues, 0, length);
+        System.arraycopy(_hashCodes, 0, newHashCodes, 0, length);
+        return new ImmutableHashSet<>(newValues, newHashCodes);
+    }
+
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableHashSet<E> _set;
 
