@@ -405,6 +405,7 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
     }
 
     @Test
+    @Override
     public void testTakeWhenEmpty() {
         final ImmutableHashMap<Integer, String> map = newBuilder().build();
         assertSame(map, map.take(0));
@@ -414,6 +415,7 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
     }
 
     @Test
+    @Override
     public void testTake() {
         withKey(a -> withKey(b -> withKey(c -> {
             final String aValue = valueFromKey(a);

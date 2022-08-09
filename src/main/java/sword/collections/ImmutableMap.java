@@ -121,6 +121,24 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
+    /**
+     * Returns a new ImmutableMap where only the <code>length</code> amount of
+     * first elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the start of this map in iteration order.
+     * @return A new ImmutableMap instance just including the first elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length is equal or greater than the
+     *         actual size of this collection.
+     */
+    @ToBeAbstract("Returned type is wrong for sorted maps")
+    default ImmutableMap<K, V> take(int length) {
+        return (length != 0)? slice(new ImmutableIntRange(0, length - 1)) :
+                isEmpty()? this : ImmutableHashMap.empty();
+    }
+
     interface Builder<K, V> extends MapBuilder<K, V> {
         @Override
         Builder<K, V> put(K key, V value);

@@ -406,6 +406,7 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
     }
 
     @Test
+    @Override
     public void testTakeWhenEmpty() {
         final ImmutableSortedMap<Integer, String> map = newBuilder().build();
         assertSame(map, map.take(0));
@@ -415,6 +416,7 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
     }
 
     @Test
+    @Override
     public void testTake() {
         withKey(a -> withKey(b -> withKey(c -> {
             final String aValue = valueFromKey(a);

@@ -312,6 +312,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
      *         instance in case the given length is equal or greater than the
      *         actual size of this collection.
      */
+    @Override
     public ImmutableSortedMap<K, V> take(int length) {
         final int size = _values.length;
         if (length >= size) {
