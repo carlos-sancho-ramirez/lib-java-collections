@@ -405,6 +405,61 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
         })));
     }
 
+    @Test
+    public void testTakeWhenEmpty() {
+        final ImmutableSortedMap<Integer, String> map = newBuilder().build();
+        assertSame(map, map.take(0));
+        assertSame(map, map.take(1));
+        assertSame(map, map.take(2));
+        assertSame(map, map.take(24));
+    }
+
+    @Test
+    public void testTake() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final String aValue = valueFromKey(a);
+            final String bValue = valueFromKey(b);
+            final String cValue = valueFromKey(c);
+            final ImmutableSortedMap<Integer, String> map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+
+            final int size = map.size();
+            final Integer firstKey = map.keyAt(0);
+            final String firstValue = map.valueAt(0);
+
+            assertTrue(map.take(0).isEmpty());
+
+            final ImmutableSortedMap<Integer, String> take1 = map.take(1);
+            if (size > 1) {
+                assertEquals(1, take1.size());
+                assertSame(firstKey, take1.keyAt(0));
+                assertSame(firstValue, take1.valueAt(0));
+            }
+            else {
+                assertSame(map, take1);
+            }
+
+            final ImmutableSortedMap<Integer, String> take2 = map.take(2);
+            if (size > 2) {
+                assertEquals(2, take2.size());
+                assertSame(firstKey, take2.keyAt(0));
+                assertSame(firstValue, take2.valueAt(0));
+                assertSame(map.keyAt(1), take2.keyAt(1));
+                assertSame(map.valueAt(1), take2.valueAt(1));
+            }
+            else {
+                assertSame(map, take2);
+            }
+
+            assertSame(map, map.take(3));
+            assertSame(map, map.take(4));
+            assertSame(map, map.take(24));
+        })));
+    }
+
     private static final class HashCodeKeyTransformableBuilder implements ImmutableTransformableBuilder<String> {
         private final ImmutableSortedMap.Builder<Integer, String> builder;
 
