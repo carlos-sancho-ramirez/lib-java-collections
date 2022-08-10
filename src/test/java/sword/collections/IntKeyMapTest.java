@@ -550,6 +550,7 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>, MB extends IntKeyM
     }
 
     @Test
+    @Override
     default void testTakeWhenEmpty() {
         final IntKeyMap<T> map = newMapBuilder().build();
         assertTrue(map.take(0).isEmpty());
@@ -559,6 +560,7 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>, MB extends IntKeyM
     }
 
     @Test
+    @Override
     default void testTake() {
         withInt(a -> withInt(b -> withInt(c -> {
             final T aValue = valueFromKey(a);

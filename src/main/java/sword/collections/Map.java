@@ -205,6 +205,7 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
      *         instance in case the given length is equal or greater than the
      *         actual size of this collection.
      */
+    @Override
     @ToBeAbstract("Returned type is wrong for sorted maps")
     default Map<K, V> take(int length) {
         return (length == 0)? ImmutableHashMap.empty() : slice(new ImmutableIntRange(0, length - 1));

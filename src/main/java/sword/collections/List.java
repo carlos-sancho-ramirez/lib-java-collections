@@ -96,6 +96,7 @@ public interface List<T> extends Transformable<T> {
      * @return A new List instance just including the first elements,
      *         or the empty instance in case the given length is 0.
      */
+    @Override
     default List<T> take(int length) {
         return (length == 0)? ImmutableList.empty() : slice(new ImmutableIntRange(0, length - 1));
     }

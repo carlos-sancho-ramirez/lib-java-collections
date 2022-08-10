@@ -359,4 +359,60 @@ interface TransformableTest<T, B extends TransformableBuilder<T>> extends Traver
             assertEquals(0, transformable.skip(24).size());
         }))));
     }
+
+    @Test
+    default void testTakeWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final Transformable<T> transformable = supplier.newBuilder().build();
+            assertTrue(transformable.take(0).isEmpty());
+            assertTrue(transformable.take(1).isEmpty());
+            assertTrue(transformable.take(2).isEmpty());
+            assertTrue(transformable.take(24).isEmpty());
+        });
+    }
+
+    @Test
+    default void testTake() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final Transformable<T> transformable = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = transformable.size();
+            final T first = transformable.valueAt(0);
+
+            assertTrue(transformable.take(0).isEmpty());
+
+            final Transformable<T> take1 = transformable.take(1);
+            assertEquals(1, take1.size());
+            assertSame(first, take1.valueAt(0));
+
+            final Transformable<T> take2 = transformable.take(2);
+            if (size == 1) {
+                assertEquals(1, take2.size());
+            }
+            else {
+                assertEquals(2, take2.size());
+                assertSame(transformable.valueAt(1), take2.valueAt(1));
+            }
+            assertSame(first, take2.valueAt(0));
+
+            final Transformable<T> take3 = transformable.take(3);
+            assertEquals(size, take3.size());
+            assertSame(first, take3.valueAt(0));
+            if (size >= 2) {
+                assertSame(transformable.valueAt(1), take3.valueAt(1));
+                if (size == 3) {
+                    assertSame(transformable.valueAt(2), take3.valueAt(2));
+                }
+            }
+
+            final Transformable<T> take4 = transformable.take(4);
+            assertEquals(size, take4.size());
+            assertSame(first, take4.valueAt(0));
+            if (size >= 2) {
+                assertSame(transformable.valueAt(1), take4.valueAt(1));
+                if (size == 3) {
+                    assertSame(transformable.valueAt(2), take4.valueAt(2));
+                }
+            }
+        }))));
+    }
 }

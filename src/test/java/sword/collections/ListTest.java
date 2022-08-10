@@ -162,6 +162,7 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
     }
 
     @Test
+    @Override
     public void testTakeWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final List<T> list = supplier.newBuilder().build();
@@ -173,6 +174,7 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
     }
 
     @Test
+    @Override
     public void testTake() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final List<T> list = supplier.newBuilder().add(a).add(b).add(c).build();
