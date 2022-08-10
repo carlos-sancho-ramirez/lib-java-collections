@@ -596,6 +596,61 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
         })));
     }
 
+    @Test
+    public void testTakeWhenEmpty() {
+        final ImmutableIntKeyMap<String> map = newMapBuilder().build();
+        assertSame(map, map.take(0));
+        assertSame(map, map.take(1));
+        assertSame(map, map.take(2));
+        assertSame(map, map.take(24));
+    }
+
+    @Test
+    public void testTake() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final String aValue = valueFromKey(a);
+            final String bValue = valueFromKey(b);
+            final String cValue = valueFromKey(c);
+            final ImmutableIntKeyMap<String> map = newMapBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+
+            final int size = map.size();
+            final int firstKey = map.keyAt(0);
+            final String firstValue = map.valueAt(0);
+
+            assertSame(ImmutableIntKeyMap.empty(), map.take(0));
+
+            final ImmutableIntKeyMap<String> take1 = map.take(1);
+            if (size > 1) {
+                assertEquals(1, take1.size());
+                assertEquals(firstKey, take1.keyAt(0));
+                assertSame(firstValue, take1.valueAt(0));
+            }
+            else {
+                assertSame(map, take1);
+            }
+
+            final ImmutableIntKeyMap<String> take2 = map.take(2);
+            if (size > 2) {
+                assertEquals(2, take2.size());
+                assertEquals(firstKey, take2.keyAt(0));
+                assertSame(firstValue, take2.valueAt(0));
+                assertEquals(map.keyAt(1), take2.keyAt(1));
+                assertSame(map.valueAt(1), take2.valueAt(1));
+            }
+            else {
+                assertSame(map, take2);
+            }
+
+            assertSame(map, map.take(3));
+            assertSame(map, map.take(4));
+            assertSame(map, map.take(24));
+        })));
+    }
+
     static final class HashCodeKeyTraversableBuilder<E> implements ImmutableTransformableBuilder<E> {
         private final ImmutableIntKeyMap.Builder<E> builder = new ImmutableIntKeyMap.Builder<>();
 
