@@ -157,6 +157,31 @@ interface IntTraversableTest<B extends IntTraversableBuilder> {
     }
 
     @Test
+    default void testAllMatchWhenEmpty() {
+        final IntTraversable traversable = newIntBuilder().build();
+        withFilterFunc(f -> assertTrue(traversable.allMatch(f)));
+    }
+
+    @Test
+    default void testAllMatchForSingleElement() {
+        withValue(value -> {
+            final IntTraversable traversable = newIntBuilder().add(value).build();
+            withFilterFunc(f -> assertEquals(f.apply(value), traversable.allMatch(f)));
+        });
+    }
+
+    @Test
+    default void testAllMatchForMultipleElements() {
+        withValue(a -> withValue(b -> {
+            final IntTraversable traversable = newIntBuilder().add(a).add(b).build();
+            withFilterFunc(f -> {
+                final boolean expected = f.apply(a) && f.apply(b);
+                assertEquals(expected, traversable.allMatch(f));
+            });
+        }));
+    }
+
+    @Test
     default void testIndexOfWhenEmpty() {
         withValue(value -> assertEquals(-1, newIntBuilder().build().indexOf(value)));
     }
