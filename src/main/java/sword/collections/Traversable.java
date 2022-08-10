@@ -31,6 +31,22 @@ public interface Traversable<T> extends Iterable<T>, Sizable {
     }
 
     /**
+     * Returns true if the given predicate returns true for all the items
+     * in this collection.
+     * <p>
+     * This is equivalent but more efficient than calling
+     * {@link #anyMatch(Predicate)} negating both the predicate and the result:
+     * <code>
+     * <br>allMatch(v -&gt; condition(v)) == !anyMatch(v -&gt; !condition(v));
+     * </code>
+     *
+     * @param predicate Predicate to be evaluated.
+     */
+    default boolean allMatch(Predicate<? super T> predicate) {
+        return iterator().allMatch(predicate);
+    }
+
+    /**
      * Returns the index within the collection for the first element matching the given value.
      * Or -1 if none matches.
      * @param value Value to be matched. {@link java.lang.Object#equals(Object)} will be called for this purpose.

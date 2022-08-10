@@ -163,6 +163,35 @@ interface TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
+    default void testAllMatchWhenEmpty() {
+        final Predicate<T> func = v -> {
+            fail("This method should never be called in empty collections");
+            return true;
+        };
+
+        withBuilderSupplier(supplier -> assertTrue(supplier.newBuilder().build().allMatch(func)));
+    }
+
+    @Test
+    default void testAllMatchForSingleElement() {
+        withValue(value -> withBuilderSupplier(supplier -> {
+            final Traversable<T> iterable = supplier.newBuilder().add(value).build();
+            withFilterFunc(f -> assertEquals(f.apply(value), iterable.allMatch(f)));
+        }));
+    }
+
+    @Test
+    default void testAllMatchForMultipleElements() {
+        withValue(a -> withValue(b -> withBuilderSupplier(supplier -> {
+            final Traversable<T> iterable = supplier.newBuilder().add(a).add(b).build();
+            withFilterFunc(f -> {
+                final boolean expected = f.apply(a) && f.apply(b);
+                assertEquals(expected, iterable.allMatch(f));
+            });
+        })));
+    }
+
+    @Test
     default void testIndexOfWhenEmpty() {
         withValue(value -> withBuilderSupplier(supplier -> {
             assertEquals(-1, supplier.newBuilder().build().indexOf(value));
