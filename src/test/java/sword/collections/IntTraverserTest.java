@@ -134,6 +134,33 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
     }
 
     @Test
+    void testAllMatchWhenEmpty() {
+        withBuilder(builder -> {
+            final IntTraversable iterable = builder.build();
+            withFilterFunc(f -> assertTrue(iterable.iterator().allMatch(f)));
+        });
+    }
+
+    @Test
+    void testAllMatchForSingleElement() {
+        withValue(value -> withBuilder(builder -> {
+            final IntTraversable iterable = builder.add(value).build();
+            withFilterFunc(f -> assertEquals(f.apply(value), iterable.iterator().allMatch(f)));
+        }));
+    }
+
+    @Test
+    void testAllMatchForMultipleElements() {
+        withValue(a -> withValue(b -> withBuilder(builder -> {
+            final IntTraversable iterable = builder.add(a).add(b).build();
+            withFilterFunc(f -> {
+                final boolean expected = f.apply(a) && f.apply(b);
+                assertEquals(expected, iterable.iterator().allMatch(f));
+            });
+        })));
+    }
+
+    @Test
     void testIndexOfWhenEmpty() {
         withBuilder(builder -> {
             IntTraversable iterable = builder.build();

@@ -35,6 +35,28 @@ public interface IntTraverser extends Iterator<Integer> {
     }
 
     /**
+     * Returns true if the given predicate returns true for all the items
+     * in this collection.
+     * <p>
+     * This is equivalent but more efficient than calling
+     * {@link #anyMatch(IntPredicate)} negating both the predicate and the result:
+     * <code>
+     * <br>allMatch(v -&gt; condition(v)) == !anyMatch(v -&gt; !condition(v));
+     * </code>
+     *
+     * @param predicate Predicate to be evaluated.
+     */
+    default boolean allMatch(IntPredicate predicate) {
+        while (hasNext()) {
+            if (!predicate.apply(next())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Returns the index from the current Traverser position from the first element matching the given value.
      * Or -1 if none matches.
      * @param value Value to be matched. {@link java.lang.Object#equals(Object)} will be called for this purpose.
