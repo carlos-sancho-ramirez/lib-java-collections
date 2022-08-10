@@ -131,6 +131,33 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
+    void testAllMatchWhenEmpty() {
+        withBuilder(builder -> {
+            final Traversable<T> iterable = builder.build();
+            withFilterFunc(f -> assertTrue(iterable.iterator().allMatch(f)));
+        });
+    }
+
+    @Test
+    void testAllMatchForSingleElement() {
+        withValue(value -> withBuilder(builder -> {
+            final Traversable<T> iterable = builder.add(value).build();
+            withFilterFunc(f -> assertEquals(f.apply(value), iterable.iterator().allMatch(f)));
+        }));
+    }
+
+    @Test
+    void testAllMatchForMultipleElements() {
+        withValue(a -> withValue(b -> withBuilder(builder -> {
+            final Traversable<T> iterable = builder.add(a).add(b).build();
+            withFilterFunc(f -> {
+                final boolean expected = f.apply(a) && f.apply(b);
+                assertEquals(expected, iterable.iterator().allMatch(f));
+            });
+        })));
+    }
+
+    @Test
     void testIndexOfWhenEmpty() {
         withBuilder(builder -> {
             Traversable<T> iterable = builder.build();
