@@ -97,6 +97,24 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
         return (ImmutableIntList) super.filterNot(predicate);
     }
 
+    public ImmutableIntList slice(ImmutableIntRange range) {
+        final int size = _values.length;
+        final int min = range.min();
+        final int max = range.max();
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        if (min >= size || max < 0) {
+            return ImmutableIntList.empty();
+        }
+
+        final int newSize = max - min + 1;
+        final int[] newValues = new int[newSize];
+        System.arraycopy(_values, min, newValues, 0, newSize);
+        return new ImmutableIntList(newValues);
+    }
+
     /**
      * Returns a new ImmutableIntList where the <code>length</code>
      * amount of first elements has been removed.

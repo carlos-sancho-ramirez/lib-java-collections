@@ -420,6 +420,48 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Test
+    void testSliceWhenEmpty() {
+        final ImmutableIntList list = newIntBuilder().build();
+        assertSame(list, list.slice(new ImmutableIntRange(0, 0)));
+        assertSame(list, list.slice(new ImmutableIntRange(1, 1)));
+        assertSame(list, list.slice(new ImmutableIntRange(0, 1)));
+        assertSame(list, list.slice(new ImmutableIntRange(1, 2)));
+        assertSame(list, list.slice(new ImmutableIntRange(0, 2)));
+    }
+
+    @Test
+    void testSlice() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableIntList list = newIntBuilder().append(a).append(b).append(c).build();
+
+            final ImmutableIntList sliceA = list.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertEquals(a, sliceA.valueAt(0));
+
+            final ImmutableIntList sliceB = list.slice(new ImmutableIntRange(1, 1));
+            assertEquals(1, sliceB.size());
+            assertEquals(b, sliceB.valueAt(0));
+
+            final ImmutableIntList sliceC = list.slice(new ImmutableIntRange(2, 2));
+            assertEquals(1, sliceC.size());
+            assertEquals(c, sliceC.valueAt(0));
+
+            final ImmutableIntList sliceAB = list.slice(new ImmutableIntRange(0, 1));
+            assertEquals(2, sliceAB.size());
+            assertEquals(a, sliceAB.valueAt(0));
+            assertEquals(b, sliceAB.valueAt(1));
+
+            final ImmutableIntList sliceBC = list.slice(new ImmutableIntRange(1, 2));
+            assertEquals(2, sliceBC.size());
+            assertEquals(b, sliceBC.valueAt(0));
+            assertEquals(c, sliceBC.valueAt(1));
+
+            assertSame(list, list.slice(new ImmutableIntRange(0, 2)));
+            assertSame(list, list.slice(new ImmutableIntRange(0, 3)));
+        })));
+    }
+
+    @Test
     void testSkip() {
         withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
