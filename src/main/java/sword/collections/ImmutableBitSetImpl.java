@@ -300,6 +300,72 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
         throw new EmptyCollectionException();
     }
 
+    public ImmutableBitSetImpl slice(ImmutableIntRange range) {
+        if (_value == null) {
+            return this;
+        }
+
+        final int min = range.min();
+        final int max = range.max();
+        if (max < 0) {
+            return new ImmutableBitSetImpl(null);
+        }
+
+        final int length = _value.length;
+        int sum = 0;
+        boolean minFound = false;
+        int minValue = 0;
+        int maxValue = 0;
+        int currentValue = 0;
+        boolean somethingFoundAfterMax = false;
+        for (int wordIndex = 0; wordIndex < length; wordIndex++) {
+            final int wordValue = _value[wordIndex];
+            int mask = 1;
+            while (mask != 0) {
+                if ((wordValue & mask) != 0) {
+                    if (!minFound && sum >= min) {
+                        minFound = true;
+                        minValue = currentValue;
+                        maxValue = currentValue;
+                    }
+                    else if (minFound) {
+                        if (sum <= max) {
+                            maxValue = currentValue;
+                        }
+                        else {
+                            somethingFoundAfterMax = true;
+                            break;
+                        }
+                    }
+
+                    ++sum;
+                }
+
+                mask <<= 1;
+                ++currentValue;
+            }
+        }
+
+        final int newLength = minFound? (maxValue >>> OFFSET_BITS_IN_INDEX) + 1 : 0;
+        if (newLength == 0) {
+            return new ImmutableBitSetImpl(null);
+        }
+
+        if (min <= 0 && !somethingFoundAfterMax) {
+            return this;
+        }
+
+        final int[] newValue = new int[newLength];
+        final int firstWordWithValue = minValue >>> OFFSET_BITS_IN_INDEX;
+        System.arraycopy(_value, firstWordWithValue, newValue, firstWordWithValue, newLength - firstWordWithValue);
+        newValue[firstWordWithValue] &= -(1 << (minValue & OFFSET_MASK));
+        if ((maxValue & OFFSET_MASK) != OFFSET_MASK) {
+            newValue[newLength - 1] &= (1 << ((maxValue + 1) & OFFSET_MASK)) - 1;
+        }
+
+        return new ImmutableBitSetImpl(newValue);
+    }
+
     @Override
     public ImmutableIntSet toImmutable() {
         return this;
