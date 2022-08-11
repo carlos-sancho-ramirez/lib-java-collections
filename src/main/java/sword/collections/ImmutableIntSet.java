@@ -172,6 +172,28 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
         return builder.build();
     }
 
+    default ImmutableIntSet slice(ImmutableIntRange range) {
+        final int size = size();
+        final int min = range.min();
+        final int max = range.max();
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        if (min >= size || max < 0) {
+            return ImmutableIntArraySet.empty();
+        }
+
+        final IntTraverser it = iterator();
+        it.skip(min);
+        final ImmutableIntSetCreator builder = new ImmutableIntSetCreator();
+        for (int i = min; i <= max && it.hasNext(); i++) {
+            builder.add(it.next());
+        }
+
+        return builder.build();
+    }
+
     /**
      * Builder to create a new instance of an {@link ImmutableIntSet}.
      */

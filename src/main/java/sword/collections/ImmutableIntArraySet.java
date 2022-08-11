@@ -233,6 +233,7 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
         return _values[length - 1];
     }
 
+    @Override
     public ImmutableIntArraySet slice(ImmutableIntRange range) {
         final int size = _values.length;
         final int min = range.min();

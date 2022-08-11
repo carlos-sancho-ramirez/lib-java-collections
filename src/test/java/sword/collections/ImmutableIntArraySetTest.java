@@ -30,6 +30,7 @@ public final class ImmutableIntArraySetTest extends ImmutableIntSetTest {
     }
 
     @Test
+    @Override
     void testSliceWhenEmpty() {
         final ImmutableIntArraySet set = newIntBuilder().build();
         assertSame(set, set.slice(new ImmutableIntRange(0, 0)));
@@ -41,6 +42,7 @@ public final class ImmutableIntArraySetTest extends ImmutableIntSetTest {
     }
 
     @Test
+    @Override
     void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntArraySet set = newIntBuilder().add(a).add(b).add(c).build();

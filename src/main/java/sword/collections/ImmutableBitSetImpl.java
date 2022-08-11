@@ -300,6 +300,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
         throw new EmptyCollectionException();
     }
 
+    @Override
     public ImmutableBitSetImpl slice(ImmutableIntRange range) {
         if (_value == null) {
             return this;

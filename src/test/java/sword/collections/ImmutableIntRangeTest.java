@@ -325,4 +325,68 @@ class ImmutableIntRangeTest {
             }
         });
     }
+
+    @Test
+    void testSlice() {
+        withValue(a -> withValue(b -> {
+            if (a <= b) {
+                final ImmutableIntRange set = new ImmutableIntRange(a, b);
+                if (set.size() > 0) { // Size can be negative if it matches or exceeds 2^31
+                    final ImmutableIntSet sliceA = set.slice(new ImmutableIntRange(0, 0));
+                    if (a == b) {
+                        assertSame(set, sliceA);
+                    }
+                    else {
+                        assertEquals(1, sliceA.size());
+                        assertEquals(a, sliceA.valueAt(0));
+                    }
+
+                    final ImmutableIntSet sliceB = set.slice(new ImmutableIntRange(1, 1));
+                    if (a == b) {
+                        assertTrue(sliceB.isEmpty());
+                    }
+                    else {
+                        assertEquals(1, sliceB.size());
+                        assertEquals(a + 1, sliceB.valueAt(0));
+                    }
+
+                    final ImmutableIntSet sliceC = set.slice(new ImmutableIntRange(2, 2));
+                    if ((long) a + 2 <= (long) b) {
+                        assertEquals(1, sliceC.size());
+                        assertEquals(a + 2, sliceC.valueAt(0));
+                    }
+                    else {
+                        assertTrue(sliceC.isEmpty());
+                    }
+
+                    final ImmutableIntSet sliceAB = set.slice(new ImmutableIntRange(0, 1));
+                    if (a == b) {
+                        assertEquals(1, sliceAB.size());
+                    }
+                    else if (a + 1 == b) {
+                        assertSame(set, sliceAB);
+                    }
+                    else {
+                        assertEquals(2, sliceAB.size());
+                        assertEquals(a + 1, sliceAB.valueAt(1));
+                    }
+                    assertEquals(a, sliceAB.valueAt(0));
+
+                    final ImmutableIntSet sliceBC = set.slice(new ImmutableIntRange(1, 2));
+                    if (a == b) {
+                        assertTrue(sliceBC.isEmpty());
+                    }
+                    else if (a + 1 == b) {
+                        assertEquals(1, sliceBC.size());
+                        assertEquals(a + 1, sliceBC.valueAt(0));
+                    }
+                    else {
+                        assertEquals(2, sliceBC.size());
+                        assertEquals(a + 1, sliceBC.valueAt(0));
+                        assertEquals(a + 2, sliceBC.valueAt(1));
+                    }
+                }
+            }
+        }));
+    }
 }

@@ -30,6 +30,7 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
     }
 
     @Test
+    @Override
     void testSliceWhenEmpty() {
         final ImmutableBitSetImpl set = newIntBuilder().build();
         assertSame(set, set.slice(new ImmutableIntRange(0, 0)));
@@ -42,6 +43,7 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
     }
 
     @Test
+    @Override
     void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableBitSetImpl set = newIntBuilder().add(a).add(b).add(c).build();
