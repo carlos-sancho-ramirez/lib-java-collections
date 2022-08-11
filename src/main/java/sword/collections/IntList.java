@@ -34,6 +34,27 @@ public interface IntList extends IntTransformable {
         return iterator().<U>map(func).toList();
     }
 
+    default IntList slice(ImmutableIntRange range) {
+        final int size = size();
+        final int min = range.min();
+        final int max = range.max();
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        if (min >= size || max < 0) {
+            return ImmutableIntList.empty();
+        }
+
+        final int newSize = max - min + 1;
+        final int[] newValues = new int[newSize];
+        for (int i = min; i <= max; i++) {
+            newValues[i - min] = valueAt(i);
+        }
+
+        return new ImmutableIntList(newValues);
+    }
+
     /**
      * Return an immutable list from the values contained in this map.
      * The same instance will be returned in case of being already immutable.

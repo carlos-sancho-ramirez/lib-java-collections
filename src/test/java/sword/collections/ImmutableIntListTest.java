@@ -420,6 +420,7 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Test
+    @Override
     void testSliceWhenEmpty() {
         final ImmutableIntList list = newIntBuilder().build();
         assertSame(list, list.slice(new ImmutableIntRange(0, 0)));
@@ -430,6 +431,7 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Test
+    @Override
     void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().append(a).append(b).append(c).build();

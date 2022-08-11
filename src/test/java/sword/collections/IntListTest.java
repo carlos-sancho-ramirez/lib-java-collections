@@ -9,6 +9,59 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 abstract class IntListTest<B extends IntListBuilder> implements IntTransformableTest<B> {
 
     @Test
+    void testSliceWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntList list = supplier.newBuilder().build();
+            assertTrue(list.slice(new ImmutableIntRange(0, 0)).isEmpty());
+            assertTrue(list.slice(new ImmutableIntRange(1, 1)).isEmpty());
+            assertTrue(list.slice(new ImmutableIntRange(0, 1)).isEmpty());
+            assertTrue(list.slice(new ImmutableIntRange(1, 2)).isEmpty());
+            assertTrue(list.slice(new ImmutableIntRange(0, 2)).isEmpty());
+        });
+    }
+
+    @Test
+    void testSlice() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntList list = supplier.newBuilder().add(a).add(b).add(c).build();
+
+            final IntList sliceA = list.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertEquals(a, sliceA.valueAt(0));
+
+            final IntList sliceB = list.slice(new ImmutableIntRange(1, 1));
+            assertEquals(1, sliceB.size());
+            assertEquals(b, sliceB.valueAt(0));
+
+            final IntList sliceC = list.slice(new ImmutableIntRange(2, 2));
+            assertEquals(1, sliceC.size());
+            assertEquals(c, sliceC.valueAt(0));
+
+            final IntList sliceAB = list.slice(new ImmutableIntRange(0, 1));
+            assertEquals(2, sliceAB.size());
+            assertEquals(a, sliceAB.valueAt(0));
+            assertEquals(b, sliceAB.valueAt(1));
+
+            final IntList sliceBC = list.slice(new ImmutableIntRange(1, 2));
+            assertEquals(2, sliceBC.size());
+            assertEquals(b, sliceBC.valueAt(0));
+            assertEquals(c, sliceBC.valueAt(1));
+
+            final IntList sliceABC = list.slice(new ImmutableIntRange(0, 2));
+            assertEquals(3, sliceABC.size());
+            assertEquals(a, sliceABC.valueAt(0));
+            assertEquals(b, sliceABC.valueAt(1));
+            assertEquals(c, sliceABC.valueAt(2));
+
+            final IntList sliceABCD = list.slice(new ImmutableIntRange(0, 3));
+            assertEquals(3, sliceABCD.size());
+            assertEquals(a, sliceABCD.valueAt(0));
+            assertEquals(b, sliceABCD.valueAt(1));
+            assertEquals(c, sliceABCD.valueAt(2));
+        }))));
+    }
+
+    @Test
     void testToImmutableWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableIntList immutableList = supplier.newBuilder().build().toImmutable();

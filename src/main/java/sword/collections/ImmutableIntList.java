@@ -97,6 +97,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
         return (ImmutableIntList) super.filterNot(predicate);
     }
 
+    @Override
     public ImmutableIntList slice(ImmutableIntRange range) {
         final int size = _values.length;
         final int min = range.min();
