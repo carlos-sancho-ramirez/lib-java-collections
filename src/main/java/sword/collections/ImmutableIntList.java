@@ -110,7 +110,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
             return ImmutableIntList.empty();
         }
 
-        final int newSize = max - min + 1;
+        final int newSize = Math.min(max + 1, size) - min;
         final int[] newValues = new int[newSize];
         System.arraycopy(_values, min, newValues, 0, newSize);
         return new ImmutableIntList(newValues);
