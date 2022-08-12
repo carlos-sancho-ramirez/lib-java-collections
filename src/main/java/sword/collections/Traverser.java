@@ -200,6 +200,27 @@ public interface Traverser<T> extends Iterator<T> {
     }
 
     /**
+     * Return the last item that is found in the iterator.
+     * <p>
+     * This method will consume the iterator, leaving it empty.
+     *
+     * @return The last item in this iterator
+     * @throws EmptyCollectionException If the iterator is already empty.
+     */
+    default T last() throws EmptyCollectionException {
+        if (!hasNext()) {
+            throw new EmptyCollectionException();
+        }
+
+        T last;
+        do {
+            last = next();
+        } while (hasNext());
+
+        return last;
+    }
+
+    /**
      * Iterates over this and the given collection in order to compare one by one the elements retrieved by both traversers.
      * @param traverser Traverser to contrast.
      * @return Whether both traversers returned equivalent values in the same order, matching also in length.

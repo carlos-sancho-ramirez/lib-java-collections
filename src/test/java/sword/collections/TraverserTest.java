@@ -460,6 +460,38 @@ abstract class TraverserTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
+    void testLastWhenEmpty() {
+        withBuilder(builder -> {
+            final Traverser<T> traverser = builder.build().iterator();
+            try {
+                traverser.last();
+                fail("Exception not thrown");
+            }
+            catch (EmptyCollectionException e) {
+                // All fine
+            }
+        });
+    }
+
+    @Test
+    void testLastForSingleElement() {
+        withValue(a -> withBuilder(builder ->
+                assertSame(a, builder.add(a).build().iterator().last())));
+    }
+
+    @Test
+    void testLastForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final Traversable<T> traversable = builder.add(a).add(b).add(c).build();
+            T expected = null;
+            for (T t : traversable) {
+                expected = t;
+            }
+            assertSame(expected, traversable.iterator().last());
+        }))));
+    }
+
+    @Test
     void testEqualTraverserWhenEmpty() {
         withBuilder(builder -> {
             final Traversable<T> empty = builder.build();
