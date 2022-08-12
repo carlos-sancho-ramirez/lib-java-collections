@@ -601,4 +601,36 @@ abstract class IntTraverserTest<B extends IntTraversableBuilder> {
             })));
         });
     }
+
+    @Test
+    void testLastWhenEmpty() {
+        withBuilder(builder -> {
+            final IntTraverser traverser = builder.build().iterator();
+            try {
+                traverser.last();
+                fail("Exception not thrown");
+            }
+            catch (EmptyCollectionException e) {
+                // All fine
+            }
+        });
+    }
+
+    @Test
+    void testLastForSingleElement() {
+        withValue(a -> withBuilder(builder ->
+                assertEquals(a, builder.add(a).build().iterator().last())));
+    }
+
+    @Test
+    void testLastForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilder(builder -> {
+            final IntTraversable traversable = builder.add(a).add(b).add(c).build();
+            int expected = 0;
+            for (int t : traversable) {
+                expected = t;
+            }
+            assertEquals(expected, traversable.iterator().last());
+        }))));
+    }
 }
