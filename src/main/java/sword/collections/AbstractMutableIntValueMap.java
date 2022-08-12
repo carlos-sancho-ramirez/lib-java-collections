@@ -31,6 +31,15 @@ abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> impl
     }
 
     @Override
+    public int last() throws EmptyCollectionException {
+        if (_size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return _values[_size - 1];
+    }
+
+    @Override
     public IntList toList() {
         final int length = _size;
         final int[] newValues = new int[length];

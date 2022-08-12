@@ -126,6 +126,16 @@ public interface IntTraversable extends Iterable<Integer>, Sizable {
     }
 
     /**
+     * Return the last element in this collection.
+     *
+     * @return the last element in this collection.
+     * @throws EmptyCollectionException If the collection is empty.
+     */
+    default int last() throws EmptyCollectionException {
+        return iterator().last();
+    }
+
+    /**
      * Whether both collections have equivalent values in the same order.
      * @param traversable Traversable to contrast.
      * @return Whether both collections have equivalent values in the same order.

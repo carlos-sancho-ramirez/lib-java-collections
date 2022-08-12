@@ -455,4 +455,36 @@ interface IntTraversableTest<B extends IntTraversableBuilder> {
             })));
         });
     }
+
+    @Test
+    default void testLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntTraversable traversable = supplier.newBuilder().build();
+            try {
+                traversable.last();
+                fail("Exception not thrown");
+            }
+            catch (EmptyCollectionException e) {
+                // All fine
+            }
+        });
+    }
+
+    @Test
+    default void testLastForSingleElement() {
+        withValue(a -> withBuilderSupplier(supplier ->
+                assertEquals(a, supplier.newBuilder().add(a).build().last())));
+    }
+
+    @Test
+    default void testLastForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntTraversable traversable = supplier.newBuilder().add(a).add(b).add(c).build();
+            int expected = 0;
+            for (int t : traversable) {
+                expected = t;
+            }
+            assertEquals(expected, traversable.last());
+        }))));
+    }
 }

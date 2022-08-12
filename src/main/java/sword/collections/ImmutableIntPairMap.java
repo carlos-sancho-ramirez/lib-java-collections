@@ -78,6 +78,16 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     }
 
     @Override
+    public int last() throws EmptyCollectionException {
+        final int size = _values.length;
+        if (size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return _values[size - 1];
+    }
+
+    @Override
     public int indexOfKey(int key) {
         return findKey(_keys, _keys.length, key);
     }

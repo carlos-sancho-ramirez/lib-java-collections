@@ -32,6 +32,15 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
     }
 
     @Override
+    public int last() throws EmptyCollectionException {
+        if (_size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return _values[_size - 1];
+    }
+
+    @Override
     public int indexOf(int value) {
         return findKey(_values, _size, value);
     }

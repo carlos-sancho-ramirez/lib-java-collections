@@ -14,7 +14,8 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
         return _root != null && _root.contains(value);
     }
 
-    public int min() {
+    @Override
+    public int min() throws EmptyCollectionException {
         if (_root == null) {
             throw new EmptyCollectionException();
         }
@@ -27,7 +28,8 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
         return node.key;
     }
 
-    public int max() {
+    @Override
+    public int max() throws EmptyCollectionException {
         if (_root == null) {
             throw new EmptyCollectionException();
         }
@@ -38,6 +40,11 @@ public final class MutableIntTreeSet extends AbstractIntTraversable implements M
         }
 
         return node.key;
+    }
+
+    @Override
+    public int last() throws EmptyCollectionException {
+        return max();
     }
 
     @Override

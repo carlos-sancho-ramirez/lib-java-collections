@@ -31,6 +31,16 @@ abstract class AbstractImmutableIntValueMap<T> extends AbstractIntValueMap<T> im
     }
 
     @Override
+    public int last() throws EmptyCollectionException {
+        final int size = _values.length;
+        if (size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return _values[size - 1];
+    }
+
+    @Override
     public ImmutableIntList toList() {
         return new ImmutableIntList(_values);
     }

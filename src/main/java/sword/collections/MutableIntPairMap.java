@@ -66,6 +66,15 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
     }
 
     @Override
+    public int last() throws EmptyCollectionException {
+        if (_size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return _values[_size - 1];
+    }
+
+    @Override
     public int indexOfKey(int key) {
         return findKey(_keys, _size, key);
     }

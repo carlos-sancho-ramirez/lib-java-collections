@@ -54,6 +54,16 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
     }
 
     @Override
+    public int last() throws EmptyCollectionException {
+        final int size = _values.length;
+        if (size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return _values[size - 1];
+    }
+
+    @Override
     public <U> ImmutableList<U> map(IntFunction<? extends U> func) {
         final int size = _values.length;
         if (size == 0) {
