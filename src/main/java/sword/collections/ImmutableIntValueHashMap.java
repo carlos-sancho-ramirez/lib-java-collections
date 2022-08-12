@@ -248,6 +248,29 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
+    public ImmutableIntValueHashMap<T> slice(ImmutableIntRange range) {
+        final int size = _values.length;
+        final int min = range.min();
+        final int max = range.max();
+        if (min <= 0 && max >= size - 1) {
+            return this;
+        }
+
+        if (min >= size || max < 0) {
+            return ImmutableIntValueHashMap.empty();
+        }
+
+        final int newSize = Math.min(max, size - 1) - min + 1;
+        final Object[] newKeys = new Object[newSize];
+        final int[] newHashCodes = new int[newSize];
+        final int[] newValues = new int[newSize];
+        System.arraycopy(_keys, min, newKeys, 0, newSize);
+        System.arraycopy(_hashCodes, min, newHashCodes, 0, newSize);
+        System.arraycopy(_values, min, newValues, 0, newSize);
+
+        return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {
         final MutableIntValueHashMap<E> _map;
 
