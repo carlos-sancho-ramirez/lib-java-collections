@@ -53,6 +53,27 @@ public interface IntSet extends IntTransformable {
      */
     IntPairMap assignToInt(IntToIntFunction function);
 
+    default IntSet slice(ImmutableIntRange range) {
+        final int size = size();
+        final int min = range.min();
+        final int max = range.max();
+        if (range.min() <= 0 && range.max() >= size - 1) {
+            return this;
+        }
+
+        if (min >= size || max < 0) {
+            return ImmutableIntArraySet.empty();
+        }
+
+        final int newSize = Math.min(size, max + 1) - min;
+        final ImmutableIntSetCreator builder = new ImmutableIntSetCreator((currentSize, nS) -> newSize);
+        for (int i = 0; i < newSize; i++) {
+            builder.add(valueAt(min + i));
+        }
+
+        return builder.build();
+    }
+
     /**
      * Return an immutable set from the values contained in this set.
      * The same instance will be returned in case of being already immutable.

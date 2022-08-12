@@ -46,10 +46,10 @@ public interface IntList extends IntTransformable {
             return ImmutableIntList.empty();
         }
 
-        final int newSize = max - min + 1;
+        final int newSize = Math.min(size, max + 1) - min;
         final int[] newValues = new int[newSize];
-        for (int i = min; i <= max; i++) {
-            newValues[i - min] = valueAt(i);
+        for (int i = 0; i < newSize; i++) {
+            newValues[i] = valueAt(min + i);
         }
 
         return new ImmutableIntList(newValues);

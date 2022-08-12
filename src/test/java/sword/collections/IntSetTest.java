@@ -10,6 +10,91 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 abstract class IntSetTest<B extends IntSet.Builder> implements IntTransformableTest<B> {
 
     @Test
+    void testSliceWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntSet set = supplier.newBuilder().build();
+            assertTrue(set.slice(new ImmutableIntRange(0, 0)).isEmpty());
+            assertTrue(set.slice(new ImmutableIntRange(1, 1)).isEmpty());
+            assertTrue(set.slice(new ImmutableIntRange(0, 1)).isEmpty());
+            assertTrue(set.slice(new ImmutableIntRange(1, 2)).isEmpty());
+            assertTrue(set.slice(new ImmutableIntRange(0, 2)).isEmpty());
+        });
+    }
+
+    @Test
+    void testSlice() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+            final int first = set.valueAt(0);
+            final int second = (size >= 2)? set.valueAt(1) : 0;
+            final int third = (size >= 3)? set.valueAt(2) : 0;
+
+            final IntSet sliceA = set.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertEquals(first, sliceA.valueAt(0));
+
+            final IntSet sliceB = set.slice(new ImmutableIntRange(1, 1));
+            if (size >= 2) {
+                assertEquals(1, sliceB.size());
+                assertEquals(second, sliceB.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceB.size());
+            }
+
+            final IntSet sliceC = set.slice(new ImmutableIntRange(2, 2));
+            if (size >= 3) {
+                assertEquals(1, sliceC.size());
+                assertEquals(third, sliceC.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceC.size());
+            }
+
+            final IntSet sliceAB = set.slice(new ImmutableIntRange(0, 1));
+            if (size >= 2) {
+                assertEquals(2, sliceAB.size());
+                assertEquals(second, sliceAB.valueAt(1));
+            }
+            else {
+                assertEquals(1, sliceAB.size());
+            }
+            assertEquals(first, sliceAB.valueAt(0));
+
+            final IntSet sliceBC = set.slice(new ImmutableIntRange(1, 2));
+            assertEquals(size - 1, sliceBC.size());
+            if (size == 2) {
+                assertEquals(second, sliceBC.valueAt(0));
+            }
+            else if (size == 3) {
+                assertEquals(second, sliceBC.valueAt(0));
+                assertEquals(third, sliceBC.valueAt(1));
+            }
+
+            final IntSet sliceABC = set.slice(new ImmutableIntRange(0, 2));
+            assertEquals(size, sliceABC.size());
+            assertEquals(first, sliceABC.valueAt(0));
+            if (size >= 2) {
+                assertEquals(second, sliceABC.valueAt(1));
+                if (size >= 3) {
+                    assertEquals(third, sliceABC.valueAt(2));
+                }
+            }
+
+            final IntSet sliceABCD = set.slice(new ImmutableIntRange(0, 3));
+            assertEquals(size, sliceABCD.size());
+            assertEquals(first, sliceABCD.valueAt(0));
+            if (size >= 2) {
+                assertEquals(second, sliceABCD.valueAt(1));
+                if (size >= 3) {
+                    assertEquals(third, sliceABCD.valueAt(2));
+                }
+            }
+        }))));
+    }
+
+    @Test
     void testMutate() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntSet set = supplier.newBuilder().add(a).add(b).build();
