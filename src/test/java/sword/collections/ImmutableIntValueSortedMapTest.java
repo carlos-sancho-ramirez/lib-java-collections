@@ -120,7 +120,8 @@ public final class ImmutableIntValueSortedMapTest implements ImmutableIntValueMa
     }
 
     @Test
-    void testSliceWhenEmpty() {
+    @Override
+    public void testSliceWhenEmpty() {
         final ImmutableIntValueSortedMap<String> map = newBuilder().build();
         assertSame(map, map.slice(new ImmutableIntRange(0, 0)));
         assertSame(map, map.slice(new ImmutableIntRange(1, 1)));
@@ -131,6 +132,7 @@ public final class ImmutableIntValueSortedMapTest implements ImmutableIntValueMa
     }
 
     @Test
+    @Override
     public void testSlice() {
         withKey(a -> withKey(b -> withKey(c -> {
             final int aValue = valueFromKey(a);

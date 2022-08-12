@@ -146,7 +146,8 @@ public final class ImmutableIntValueHashMapTest implements ImmutableIntValueMapT
     }
 
     @Test
-    void testSliceWhenEmpty() {
+    @Override
+    public void testSliceWhenEmpty() {
         final ImmutableIntValueHashMap<String> map = newBuilder().build();
         assertSame(map, map.slice(new ImmutableIntRange(0, 0)));
         assertSame(map, map.slice(new ImmutableIntRange(1, 1)));
@@ -157,6 +158,7 @@ public final class ImmutableIntValueHashMapTest implements ImmutableIntValueMapT
     }
 
     @Test
+    @Override
     public void testSlice() {
         withKey(a -> withKey(b -> withKey(c -> {
             final int aValue = valueFromKey(a);

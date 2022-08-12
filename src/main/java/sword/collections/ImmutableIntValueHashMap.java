@@ -248,6 +248,7 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
+    @Override
     public ImmutableIntValueHashMap<T> slice(ImmutableIntRange range) {
         final int size = _values.length;
         final int min = range.min();

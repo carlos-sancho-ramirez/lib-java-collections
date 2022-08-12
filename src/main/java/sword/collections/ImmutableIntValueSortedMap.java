@@ -216,6 +216,7 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
         return new ImmutableIntValueSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
+    @Override
     public ImmutableIntValueSortedMap<T> slice(ImmutableIntRange range) {
         final int size = _values.length;
         if (size == 0) {
