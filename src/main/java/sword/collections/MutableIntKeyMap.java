@@ -38,6 +38,15 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
     }
 
     @Override
+    public T last() throws EmptyCollectionException {
+        if (_size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return valueAt(_size - 1);
+    }
+
+    @Override
     public IntKeyMap<T> filter(Predicate<? super T> predicate) {
         final ImmutableIntKeyMap.Builder<T> builder = new ImmutableIntKeyMap.Builder<>();
         for (int i = 0; i < _size; i++) {

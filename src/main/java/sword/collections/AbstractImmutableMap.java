@@ -15,6 +15,16 @@ abstract class AbstractImmutableMap<K, V> extends AbstractMap<K, V> implements I
         return _keys.length;
     }
 
+    @Override
+    public V last() throws EmptyCollectionException {
+        final int size = _keys.length;
+        if (size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return valueAt(size - 1);
+    }
+
     @SuppressWarnings("unchecked")
     public K keyAt(int index) {
         return (K) _keys[index];

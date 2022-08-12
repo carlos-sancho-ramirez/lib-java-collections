@@ -28,6 +28,15 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
         return (T) _values[index];
     }
 
+    @Override
+    public T last() throws EmptyCollectionException {
+        if (_size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return valueAt(_size - 1);
+    }
+
     private class Iterator extends AbstractTransformer<T> {
 
         private int _index;

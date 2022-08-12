@@ -79,6 +79,16 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
     }
 
     @Override
+    public T last() throws EmptyCollectionException {
+        final int size = _keys.length;
+        if (size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return valueAt(size - 1);
+    }
+
+    @Override
     public int indexOfKey(int key) {
         return findKey(_keys, _keys.length, key);
     }

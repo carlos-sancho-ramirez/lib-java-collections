@@ -39,6 +39,16 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     @Override
+    public T last() throws EmptyCollectionException {
+        final int size = _values.length;
+        if (size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return valueAt(size - 1);
+    }
+
+    @Override
     public int indexOf(T value) {
         return SortUtils.indexOf(_values, _values.length, value);
     }

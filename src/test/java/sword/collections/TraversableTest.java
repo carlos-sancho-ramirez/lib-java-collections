@@ -363,6 +363,38 @@ interface TraversableTest<T, B extends TraversableBuilder<T>> {
     }
 
     @Test
+    default void testLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final Traversable<T> traversable = supplier.newBuilder().build();
+            try {
+                traversable.last();
+                fail("Exception not thrown");
+            }
+            catch (EmptyCollectionException e) {
+                // All fine
+            }
+        });
+    }
+
+    @Test
+    default void testLastForSingleElement() {
+        withValue(a -> withBuilderSupplier(supplier ->
+                assertSame(a, supplier.newBuilder().add(a).build().last())));
+    }
+
+    @Test
+    default void testLastForMultipleElements() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final Traversable<T> traversable = supplier.newBuilder().add(a).add(b).add(c).build();
+            T expected = null;
+            for (T t : traversable) {
+                expected = t;
+            }
+            assertSame(expected, traversable.last());
+        }))));
+    }
+
+    @Test
     default void testEqualTraversableWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final Traversable<T> empty = supplier.newBuilder().build();

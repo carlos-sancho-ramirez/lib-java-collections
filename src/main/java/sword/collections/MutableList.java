@@ -45,6 +45,15 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
     }
 
     @Override
+    public T last() throws EmptyCollectionException {
+        if (_size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return valueAt(_size - 1);
+    }
+
+    @Override
     public int indexOf(T value) {
         return SortUtils.indexOf(_values, _size, value);
     }

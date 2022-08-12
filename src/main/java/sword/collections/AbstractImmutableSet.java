@@ -20,6 +20,16 @@ abstract class AbstractImmutableSet<T> extends AbstractImmutableTransformable<T>
     }
 
     @Override
+    public T last() throws EmptyCollectionException {
+        final int size = _values.length;
+        if (size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return valueAt(size - 1);
+    }
+
+    @Override
     public AbstractImmutableSet<T> filter(Predicate<? super T> predicate) {
         return (AbstractImmutableSet<T>) super.filter(predicate);
     }

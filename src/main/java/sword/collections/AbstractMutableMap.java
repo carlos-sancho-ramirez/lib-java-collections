@@ -32,6 +32,15 @@ abstract class AbstractMutableMap<K, V> extends AbstractMap<K, V> implements Mut
     }
 
     @Override
+    public V last() throws EmptyCollectionException {
+        if (_size == 0) {
+            throw new EmptyCollectionException();
+        }
+
+        return valueAt(_size - 1);
+    }
+
+    @Override
     public List<V> toList() {
         final int length = _size;
         final Object[] newValues = new Object[length];
