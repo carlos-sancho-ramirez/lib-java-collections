@@ -495,4 +495,117 @@ interface IntPairMapTest<B extends IntTransformableBuilder, MB extends IntPairMa
             }
         })));
     }
+
+    @Test
+    default void testSliceWhenEmpty() {
+        final IntPairMap map = newBuilder().build();
+        assertTrue(map.slice(new ImmutableIntRange(0, 0)).isEmpty());
+        assertTrue(map.slice(new ImmutableIntRange(1, 1)).isEmpty());
+        assertTrue(map.slice(new ImmutableIntRange(2, 2)).isEmpty());
+        assertTrue(map.slice(new ImmutableIntRange(0, 1)).isEmpty());
+        assertTrue(map.slice(new ImmutableIntRange(1, 2)).isEmpty());
+        assertTrue(map.slice(new ImmutableIntRange(0, 2)).isEmpty());
+    }
+
+    @Test
+    default void testSlice() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final int aValue = valueFromKey(a);
+            final int bValue = valueFromKey(b);
+            final int cValue = valueFromKey(c);
+            final IntPairMap map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+
+            final int size = map.size();
+            final int firstKey = map.keyAt(0);
+            final int secondKey = (size >= 2)? map.keyAt(1) : 0;
+            final int thirdKey = (size >= 3)? map.keyAt(2) : 0;
+            final int firstValue = map.valueAt(0);
+            final int secondValue = (size >= 2)? map.valueAt(1) : 0;
+            final int thirdValue = (size >= 3)? map.valueAt(2) : 0;
+
+            final IntPairMap sliceA = map.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertEquals(firstKey, sliceA.keyAt(0));
+            assertEquals(firstValue, sliceA.valueAt(0));
+
+            final IntPairMap sliceB = map.slice(new ImmutableIntRange(1, 1));
+            if (size >= 2) {
+                assertEquals(1, sliceB.size());
+                assertEquals(secondKey, sliceB.keyAt(0));
+                assertEquals(secondValue, sliceB.valueAt(0));
+            }
+            else {
+                assertTrue(sliceB.isEmpty());
+            }
+
+            final IntPairMap sliceC = map.slice(new ImmutableIntRange(2, 2));
+            if (size >= 3) {
+                assertEquals(1, sliceC.size());
+                assertEquals(thirdKey, sliceC.keyAt(0));
+                assertEquals(thirdValue, sliceC.valueAt(0));
+            }
+            else {
+                assertTrue(sliceC.isEmpty());
+            }
+
+            final IntPairMap sliceAB = map.slice(new ImmutableIntRange(0, 1));
+            if (size >= 2) {
+                assertEquals(2, sliceAB.size());
+                assertEquals(secondKey, sliceAB.keyAt(1));
+                assertEquals(secondValue, sliceAB.valueAt(1));
+            }
+            else {
+                assertEquals(1, sliceAB.size());
+            }
+            assertEquals(firstKey, sliceAB.keyAt(0));
+            assertEquals(firstValue, sliceAB.valueAt(0));
+
+            final IntPairMap sliceBC = map.slice(new ImmutableIntRange(1, 2));
+            if (size == 1) {
+                assertTrue(sliceBC.isEmpty());
+            }
+            else if (size == 2) {
+                assertEquals(1, sliceBC.size());
+                assertEquals(secondKey, sliceBC.keyAt(0));
+                assertEquals(secondValue, sliceBC.valueAt(0));
+            }
+            else {
+                assertEquals(2, sliceBC.size());
+                assertEquals(secondKey, sliceBC.keyAt(0));
+                assertEquals(secondValue, sliceBC.valueAt(0));
+                assertEquals(thirdKey, sliceBC.keyAt(1));
+                assertEquals(thirdValue, sliceBC.valueAt(1));
+            }
+
+            final IntPairMap sliceABC = map.slice(new ImmutableIntRange(0, 2));
+            assertEquals(size, sliceABC.size());
+            assertEquals(firstKey, sliceABC.keyAt(0));
+            assertEquals(firstValue, sliceABC.valueAt(0));
+            if (size >= 2) {
+                assertEquals(secondKey, sliceABC.keyAt(1));
+                assertEquals(secondValue, sliceABC.valueAt(1));
+                if (size == 3) {
+                    assertEquals(thirdKey, sliceABC.keyAt(2));
+                    assertEquals(thirdValue, sliceABC.valueAt(2));
+                }
+            }
+
+            final IntPairMap sliceABCD = map.slice(new ImmutableIntRange(0, 3));
+            assertEquals(size, sliceABCD.size());
+            assertEquals(firstKey, sliceABCD.keyAt(0));
+            assertEquals(firstValue, sliceABCD.valueAt(0));
+            if (size >= 2) {
+                assertEquals(secondKey, sliceABCD.keyAt(1));
+                assertEquals(secondValue, sliceABCD.valueAt(1));
+                if (size == 3) {
+                    assertEquals(thirdKey, sliceABCD.keyAt(2));
+                    assertEquals(thirdValue, sliceABCD.valueAt(2));
+                }
+            }
+        })));
+    }
 }

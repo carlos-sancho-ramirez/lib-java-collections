@@ -329,6 +329,7 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Test
+    @Override
     public void testSliceWhenEmpty() {
         final ImmutableIntPairMap map = newBuilder().build();
         assertSame(map, map.slice(new ImmutableIntRange(0, 0)));
@@ -340,6 +341,7 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Test
+    @Override
     public void testSlice() {
         withInt(a -> withInt(b -> withInt(c -> {
             final int aValue = valueFromKey(a);

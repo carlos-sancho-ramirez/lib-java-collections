@@ -219,6 +219,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         return new ImmutableIntKeyMap<>(_keys, newValues);
     }
 
+    @Override
     public ImmutableIntPairMap slice(ImmutableIntRange range) {
         final int size = _values.length;
         final int min = range.min();

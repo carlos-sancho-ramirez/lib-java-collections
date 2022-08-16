@@ -107,6 +107,31 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
     @Override
     IntPairMap mapToInt(IntToIntFunction func);
 
+    default IntPairMap slice(ImmutableIntRange range) {
+        final int size = size();
+        if (size == 0) {
+            return this;
+        }
+
+        final int min = range.min();
+        final int max = range.max();
+        if (min >= size || max < 0) {
+            return ImmutableIntPairMap.empty();
+        }
+
+        if (min <= 0 && max >= size - 1) {
+            return this;
+        }
+
+        final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
+        final int maxPosition = Math.min(max, size - 1);
+        for (int position = min; position <= maxPosition; position++) {
+            builder.put(keyAt(position), valueAt(position));
+        }
+
+        return builder.build();
+    }
+
     /**
      * Return an immutable map from the values contained in this map.
      * The same instance will be returned in case of being already immutable.
