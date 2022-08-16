@@ -22,7 +22,7 @@ abstract class IntSetTest<B extends IntSet.Builder> implements IntTransformableT
     }
 
     @Test
-    void testSlice() {
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();

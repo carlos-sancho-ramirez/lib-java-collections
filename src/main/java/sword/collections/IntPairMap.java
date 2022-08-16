@@ -107,6 +107,7 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
     @Override
     IntPairMap mapToInt(IntToIntFunction func);
 
+    @Override
     default IntPairMap slice(ImmutableIntRange range) {
         final int size = size();
         if (size == 0) {

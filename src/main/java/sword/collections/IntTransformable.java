@@ -1,5 +1,6 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
 import sword.annotations.ToBeSubtyped;
 
 public interface IntTransformable extends IntTraversable {
@@ -76,5 +77,37 @@ public interface IntTransformable extends IntTraversable {
      */
     default IntPairMap count() {
         return iterator().count();
+    }
+
+    /**
+     * Composes a new collection where the elements are extracted from this one
+     * according to the positions given in the range.
+     * <p>
+     * The size of the resulting collection should be at most the size of the given
+     * range. It can be less if the actual collection does not have enough elements.
+     *
+     * @param range Positions to be extracted from the original collection.
+     *              Negative numbers are not expected.
+     * @return A new collection where the elements are extracted from this collection.
+     */
+    @ToBeAbstract("This implementation is unable to return the proper transformable type")
+    default IntTransformable slice(ImmutableIntRange range) {
+        final int size = size();
+        final int min = range.min();
+        final int max = range.max();
+        if (min <= 0 && max >= size - 1) {
+            return this;
+        }
+
+        if (min >= size || max < 0) {
+            return ImmutableIntList.empty();
+        }
+
+        final ImmutableIntList.Builder builder = new ImmutableIntList.Builder();
+        for (int position = min; position <= max && position < size; position++) {
+            builder.append(valueAt(position));
+        }
+
+        return builder.build();
     }
 }

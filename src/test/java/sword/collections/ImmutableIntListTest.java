@@ -432,7 +432,7 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
 
     @Test
     @Override
-    void testSlice() {
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().append(a).append(b).append(c).build();
 

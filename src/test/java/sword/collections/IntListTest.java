@@ -21,7 +21,7 @@ abstract class IntListTest<B extends IntListBuilder> implements IntTransformable
     }
 
     @Test
-    void testSlice() {
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntList list = supplier.newBuilder().add(a).add(b).add(c).build();
 

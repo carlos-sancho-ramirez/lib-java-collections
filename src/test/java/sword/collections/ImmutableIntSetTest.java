@@ -410,7 +410,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
-    void testSlice() {
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
             final int size = set.size();

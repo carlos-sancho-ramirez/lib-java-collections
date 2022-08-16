@@ -44,7 +44,7 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
 
     @Test
     @Override
-    void testSlice() {
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableBitSetImpl set = newIntBuilder().add(a).add(b).add(c).build();
             final int size = set.size();

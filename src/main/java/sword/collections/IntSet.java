@@ -53,6 +53,7 @@ public interface IntSet extends IntTransformable {
      */
     IntPairMap assignToInt(IntToIntFunction function);
 
+    @Override
     default IntSet slice(ImmutableIntRange range) {
         final int size = size();
         final int min = range.min();

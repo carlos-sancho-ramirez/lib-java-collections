@@ -132,6 +132,7 @@ public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
      */
     Set<Entry<T>> entries();
 
+    @Override
     @ToBeAbstract("Unable to return the proper type. So the iteration order may be altered")
     default IntValueMap<T> slice(ImmutableIntRange range) {
         final int size = size();

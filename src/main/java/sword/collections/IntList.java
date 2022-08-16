@@ -34,6 +34,7 @@ public interface IntList extends IntTransformable {
         return iterator().<U>map(func).toList();
     }
 
+    @Override
     default IntList slice(ImmutableIntRange range) {
         final int size = size();
         final int min = range.min();

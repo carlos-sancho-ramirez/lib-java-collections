@@ -43,7 +43,7 @@ public final class ImmutableIntArraySetTest extends ImmutableIntSetTest {
 
     @Test
     @Override
-    void testSlice() {
+    public void testSlice() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntArraySet set = newIntBuilder().add(a).add(b).add(c).build();
             final int size = set.size();
