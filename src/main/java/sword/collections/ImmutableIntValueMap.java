@@ -77,6 +77,7 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
 
     ImmutableIntKeyMap<T> invert();
 
+    @Override
     @ToBeAbstract("Unable to return the proper type. So the iteration order may be altered")
     default ImmutableIntValueMap<T> slice(ImmutableIntRange range) {
         final int size = size();
