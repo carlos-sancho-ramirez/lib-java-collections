@@ -328,6 +328,96 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
         }))));
     }
 
+    @Test
+    public void testSliceWhenEmpty() {
+        final ImmutableIntPairMap map = newBuilder().build();
+        assertSame(map, map.slice(new ImmutableIntRange(0, 0)));
+        assertSame(map, map.slice(new ImmutableIntRange(1, 1)));
+        assertSame(map, map.slice(new ImmutableIntRange(2, 2)));
+        assertSame(map, map.slice(new ImmutableIntRange(0, 1)));
+        assertSame(map, map.slice(new ImmutableIntRange(1, 2)));
+        assertSame(map, map.slice(new ImmutableIntRange(0, 2)));
+    }
+
+    @Test
+    public void testSlice() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final int aValue = valueFromKey(a);
+            final int bValue = valueFromKey(b);
+            final int cValue = valueFromKey(c);
+            final ImmutableIntPairMap map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+
+            final int size = map.size();
+            final int firstKey = map.keyAt(0);
+            final int secondKey = (size >= 2)? map.keyAt(1) : 0;
+            final int thirdKey = (size >= 3)? map.keyAt(2) : 0;
+            final int firstValue = map.valueAt(0);
+            final int secondValue = (size >= 2)? map.valueAt(1) : 0;
+            final int thirdValue = (size >= 3)? map.valueAt(2) : 0;
+
+            final ImmutableIntPairMap sliceA = map.slice(new ImmutableIntRange(0, 0));
+            assertEquals(1, sliceA.size());
+            assertEquals(firstKey, sliceA.keyAt(0));
+            assertEquals(firstValue, sliceA.valueAt(0));
+
+            final ImmutableIntPairMap sliceB = map.slice(new ImmutableIntRange(1, 1));
+            if (size >= 2) {
+                assertEquals(1, sliceB.size());
+                assertEquals(secondKey, sliceB.keyAt(0));
+                assertEquals(secondValue, sliceB.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceB.size());
+            }
+
+            final ImmutableIntPairMap sliceC = map.slice(new ImmutableIntRange(2, 2));
+            if (size >= 3) {
+                assertEquals(1, sliceC.size());
+                assertEquals(thirdKey, sliceC.keyAt(0));
+                assertEquals(thirdValue, sliceC.valueAt(0));
+            }
+            else {
+                assertEquals(0, sliceC.size());
+            }
+
+            final ImmutableIntPairMap sliceAB = map.slice(new ImmutableIntRange(0, 1));
+            if (size >= 2) {
+                assertEquals(2, sliceAB.size());
+                assertEquals(secondKey, sliceAB.keyAt(1));
+                assertEquals(secondValue, sliceAB.valueAt(1));
+            }
+            else {
+                assertEquals(1, sliceAB.size());
+            }
+            assertEquals(firstKey, sliceAB.keyAt(0));
+            assertEquals(firstValue, sliceAB.valueAt(0));
+
+            final ImmutableIntPairMap sliceBC = map.slice(new ImmutableIntRange(1, 2));
+            if (size == 1) {
+                assertEquals(0, sliceBC.size());
+            }
+            else if (size == 2) {
+                assertEquals(1, sliceBC.size());
+                assertEquals(secondKey, sliceBC.keyAt(0));
+                assertEquals(secondValue, sliceBC.valueAt(0));
+            }
+            else {
+                assertEquals(2, sliceBC.size());
+                assertEquals(secondKey, sliceBC.keyAt(0));
+                assertEquals(secondValue, sliceBC.valueAt(0));
+                assertEquals(thirdKey, sliceBC.keyAt(1));
+                assertEquals(thirdValue, sliceBC.valueAt(1));
+            }
+
+            assertSame(map, map.slice(new ImmutableIntRange(0, 2)));
+            assertSame(map, map.slice(new ImmutableIntRange(0, 3)));
+        })));
+    }
+
     static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {
         private final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
 
