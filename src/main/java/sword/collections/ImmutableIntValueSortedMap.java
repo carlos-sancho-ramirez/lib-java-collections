@@ -242,6 +242,29 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
         return new ImmutableIntValueSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
+    public ImmutableIntValueSortedMap<T> skip(int length) {
+        final int size = _values.length;
+        if (size == 0) {
+            return this;
+        }
+
+        if (length <= 0) {
+            return this;
+        }
+
+        if (length >= size) {
+            return new ImmutableIntValueSortedMap<>(_sortFunction, new Object[0], new int[0]);
+        }
+
+        final int newSize = size - length;
+        final Object[] newKeys = new Object[newSize];
+        final int[] newValues = new int[newSize];
+        System.arraycopy(_keys, length, newKeys, 0, newSize);
+        System.arraycopy(_values, length, newValues, 0, newSize);
+
+        return new ImmutableIntValueSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {
         private final MutableIntValueSortedMap<E> _map;
 
