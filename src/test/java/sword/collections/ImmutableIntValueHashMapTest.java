@@ -237,6 +237,62 @@ public final class ImmutableIntValueHashMapTest implements ImmutableIntValueMapT
         })));
     }
 
+    @Test
+    public void testSkipWhenEmpty() {
+        final ImmutableIntValueHashMap<String> set = newBuilder().build();
+        assertSame(set, set.skip(0));
+        assertSame(set, set.skip(1));
+        assertSame(set, set.skip(20));
+    }
+
+    @Test
+    public void testSkip() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final int aValue = valueFromKey(a);
+            final int bValue = valueFromKey(b);
+            final int cValue = valueFromKey(c);
+
+            final ImmutableIntValueHashMap<String> set = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            final int size = set.size();
+            final String secondKey = (size >= 2)? set.keyAt(1) : null;
+            final int secondValue = (size >= 2)? set.valueAt(1) : 0;
+            final String thirdKey = (size == 3)? set.keyAt(2) : null;
+            final int thirdValue = (size == 3)? set.valueAt(2) : 0;
+
+            assertSame(set, set.skip(0));
+
+            final ImmutableIntValueHashMap<String> skip1 = set.skip(1);
+            assertEquals(size - 1, skip1.size());
+            if (size >= 2) {
+                assertSame(secondKey, skip1.keyAt(0));
+                assertEquals(secondValue, skip1.valueAt(0));
+                if (size == 3) {
+                    assertSame(thirdKey, skip1.keyAt(1));
+                    assertEquals(thirdValue, skip1.valueAt(1));
+                }
+            }
+
+            final ImmutableIntValueHashMap<String> empty = ImmutableIntValueHashMap.empty();
+            final ImmutableIntValueHashMap<String> skip2 = set.skip(2);
+            if (size == 3) {
+                assertSame(thirdKey, skip2.keyAt(0));
+                assertEquals(thirdValue, skip2.valueAt(0));
+                assertEquals(1, skip2.size());
+            }
+            else {
+                assertSame(empty, skip2);
+            }
+
+            assertSame(empty, set.skip(3));
+            assertSame(empty, set.skip(4));
+            assertSame(empty, set.skip(24));
+        })));
+    }
+
     static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {
         private final ImmutableIntValueHashMap.Builder<String> builder = new ImmutableIntValueHashMap.Builder<>();
 

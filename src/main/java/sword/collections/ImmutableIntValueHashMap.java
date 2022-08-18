@@ -272,6 +272,27 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
+    public ImmutableIntValueHashMap<T> skip(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0) {
+            return this;
+        }
+        else if (length >= _values.length) {
+            return empty();
+        }
+
+        final int remain = _values.length - length;
+        final Object[] newKeys = new Object[remain];
+        final int[] newValues = new int[remain];
+        final int[] newHashCodes = new int[remain];
+        System.arraycopy(_keys, length, newKeys, 0, remain);
+        System.arraycopy(_hashCodes, length, newHashCodes, 0, remain);
+        System.arraycopy(_values, length, newValues, 0, remain);
+        return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {
         final MutableIntValueHashMap<E> _map;
 
