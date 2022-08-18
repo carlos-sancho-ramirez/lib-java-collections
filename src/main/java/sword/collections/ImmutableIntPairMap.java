@@ -241,6 +241,24 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         return new ImmutableIntPairMap(newKeys, newValues);
     }
 
+    public ImmutableIntPairMap skip(int length) {
+        final int size = _values.length;
+        if (length <= 0) {
+            return this;
+        }
+
+        if (length >= size) {
+            return ImmutableIntPairMap.empty();
+        }
+
+        final int newSize = size - length;
+        final int[] newKeys = new int[newSize];
+        final int[] newValues = new int[newSize];
+        System.arraycopy(_keys, length, newKeys, 0, newSize);
+        System.arraycopy(_values, length, newValues, 0, newSize);
+        return new ImmutableIntPairMap(newKeys, newValues);
+    }
+
     @Override
     public ImmutableIntPairMap toImmutable() {
         return this;
