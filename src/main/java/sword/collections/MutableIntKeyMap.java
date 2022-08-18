@@ -128,6 +128,10 @@ public final class MutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements M
 
     @SuppressWarnings("unchecked")
     public T valueAt(int index) {
+        if (index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         return (T) _values[index];
     }
 

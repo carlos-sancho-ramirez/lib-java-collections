@@ -25,6 +25,10 @@ abstract class AbstractMutableSet<T> extends AbstractTraversable<T> implements M
     @Override
     @SuppressWarnings("unchecked")
     public T valueAt(int index) {
+        if (index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         return (T) _values[index];
     }
 

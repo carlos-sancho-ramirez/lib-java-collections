@@ -28,6 +28,10 @@ abstract class AbstractMutableMap<K, V> extends AbstractMap<K, V> implements Mut
     @Override
     @SuppressWarnings("unchecked")
     public V valueAt(int index) {
+        if (index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         return (V) _values[index];
     }
 

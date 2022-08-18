@@ -105,6 +105,21 @@ public interface Traversable<T> extends Iterable<T>, Sizable {
     }
 
     /**
+     * Return the first element in this collection in iteration order.
+     *
+     * @return the first element in this collection.
+     * @throws EmptyCollectionException If the collection is empty.
+     */
+    default T first() throws EmptyCollectionException {
+        try {
+            return valueAt(0);
+        }
+        catch (IndexOutOfBoundsException e) {
+            throw new EmptyCollectionException();
+        }
+    }
+
+    /**
      * Return the last element in this collection.
      *
      * @return the last element in this collection.

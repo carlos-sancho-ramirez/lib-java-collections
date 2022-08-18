@@ -36,6 +36,10 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
     @Override
     @SuppressWarnings("unchecked")
     public T valueAt(int index) {
+        if (index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         return (T) _values[index];
     }
 
