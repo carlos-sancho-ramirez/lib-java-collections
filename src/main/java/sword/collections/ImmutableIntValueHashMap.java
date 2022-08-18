@@ -272,6 +272,7 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
+    @Override
     public ImmutableIntValueHashMap<T> skip(int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
