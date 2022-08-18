@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class IntSetTest<B extends IntSet.Builder> implements IntTransformableTest<B> {
@@ -91,6 +92,50 @@ abstract class IntSetTest<B extends IntSet.Builder> implements IntTransformableT
                     assertEquals(third, sliceABCD.valueAt(2));
                 }
             }
+        }))));
+    }
+
+    @Test
+    public void testSkipWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntSet set = supplier.newBuilder().build();
+            assertSame(set, set.skip(0));
+            assertTrue(set.skip(1).isEmpty());
+            assertTrue(set.skip(20).isEmpty());
+        });
+    }
+
+    @Test
+    public void testSkip() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+            final int second = (size >= 2)? set.valueAt(1) : 0;
+            final int third = (size == 3)? set.valueAt(2) : 0;
+
+            assertSame(set, set.skip(0));
+
+            final IntSet skip1 = set.skip(1);
+            assertEquals(size - 1, skip1.size());
+            if (size >= 2) {
+                assertEquals(second, skip1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(third, skip1.valueAt(1));
+                }
+            }
+
+            final IntSet skip2 = set.skip(2);
+            if (size == 3) {
+                assertEquals(third, skip2.valueAt(0));
+                assertEquals(1, skip2.size());
+            }
+            else {
+                assertTrue(skip2.isEmpty());
+            }
+
+            assertTrue(set.skip(3).isEmpty());
+            assertTrue(set.skip(4).isEmpty());
+            assertTrue(set.skip(24).isEmpty());
         }))));
     }
 

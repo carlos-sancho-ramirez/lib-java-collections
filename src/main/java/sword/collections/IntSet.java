@@ -58,7 +58,7 @@ public interface IntSet extends IntTransformable {
         final int size = size();
         final int min = range.min();
         final int max = range.max();
-        if (range.min() <= 0 && range.max() >= size - 1) {
+        if (min <= 0 && max >= size - 1) {
             return this;
         }
 
@@ -66,13 +66,30 @@ public interface IntSet extends IntTransformable {
             return ImmutableIntArraySet.empty();
         }
 
-        final int newSize = Math.min(size, max + 1) - min;
+        final int newSize = Math.min(size - 1, max) - min + 1;
         final ImmutableIntSetCreator builder = new ImmutableIntSetCreator((currentSize, nS) -> newSize);
         for (int i = 0; i < newSize; i++) {
             builder.add(valueAt(min + i));
         }
 
         return builder.build();
+    }
+
+    /**
+     * Returns a new IntSet where the <code>length</code>
+     * amount of first elements in iteration order has been removed.
+     * <p>
+     * This will return an empty set if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the start of the set.
+     * @return A new IntSet instance without the first elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance of the given length is equal or greater
+     *         than the actual length of the list.
+     */
+    default IntSet skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
     /**
