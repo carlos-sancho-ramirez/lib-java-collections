@@ -104,6 +104,7 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
         return builder.build();
     }
 
+    @Override
     default ImmutableIntValueMap<T> skip(int length) {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }

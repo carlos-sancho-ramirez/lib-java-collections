@@ -159,6 +159,10 @@ public interface IntValueMap<T> extends IntTransformable, IntValueMapGetter<T> {
         return builder.build();
     }
 
+    default IntValueMap<T> skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
+    }
+
     /**
      * Return an immutable map from the values contained in this map.
      * The same instance will be returned in case of being already immutable.
