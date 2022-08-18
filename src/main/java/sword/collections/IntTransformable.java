@@ -110,4 +110,14 @@ public interface IntTransformable extends IntTraversable {
 
         return builder.build();
     }
+
+    /**
+     * Returns a new collection where the <code>length</code> amount of first elements has been removed.
+     *
+     * @param length the amount of elements to be removed from the start of the collection.
+     * @return A new collection without the first elements.
+     */
+    default IntTransformable skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
+    }
 }

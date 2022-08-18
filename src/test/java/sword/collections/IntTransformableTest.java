@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTraversableTest<B> {
@@ -413,6 +414,50 @@ interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTra
                     assertEquals(third, sliceABCD.valueAt(2));
                 }
             }
+        }))));
+    }
+
+    @Test
+    default void testSkipWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntTransformable transformable = supplier.newBuilder().build();
+            assertSame(transformable, transformable.skip(0));
+            assertTrue(transformable.skip(1).isEmpty());
+            assertTrue(transformable.skip(20).isEmpty());
+        });
+    }
+
+    @Test
+    default void testSkip() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntTransformable transformable = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = transformable.size();
+            final int second = (size >= 2)? transformable.valueAt(1) : 0;
+            final int third = (size == 3)? transformable.valueAt(2) : 0;
+
+            assertSame(transformable, transformable.skip(0));
+
+            final IntTransformable skip1 = transformable.skip(1);
+            assertEquals(size - 1, skip1.size());
+            if (size >= 2) {
+                assertEquals(second, skip1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(third, skip1.valueAt(1));
+                }
+            }
+
+            final IntTransformable skip2 = transformable.skip(2);
+            if (size == 3) {
+                assertEquals(third, skip2.valueAt(0));
+                assertEquals(1, skip2.size());
+            }
+            else {
+                assertEquals(0, skip2.size());
+            }
+
+            assertTrue(transformable.skip(3).isEmpty());
+            assertTrue(transformable.skip(4).isEmpty());
+            assertTrue(transformable.skip(24).isEmpty());
         }))));
     }
 }

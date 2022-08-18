@@ -133,6 +133,7 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
         return builder.build();
     }
 
+    @Override
     default IntPairMap skip(int length) {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
