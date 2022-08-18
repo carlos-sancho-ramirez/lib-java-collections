@@ -62,6 +62,10 @@ public final class MutableIntPairMap extends AbstractIntPairMap implements Mutab
 
     @Override
     public int valueAt(int index) {
+        if (index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         return _values[index];
     }
 

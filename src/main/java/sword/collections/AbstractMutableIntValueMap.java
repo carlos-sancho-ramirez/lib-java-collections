@@ -27,6 +27,10 @@ abstract class AbstractMutableIntValueMap<T> extends AbstractIntValueMap<T> impl
 
     @Override
     public int valueAt(int index) {
+        if (index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         return _values[index];
     }
 

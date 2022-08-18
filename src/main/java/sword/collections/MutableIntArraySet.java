@@ -28,6 +28,10 @@ public final class MutableIntArraySet extends AbstractIntTraversable implements 
 
     @Override
     public int valueAt(int index) {
+        if (index >= _size) {
+            throw new IndexOutOfBoundsException();
+        }
+
         return _values[index];
     }
 

@@ -150,7 +150,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
 
     @Override
     public ImmutableBitSetImpl removeAt(int index) {
-        if (index < 0) {
+        if (index < 0 || _value == null) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -245,7 +245,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
 
     @Override
     public int valueAt(int index) {
-        if (index < 0) {
+        if (index < 0 || _value == null) {
             throw new IndexOutOfBoundsException();
         }
 
