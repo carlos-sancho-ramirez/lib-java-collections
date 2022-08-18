@@ -262,6 +262,35 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
         return new ImmutableIntArraySet(newValues);
     }
 
+    /**
+     * Returns a new ImmutableIntArraySet where the <code>length</code>
+     * amount of first elements in iteration order has been removed.
+     * <p>
+     * This will return an empty set if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the start of the set.
+     * @return A new ImmutableIntList instance without the first elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance of the given length is equal or greater
+     *         than the actual length of the list.
+     */
+    public ImmutableIntArraySet skip(int length) {
+        if (length == 0) {
+            return this;
+        }
+
+        final int size = _values.length;
+        if (length >= size) {
+            return ImmutableIntArraySet.empty();
+        }
+
+        final int newSize = size - length;
+        final int[] newValues = new int[newSize];
+        System.arraycopy(_values, length, newValues, 0, newSize);
+        return new ImmutableIntArraySet(newValues);
+    }
+
     @Override
     public ImmutableIntSet toImmutable() {
         return this;
