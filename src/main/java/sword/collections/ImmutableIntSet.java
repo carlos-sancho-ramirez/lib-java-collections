@@ -172,6 +172,7 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
         return builder.build();
     }
 
+    @Override
     default ImmutableIntSet slice(ImmutableIntRange range) {
         final int size = size();
         final int min = range.min();
@@ -192,6 +193,23 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
         }
 
         return builder.build();
+    }
+
+    /**
+     * Returns a new ImmutableIntSet where the <code>length</code>
+     * amount of first elements in iteration order has been removed.
+     * <p>
+     * This will return an empty set if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the start of the set.
+     * @return A new ImmutableIntSet instance without the first elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance of the given length is equal or greater
+     *         than the actual length of the list.
+     */
+    default ImmutableIntSet skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
     /**

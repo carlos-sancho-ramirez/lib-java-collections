@@ -346,7 +346,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     @Test
     @Override
     public void testSkip() {
-        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             final int size = set.size();
             final T second = (size >= 2)? set.valueAt(1) : null;
@@ -376,7 +376,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
             assertSame(empty, set.skip(3));
             assertSame(empty, set.skip(4));
             assertSame(empty, set.skip(24));
-        })))));
+        }))));
     }
 
     @Test

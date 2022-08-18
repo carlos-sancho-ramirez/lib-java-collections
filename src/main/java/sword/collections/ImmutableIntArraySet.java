@@ -270,11 +270,12 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
      * or exceeds the length of this array.
      *
      * @param length the amount of elements to be removed from the start of the set.
-     * @return A new ImmutableIntList instance without the first elements,
+     * @return A new ImmutableIntSet instance without the first elements,
      *         the same instance in case the given length is 0,
      *         or the empty instance of the given length is equal or greater
      *         than the actual length of the list.
      */
+    @Override
     public ImmutableIntArraySet skip(int length) {
         if (length == 0) {
             return this;

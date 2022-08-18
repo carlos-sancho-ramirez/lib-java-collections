@@ -476,4 +476,46 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
             assertSame(set, set.slice(new ImmutableIntRange(0, 3)));
         })));
     }
+
+    @Test
+    public void testSkipWhenEmpty() {
+        final ImmutableIntSet set = newIntBuilder().build();
+        assertSame(set, set.skip(0));
+        assertTrue(set.skip(1).isEmpty());
+        assertTrue(set.skip(20).isEmpty());
+    }
+
+    @Test
+    public void testSkip() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+            final int second = (size >= 2)? set.valueAt(1) : 0;
+            final int third = (size == 3)? set.valueAt(2) : 0;
+
+            assertSame(set, set.skip(0));
+
+            final ImmutableIntSet skip1 = set.skip(1);
+            assertEquals(size - 1, skip1.size());
+            if (size >= 2) {
+                assertEquals(second, skip1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(third, skip1.valueAt(1));
+                }
+            }
+
+            final ImmutableIntSet skip2 = set.skip(2);
+            if (size == 3) {
+                assertEquals(third, skip2.valueAt(0));
+                assertEquals(1, skip2.size());
+            }
+            else {
+                assertTrue(skip2.isEmpty());
+            }
+
+            assertTrue(set.skip(3).isEmpty());
+            assertTrue(set.skip(4).isEmpty());
+            assertTrue(set.skip(24).isEmpty());
+        })));
+    }
 }
