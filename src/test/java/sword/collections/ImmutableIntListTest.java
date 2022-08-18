@@ -464,8 +464,9 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Test
-    void testSkip() {
-        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
+    @Override
+    public void testSkip() {
+        withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
 
             assertSame(list, list.skip(0));
@@ -476,12 +477,12 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
             assertSame(emptyList, list.skip(3));
             assertSame(emptyList, list.skip(4));
             assertSame(emptyList, list.skip(24));
-        }))));
+        })));
     }
 
     @Test
     void testSkipLast() {
-        withFilterFunc(f -> withValue(a -> withValue(b -> withValue(c -> {
+        withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
 
             assertSame(list, list.skipLast(0));
@@ -492,6 +493,6 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
             assertSame(emptyList, list.skipLast(3));
             assertSame(emptyList, list.skipLast(4));
             assertSame(emptyList, list.skipLast(24));
-        }))));
+        })));
     }
 }

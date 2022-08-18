@@ -120,7 +120,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
             return ImmutableIntList.empty();
         }
 
-        final int newSize = Math.min(max + 1, size) - min;
+        final int newSize = Math.min(max, size - 1) - min + 1;
         final int[] newValues = new int[newSize];
         System.arraycopy(_values, min, newValues, 0, newSize);
         return new ImmutableIntList(newValues);
@@ -139,6 +139,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
      *         or the empty instance of the given length is equal or greater
      *         than the actual length of the list.
      */
+    @Override
     public ImmutableIntList skip(int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");

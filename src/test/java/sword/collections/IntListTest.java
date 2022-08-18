@@ -62,6 +62,31 @@ abstract class IntListTest<B extends IntListBuilder> implements IntTransformable
     }
 
     @Test
+    public void testSkipWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntList list = supplier.newBuilder().build();
+            assertSame(list, list.skip(0));
+            assertTrue(list.skip(1).isEmpty());
+            assertTrue(list.skip(20).isEmpty());
+        });
+    }
+
+    @Test
+    public void testSkip() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntList list = supplier.newBuilder().add(a).add(b).add(c).build();
+
+            assertSame(list, list.skip(0));
+            assertEquals(supplier.newBuilder().add(b).add(c).build(), list.skip(1));
+            assertEquals(supplier.newBuilder().add(c).build(), list.skip(2));
+
+            assertTrue(list.skip(3).isEmpty());
+            assertTrue(list.skip(4).isEmpty());
+            assertTrue(list.skip(24).isEmpty());
+        }))));
+    }
+
+    @Test
     void testToImmutableWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableIntList immutableList = supplier.newBuilder().build().toImmutable();

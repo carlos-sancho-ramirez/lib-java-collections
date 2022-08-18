@@ -47,13 +47,30 @@ public interface IntList extends IntTransformable {
             return ImmutableIntList.empty();
         }
 
-        final int newSize = Math.min(size, max + 1) - min;
+        final int newSize = Math.min(size - 1, max) - min + 1;
         final int[] newValues = new int[newSize];
         for (int i = 0; i < newSize; i++) {
             newValues[i] = valueAt(min + i);
         }
 
         return new ImmutableIntList(newValues);
+    }
+
+    /**
+     * Returns a new IntList where the <code>length</code>
+     * amount of first elements has been removed.
+     * <p>
+     * This will return an empty list if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the start of the list.
+     * @return A new IntList instance without the first elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the list.
+     */
+    default IntList skip(int length) {
+        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
     /**
