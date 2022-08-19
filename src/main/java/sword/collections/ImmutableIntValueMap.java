@@ -122,6 +122,7 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
      *         instance in case the given length is equal or greater than the
      *         actual size of this collection.
      */
+    @Override
     @ToBeAbstract("Returned type is wrong for sorted maps")
     default ImmutableIntValueMap<T> take(int length) {
         return isEmpty()? this :

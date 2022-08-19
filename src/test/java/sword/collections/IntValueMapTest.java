@@ -761,4 +761,76 @@ interface IntValueMapTest<K, B extends IntTransformableBuilder, MB extends IntVa
             assertTrue(map.skip(24).isEmpty());
         })));
     }
+
+    @Test
+    default void testTakeWhenEmpty() {
+        final IntValueMap<K> map = newBuilder().build();
+        assertTrue(map.take(0).isEmpty());
+        assertTrue(map.take(1).isEmpty());
+        assertTrue(map.take(2).isEmpty());
+        assertTrue(map.take(24).isEmpty());
+    }
+
+    @Test
+    default void testTake() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final int aValue = valueFromKey(a);
+            final int bValue = valueFromKey(b);
+            final int cValue = valueFromKey(c);
+            final IntValueMap<K> map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+
+            final int size = map.size();
+            final K firstKey = map.keyAt(0);
+            final int firstValue = map.valueAt(0);
+
+            assertTrue(map.take(0).isEmpty());
+
+            final IntValueMap<K> take1 = map.take(1);
+            assertEquals(1, take1.size());
+            assertSame(firstKey, take1.keyAt(0));
+            assertEquals(firstValue, take1.valueAt(0));
+
+            final IntValueMap<K> take2 = map.take(2);
+            assertSame(firstKey, take2.keyAt(0));
+            assertEquals(firstValue, take2.valueAt(0));
+            if (size == 1) {
+                assertEquals(1, take2.size());
+            }
+            else {
+                assertEquals(2, take2.size());
+                assertSame(map.keyAt(1), take2.keyAt(1));
+                assertEquals(map.valueAt(1), take2.valueAt(1));
+            }
+
+            final IntValueMap<K> take3 = map.take(3);
+            assertEquals(size, take3.size());
+            assertSame(firstKey, take3.keyAt(0));
+            assertEquals(firstValue, take3.valueAt(0));
+            if (size > 1) {
+                assertSame(map.keyAt(1), take3.keyAt(1));
+                assertEquals(map.valueAt(1), take3.valueAt(1));
+                if (size == 3) {
+                    assertSame(map.keyAt(2), take3.keyAt(2));
+                    assertEquals(map.valueAt(2), take3.valueAt(2));
+                }
+            }
+
+            final IntValueMap<K> take4 = map.take(4);
+            assertEquals(size, take4.size());
+            assertSame(firstKey, take4.keyAt(0));
+            assertEquals(firstValue, take4.valueAt(0));
+            if (size > 1) {
+                assertSame(map.keyAt(1), take4.keyAt(1));
+                assertEquals(map.valueAt(1), take4.valueAt(1));
+                if (size == 3) {
+                    assertSame(map.keyAt(2), take4.keyAt(2));
+                    assertEquals(map.valueAt(2), take4.valueAt(2));
+                }
+            }
+        })));
+    }
 }

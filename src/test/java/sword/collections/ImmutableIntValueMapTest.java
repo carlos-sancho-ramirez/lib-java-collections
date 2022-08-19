@@ -525,6 +525,7 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
     }
 
     @Test
+    @Override
     default void testTakeWhenEmpty() {
         final ImmutableIntValueMap<T> map = newBuilder().build();
         assertSame(map, map.take(0));
@@ -534,6 +535,7 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
     }
 
     @Test
+    @Override
     default void testTake() {
         withKey(a -> withKey(b -> withKey(c -> {
             final int aValue = valueFromKey(a);
