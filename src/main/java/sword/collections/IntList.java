@@ -75,6 +75,19 @@ public interface IntList extends IntTransformable {
     }
 
     /**
+     * Returns a new IntList where only the <code>length</code> amount of
+     * first elements are included, and the rest are discarded if any.
+     *
+     * @param length the maximum number of elements to be included from the
+     *               start of the list.
+     * @return A new IntList instance just including the first elements,
+     *         or the empty instance in case the given length is 0.
+     */
+    default IntList take(int length) {
+        return (length == 0)? ImmutableIntList.empty() : slice(new ImmutableIntRange(0, length - 1));
+    }
+
+    /**
      * Return an immutable list from the values contained in this map.
      * The same instance will be returned in case of being already immutable.
      */
