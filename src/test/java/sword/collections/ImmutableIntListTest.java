@@ -495,4 +495,35 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
             assertSame(emptyList, list.skipLast(24));
         })));
     }
+
+    @Test
+    public void testTakeWhenEmpty() {
+        final ImmutableIntList list = newIntBuilder().build();
+        assertSame(list, list.take(0));
+        assertSame(list, list.take(1));
+        assertSame(list, list.take(2));
+        assertSame(list, list.take(24));
+    }
+
+    @Test
+    public void testTake() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
+
+            assertSame(ImmutableIntList.empty(), list.take(0));
+
+            final ImmutableIntList take1 = list.take(1);
+            assertEquals(1, take1.size());
+            assertEquals(a, take1.valueAt(0));
+
+            final ImmutableIntList take2 = list.take(2);
+            assertEquals(2, take2.size());
+            assertEquals(a, take2.valueAt(0));
+            assertEquals(b, take2.valueAt(1));
+
+            assertSame(list, list.take(3));
+            assertSame(list, list.take(4));
+            assertSame(list, list.take(24));
+        })));
+    }
 }
