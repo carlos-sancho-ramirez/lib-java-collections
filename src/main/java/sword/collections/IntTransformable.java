@@ -120,4 +120,18 @@ public interface IntTransformable extends IntTraversable {
     default IntTransformable skip(int length) {
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
+
+    /**
+     * Returns a new collection where only the <code>length</code> amount of
+     * first elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the start of this map in iteration order.
+     * @return A new collection just including the first elements.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper type")
+    default IntTransformable take(int length) {
+        return (length == 0)? ImmutableIntList.empty() : slice(new ImmutableIntRange(0, length - 1));
+    }
 }
