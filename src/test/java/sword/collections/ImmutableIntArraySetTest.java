@@ -154,4 +154,47 @@ public final class ImmutableIntArraySetTest extends ImmutableIntSetTest {
             assertSame(empty, set.skip(24));
         })));
     }
+
+    @Test
+    public void testTakeWhenEmpty() {
+        final ImmutableIntArraySet set = newIntBuilder().build();
+        assertSame(set, set.take(0));
+        assertSame(set, set.take(1));
+        assertSame(set, set.take(2));
+        assertSame(set, set.take(24));
+    }
+
+    @Test
+    public void testTake() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableIntArraySet set = newIntBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+            final int first = set.valueAt(0);
+
+            assertSame(ImmutableIntArraySet.empty(), set.take(0));
+
+            final ImmutableIntArraySet take1 = set.take(1);
+            if (size > 1) {
+                assertEquals(1, take1.size());
+                assertEquals(first, take1.valueAt(0));
+            }
+            else {
+                assertSame(set, take1);
+            }
+
+            final ImmutableIntArraySet take2 = set.take(2);
+            if (size > 2) {
+                assertEquals(2, take2.size());
+                assertEquals(first, take2.valueAt(0));
+                assertEquals(set.valueAt(1), take2.valueAt(1));
+            }
+            else {
+                assertSame(set, take2);
+            }
+
+            assertSame(set, set.take(3));
+            assertSame(set, set.take(4));
+            assertSame(set, set.take(24));
+        })));
+    }
 }
