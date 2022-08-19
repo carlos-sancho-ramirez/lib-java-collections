@@ -226,6 +226,7 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
      *         instance in case the given length is equal or greater than the
      *         actual size of this set.
      */
+    @Override
     default ImmutableIntSet take(int length) {
         return isEmpty()? this :
                 (length == 0)? ImmutableIntArraySet.empty() :
