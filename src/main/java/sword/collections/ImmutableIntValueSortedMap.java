@@ -278,6 +278,7 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
      *         instance in case the given length is equal or greater than the
      *         actual size of this collection.
      */
+    @Override
     public ImmutableIntValueSortedMap<T> take(int length) {
         final int size = _values.length;
         if (length >= size) {

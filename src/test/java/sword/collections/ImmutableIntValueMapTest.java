@@ -523,4 +523,59 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
             assertTrue(map.skip(24).isEmpty());
         })));
     }
+
+    @Test
+    default void testTakeWhenEmpty() {
+        final ImmutableIntValueMap<T> map = newBuilder().build();
+        assertSame(map, map.take(0));
+        assertSame(map, map.take(1));
+        assertSame(map, map.take(2));
+        assertSame(map, map.take(24));
+    }
+
+    @Test
+    default void testTake() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final int aValue = valueFromKey(a);
+            final int bValue = valueFromKey(b);
+            final int cValue = valueFromKey(c);
+            final ImmutableIntValueMap<T> map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+
+            final int size = map.size();
+            final T firstKey = map.keyAt(0);
+            final int firstValue = map.valueAt(0);
+
+            assertTrue(map.take(0).isEmpty());
+
+            final ImmutableIntValueMap<T> take1 = map.take(1);
+            if (size > 1) {
+                assertEquals(1, take1.size());
+                assertSame(firstKey, take1.keyAt(0));
+                assertEquals(firstValue, take1.valueAt(0));
+            }
+            else {
+                assertSame(map, take1);
+            }
+
+            final ImmutableIntValueMap<T> take2 = map.take(2);
+            if (size > 2) {
+                assertEquals(2, take2.size());
+                assertSame(firstKey, take2.keyAt(0));
+                assertEquals(firstValue, take2.valueAt(0));
+                assertSame(map.keyAt(1), take2.keyAt(1));
+                assertEquals(map.valueAt(1), take2.valueAt(1));
+            }
+            else {
+                assertSame(map, take2);
+            }
+
+            assertSame(map, map.take(3));
+            assertSame(map, map.take(4));
+            assertSame(map, map.take(24));
+        })));
+    }
 }

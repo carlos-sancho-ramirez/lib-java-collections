@@ -306,6 +306,7 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
      *         instance in case the given length is equal or greater than the
      *         actual size of this collection.
      */
+    @Override
     public ImmutableIntValueHashMap<T> take(int length) {
         final int size = _values.length;
         if (length >= size) {

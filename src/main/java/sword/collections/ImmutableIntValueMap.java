@@ -109,6 +109,26 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
         return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
+    /**
+     * Returns a new ImmutableIntValueMap where only the <code>length</code> amount of
+     * first elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the start of this map in iteration order.
+     * @return A new ImmutableIntValueMap instance just including the first elements,
+     *         this instance if it is already empty,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length is equal or greater than the
+     *         actual size of this collection.
+     */
+    @ToBeAbstract("Returned type is wrong for sorted maps")
+    default ImmutableIntValueMap<T> take(int length) {
+        return isEmpty()? this :
+                (length == 0)? ImmutableIntValueHashMap.empty() :
+                    slice(new ImmutableIntRange(0, length - 1));
+    }
+
     interface Builder<E> extends IntValueMap.Builder<E> {
         Builder<E> put(E key, int value);
         ImmutableIntValueMap<E> build();
