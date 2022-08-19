@@ -520,4 +520,49 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
             assertTrue(set.skip(24).isEmpty());
         })));
     }
+
+    @Test
+    public void testTakeWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableIntSet set = supplier.newBuilder().build();
+            assertSame(set, set.take(0));
+            assertSame(set, set.take(1));
+            assertSame(set, set.take(2));
+            assertSame(set, set.take(24));
+        });
+    }
+
+    @Test
+    public void testTake() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableIntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
+            final int size = set.size();
+            final int first = set.valueAt(0);
+
+            assertTrue(set.take(0).isEmpty());
+
+            final ImmutableIntSet take1 = set.take(1);
+            if (size > 1) {
+                assertEquals(1, take1.size());
+                assertEquals(first, take1.valueAt(0));
+            }
+            else {
+                assertSame(set, take1);
+            }
+
+            final ImmutableIntSet take2 = set.take(2);
+            if (size > 2) {
+                assertEquals(2, take2.size());
+                assertEquals(first, take2.valueAt(0));
+                assertEquals(set.valueAt(1), take2.valueAt(1));
+            }
+            else {
+                assertSame(set, take2);
+            }
+
+            assertSame(set, set.take(3));
+            assertSame(set, set.take(4));
+            assertSame(set, set.take(24));
+        }))));
+    }
 }
