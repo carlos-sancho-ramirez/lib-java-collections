@@ -260,6 +260,37 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableSortedSet<>(_sortFunction, newValues);
     }
 
+    /**
+     * Returns a new ImmutableSortedSet where the <code>length</code> amount of
+     * last elements has been removed.
+     * <p>
+     * This will return an empty instance if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the end of the list.
+     * @return A new ImmutableSortedSet instance without the last elements,
+     *         the same instance in case the given length is 0 or is already empty,
+     *         or the empty instance of the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    public ImmutableSortedSet<T> skipLast(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0 || _values.length == 0) {
+            return this;
+        }
+
+        if (length >= _values.length) {
+            return new ImmutableSortedSet<>(_sortFunction, new Object[0]);
+        }
+
+        final int remain = _values.length - length;
+        final Object[] newValues = new Object[remain];
+        System.arraycopy(_values, 0, newValues, 0, remain);
+        return new ImmutableSortedSet<>(_sortFunction, newValues);
+    }
+
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableSortedSet<E> _set;
 

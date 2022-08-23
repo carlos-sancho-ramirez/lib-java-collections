@@ -239,4 +239,49 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
             assertSame(set, set.take(24));
         }))));
     }
+
+    @Test
+    void testSkipLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableSortedSet<String> set = supplier.newBuilder().build();
+            assertSame(set, set.skipLast(0));
+            assertSame(set, set.skipLast(1));
+            assertSame(set, set.skipLast(2));
+            assertSame(set, set.skipLast(24));
+        });
+    }
+
+    @Test
+    void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableSortedSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertSame(set, set.skipLast(0));
+
+            final int size = set.size();
+            final String first = set.valueAt(0);
+            final String second = (size >= 2)? set.valueAt(1) : null;
+
+            final ImmutableSortedSet<String> set1 = set.skipLast(1);
+            assertEquals(size - 1, set1.size());
+            if (size >= 2) {
+                assertSame(first, set1.valueAt(0));
+                if (size == 3) {
+                    assertSame(second, set1.valueAt(1));
+                }
+            }
+
+            final ImmutableSortedSet<String> set2 = set.skipLast(2);
+            if (size < 3) {
+                assertTrue(set2.isEmpty());
+            }
+            else {
+                assertEquals(1, set2.size());
+                assertSame(first, set2.valueAt(0));
+            }
+
+            assertTrue(set.skipLast(3).isEmpty());
+            assertTrue(set.skipLast(4).isEmpty());
+            assertTrue(set.skipLast(24).isEmpty());
+        }))));
+    }
 }
