@@ -102,6 +102,29 @@ public interface List<T> extends Transformable<T> {
     }
 
     /**
+     * Returns a new List where the <code>length</code> amount of last elements
+     * has been removed.
+     * <p>
+     * This will return an empty list if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the end of the list.
+     * @return A new List instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance of the given length is equal or greater
+     *         than the actual length of the list.
+     */
+    default List<T> skipLast(int length) {
+        final int size = size();
+        if (size == 0) {
+            return this;
+        }
+
+        final int max = size - length - 1;
+        return (max < 0)? ImmutableList.empty() : slice(new ImmutableIntRange(0, max));
+    }
+
+    /**
      * Return an immutable list from the values contained in this collection.
      * The same instance will be returned in case of being already immutable.
      */

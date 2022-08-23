@@ -178,11 +178,12 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
      *         or the empty instance of the given length is equal or greater
      *         than the actual length of the list.
      */
+    @Override
     public ImmutableList<T> skipLast(int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
         }
-        else if (length == 0) {
+        else if (length == 0 || _values.length == 0) {
             return this;
         }
         else if (length >= _values.length) {

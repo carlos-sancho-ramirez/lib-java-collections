@@ -202,4 +202,37 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
             assertSame(c, take4.valueAt(2));
         }))));
     }
+
+    @Test
+    void testSkipLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final List<T> list = supplier.newBuilder().build();
+            assertSame(list, list.skipLast(0));
+            assertTrue(list.skipLast(1).isEmpty());
+            assertTrue(list.skipLast(2).isEmpty());
+            assertTrue(list.skipLast(24).isEmpty());
+        });
+    }
+
+    @Test
+    void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final List<T> list = supplier.newBuilder().add(a).add(b).add(c).build();
+
+            assertSame(list, list.skipLast(0));
+
+            final List<T> list1 = list.skipLast(1);
+            assertEquals(2, list1.size());
+            assertSame(a, list1.valueAt(0));
+            assertSame(b, list1.valueAt(1));
+
+            final List<T> list2 = list.skipLast(2);
+            assertEquals(1, list2.size());
+            assertSame(a, list2.valueAt(0));
+
+            assertTrue(list.skipLast(3).isEmpty());
+            assertTrue(list.skipLast(4).isEmpty());
+            assertTrue(list.skipLast(24).isEmpty());
+        }))));
+    }
 }
