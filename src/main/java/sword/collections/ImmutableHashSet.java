@@ -321,6 +321,38 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableHashSet<>(newValues, newHashCodes);
     }
 
+    /**
+     * Returns a new ImmutableHashSet where the <code>length</code> amount of
+     * last elements has been removed.
+     * <p>
+     * This will return the empty instance if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the end of the list.
+     * @return A new ImmutableHashSet instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance of the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    public ImmutableHashSet<T> skipLast(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0 || _values.length == 0) {
+            return this;
+        }
+        else if (length >= _values.length) {
+            return empty();
+        }
+
+        final int remain = _values.length - length;
+        final Object[] newValues = new Object[remain];
+        final int[] newHashCodes = new int[remain];
+        System.arraycopy(_values, 0, newValues, 0, remain);
+        System.arraycopy(_hashCodes, 0, newHashCodes, 0, remain);
+        return new ImmutableHashSet<>(newValues, newHashCodes);
+    }
+
     public static class Builder<E> implements ImmutableSet.Builder<E> {
         private final MutableHashSet<E> _set;
 

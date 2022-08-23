@@ -487,4 +487,53 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
             assertSame(set, set.take(24));
         }))));
     }
+
+    @Test
+    void testSkipLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableHashSet<String> set = supplier.newBuilder().build();
+            assertSame(set, set.skipLast(0));
+            assertSame(set, set.skipLast(1));
+            assertSame(set, set.skipLast(2));
+            assertSame(set, set.skipLast(24));
+        });
+    }
+
+    @Test
+    void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableHashSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertSame(set, set.skipLast(0));
+
+            final int size = set.size();
+            final String first = set.valueAt(0);
+            final String second = (size >= 2)? set.valueAt(1) : null;
+            final ImmutableHashSet<String> empty = ImmutableHashSet.empty();
+
+            final ImmutableHashSet<String> set1 = set.skipLast(1);
+            if (size == 1) {
+                assertSame(empty, set1);
+            }
+            else {
+                assertEquals(size - 1, set1.size());
+                assertSame(first, set1.valueAt(0));
+                if (size == 3) {
+                    assertSame(second, set1.valueAt(1));
+                }
+            }
+
+            final ImmutableHashSet<String> set2 = set.skipLast(2);
+            if (size < 3) {
+                assertSame(empty, set2);
+            }
+            else {
+                assertEquals(1, set2.size());
+                assertSame(first, set2.valueAt(0));
+            }
+
+            assertSame(empty, set.skipLast(3));
+            assertSame(empty, set.skipLast(4));
+            assertSame(empty, set.skipLast(24));
+        }))));
+    }
 }
