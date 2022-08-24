@@ -153,7 +153,7 @@ public interface Set<T> extends Transformable<T> {
      * @return A new Set instance without the last elements,
      *         the same instance in case the given length is 0,
      *         or an empty instance if the given length is equal or greater
-     *         than the actual length of the list.
+     *         than the actual length of the set.
      */
     @ToBeAbstract("This implementation is unable to provide the proper set type in case of sorted set. So the iteration order gets broken")
     default Set<T> skipLast(int length) {

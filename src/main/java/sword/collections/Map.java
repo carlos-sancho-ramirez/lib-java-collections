@@ -212,6 +212,30 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
     }
 
     /**
+     * Returns a new Map where the <code>length</code> amount of last elements
+     * has been removed.
+     * <p>
+     * This will return an empty map if the given parameter matches
+     * or exceeds the length of this collection.
+     *
+     * @param length the amount of elements to be removed from the end of the map.
+     * @return A new Map instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or an empty instance if the given length is equal or greater
+     *         than the actual length of the map.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper map type in case of sorted map. So the iteration order gets broken")
+    default Map<K, V> skipLast(int length) {
+        if (length == 0) {
+            return this;
+        }
+
+        final int size = size();
+        final int max = size - length - 1;
+        return (max < 0)? ImmutableHashMap.empty() : slice(new ImmutableIntRange(0, max));
+    }
+
+    /**
      * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
      *
      * Note that the order of the key-value pair within the map and the collection mutability is irrelevant.

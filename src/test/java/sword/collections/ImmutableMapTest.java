@@ -421,6 +421,7 @@ public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<
     }
 
     @Test
+    @Override
     default void testSkipLastWhenEmpty() {
         final ImmutableMap<K, V> map = newBuilder().build();
         assertSame(map, map.skipLast(0));
@@ -430,6 +431,7 @@ public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<
     }
 
     @Test
+    @Override
     default void testSkipLast() {
         withKey(a -> withKey(b -> withKey(c -> {
             final V aValue = valueFromKey(a);
