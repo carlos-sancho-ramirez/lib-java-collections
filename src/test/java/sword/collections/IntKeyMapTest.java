@@ -624,6 +624,7 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>, MB extends IntKeyM
     }
 
     @Test
+    @Override
     default void testSkipLastWhenEmpty() {
         final IntKeyMap<T> map = newMapBuilder().build();
         assertSame(map, map.skipLast(0));
@@ -633,6 +634,7 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>, MB extends IntKeyM
     }
 
     @Test
+    @Override
     default void testSkipLast() {
         withInt(a -> withInt(b -> withInt(c -> {
             final T aValue = valueFromKey(a);

@@ -402,7 +402,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
 
     @Test
     @Override
-    void testSkipLastWhenEmpty() {
+    public void testSkipLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().build();
             assertSame(set, set.skipLast(0));
@@ -414,7 +414,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
 
     @Test
     @Override
-    void testSkipLast() {
+    public void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             assertSame(set, set.skipLast(0));

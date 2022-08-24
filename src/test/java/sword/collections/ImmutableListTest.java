@@ -165,7 +165,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
 
     @Test
     @Override
-    void testSkipLastWhenEmpty() {
+    public void testSkipLastWhenEmpty() {
         final ImmutableList<String> list = newBuilder().build();
         assertSame(list, list.skipLast(0));
         assertSame(list, list.skipLast(1));
@@ -175,7 +175,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
 
     @Test
     @Override
-    void testSkipLast() {
+    public void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
 

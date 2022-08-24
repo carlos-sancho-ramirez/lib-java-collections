@@ -187,6 +187,7 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
      *         or an empty instance if the given length is equal or greater
      *         than the actual length of the map.
      */
+    @Override
     default IntKeyMap<T> skipLast(int length) {
         if (length == 0) {
             return this;

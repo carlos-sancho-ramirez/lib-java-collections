@@ -204,7 +204,8 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
     }
 
     @Test
-    void testSkipLastWhenEmpty() {
+    @Override
+    public void testSkipLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final List<T> list = supplier.newBuilder().build();
             assertSame(list, list.skipLast(0));
@@ -215,7 +216,8 @@ abstract class ListTest<T, B extends ListBuilder<T>> implements TransformableTes
     }
 
     @Test
-    void testSkipLast() {
+    @Override
+    public void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final List<T> list = supplier.newBuilder().add(a).add(b).add(c).build();
 

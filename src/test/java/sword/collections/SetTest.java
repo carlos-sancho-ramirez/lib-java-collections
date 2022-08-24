@@ -248,7 +248,8 @@ abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest
     }
 
     @Test
-    void testSkipLastWhenEmpty() {
+    @Override
+    public void testSkipLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final Set<T> set = supplier.newBuilder().build();
             assertSame(set, set.skipLast(0));
@@ -259,7 +260,8 @@ abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest
     }
 
     @Test
-    void testSkipLast() {
+    @Override
+    public void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
             assertSame(set, set.skipLast(0));

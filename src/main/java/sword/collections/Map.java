@@ -224,6 +224,7 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
      *         or an empty instance if the given length is equal or greater
      *         than the actual length of the map.
      */
+    @Override
     @ToBeAbstract("This implementation is unable to provide the proper map type in case of sorted map. So the iteration order gets broken")
     default Map<K, V> skipLast(int length) {
         if (length == 0) {

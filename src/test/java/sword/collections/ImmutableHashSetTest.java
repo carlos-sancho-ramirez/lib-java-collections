@@ -491,7 +491,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
 
     @Test
     @Override
-    void testSkipLastWhenEmpty() {
+    public void testSkipLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableHashSet<String> set = supplier.newBuilder().build();
             assertSame(set, set.skipLast(0));
@@ -503,7 +503,7 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
 
     @Test
     @Override
-    void testSkipLast() {
+    public void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableHashSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
             assertSame(set, set.skipLast(0));
