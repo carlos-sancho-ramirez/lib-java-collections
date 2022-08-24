@@ -267,7 +267,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
      * This will return an empty instance if the given parameter matches
      * or exceeds the length of this array.
      *
-     * @param length the amount of elements to be removed from the end of the list.
+     * @param length the amount of elements to be removed from the end of the set.
      * @return A new ImmutableSortedSet instance without the last elements,
      *         the same instance in case the given length is 0 or is already empty,
      *         or the empty instance if the given length is equal or greater

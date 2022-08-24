@@ -329,6 +329,40 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
+    /**
+     * Returns a new ImmutableSortedMap where the <code>length</code> amount of
+     * last elements has been removed.
+     * <p>
+     * This will return an empty instance if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the end of the map.
+     * @return A new ImmutableSortedMap instance without the last elements,
+     *         the same instance in case the given length is 0 or is already empty,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of this set.
+     */
+    public ImmutableSortedMap<K, V> skipLast(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0 || _values.length == 0) {
+            return this;
+        }
+
+        if (length >= _values.length) {
+            final Object[] emptyArray = new Object[0];
+            return new ImmutableSortedMap<>(_sortFunction, emptyArray, emptyArray);
+        }
+
+        final int remain = _values.length - length;
+        final Object[] newKeys = new Object[remain];
+        final Object[] newValues = new Object[remain];
+        System.arraycopy(_values, 0, newValues, 0, remain);
+        System.arraycopy(_keys, 0, newKeys, 0, remain);
+        return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
         private final MutableSortedMap<K, V> _map;
 

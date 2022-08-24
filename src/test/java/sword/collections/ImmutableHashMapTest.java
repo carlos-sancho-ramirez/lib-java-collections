@@ -484,29 +484,34 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
             assertSame(map, map.skipLast(0));
 
             final int size = map.size();
-            final String first = map.valueAt(0);
-            final String second = (size >= 2)? map.valueAt(1) : null;
+            final Integer firstKey = map.keyAt(0);
+            final String firstValue = map.valueAt(0);
+            final Integer secondKey = (size >= 2)? map.keyAt(1) : null;
+            final String secondValue = (size >= 2)? map.valueAt(1) : null;
             final ImmutableHashMap<Integer, String> empty = ImmutableHashMap.empty();
 
-            final ImmutableHashMap<Integer, String> set1 = map.skipLast(1);
+            final ImmutableHashMap<Integer, String> map1 = map.skipLast(1);
             if (size == 1) {
-                assertSame(empty, set1);
+                assertSame(empty, map1);
             }
             else {
-                assertEquals(size - 1, set1.size());
-                assertSame(first, set1.valueAt(0));
+                assertEquals(size - 1, map1.size());
+                assertSame(firstKey, map1.keyAt(0));
+                assertSame(firstValue, map1.valueAt(0));
                 if (size == 3) {
-                    assertSame(second, set1.valueAt(1));
+                    assertSame(secondKey, map1.keyAt(1));
+                    assertSame(secondValue, map1.valueAt(1));
                 }
             }
 
-            final ImmutableHashMap<Integer, String> set2 = map.skipLast(2);
+            final ImmutableHashMap<Integer, String> map2 = map.skipLast(2);
             if (size < 3) {
-                assertSame(empty, set2);
+                assertSame(empty, map2);
             }
             else {
-                assertEquals(1, set2.size());
-                assertSame(first, set2.valueAt(0));
+                assertEquals(1, map2.size());
+                assertSame(firstKey, map2.keyAt(0));
+                assertSame(firstValue, map2.valueAt(0));
             }
 
             assertSame(empty, map.skipLast(3));
