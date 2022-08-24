@@ -139,6 +139,30 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
                 isEmpty()? this : ImmutableHashMap.empty();
     }
 
+    /**
+     * Returns a new ImmutableMap where the <code>length</code> amount of last
+     * elements has been removed.
+     * <p>
+     * This will return an empty map if the given parameter matches or exceeds
+     * the length of this collection.
+     *
+     * @param length the amount of elements to be removed from the end of the map.
+     * @return A new ImmutableMap instance without the last elements,
+     *         the same instance in case the given length is 0 or this map is already empty,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    @ToBeAbstract("Unable to provide the proper type. If it was a sorted map, it sortFunction is lost")
+    default ImmutableMap<K, V> skipLast(int length) {
+        final int size = size();
+        if (size == 0) {
+            return this;
+        }
+
+        final int max = size - length - 1;
+        return (max < 0)? ImmutableHashMap.empty() : slice(new ImmutableIntRange(0, max));
+    }
+
     interface Builder<K, V> extends MapBuilder<K, V> {
         @Override
         Builder<K, V> put(K key, V value);

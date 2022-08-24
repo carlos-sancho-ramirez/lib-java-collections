@@ -342,6 +342,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
      *         or the empty instance if the given length is equal or greater
      *         than the actual length of this set.
      */
+    @Override
     public ImmutableSortedMap<K, V> skipLast(int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");

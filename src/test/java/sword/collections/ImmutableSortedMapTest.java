@@ -463,7 +463,8 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
     }
 
     @Test
-    void testSkipLastWhenEmpty() {
+    @Override
+    public void testSkipLastWhenEmpty() {
         final ImmutableSortedMap<Integer, String> map = newBuilder().build();
         assertSame(map, map.skipLast(0));
         assertSame(map, map.skipLast(1));
@@ -472,7 +473,8 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
     }
 
     @Test
-    void testSkipLast() {
+    @Override
+    public void testSkipLast() {
         withKey(a -> withKey(b -> withKey(c -> {
             final String aValue = valueFromKey(a);
             final String bValue = valueFromKey(b);
