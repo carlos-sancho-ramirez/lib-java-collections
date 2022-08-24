@@ -401,6 +401,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
+    @Override
     void testSkipLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().build();
@@ -412,6 +413,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
     }
 
     @Test
+    @Override
     void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();

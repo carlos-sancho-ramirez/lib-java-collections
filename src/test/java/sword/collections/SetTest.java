@@ -246,4 +246,49 @@ abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest
             }
         }))));
     }
+
+    @Test
+    void testSkipLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final Set<T> set = supplier.newBuilder().build();
+            assertSame(set, set.skipLast(0));
+            assertTrue(set.skipLast(1).isEmpty());
+            assertTrue(set.skipLast(2).isEmpty());
+            assertTrue(set.skipLast(24).isEmpty());
+        });
+    }
+
+    @Test
+    void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertSame(set, set.skipLast(0));
+
+            final int size = set.size();
+            final T first = set.valueAt(0);
+            final T second = (size >= 2)? set.valueAt(1) : null;
+
+            final Set<T> set1 = set.skipLast(1);
+            assertEquals(size - 1, set1.size());
+            if (size >= 2) {
+                assertSame(first, set1.valueAt(0));
+                if (size == 3) {
+                    assertSame(second, set1.valueAt(1));
+                }
+            }
+
+            final Set<T> set2 = set.skipLast(2);
+            if (size < 3) {
+                assertTrue(set2.isEmpty());
+            }
+            else {
+                assertEquals(1, set2.size());
+                assertSame(first, set2.valueAt(0));
+            }
+
+            assertTrue(set.skipLast(3).isEmpty());
+            assertTrue(set.skipLast(4).isEmpty());
+            assertTrue(set.skipLast(24).isEmpty());
+        }))));
+    }
 }

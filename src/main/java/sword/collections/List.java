@@ -111,7 +111,7 @@ public interface List<T> extends Transformable<T> {
      * @param length the amount of elements to be removed from the end of the list.
      * @return A new List instance without the last elements,
      *         the same instance in case the given length is 0,
-     *         or the empty instance of the given length is equal or greater
+     *         or the empty instance if the given length is equal or greater
      *         than the actual length of the list.
      */
     default List<T> skipLast(int length) {

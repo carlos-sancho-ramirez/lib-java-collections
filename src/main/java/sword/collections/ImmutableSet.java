@@ -151,6 +151,7 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
      *         or the empty instance if the given length is equal or greater
      *         than the actual length of the set.
      */
+    @Override
     @ToBeAbstract("Unable to provide the proper type. If it was a sorted set, it sortFunction is lost")
     default ImmutableSet<T> skipLast(int length) {
         final int size = size();
