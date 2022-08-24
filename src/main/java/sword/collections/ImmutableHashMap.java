@@ -351,6 +351,40 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
     }
 
+    /**
+     * Returns a new ImmutableHashMap where the <code>length</code> amount of
+     * last elements has been removed.
+     * <p>
+     * This will return the empty instance if the given parameter matches
+     * or exceeds the length of this map.
+     *
+     * @param length the amount of elements to be removed from the end of the map.
+     * @return A new ImmutableHashMap instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    public ImmutableHashMap<K, V> skipLast(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0 || _values.length == 0) {
+            return this;
+        }
+        else if (length >= _values.length) {
+            return empty();
+        }
+
+        final int remain = _values.length - length;
+        final Object[] newKeys = new Object[remain];
+        final int[] newHashCodes = new int[remain];
+        final Object[] newValues = new Object[remain];
+        System.arraycopy(_keys, 0, newKeys, 0, remain);
+        System.arraycopy(_hashCodes, 0, newHashCodes, 0, remain);
+        System.arraycopy(_values, 0, newValues, 0, remain);
+        return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
         private final MutableHashMap<K, V> _map;
 

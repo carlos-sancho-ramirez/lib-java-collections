@@ -461,6 +461,60 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
         })));
     }
 
+    @Test
+    void testSkipLastWhenEmpty() {
+        final ImmutableHashMap<Integer, String> map = newBuilder().build();
+        assertSame(map, map.skipLast(0));
+        assertSame(map, map.skipLast(1));
+        assertSame(map, map.skipLast(2));
+        assertSame(map, map.skipLast(24));
+    }
+
+    @Test
+    void testSkipLast() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final String aValue = valueFromKey(a);
+            final String bValue = valueFromKey(b);
+            final String cValue = valueFromKey(c);
+            final ImmutableHashMap<Integer, String> map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            assertSame(map, map.skipLast(0));
+
+            final int size = map.size();
+            final String first = map.valueAt(0);
+            final String second = (size >= 2)? map.valueAt(1) : null;
+            final ImmutableHashMap<Integer, String> empty = ImmutableHashMap.empty();
+
+            final ImmutableHashMap<Integer, String> set1 = map.skipLast(1);
+            if (size == 1) {
+                assertSame(empty, set1);
+            }
+            else {
+                assertEquals(size - 1, set1.size());
+                assertSame(first, set1.valueAt(0));
+                if (size == 3) {
+                    assertSame(second, set1.valueAt(1));
+                }
+            }
+
+            final ImmutableHashMap<Integer, String> set2 = map.skipLast(2);
+            if (size < 3) {
+                assertSame(empty, set2);
+            }
+            else {
+                assertEquals(1, set2.size());
+                assertSame(first, set2.valueAt(0));
+            }
+
+            assertSame(empty, map.skipLast(3));
+            assertSame(empty, map.skipLast(4));
+            assertSame(empty, map.skipLast(24));
+        })));
+    }
+
     static final class HashCodeKeyTraversableBuilder<E> implements ImmutableTransformableBuilder<E> {
         private final ImmutableHashMap.Builder<Integer, E> builder = new ImmutableHashMap.Builder<>();
 
