@@ -121,7 +121,7 @@ public interface Set<T> extends Transformable<T> {
      */
     @Override
     default Set<T> skip(int length) {
-        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
+        return isEmpty()? this : slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
     /**

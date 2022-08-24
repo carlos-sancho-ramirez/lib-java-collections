@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static sword.collections.SortUtils.equal;
 
 public final class ImmutableSortedSetTest extends ImmutableSetTest<String, ImmutableSortedSet.Builder<String>> {
 
@@ -241,6 +242,7 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
     }
 
     @Test
+    @Override
     void testSkipLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableSortedSet<String> set = supplier.newBuilder().build();
@@ -252,6 +254,7 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
     }
 
     @Test
+    @Override
     void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableSortedSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
@@ -283,5 +286,31 @@ public final class ImmutableSortedSetTest extends ImmutableSetTest<String, Immut
             assertTrue(set.skipLast(4).isEmpty());
             assertTrue(set.skipLast(24).isEmpty());
         }))));
+    }
+
+    @Test
+    void testEquals() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(setSupplier -> withTraversableBuilderSupplier(trSupplier -> {
+            final ImmutableSortedSet<String> set = setSupplier.newBuilder().add(a).add(b).add(c).build();
+            final TraversableBuilder<String> builder = trSupplier.newBuilder();
+            for (String item : set) {
+                builder.add(item);
+            }
+            final Traversable<String> traversable = builder.build();
+            final Traverser<String> traverser = traversable.iterator();
+            boolean sameOrderAndSize = true;
+            for (String item : set) {
+                if (!traverser.hasNext() || !equal(item, traverser.next())) {
+                    sameOrderAndSize = false;
+                    break;
+                }
+            }
+
+            if (traverser.hasNext()) {
+                sameOrderAndSize = false;
+            }
+
+            assertEquals(sameOrderAndSize, set.equals(traversable));
+        })))));
     }
 }

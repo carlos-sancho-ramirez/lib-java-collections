@@ -18,7 +18,9 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
     ImmutableSet<T> filter(Predicate<? super T> predicate);
 
     @Override
-    ImmutableSet<T> filterNot(Predicate<? super T> predicate);
+    default ImmutableSet<T> filterNot(Predicate<? super T> predicate) {
+        return filter(v -> !predicate.apply(v));
+    }
 
     @Override
     ImmutableIntList mapToInt(IntResultFunction<? super T> func);
@@ -68,7 +70,14 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
      *
      * @param iterable Collection from where new items will be added.
      */
-    ImmutableSet<T> addAll(Iterable<T> iterable);
+    default ImmutableSet<T> addAll(Iterable<T> iterable) {
+        ImmutableSet<T> acc = this;
+        for (T item : iterable) {
+            acc = acc.add(item);
+        }
+
+        return acc;
+    }
 
     @Override
     ImmutableSet<T> sort(SortFunction<? super T> function);
@@ -109,7 +118,7 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
 
     @Override
     default ImmutableSet<T> skip(int length) {
-        return slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
+        return isEmpty()? this : slice(new ImmutableIntRange(length, Integer.MAX_VALUE));
     }
 
     /**
@@ -126,7 +135,31 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
      */
     @ToBeAbstract("This implementation is unable to provide the proper set type in case of sorted set. So the iteration order gets broken")
     default ImmutableSet<T> take(int length) {
-        return (length == 0)? ImmutableHashSet.empty() : slice(new ImmutableIntRange(0, length - 1));
+        return isEmpty()? this : (length == 0)? ImmutableHashSet.empty() : slice(new ImmutableIntRange(0, length - 1));
+    }
+
+    /**
+     * Returns a new ImmutableSet where the <code>length</code> amount of last
+     * elements has been removed.
+     * <p>
+     * This will return an empty set if the given parameter matches or exceeds
+     * the length of this collection.
+     *
+     * @param length the amount of elements to be removed from the end of the set.
+     * @return A new ImmutableSet instance without the last elements,
+     *         the same instance in case the given length is 0 or this set is already empty,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    @ToBeAbstract("Unable to provide the proper type. If it was a sorted set, it sortFunction is lost")
+    default ImmutableSet<T> skipLast(int length) {
+        final int size = size();
+        if (size == 0) {
+            return this;
+        }
+
+        final int max = size - length - 1;
+        return (max < 0)? ImmutableHashSet.empty() : slice(new ImmutableIntRange(0, max));
     }
 
     interface Builder<E> extends Set.Builder<E>, ImmutableTransformableBuilder<E> {

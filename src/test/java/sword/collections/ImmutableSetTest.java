@@ -161,7 +161,7 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
         })))));
     }
 
-    private void withTraversableBuilderSupplier(Procedure<BuilderSupplier<T, TraversableBuilder<T>>> procedure) {
+    void withTraversableBuilderSupplier(Procedure<BuilderSupplier<T, TraversableBuilder<T>>> procedure) {
         procedure.apply(ImmutableHashSet.Builder::new);
         procedure.apply(MutableHashSet.Builder::new);
         withSortFunc(sortFunc -> {
@@ -171,32 +171,6 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
         procedure.apply(ImmutableList.Builder::new);
         procedure.apply(MutableList.Builder::new);
         // TODO: Include maps
-    }
-
-    @Test
-    void testEquals() {
-        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(setSupplier -> withTraversableBuilderSupplier(trSupplier -> {
-            final ImmutableSet<T> set = setSupplier.newBuilder().add(a).add(b).add(c).build();
-            final TraversableBuilder<T> builder = trSupplier.newBuilder();
-            for (T item : set) {
-                builder.add(item);
-            }
-            final Traversable<T> traversable = builder.build();
-            final Traverser<T> traverser = traversable.iterator();
-            boolean sameOrderAndSize = true;
-            for (T item : set) {
-                if (!traverser.hasNext() || !equal(item, traverser.next())) {
-                    sameOrderAndSize = false;
-                    break;
-                }
-            }
-
-            if (traverser.hasNext()) {
-                sameOrderAndSize = false;
-            }
-
-            assertEquals(sameOrderAndSize, set.equals(traversable));
-        })))));
     }
 
     @Test
@@ -423,6 +397,51 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
             assertSame(set, set.take(3));
             assertSame(set, set.take(4));
             assertSame(set, set.take(24));
+        }))));
+    }
+
+    @Test
+    void testSkipLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().build();
+            assertSame(set, set.skipLast(0));
+            assertSame(set, set.skipLast(1));
+            assertSame(set, set.skipLast(2));
+            assertSame(set, set.skipLast(24));
+        });
+    }
+
+    @Test
+    void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertSame(set, set.skipLast(0));
+
+            final int size = set.size();
+            final T first = set.valueAt(0);
+            final T second = (size >= 2)? set.valueAt(1) : null;
+
+            final ImmutableSet<T> set1 = set.skipLast(1);
+            assertEquals(size - 1, set1.size());
+            if (size >= 2) {
+                assertSame(first, set1.valueAt(0));
+                if (size == 3) {
+                    assertSame(second, set1.valueAt(1));
+                }
+            }
+
+            final ImmutableSet<T> set2 = set.skipLast(2);
+            if (size < 3) {
+                assertTrue(set2.isEmpty());
+            }
+            else {
+                assertEquals(1, set2.size());
+                assertSame(first, set2.valueAt(0));
+            }
+
+            assertTrue(set.skipLast(3).isEmpty());
+            assertTrue(set.skipLast(4).isEmpty());
+            assertTrue(set.skipLast(24).isEmpty());
         }))));
     }
 }

@@ -52,6 +52,16 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
     }
 
     @Override
+    public ImmutableHashSet<T> filter(Predicate<? super T> predicate) {
+        return (ImmutableHashSet<T>) super.filter(predicate);
+    }
+
+    @Override
+    public ImmutableHashSet<T> filterNot(Predicate<? super T> predicate) {
+        return (ImmutableHashSet<T>) super.filterNot(predicate);
+    }
+
+    @Override
     public <E> ImmutableHashMap<T, E> assign(Function<? super T, ? extends E> function) {
         final int size = size();
         if (size == 0) {
@@ -328,12 +338,13 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
      * This will return the empty instance if the given parameter matches
      * or exceeds the length of this array.
      *
-     * @param length the amount of elements to be removed from the end of the list.
+     * @param length the amount of elements to be removed from the end of the set.
      * @return A new ImmutableHashSet instance without the last elements,
      *         the same instance in case the given length is 0,
-     *         or the empty instance of the given length is equal or greater
+     *         or the empty instance if the given length is equal or greater
      *         than the actual length of the set.
      */
+    @Override
     public ImmutableHashSet<T> skipLast(int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
