@@ -463,6 +463,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
      *         or the empty instance if the given length is equal or greater
      *         than the actual length of the set.
      */
+    @Override
     public ImmutableIntKeyMap<T> skipLast(int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
