@@ -679,4 +679,84 @@ interface IntKeyMapTest<T, B extends TransformableBuilder<T>, MB extends IntKeyM
             assertTrue(map.skipLast(24).isEmpty());
         })));
     }
+
+    @Test
+    default void testTakeLastWhenEmpty() {
+        final IntKeyMap<T> map = newMapBuilder().build();
+        assertSame(map, map.takeLast(0));
+        assertTrue(map.takeLast(1).isEmpty());
+        assertTrue(map.takeLast(2).isEmpty());
+        assertTrue(map.takeLast(24).isEmpty());
+    }
+
+    @Test
+    default void testTakeLast() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final T aValue = valueFromKey(a);
+            final T bValue = valueFromKey(b);
+            final T cValue = valueFromKey(c);
+            final IntKeyMap<T> map = newMapBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            assertTrue(map.takeLast(0).isEmpty());
+
+            final int size = map.size();
+            final int firstKey = map.keyAt(0);
+            final T firstValue = map.valueAt(0);
+            final int secondKey = (size >= 2)? map.keyAt(1) : 0;
+            final T secondValue = (size >= 2)? map.valueAt(1) : null;
+            final int thirdKey = (size >= 3)? map.keyAt(2) : 0;
+            final T thirdValue = (size >= 3)? map.valueAt(2) : null;
+
+            final IntKeyMap<T> take1 = map.takeLast(1);
+            assertEquals(1, take1.size());
+            assertEquals((size == 1)? firstKey : (size == 2)? secondKey : thirdKey, take1.keyAt(0));
+            assertSame((size == 1)? firstValue : (size == 2)? secondValue : thirdValue, take1.valueAt(0));
+
+            final IntKeyMap<T> take2 = map.takeLast(2);
+            assertEquals(Math.min(size, 2), take2.size());
+            if (size <= 2) {
+                assertEquals(firstKey, take2.keyAt(0));
+                assertSame(firstValue, take2.valueAt(0));
+                if (size == 2) {
+                    assertEquals(secondKey, take2.keyAt(1));
+                    assertSame(secondValue, take2.valueAt(1));
+                }
+            }
+            else {
+                assertEquals(secondKey, take2.keyAt(0));
+                assertSame(secondValue, take2.valueAt(0));
+                assertEquals(thirdKey, take2.keyAt(1));
+                assertSame(thirdValue, take2.valueAt(1));
+            }
+
+            final IntKeyMap<T> take3 = map.takeLast(3);
+            assertEquals(size, take3.size());
+            assertEquals(firstKey, take3.keyAt(0));
+            assertSame(firstValue, take3.valueAt(0));
+            if (size >= 2) {
+                assertEquals(secondKey, take3.keyAt(1));
+                assertSame(secondValue, take3.valueAt(1));
+                if (size == 3) {
+                    assertEquals(thirdKey, take3.keyAt(2));
+                    assertSame(thirdValue, take3.valueAt(2));
+                }
+            }
+
+            final IntKeyMap<T> take4 = map.takeLast(3);
+            assertEquals(size, take4.size());
+            assertEquals(firstKey, take4.keyAt(0));
+            assertSame(firstValue, take4.valueAt(0));
+            if (size >= 2) {
+                assertEquals(secondKey, take4.keyAt(1));
+                assertSame(secondValue, take4.valueAt(1));
+                if (size == 3) {
+                    assertEquals(thirdKey, take4.keyAt(2));
+                    assertSame(thirdValue, take4.valueAt(2));
+                }
+            }
+        })));
+    }
 }

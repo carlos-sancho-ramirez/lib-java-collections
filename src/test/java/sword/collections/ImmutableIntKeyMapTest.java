@@ -713,6 +713,7 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         final ImmutableIntKeyMap<String> map = newMapBuilder().build();
         assertSame(map, map.takeLast(0));
@@ -722,6 +723,7 @@ public final class ImmutableIntKeyMapTest implements IntKeyMapTest<String, Immut
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withInt(a -> withInt(b -> withInt(c -> {
             final String aValue = valueFromKey(a);

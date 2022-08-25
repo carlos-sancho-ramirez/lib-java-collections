@@ -199,6 +199,23 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
     }
 
     /**
+     * Returns a new IntKeyMap where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this map.
+     * @return A new IntKeyMap instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    default IntKeyMap<T> takeLast(int length) {
+        final int size = size();
+        return (size == 0)? this : (length == 0)? ImmutableIntKeyMap.empty() : slice(new ImmutableIntRange(size - length, size - 1));
+    }
+
+    /**
      * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
      *
      * Note that the order of the key-value pair within the map and the collection mutability is irrelevant.

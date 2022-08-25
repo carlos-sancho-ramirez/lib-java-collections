@@ -488,6 +488,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     public ImmutableIntKeyMap<T> takeLast(int length) {
         return take(_values.length - length, length);
     }
