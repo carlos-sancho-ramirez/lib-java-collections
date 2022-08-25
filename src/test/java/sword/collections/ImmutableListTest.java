@@ -224,6 +224,37 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
+    public void testTakeLastWhenEmpty() {
+        final ImmutableList<String> list = newBuilder().build();
+        assertSame(list, list.takeLast(0));
+        assertSame(list, list.takeLast(1));
+        assertSame(list, list.takeLast(2));
+        assertSame(list, list.takeLast(24));
+    }
+
+    @Test
+    public void testTakeLast() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
+
+            assertSame(ImmutableList.empty(), list.takeLast(0));
+
+            final ImmutableList<String> take1 = list.takeLast(1);
+            assertEquals(1, take1.size());
+            assertSame(c, take1.valueAt(0));
+
+            final ImmutableList<String> take2 = list.takeLast(2);
+            assertEquals(2, take2.size());
+            assertSame(b, take2.valueAt(0));
+            assertSame(c, take2.valueAt(1));
+
+            assertSame(list, list.takeLast(3));
+            assertSame(list, list.takeLast(4));
+            assertSame(list, list.takeLast(24));
+        })));
+    }
+
+    @Test
     void testReverseWhenEmpty() {
         final ImmutableList empty = ImmutableList.empty();
         assertSame(empty, empty.reverse());

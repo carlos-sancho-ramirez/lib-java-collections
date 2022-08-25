@@ -197,6 +197,33 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
     }
 
     /**
+     * Returns a new ImmutableList where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this list.
+     * @return A new ImmutableList instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableList<T> takeLast(int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableList.empty();
+        }
+
+        final Object[] newValues = new Object[length];
+        System.arraycopy(_values, size - length, newValues, 0, length);
+        return new ImmutableList<>(newValues);
+    }
+
+    /**
      * Returns a new instance of a list, where all the items from this list has
      * been copied but in the reversed traversable order.
      *
