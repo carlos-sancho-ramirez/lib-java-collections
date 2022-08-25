@@ -237,6 +237,24 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
     }
 
     /**
+     * Returns a new Map where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this map.
+     * @return A new Map instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    @ToBeAbstract("Unable to provide the proper type. If it was a sorted map, it sortFunction is lost")
+    default Map<K, V> takeLast(int length) {
+        final int size = size();
+        return (size == 0)? this : (length == 0)? ImmutableHashMap.empty() : slice(new ImmutableIntRange(size - length, size - 1));
+    }
+
+    /**
      * Return true if this map, and the given one, have equivalent keys, and equivalent values assigned.
      *
      * Note that the order of the key-value pair within the map and the collection mutability is irrelevant.

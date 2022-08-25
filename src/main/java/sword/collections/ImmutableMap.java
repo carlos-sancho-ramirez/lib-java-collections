@@ -176,6 +176,7 @@ public interface ImmutableMap<K, V> extends Map<K, V>, ImmutableTransformable<V>
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     @ToBeAbstract("Unable to provide the proper type. If it was a sorted map, it sortFunction is lost")
     default ImmutableMap<K, V> takeLast(int length) {
         final int size = size();
