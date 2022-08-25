@@ -400,12 +400,11 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         return new ImmutableIntKeyMap<>(newKeys, newValues);
     }
 
-    @Override
-    public ImmutableIntKeyMap<T> skip(int length) {
+    private ImmutableIntKeyMap<T> skip(int index, int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
         }
-        else if (length == 0) {
+        else if (length == 0 || _values.length == 0) {
             return this;
         }
         else if (length >= _values.length) {
@@ -415,9 +414,31 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
         final int remain = _values.length - length;
         final int[] newKeys = new int[remain];
         final Object[] newValues = new Object[remain];
-        System.arraycopy(_keys, length, newKeys, 0, remain);
-        System.arraycopy(_values, length, newValues, 0, remain);
+        System.arraycopy(_keys, index, newKeys, 0, remain);
+        System.arraycopy(_values, index, newValues, 0, remain);
         return new ImmutableIntKeyMap<>(newKeys, newValues);
+    }
+
+    private ImmutableIntKeyMap<T> take(int index, int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableIntKeyMap.empty();
+        }
+
+        final int[] newKeys = new int[length];
+        final Object[] newValues = new Object[length];
+        System.arraycopy(_keys, index, newKeys, 0, length);
+        System.arraycopy(_values, index, newValues, 0, length);
+        return new ImmutableIntKeyMap<>(newKeys, newValues);
+    }
+
+    @Override
+    public ImmutableIntKeyMap<T> skip(int length) {
+        return skip(length, length);
     }
 
     /**
@@ -434,20 +455,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
      */
     @Override
     public ImmutableIntKeyMap<T> take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableIntKeyMap.empty();
-        }
-
-        final int[] newKeys = new int[length];
-        final Object[] newValues = new Object[length];
-        System.arraycopy(_keys, 0, newKeys, 0, length);
-        System.arraycopy(_values, 0, newValues, 0, length);
-        return new ImmutableIntKeyMap<>(newKeys, newValues);
+        return take(0, length);
     }
 
     /**
@@ -465,22 +473,23 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
      */
     @Override
     public ImmutableIntKeyMap<T> skipLast(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Unable to skip a negative number of elements");
-        }
-        else if (length == 0 || _values.length == 0) {
-            return this;
-        }
-        else if (length >= _values.length) {
-            return empty();
-        }
+        return skip(0, length);
+    }
 
-        final int remain = _values.length - length;
-        final int[] newKeys = new int[remain];
-        final Object[] newValues = new Object[remain];
-        System.arraycopy(_keys, 0, newKeys, 0, remain);
-        System.arraycopy(_values, 0, newValues, 0, remain);
-        return new ImmutableIntKeyMap<>(newKeys, newValues);
+    /**
+     * Returns a new ImmutableIntKeyMap where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this map.
+     * @return A new ImmutableIntKeyMap instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableIntKeyMap<T> takeLast(int length) {
+        return take(_values.length - length, length);
     }
 
     @Override
