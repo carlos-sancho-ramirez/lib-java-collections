@@ -126,6 +126,23 @@ public interface List<T> extends Transformable<T> {
     }
 
     /**
+     * Returns a new List where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this list.
+     * @return A new List instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    default List<T> takeLast(int length) {
+        final int size = size();
+        return (size == 0)? this : (length == 0)? ImmutableList.empty() : slice(new ImmutableIntRange(size - length, size - 1));
+    }
+
+    /**
      * Return an immutable list from the values contained in this collection.
      * The same instance will be returned in case of being already immutable.
      */

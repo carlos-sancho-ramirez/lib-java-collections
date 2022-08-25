@@ -224,6 +224,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         final ImmutableList<String> list = newBuilder().build();
         assertSame(list, list.takeLast(0));
@@ -233,6 +234,7 @@ public final class ImmutableListTest extends ListTest<String, ImmutableList.Buil
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableList<String> list = newBuilder().add(a).add(b).add(c).build();
