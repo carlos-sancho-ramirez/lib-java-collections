@@ -168,6 +168,24 @@ public interface Set<T> extends Transformable<T> {
     }
 
     /**
+     * Returns a new Set where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this set.
+     * @return A new Set instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    @ToBeAbstract("Unable to provide the proper type. If it was a sorted set, it sortFunction is lost")
+    default Set<T> takeLast(int length) {
+        final int size = size();
+        return (size == 0)? this : (length == 0)? ImmutableHashSet.empty() : slice(new ImmutableIntRange(size - length, size - 1));
+    }
+
+    /**
      * Returns a hash code calculated from the hashcode of any of the elements.
      *
      * The resulting hashcode is guaranteed to be the same independently of the
