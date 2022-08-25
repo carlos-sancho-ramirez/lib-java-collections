@@ -179,6 +179,7 @@ public interface Set<T> extends Transformable<T> {
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     @ToBeAbstract("Unable to provide the proper type. If it was a sorted set, it sortFunction is lost")
     default Set<T> takeLast(int length) {
         final int size = size();

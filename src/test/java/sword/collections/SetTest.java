@@ -295,6 +295,7 @@ abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final Set<T> set = supplier.newBuilder().build();
@@ -306,6 +307,7 @@ abstract class SetTest<T, B extends Set.Builder<T>> implements TransformableTest
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final Set<T> set = supplier.newBuilder().add(a).add(b).add(c).build();

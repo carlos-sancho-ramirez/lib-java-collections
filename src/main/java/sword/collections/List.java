@@ -137,6 +137,7 @@ public interface List<T> extends Transformable<T> {
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     default List<T> takeLast(int length) {
         final int size = size();
         return (size == 0)? this : (length == 0)? ImmutableList.empty() : slice(new ImmutableIntRange(size - length, size - 1));

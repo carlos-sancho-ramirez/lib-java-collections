@@ -828,6 +828,7 @@ interface MapTest<K, V, B extends TransformableBuilder<V>, MB extends MapBuilder
     }
 
     @Test
+    @Override
     default void testTakeLastWhenEmpty() {
         final Map<K, V> map = newBuilder().build();
         assertSame(map, map.takeLast(0));
@@ -837,6 +838,7 @@ interface MapTest<K, V, B extends TransformableBuilder<V>, MB extends MapBuilder
     }
 
     @Test
+    @Override
     default void testTakeLast() {
         withKey(a -> withKey(b -> withKey(c -> {
             final V aValue = valueFromKey(a);

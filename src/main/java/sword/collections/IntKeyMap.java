@@ -210,6 +210,7 @@ public interface IntKeyMap<T> extends Transformable<T>, IntKeyMapGetter<T> {
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     default IntKeyMap<T> takeLast(int length) {
         final int size = size();
         return (size == 0)? this : (length == 0)? ImmutableIntKeyMap.empty() : slice(new ImmutableIntRange(size - length, size - 1));

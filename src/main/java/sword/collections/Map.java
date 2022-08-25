@@ -248,6 +248,7 @@ public interface Map<K, V> extends Transformable<V>, MapGetter<K, V> {
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     @ToBeAbstract("Unable to provide the proper type. If it was a sorted map, it sortFunction is lost")
     default Map<K, V> takeLast(int length) {
         final int size = size();
