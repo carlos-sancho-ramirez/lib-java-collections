@@ -541,6 +541,52 @@ public final class ImmutableHashSetTest extends ImmutableSetTest<String, Immutab
     }
 
     @Test
+    public void testTakeLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableHashSet<String> set = supplier.newBuilder().build();
+            assertSame(set, set.takeLast(0));
+            assertSame(set, set.takeLast(1));
+            assertSame(set, set.takeLast(2));
+            assertSame(set, set.takeLast(24));
+        });
+    }
+
+    @Test
+    public void testTakeLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableHashSet<String> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertSame(ImmutableHashSet.empty(), set.takeLast(0));
+
+            final int size = set.size();
+            final String second = (size >= 2)? set.valueAt(1) : null;
+            final String third = (size >= 3)? set.valueAt(2) : null;
+
+            final ImmutableHashSet<String> take1 = set.takeLast(1);
+            if (size == 1) {
+                assertSame(set, take1);
+            }
+            else {
+                assertEquals(1, take1.size());
+                assertSame((size == 2)? second : third, take1.valueAt(0));
+            }
+
+            final ImmutableHashSet<String> take2 = set.takeLast(2);
+            if (size <= 2) {
+                assertSame(set, take2);
+            }
+            else {
+                assertEquals(2, take2.size());
+                assertSame(second, take2.valueAt(0));
+                assertSame(third, take2.valueAt(1));
+            }
+
+            assertSame(set, set.takeLast(3));
+            assertSame(set, set.takeLast(4));
+            assertSame(set, set.takeLast(24));
+        }))));
+    }
+
+    @Test
     void testEquals() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(setSupplier -> withTraversableBuilderSupplier(trSupplier -> {
             final ImmutableHashSet<String> set = setSupplier.newBuilder().add(a).add(b).add(c).build();
