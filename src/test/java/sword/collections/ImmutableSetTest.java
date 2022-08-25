@@ -446,4 +446,50 @@ abstract class ImmutableSetTest<T, B extends ImmutableSet.Builder<T>> extends Se
             assertTrue(set.skipLast(24).isEmpty());
         }))));
     }
+
+    @Test
+    public void testTakeLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().build();
+            assertSame(set, set.takeLast(0));
+            assertSame(set, set.takeLast(1));
+            assertSame(set, set.takeLast(2));
+            assertSame(set, set.takeLast(24));
+        });
+    }
+
+    @Test
+    public void testTakeLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final ImmutableSet<T> set = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertTrue(set.takeLast(0).isEmpty());
+
+            final int size = set.size();
+            final T second = (size >= 2)? set.valueAt(1) : null;
+            final T third = (size >= 3)? set.valueAt(2) : null;
+
+            final ImmutableSet<T> take1 = set.takeLast(1);
+            if (size == 1) {
+                assertSame(set, take1);
+            }
+            else {
+                assertEquals(1, take1.size());
+                assertSame((size == 2)? second : third, take1.valueAt(0));
+            }
+
+            final ImmutableSet<T> take2 = set.takeLast(2);
+            if (size <= 2) {
+                assertSame(set, take2);
+            }
+            else {
+                assertEquals(2, take2.size());
+                assertSame(second, take2.valueAt(0));
+                assertSame(third, take2.valueAt(1));
+            }
+
+            assertSame(set, set.takeLast(3));
+            assertSame(set, set.takeLast(4));
+            assertSame(set, set.takeLast(24));
+        }))));
+    }
 }

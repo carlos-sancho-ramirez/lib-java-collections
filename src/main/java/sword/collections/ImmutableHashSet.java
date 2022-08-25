@@ -369,6 +369,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     public ImmutableHashSet<T> takeLast(int length) {
         return take(_values.length - length, length);
     }
