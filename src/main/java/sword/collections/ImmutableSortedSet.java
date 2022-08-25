@@ -214,12 +214,11 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableSortedSet<>(_sortFunction, newValues);
     }
 
-    @Override
-    public ImmutableSortedSet<T> skip(int length) {
+    private ImmutableSortedSet<T> skip(int index, int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
         }
-        else if (length == 0) {
+        else if (length == 0 || _values.length == 0) {
             return this;
         }
         else if (length >= _values.length) {
@@ -228,7 +227,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
 
         final int remain = _values.length - length;
         final Object[] newValues = new Object[remain];
-        System.arraycopy(_values, length, newValues, 0, remain);
+        System.arraycopy(_values, index, newValues, 0, remain);
         return new ImmutableSortedSet<>(_sortFunction, newValues);
     }
 
@@ -244,6 +243,11 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
         final Object[] newValues = new Object[length];
         System.arraycopy(_values, index, newValues, 0, length);
         return new ImmutableSortedSet<>(_sortFunction, newValues);
+    }
+
+    @Override
+    public ImmutableSortedSet<T> skip(int length) {
+        return skip(length, length);
     }
 
     /**
@@ -278,21 +282,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
      */
     @Override
     public ImmutableSortedSet<T> skipLast(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Unable to skip a negative number of elements");
-        }
-        else if (length == 0 || _values.length == 0) {
-            return this;
-        }
-
-        if (length >= _values.length) {
-            return new ImmutableSortedSet<>(_sortFunction, new Object[0]);
-        }
-
-        final int remain = _values.length - length;
-        final Object[] newValues = new Object[remain];
-        System.arraycopy(_values, 0, newValues, 0, remain);
-        return new ImmutableSortedSet<>(_sortFunction, newValues);
+        return skip(0, length);
     }
 
     /**

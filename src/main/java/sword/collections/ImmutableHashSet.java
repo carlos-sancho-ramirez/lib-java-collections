@@ -281,12 +281,11 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableHashSet<>(newKeys, newHashCodes);
     }
 
-    @Override
-    public ImmutableHashSet<T> skip(int length) {
+    private ImmutableHashSet<T> skip(int index, int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
         }
-        else if (length == 0) {
+        else if (length == 0 || _values.length == 0) {
             return this;
         }
         else if (length >= _values.length) {
@@ -296,9 +295,31 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
         final int remain = _values.length - length;
         Object[] newValues = new Object[remain];
         int[] newHashCodes = new int[remain];
-        System.arraycopy(_values, length, newValues, 0, remain);
-        System.arraycopy(_hashCodes, length, newHashCodes, 0, remain);
+        System.arraycopy(_values, index, newValues, 0, remain);
+        System.arraycopy(_hashCodes, index, newHashCodes, 0, remain);
         return new ImmutableHashSet<>(newValues, newHashCodes);
+    }
+
+    private ImmutableHashSet<T> take(int index, int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableHashSet.empty();
+        }
+
+        final Object[] newValues = new Object[length];
+        final int[] newHashCodes = new int[length];
+        System.arraycopy(_values, index, newValues, 0, length);
+        System.arraycopy(_hashCodes, index, newHashCodes, 0, length);
+        return new ImmutableHashSet<>(newValues, newHashCodes);
+    }
+
+    @Override
+    public ImmutableHashSet<T> skip(int length) {
+        return skip(length, length);
     }
 
     /**
@@ -315,20 +336,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
      */
     @Override
     public ImmutableHashSet<T> take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableHashSet.empty();
-        }
-
-        final Object[] newValues = new Object[length];
-        final int[] newHashCodes = new int[length];
-        System.arraycopy(_values, 0, newValues, 0, length);
-        System.arraycopy(_hashCodes, 0, newHashCodes, 0, length);
-        return new ImmutableHashSet<>(newValues, newHashCodes);
+        return take(0, length);
     }
 
     /**
@@ -346,22 +354,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
      */
     @Override
     public ImmutableHashSet<T> skipLast(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Unable to skip a negative number of elements");
-        }
-        else if (length == 0 || _values.length == 0) {
-            return this;
-        }
-        else if (length >= _values.length) {
-            return empty();
-        }
-
-        final int remain = _values.length - length;
-        final Object[] newValues = new Object[remain];
-        final int[] newHashCodes = new int[remain];
-        System.arraycopy(_values, 0, newValues, 0, remain);
-        System.arraycopy(_hashCodes, 0, newHashCodes, 0, remain);
-        return new ImmutableHashSet<>(newValues, newHashCodes);
+        return skip(0, length);
     }
 
     /**
@@ -377,20 +370,7 @@ public final class ImmutableHashSet<T> extends AbstractImmutableSet<T> {
      *         actual size of this collection.
      */
     public ImmutableHashSet<T> takeLast(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableHashSet.empty();
-        }
-
-        final Object[] newValues = new Object[length];
-        final int[] newHashCodes = new int[length];
-        System.arraycopy(_values, size - length, newValues, 0, length);
-        System.arraycopy(_hashCodes, size - length, newHashCodes, 0, length);
-        return new ImmutableHashSet<>(newValues, newHashCodes);
+        return take(_values.length - length, length);
     }
 
     public static class Builder<E> implements ImmutableSet.Builder<E> {

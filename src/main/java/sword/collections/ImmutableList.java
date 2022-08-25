@@ -107,6 +107,38 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
         return builder.build();
     }
 
+    private ImmutableList<T> skip(int index, int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0 || _values.length == 0) {
+            return this;
+        }
+        else if (length >= _values.length) {
+            return empty();
+        }
+
+        final int remain = _values.length - length;
+        Object[] newValues = new Object[remain];
+        System.arraycopy(_values, index, newValues, 0, remain);
+        return new ImmutableList<>(newValues);
+    }
+
+    private ImmutableList<T> take(int index, int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableList.empty();
+        }
+
+        final Object[] newValues = new Object[length];
+        System.arraycopy(_values, index, newValues, 0, length);
+        return new ImmutableList<>(newValues);
+    }
+
     /**
      * Returns a new ImmutableList of the same type where the
      * <code>length</code> amount of first elements has been removed.
@@ -122,20 +154,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
      */
     @Override
     public ImmutableList<T> skip(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Unable to skip a negative number of elements");
-        }
-        else if (length == 0) {
-            return this;
-        }
-        else if (length >= _values.length) {
-            return empty();
-        }
-
-        final int remain = _values.length - length;
-        Object[] newValues = new Object[remain];
-        System.arraycopy(_values, length, newValues, 0, remain);
-        return new ImmutableList<>(newValues);
+        return skip(length, length);
     }
 
     /**
@@ -151,18 +170,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
      *         actual size of this collection.
      */
     public ImmutableList<T> take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableList.empty();
-        }
-
-        final Object[] newValues = new Object[length];
-        System.arraycopy(_values, 0, newValues, 0, length);
-        return new ImmutableList<>(newValues);
+        return take(0, length);
     }
 
     /**
@@ -180,20 +188,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
      */
     @Override
     public ImmutableList<T> skipLast(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Unable to skip a negative number of elements");
-        }
-        else if (length == 0 || _values.length == 0) {
-            return this;
-        }
-        else if (length >= _values.length) {
-            return empty();
-        }
-
-        final int remain = _values.length - length;
-        Object[] newValues = new Object[remain];
-        System.arraycopy(_values, 0, newValues, 0, remain);
-        return new ImmutableList<>(newValues);
+        return skip(0, length);
     }
 
     /**
@@ -210,18 +205,7 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
      */
     @Override
     public ImmutableList<T> takeLast(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableList.empty();
-        }
-
-        final Object[] newValues = new Object[length];
-        System.arraycopy(_values, size - length, newValues, 0, length);
-        return new ImmutableList<>(newValues);
+        return take(_values.length - length, length);
     }
 
     /**
