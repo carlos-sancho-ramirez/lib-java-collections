@@ -280,8 +280,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
-    @Override
-    public ImmutableSortedMap<K, V> skip(int length) {
+    private ImmutableSortedMap<K, V> skip(int index, int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
         }
@@ -289,15 +288,37 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
             return this;
         }
         else if (length >= _values.length) {
-            return new ImmutableSortedMap<>(_sortFunction, new Object[0], new Object[0]);
+            final Object[] emptyArray = new Object[0];
+            return new ImmutableSortedMap<>(_sortFunction, emptyArray, emptyArray);
         }
 
         final int remain = _values.length - length;
         final Object[] newKeys = new Object[remain];
         final Object[] newValues = new Object[remain];
-        System.arraycopy(_keys, length, newKeys, 0, remain);
-        System.arraycopy(_values, length, newValues, 0, remain);
+        System.arraycopy(_keys, index, newKeys, 0, remain);
+        System.arraycopy(_values, index, newValues, 0, remain);
         return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
+    private ImmutableSortedMap<K, V> take(int index, int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        final Object[] newKeys = new Object[length];
+        final Object[] newValues = new Object[length];
+        if (length != 0) {
+            System.arraycopy(_keys, index, newKeys, 0, length);
+            System.arraycopy(_values, index, newValues, 0, length);
+        }
+
+        return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
+    @Override
+    public ImmutableSortedMap<K, V> skip(int length) {
+        return skip(length, length);
     }
 
     /**
@@ -314,19 +335,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
      */
     @Override
     public ImmutableSortedMap<K, V> take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        final Object[] newKeys = new Object[length];
-        final Object[] newValues = new Object[length];
-        if (length != 0) {
-            System.arraycopy(_keys, 0, newKeys, 0, length);
-            System.arraycopy(_values, 0, newValues, 0, length);
-        }
-
-        return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
+        return take(0, length);
     }
 
     /**
@@ -344,24 +353,23 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
      */
     @Override
     public ImmutableSortedMap<K, V> skipLast(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Unable to skip a negative number of elements");
-        }
-        else if (length == 0 || _values.length == 0) {
-            return this;
-        }
+        return skip(0, length);
+    }
 
-        if (length >= _values.length) {
-            final Object[] emptyArray = new Object[0];
-            return new ImmutableSortedMap<>(_sortFunction, emptyArray, emptyArray);
-        }
-
-        final int remain = _values.length - length;
-        final Object[] newKeys = new Object[remain];
-        final Object[] newValues = new Object[remain];
-        System.arraycopy(_values, 0, newValues, 0, remain);
-        System.arraycopy(_keys, 0, newKeys, 0, remain);
-        return new ImmutableSortedMap<>(_sortFunction, newKeys, newValues);
+    /**
+     * Returns a new ImmutableSortedMap where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this map.
+     * @return A new ImmutableSortedMap instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableSortedMap<K, V> takeLast(int length) {
+        return take(_values.length - length, length);
     }
 
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {
