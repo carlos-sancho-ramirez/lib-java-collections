@@ -232,6 +232,20 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
         return new ImmutableSortedSet<>(_sortFunction, newValues);
     }
 
+    private ImmutableSortedSet<T> take(int index, int length) {
+        if (length >= _values.length) {
+            return this;
+        }
+
+        if (length == 0) {
+            return new ImmutableSortedSet<>(_sortFunction, new Object[0]);
+        }
+
+        final Object[] newValues = new Object[length];
+        System.arraycopy(_values, index, newValues, 0, length);
+        return new ImmutableSortedSet<>(_sortFunction, newValues);
+    }
+
     /**
      * Returns a new ImmutableSortedSet where only the <code>length</code> amount of
      * first elements are included, and the rest is discarded if any.
@@ -246,18 +260,7 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
      */
     @Override
     public ImmutableSortedSet<T> take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return new ImmutableSortedSet<>(_sortFunction, new Object[0]);
-        }
-
-        final Object[] newValues = new Object[length];
-        System.arraycopy(_values, 0, newValues, 0, length);
-        return new ImmutableSortedSet<>(_sortFunction, newValues);
+        return take(0, length);
     }
 
     /**
@@ -290,6 +293,22 @@ public final class ImmutableSortedSet<T> extends AbstractImmutableSet<T> {
         final Object[] newValues = new Object[remain];
         System.arraycopy(_values, 0, newValues, 0, remain);
         return new ImmutableSortedSet<>(_sortFunction, newValues);
+    }
+
+    /**
+     * Returns a new ImmutableSortedSet where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this set.
+     * @return A new ImmutableSortedSet instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableSortedSet<T> takeLast(int length) {
+        return take(_values.length - length, length);
     }
 
     public static class Builder<E> implements ImmutableSet.Builder<E> {
