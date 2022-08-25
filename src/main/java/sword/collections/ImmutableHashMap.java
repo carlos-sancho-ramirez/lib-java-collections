@@ -297,12 +297,11 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
         return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
     }
 
-    @Override
-    public ImmutableHashMap<K, V> skip(int length) {
+    private ImmutableHashMap<K, V> skip(int index, int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
         }
-        else if (length == 0) {
+        else if (length == 0 || _values.length == 0) {
             return this;
         }
         else if (length >= _values.length) {
@@ -313,10 +312,34 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
         final Object[] newKeys = new Object[remain];
         final Object[] newValues = new Object[remain];
         final int[] newHashCodes = new int[remain];
-        System.arraycopy(_keys, length, newKeys, 0, remain);
-        System.arraycopy(_hashCodes, length, newHashCodes, 0, remain);
-        System.arraycopy(_values, length, newValues, 0, remain);
+        System.arraycopy(_keys, index, newKeys, 0, remain);
+        System.arraycopy(_hashCodes, index, newHashCodes, 0, remain);
+        System.arraycopy(_values, index, newValues, 0, remain);
         return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
+    private ImmutableHashMap<K, V> take(int index, int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableHashMap.empty();
+        }
+
+        final Object[] newKeys = new Object[length];
+        final int[] newHashCodes = new int[length];
+        final Object[] newValues = new Object[length];
+        System.arraycopy(_keys, index, newKeys, 0, length);
+        System.arraycopy(_hashCodes, index, newHashCodes, 0, length);
+        System.arraycopy(_values, index, newValues, 0, length);
+        return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
+    @Override
+    public ImmutableHashMap<K, V> skip(int length) {
+        return skip(length, length);
     }
 
     /**
@@ -333,22 +356,7 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
      */
     @Override
     public ImmutableHashMap<K, V> take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableHashMap.empty();
-        }
-
-        final Object[] newKeys = new Object[length];
-        final int[] newHashCodes = new int[length];
-        final Object[] newValues = new Object[length];
-        System.arraycopy(_keys, 0, newKeys, 0, length);
-        System.arraycopy(_hashCodes, 0, newHashCodes, 0, length);
-        System.arraycopy(_values, 0, newValues, 0, length);
-        return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
+        return take(0, length);
     }
 
     /**
@@ -366,24 +374,23 @@ public final class ImmutableHashMap<K, V> extends AbstractImmutableMap<K, V> {
      */
     @Override
     public ImmutableHashMap<K, V> skipLast(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Unable to skip a negative number of elements");
-        }
-        else if (length == 0 || _values.length == 0) {
-            return this;
-        }
-        else if (length >= _values.length) {
-            return empty();
-        }
+        return skip(0, length);
+    }
 
-        final int remain = _values.length - length;
-        final Object[] newKeys = new Object[remain];
-        final int[] newHashCodes = new int[remain];
-        final Object[] newValues = new Object[remain];
-        System.arraycopy(_keys, 0, newKeys, 0, remain);
-        System.arraycopy(_hashCodes, 0, newHashCodes, 0, remain);
-        System.arraycopy(_values, 0, newValues, 0, remain);
-        return new ImmutableHashMap<>(newKeys, newHashCodes, newValues);
+    /**
+     * Returns a new ImmutableHashMap where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this map.
+     * @return A new ImmutableHashMap instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableHashMap<K, V> takeLast(int length) {
+        return take(_values.length - length, length);
     }
 
     public static class Builder<K, V> implements ImmutableMap.Builder<K, V> {

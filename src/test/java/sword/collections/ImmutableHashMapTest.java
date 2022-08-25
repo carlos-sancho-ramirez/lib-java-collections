@@ -522,6 +522,62 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
         })));
     }
 
+    @Test
+    public void testTakeLastWhenEmpty() {
+        final ImmutableHashMap<Integer, String> map = newBuilder().build();
+        assertSame(map, map.takeLast(0));
+        assertSame(map, map.takeLast(1));
+        assertSame(map, map.takeLast(2));
+        assertSame(map, map.takeLast(24));
+    }
+
+    @Test
+    public void testTakeLast() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final String aValue = valueFromKey(a);
+            final String bValue = valueFromKey(b);
+            final String cValue = valueFromKey(c);
+            final ImmutableHashMap<Integer, String> map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            assertSame(ImmutableHashMap.empty(), map.takeLast(0));
+
+            final int size = map.size();
+            final Integer secondKey = (size >= 2)? map.keyAt(1) : null;
+            final String secondValue = (size >= 2)? map.valueAt(1) : null;
+            final Integer thirdKey = (size >= 3)? map.keyAt(2) : null;
+            final String thirdValue = (size >= 3)? map.valueAt(2) : null;
+
+            final ImmutableHashMap<Integer, String> take1 = map.takeLast(1);
+            if (size == 1) {
+                assertSame(map, take1);
+            }
+            else {
+                assertEquals(1, take1.size());
+                assertSame((size == 2)? secondKey : thirdKey, take1.keyAt(0));
+                assertSame((size == 2)? secondValue : thirdValue, take1.valueAt(0));
+            }
+
+            final ImmutableHashMap<Integer, String> take2 = map.takeLast(2);
+            if (size <= 2) {
+                assertSame(map, take2);
+            }
+            else {
+                assertEquals(2, take2.size());
+                assertSame(secondKey, take2.keyAt(0));
+                assertSame(secondValue, take2.valueAt(0));
+                assertSame(thirdKey, take2.keyAt(1));
+                assertSame(thirdValue, take2.valueAt(1));
+            }
+
+            assertSame(map, map.takeLast(3));
+            assertSame(map, map.takeLast(4));
+            assertSame(map, map.takeLast(24));
+        })));
+    }
+
     static final class HashCodeKeyTraversableBuilder<E> implements ImmutableTransformableBuilder<E> {
         private final ImmutableHashMap.Builder<Integer, E> builder = new ImmutableHashMap.Builder<>();
 
