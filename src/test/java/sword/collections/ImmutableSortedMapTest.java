@@ -520,6 +520,7 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         final ImmutableSortedMap<Integer, String> map = newBuilder().build();
         assertSame(map, map.takeLast(0));
@@ -529,6 +530,7 @@ public final class ImmutableSortedMapTest implements ImmutableMapTest<Integer, S
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withKey(a -> withKey(b -> withKey(c -> {
             final String aValue = valueFromKey(a);

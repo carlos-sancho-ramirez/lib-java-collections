@@ -476,4 +476,60 @@ public interface ImmutableMapTest<K, V, B extends ImmutableTransformableBuilder<
             assertTrue(map.skipLast(24).isEmpty());
         })));
     }
+
+    @Test
+    default void testTakeLastWhenEmpty() {
+        final ImmutableMap<K, V> map = newBuilder().build();
+        assertSame(map, map.takeLast(0));
+        assertSame(map, map.takeLast(1));
+        assertSame(map, map.takeLast(2));
+        assertSame(map, map.takeLast(24));
+    }
+
+    @Test
+    default void testTakeLast() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final V aValue = valueFromKey(a);
+            final V bValue = valueFromKey(b);
+            final V cValue = valueFromKey(c);
+            final ImmutableMap<K, V> map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            assertTrue(map.takeLast(0).isEmpty());
+
+            final int size = map.size();
+            final K secondKey = (size >= 2)? map.keyAt(1) : null;
+            final V secondValue = (size >= 2)? map.valueAt(1) : null;
+            final K thirdKey = (size >= 3)? map.keyAt(2) : null;
+            final V thirdValue = (size >= 3)? map.valueAt(2) : null;
+
+            final ImmutableMap<K, V> take1 = map.takeLast(1);
+            if (size == 1) {
+                assertSame(map, take1);
+            }
+            else {
+                assertEquals(1, take1.size());
+                assertSame((size == 2)? secondKey : thirdKey, take1.keyAt(0));
+                assertSame((size == 2)? secondValue : thirdValue, take1.valueAt(0));
+            }
+
+            final ImmutableMap<K, V> take2 = map.takeLast(2);
+            if (size <= 2) {
+                assertSame(map, take2);
+            }
+            else {
+                assertEquals(2, take2.size());
+                assertSame(secondKey, take2.keyAt(0));
+                assertSame(secondValue, take2.valueAt(0));
+                assertSame(thirdKey, take2.keyAt(1));
+                assertSame(thirdValue, take2.valueAt(1));
+            }
+
+            assertSame(map, map.takeLast(3));
+            assertSame(map, map.takeLast(4));
+            assertSame(map, map.takeLast(24));
+        })));
+    }
 }

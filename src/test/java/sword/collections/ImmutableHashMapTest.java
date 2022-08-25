@@ -523,6 +523,7 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         final ImmutableHashMap<Integer, String> map = newBuilder().build();
         assertSame(map, map.takeLast(0));
@@ -532,6 +533,7 @@ public final class ImmutableHashMapTest implements ImmutableMapTest<Integer, Str
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withKey(a -> withKey(b -> withKey(c -> {
             final String aValue = valueFromKey(a);
