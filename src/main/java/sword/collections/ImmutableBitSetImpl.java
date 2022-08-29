@@ -367,6 +367,58 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
         return new ImmutableBitSetImpl(newValue);
     }
 
+    /**
+     * Returns a new ImmutableIntSet where the <code>length</code> amount of
+     * last elements has been removed.
+     * <p>
+     * This will return an empty instance if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the end of the set.
+     * @return A new ImmutableIntSet instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    public ImmutableIntSet skipLast(int length) {
+        if (_value == null || length == 0) {
+            return this;
+        }
+
+        final int wordCount = _value.length;
+        int wordIndex;
+        int bitIndex = 31;
+        int count = 0;
+
+        outLoop:
+        for (wordIndex = wordCount - 1; wordIndex >= 0; wordIndex--) {
+            for (bitIndex = 31; bitIndex >= 0; bitIndex--) {
+                if ((_value[wordIndex] & (1 << bitIndex)) != 0) {
+                    if (++count > length) {
+                        break outLoop;
+                    }
+                }
+            }
+        }
+
+        if (count <= length) {
+            return empty();
+        }
+
+        final int[] newValue = new int[wordIndex + 1];
+        System.arraycopy(_value, 0, newValue, 0, wordIndex + 1);
+        if (bitIndex != 31) {
+            newValue[wordIndex] &= (1 << (bitIndex + 1)) - 1;
+        }
+
+        final ImmutableBitSetImpl result = new ImmutableBitSetImpl(newValue);
+        if (_size != -1) {
+            result._size = _size - length;
+        }
+
+        return result;
+    }
+
     @Override
     public ImmutableIntSet toImmutable() {
         return this;

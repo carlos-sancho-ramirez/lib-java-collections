@@ -111,4 +111,49 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
             assertSame(set, set.slice(new ImmutableIntRange(0, 67)));
         })));
     }
+
+    @Test
+    public void testSkipLastWhenEmpty() {
+        final ImmutableBitSetImpl set = newIntBuilder().build();
+        assertSame(set, set.skipLast(0));
+        assertSame(set, set.skipLast(1));
+        assertSame(set, set.skipLast(2));
+        assertSame(set, set.skipLast(24));
+    }
+
+    @Test
+    public void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableBitSetImpl set = newIntBuilder().add(a).add(b).add(c).build();
+            assertSame(set, set.skipLast(0));
+
+            final int size = set.size();
+            final int first = set.valueAt(0);
+            final int second = (size >= 2)? set.valueAt(1) : 0;
+            final ImmutableIntSet set1 = set.skipLast(1);
+            if (size == 1) {
+                assertTrue(set1.isEmpty());
+            }
+            else {
+                assertEquals(size - 1, set1.size());
+                assertEquals(first, set1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(second, set1.valueAt(1));
+                }
+            }
+
+            final ImmutableIntSet set2 = set.skipLast(2);
+            if (size < 3) {
+                assertTrue(set2.isEmpty());
+            }
+            else {
+                assertEquals(1, set2.size());
+                assertEquals(first, set2.valueAt(0));
+            }
+
+            assertTrue(set.skipLast(3).isEmpty());
+            assertTrue(set.skipLast(4).isEmpty());
+            assertTrue(set.skipLast(24).isEmpty());
+        })));
+    }
 }
