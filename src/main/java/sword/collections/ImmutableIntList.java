@@ -195,7 +195,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
      * @param length the amount of elements to be removed from the end of the list.
      * @return A new ImmutableIntList instance without the last elements,
      *         the same instance in case the given length is 0,
-     *         or the empty instance of the given length is equal or greater
+     *         or the empty instance if the given length is equal or greater
      *         than the actual length of the list.
      */
     public ImmutableIntList skipLast(int length) {

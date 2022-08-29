@@ -481,7 +481,20 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Test
-    void testSkipLast() {
+    @Override
+    public void testSkipLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableIntList list = supplier.newBuilder().build();
+            assertSame(list, list.skipLast(0));
+            assertSame(list, list.skipLast(1));
+            assertSame(list, list.skipLast(2));
+            assertSame(list, list.skipLast(24));
+        });
+    }
+
+    @Test
+    @Override
+    public void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
 
