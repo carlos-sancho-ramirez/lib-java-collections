@@ -199,4 +199,51 @@ public final class ImmutableIntArraySetTest extends ImmutableIntSetTest {
             assertSame(set, set.take(24));
         })));
     }
+
+    @Test
+    public void testSkipLastWhenEmpty() {
+        final ImmutableIntArraySet set = newIntBuilder().build();
+        assertSame(set, set.skipLast(0));
+        assertSame(set, set.skipLast(1));
+        assertSame(set, set.skipLast(2));
+        assertSame(set, set.skipLast(24));
+    }
+
+    @Test
+    public void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableIntArraySet set = newIntBuilder().add(a).add(b).add(c).build();
+            assertSame(set, set.skipLast(0));
+
+            final int size = set.size();
+            final int first = set.valueAt(0);
+            final int second = (size >= 2)? set.valueAt(1) : 0;
+            final ImmutableIntArraySet empty = ImmutableIntArraySet.empty();
+
+            final ImmutableIntArraySet set1 = set.skipLast(1);
+            if (size == 1) {
+                assertSame(empty, set1);
+            }
+            else {
+                assertEquals(size - 1, set1.size());
+                assertEquals(first, set1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(second, set1.valueAt(1));
+                }
+            }
+
+            final ImmutableIntArraySet set2 = set.skipLast(2);
+            if (size < 3) {
+                assertSame(empty, set2);
+            }
+            else {
+                assertEquals(1, set2.size());
+                assertEquals(first, set2.valueAt(0));
+            }
+
+            assertSame(empty, set.skipLast(3));
+            assertSame(empty, set.skipLast(4));
+            assertSame(empty, set.skipLast(24));
+        })));
+    }
 }
