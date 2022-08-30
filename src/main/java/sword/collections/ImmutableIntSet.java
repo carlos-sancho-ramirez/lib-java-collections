@@ -1,7 +1,5 @@
 package sword.collections;
 
-import sword.annotations.ToBeAbstract;
-
 /**
  * Base for efficient implementations for immutable sets when there are few values included.
  * 'Set' must be understood as a collection where its elements cannot be repeated.

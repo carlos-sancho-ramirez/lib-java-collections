@@ -106,6 +106,29 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
         return builder.add(value).build();
     }
 
+    /**
+     * Returns a new ImmutableIntSet where the <code>length</code> amount of last
+     * elements has been removed.
+     * <p>
+     * This will return an empty set if the given parameter matches or exceeds
+     * the length of this collection.
+     *
+     * @param length the amount of elements to be removed from the end of the set.
+     * @return A new ImmutableIntSet instance without the last elements,
+     *         the same instance in case the given length is 0 or this set is already empty,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    public ImmutableIntSet skipLast(int length) {
+        if (length == 0) {
+            return this;
+        }
+
+        final int newMax = _max - length;
+        return (newMax < _max && newMax >= _min)? new ImmutableIntRange(_min, _max - length) :
+                ImmutableIntArraySet.empty();
+    }
+
     @Override
     public ImmutableIntSet removeAt(int index) {
         if (index < 0 || index >= size()) {

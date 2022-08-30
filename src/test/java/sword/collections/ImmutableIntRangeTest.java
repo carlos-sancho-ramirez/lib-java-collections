@@ -389,4 +389,31 @@ class ImmutableIntRangeTest {
             }
         }));
     }
+
+    @Test
+    public void testSkipLast() {
+        withRange(set -> {
+            assertSame(set, set.skipLast(0));
+
+            final int size = set.size();
+            if (size > 0) {
+                final ImmutableIntSet set1 = set.skipLast(1);
+                assertEquals(size - 1, set1.size());
+                if (size > 1) {
+                    assertEquals(set.min(), set1.min());
+                    assertEquals(set.max() - 1, set1.max());
+                }
+
+                final ImmutableIntSet set2 = set.skipLast(2);
+                if (size < 3) {
+                    assertTrue(set2.isEmpty());
+                }
+                else {
+                    assertEquals(size - 2, set2.size());
+                    assertEquals(set.min(), set2.min());
+                    assertEquals(set.max() - 2, set2.max());
+                }
+            }
+        });
+    }
 }
