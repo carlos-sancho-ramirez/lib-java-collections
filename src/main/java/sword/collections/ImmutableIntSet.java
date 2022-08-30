@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.ToBeAbstract;
+
 /**
  * Base for efficient implementations for immutable sets when there are few values included.
  * 'Set' must be understood as a collection where its elements cannot be repeated.
@@ -177,7 +179,7 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
         final int size = size();
         final int min = range.min();
         final int max = range.max();
-        if (range.min() <= 0 && range.max() >= size - 1) {
+        if (size == 0 || min <= 0 && max >= size - 1) {
             return this;
         }
 
@@ -231,6 +233,29 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
         return isEmpty()? this :
                 (length == 0)? ImmutableIntArraySet.empty() :
                         slice(new ImmutableIntRange(0, length - 1));
+    }
+
+    /**
+     * Returns a new ImmutableIntSet where the <code>length</code> amount of last
+     * elements has been removed.
+     * <p>
+     * This will return an empty set if the given parameter matches or exceeds
+     * the length of this collection.
+     *
+     * @param length the amount of elements to be removed from the end of the set.
+     * @return A new ImmutableIntSet instance without the last elements,
+     *         the same instance in case the given length is 0 or this set is already empty,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    default ImmutableIntSet skipLast(int length) {
+        final int size = size();
+        if (size == 0) {
+            return this;
+        }
+
+        final int max = size - length - 1;
+        return (max < 0)? ImmutableIntArraySet.empty() : slice(new ImmutableIntRange(0, max));
     }
 
     /**

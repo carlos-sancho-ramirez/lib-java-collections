@@ -103,7 +103,7 @@ public interface ImmutableSet<T> extends Set<T>, ImmutableTransformable<T> {
             return ImmutableHashSet.empty();
         }
 
-        if (range.min() <= 0 && range.max() >= size - 1) {
+        if (min <= 0 && max >= size - 1) {
             return this;
         }
 

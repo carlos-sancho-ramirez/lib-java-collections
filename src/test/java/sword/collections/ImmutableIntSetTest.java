@@ -115,10 +115,19 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     @Test
     void testAddAll() {
         withValue(a -> withValue(b -> withValue(c -> withValue(d -> {
-            ImmutableIntSet set1 = newIntBuilder().add(a).add(b).build();
-            ImmutableIntSet set2 = newIntBuilder().add(c).add(d).build();
-            ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).add(d).build();
-            assertEquals(set, set1.addAll(set2));
+            final ImmutableIntSet set1 = newIntBuilder().add(a).add(b).build();
+            final ImmutableIntSet set2 = newIntBuilder().add(c).add(d).build();
+
+            final int expectedSize = (a == b && a == c && a == d)? 1 :
+                    (a == b && a == c || a == b && a == d || a == c && a == d || b == c && b == d)? 2 :
+                            (a == b && c == d || a == c && b == d || a == d && b == c)? 2 :
+                            (a == b || a == c || a == d || b == c || b == d || c == d)? 3 : 4;
+            final ImmutableIntSet result = set1.addAll(set2);
+            assertEquals(expectedSize, result.size());
+            assertTrue(result.contains(a));
+            assertTrue(result.contains(b));
+            assertTrue(result.contains(c));
+            assertTrue(result.contains(d));
         }))));
     }
 
@@ -194,14 +203,14 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
                     assertEquals(2, map.size());
                     if (aGroup.equals(map.keyAt(0))) {
                         assertEquals(cGroup, map.keyAt(1));
-                        assertEquals(newIntBuilder().add(a).add(b).build(), map.valueAt(0));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(1));
+                        assertTrue(newIntBuilder().add(a).add(b).build().equalSet(map.valueAt(0)));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(1)));
                     }
                     else {
                         assertEquals(cGroup, map.keyAt(0));
                         assertEquals(aGroup, map.keyAt(1));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(0));
-                        assertEquals(newIntBuilder().add(a).add(b).build(), map.valueAt(1));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(0)));
+                        assertTrue(newIntBuilder().add(a).add(b).build().equalSet(map.valueAt(1)));
                     }
                 }
             }
@@ -209,73 +218,73 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
                 assertEquals(2, map.size());
                 if (aGroup.equals(map.keyAt(0))) {
                     assertEquals(bGroup, map.keyAt(1));
-                    assertEquals(newIntBuilder().add(a).add(c).build(), map.valueAt(0));
-                    assertEquals(newIntBuilder().add(b).build(), map.valueAt(1));
+                    assertTrue(newIntBuilder().add(a).add(c).build().equalSet(map.valueAt(0)));
+                    assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(1)));
                 }
                 else {
                     assertEquals(bGroup, map.keyAt(0));
                     assertEquals(aGroup, map.keyAt(1));
-                    assertEquals(newIntBuilder().add(b).build(), map.valueAt(0));
-                    assertEquals(newIntBuilder().add(a).add(c).build(), map.valueAt(1));
+                    assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(0)));
+                    assertTrue(newIntBuilder().add(a).add(c).build().equalSet(map.valueAt(1)));
                 }
             }
             else if (bGroup.equals(cGroup)) {
                 assertEquals(2, map.size());
                 if (aGroup.equals(map.keyAt(0))) {
                     assertEquals(bGroup, map.keyAt(1));
-                    assertEquals(newIntBuilder().add(a).build(), map.valueAt(0));
-                    assertEquals(newIntBuilder().add(b).add(c).build(), map.valueAt(1));
+                    assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(0)));
+                    assertTrue(newIntBuilder().add(b).add(c).build().equalSet(map.valueAt(1)));
                 }
                 else {
                     assertEquals(bGroup, map.keyAt(0));
                     assertEquals(aGroup, map.keyAt(1));
-                    assertEquals(newIntBuilder().add(b).add(c).build(), map.valueAt(0));
-                    assertEquals(newIntBuilder().add(a).build(), map.valueAt(1));
+                    assertTrue(newIntBuilder().add(b).add(c).build().equalSet(map.valueAt(0)));
+                    assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(1)));
                 }
             }
             else {
                 assertEquals(3, map.size());
                 if (aGroup.equals(map.keyAt(0))) {
-                    assertEquals(newIntBuilder().add(a).build(), map.valueAt(0));
+                    assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(0)));
                     if (bGroup.equals(map.keyAt(1))) {
                         assertEquals(cGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(2)));
                     }
                     else {
                         assertEquals(cGroup, map.keyAt(1));
                         assertEquals(bGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(2)));
                     }
                 }
                 else if (bGroup.equals(map.keyAt(0))) {
-                    assertEquals(newIntBuilder().add(b).build(), map.valueAt(0));
+                    assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(0)));
                     if (aGroup.equals(map.keyAt(1))) {
                         assertEquals(cGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(2)));
                     }
                     else {
                         assertEquals(cGroup, map.keyAt(1));
                         assertEquals(aGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(2)));
                     }
                 }
                 else {
                     assertEquals(cGroup, map.keyAt(0));
-                    assertEquals(newIntBuilder().add(c).build(), map.valueAt(0));
+                    assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(0)));
                     if (aGroup.equals(map.keyAt(1))) {
                         assertEquals(bGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(2)));
                     }
                     else {
                         assertEquals(bGroup, map.keyAt(1));
                         assertEquals(aGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(2)));
                     }
                 }
             }
@@ -310,14 +319,14 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
                     assertEquals(2, map.size());
                     if (aGroup == map.keyAt(0)) {
                         assertEquals(cGroup, map.keyAt(1));
-                        assertEquals(newIntBuilder().add(a).add(b).build(), map.valueAt(0));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(1));
+                        assertTrue(newIntBuilder().add(a).add(b).build().equalSet(map.valueAt(0)));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(1)));
                     }
                     else {
                         assertEquals(cGroup, map.keyAt(0));
                         assertEquals(aGroup, map.keyAt(1));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(0));
-                        assertEquals(newIntBuilder().add(a).add(b).build(), map.valueAt(1));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(0)));
+                        assertTrue(newIntBuilder().add(a).add(b).build().equalSet(map.valueAt(1)));
                     }
                 }
             }
@@ -325,73 +334,73 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
                 assertEquals(2, map.size());
                 if (aGroup == map.keyAt(0)) {
                     assertEquals(bGroup, map.keyAt(1));
-                    assertEquals(newIntBuilder().add(a).add(c).build(), map.valueAt(0));
-                    assertEquals(newIntBuilder().add(b).build(), map.valueAt(1));
+                    assertTrue(newIntBuilder().add(a).add(c).build().equalSet(map.valueAt(0)));
+                    assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(1)));
                 }
                 else {
                     assertEquals(bGroup, map.keyAt(0));
                     assertEquals(aGroup, map.keyAt(1));
-                    assertEquals(newIntBuilder().add(b).build(), map.valueAt(0));
-                    assertEquals(newIntBuilder().add(a).add(c).build(), map.valueAt(1));
+                    assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(0)));
+                    assertTrue(newIntBuilder().add(a).add(c).build().equalSet(map.valueAt(1)));
                 }
             }
             else if (bGroup == cGroup) {
                 assertEquals(2, map.size());
                 if (aGroup == map.keyAt(0)) {
                     assertEquals(bGroup, map.keyAt(1));
-                    assertEquals(newIntBuilder().add(a).build(), map.valueAt(0));
-                    assertEquals(newIntBuilder().add(b).add(c).build(), map.valueAt(1));
+                    assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(0)));
+                    assertTrue(newIntBuilder().add(b).add(c).build().equalSet(map.valueAt(1)));
                 }
                 else {
                     assertEquals(bGroup, map.keyAt(0));
                     assertEquals(aGroup, map.keyAt(1));
-                    assertEquals(newIntBuilder().add(b).add(c).build(), map.valueAt(0));
-                    assertEquals(newIntBuilder().add(a).build(), map.valueAt(1));
+                    assertTrue(newIntBuilder().add(b).add(c).build().equalSet(map.valueAt(0)));
+                    assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(1)));
                 }
             }
             else {
                 assertEquals(3, map.size());
                 if (aGroup == map.keyAt(0)) {
-                    assertEquals(newIntBuilder().add(a).build(), map.valueAt(0));
+                    assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(0)));
                     if (bGroup == map.keyAt(1)) {
                         assertEquals(cGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(2)));
                     }
                     else {
                         assertEquals(cGroup, map.keyAt(1));
                         assertEquals(bGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(2)));
                     }
                 }
                 else if (bGroup == map.keyAt(0)) {
-                    assertEquals(newIntBuilder().add(b).build(), map.valueAt(0));
+                    assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(0)));
                     if (aGroup == map.keyAt(1)) {
                         assertEquals(cGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(2)));
                     }
                     else {
                         assertEquals(cGroup, map.keyAt(1));
                         assertEquals(aGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(c).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(2)));
                     }
                 }
                 else {
                     assertEquals(cGroup, map.keyAt(0));
-                    assertEquals(newIntBuilder().add(c).build(), map.valueAt(0));
+                    assertTrue(newIntBuilder().add(c).build().equalSet(map.valueAt(0)));
                     if (aGroup == map.keyAt(1)) {
                         assertEquals(bGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(2)));
                     }
                     else {
                         assertEquals(bGroup, map.keyAt(1));
                         assertEquals(aGroup, map.keyAt(2));
-                        assertEquals(newIntBuilder().add(b).build(), map.valueAt(1));
-                        assertEquals(newIntBuilder().add(a).build(), map.valueAt(2));
+                        assertTrue(newIntBuilder().add(b).build().equalSet(map.valueAt(1)));
+                        assertTrue(newIntBuilder().add(a).build().equalSet(map.valueAt(2)));
                     }
                 }
             }
@@ -566,5 +575,48 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
             assertSame(set, set.take(4));
             assertSame(set, set.take(24));
         }))));
+    }
+
+    @Test
+    public void testSkipLastWhenEmpty() {
+        final ImmutableIntSet set = newIntBuilder().build();
+        assertSame(set, set.skipLast(0));
+        assertSame(set, set.skipLast(1));
+        assertSame(set, set.skipLast(2));
+        assertSame(set, set.skipLast(24));
+    }
+
+    @Test
+    public void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
+            assertSame(set, set.skipLast(0));
+
+            final int size = set.size();
+            final int first = set.valueAt(0);
+            final int second = (size >= 2)? set.valueAt(1) : 0;
+
+            final ImmutableIntSet set1 = set.skipLast(1);
+            assertEquals(size - 1, set1.size());
+            if (size >= 2) {
+                assertEquals(first, set1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(second, set1.valueAt(1));
+                }
+            }
+
+            final ImmutableIntSet set2 = set.skipLast(2);
+            if (size < 3) {
+                assertTrue(set2.isEmpty());
+            }
+            else {
+                assertEquals(1, set2.size());
+                assertEquals(first, set2.valueAt(0));
+            }
+
+            assertTrue(set.skipLast(3).isEmpty());
+            assertTrue(set.skipLast(4).isEmpty());
+            assertTrue(set.skipLast(24).isEmpty());
+        })));
     }
 }
