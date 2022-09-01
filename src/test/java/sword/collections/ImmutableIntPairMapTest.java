@@ -536,6 +536,7 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Test
+    @Override
     public void testSkipLastWhenEmpty() {
         final ImmutableIntPairMap map = newBuilder().build();
         assertSame(map, map.skipLast(0));
@@ -545,6 +546,7 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
     }
 
     @Test
+    @Override
     public void testSkipLast() {
         withInt(a -> withInt(b -> withInt(c -> {
             final int aValue = valueFromKey(a);

@@ -307,6 +307,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
      *         or the empty instance if the given length is equal or greater
      *         than the actual length of the map.
      */
+    @Override
     public ImmutableIntPairMap skipLast(int length) {
         return skip(0, length);
     }
