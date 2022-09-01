@@ -242,8 +242,7 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
         return new ImmutableIntValueSortedMap<>(_sortFunction, newKeys, newValues);
     }
 
-    @Override
-    public ImmutableIntValueSortedMap<T> skip(int length) {
+    private ImmutableIntValueSortedMap<T> skip(int index, int length) {
         final int size = _values.length;
         if (size == 0) {
             return this;
@@ -260,10 +259,15 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
         final int newSize = size - length;
         final Object[] newKeys = new Object[newSize];
         final int[] newValues = new int[newSize];
-        System.arraycopy(_keys, length, newKeys, 0, newSize);
-        System.arraycopy(_values, length, newValues, 0, newSize);
+        System.arraycopy(_keys, index, newKeys, 0, newSize);
+        System.arraycopy(_values, index, newValues, 0, newSize);
 
         return new ImmutableIntValueSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
+    @Override
+    public ImmutableIntValueSortedMap<T> skip(int length) {
+        return skip(length, length);
     }
 
     /**
@@ -293,6 +297,23 @@ public final class ImmutableIntValueSortedMap<T> extends AbstractImmutableIntVal
         }
 
         return new ImmutableIntValueSortedMap<>(_sortFunction, newKeys, newValues);
+    }
+
+    /**
+     * Returns a new ImmutableIntValueSortedMap where the <code>length</code> amount of
+     * last elements has been removed.
+     * <p>
+     * This will return an empty instance if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the end of the map.
+     * @return A new ImmutableIntValueSortedMap instance without the last elements,
+     *         the same instance in case the given length is 0 or is already empty,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of this map.
+     */
+    public ImmutableIntValueSortedMap<T> skipLast(int length) {
+        return skip(0, length);
     }
 
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {

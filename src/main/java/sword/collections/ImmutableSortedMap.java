@@ -349,7 +349,7 @@ public final class ImmutableSortedMap<K, V> extends AbstractImmutableMap<K, V> {
      * @return A new ImmutableSortedMap instance without the last elements,
      *         the same instance in case the given length is 0 or is already empty,
      *         or the empty instance if the given length is equal or greater
-     *         than the actual length of this set.
+     *         than the actual length of this map.
      */
     @Override
     public ImmutableSortedMap<K, V> skipLast(int length) {
