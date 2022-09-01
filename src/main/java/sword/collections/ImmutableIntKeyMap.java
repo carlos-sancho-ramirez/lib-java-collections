@@ -469,7 +469,7 @@ public final class ImmutableIntKeyMap<T> extends AbstractIntKeyMap<T> implements
      * @return A new ImmutableIntKeyMap instance without the last elements,
      *         the same instance in case the given length is 0,
      *         or the empty instance if the given length is equal or greater
-     *         than the actual length of the set.
+     *         than the actual length of the map.
      */
     @Override
     public ImmutableIntKeyMap<T> skipLast(int length) {

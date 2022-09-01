@@ -241,8 +241,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         return new ImmutableIntPairMap(newKeys, newValues);
     }
 
-    @Override
-    public ImmutableIntPairMap skip(int length) {
+    private ImmutableIntPairMap skip(int index, int length) {
         final int size = _values.length;
         if (length <= 0) {
             return this;
@@ -255,9 +254,14 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         final int newSize = size - length;
         final int[] newKeys = new int[newSize];
         final int[] newValues = new int[newSize];
-        System.arraycopy(_keys, length, newKeys, 0, newSize);
-        System.arraycopy(_values, length, newValues, 0, newSize);
+        System.arraycopy(_keys, index, newKeys, 0, newSize);
+        System.arraycopy(_values, index, newValues, 0, newSize);
         return new ImmutableIntPairMap(newKeys, newValues);
+    }
+
+    @Override
+    public ImmutableIntPairMap skip(int length) {
+        return skip(length, length);
     }
 
     /**
@@ -288,6 +292,23 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         System.arraycopy(_keys, 0, newKeys, 0, length);
         System.arraycopy(_values, 0, newValues, 0, length);
         return new ImmutableIntPairMap(newKeys, newValues);
+    }
+
+    /**
+     * Returns a new ImmutableIntPairMap where the <code>length</code> amount of
+     * last elements has been removed.
+     * <p>
+     * This will return the empty instance if the given parameter matches
+     * or exceeds the length of this map.
+     *
+     * @param length the amount of elements to be removed from the end of the map.
+     * @return A new ImmutableIntPairMap instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the map.
+     */
+    public ImmutableIntPairMap skipLast(int length) {
+        return skip(0, length);
     }
 
     @Override
