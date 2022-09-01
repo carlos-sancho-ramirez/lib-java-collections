@@ -141,8 +141,9 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
      * @return A new ImmutableIntValueMap instance without the last elements,
      *         the same instance in case the given length is 0 or this map is already empty,
      *         or the empty instance if the given length is equal or greater
-     *         than the actual length of the set.
+     *         than the actual length of the map.
      */
+    @Override
     @ToBeAbstract("Unable to provide the proper type. If it was a sorted map, it sortFunction is lost")
     default ImmutableIntValueMap<T> skipLast(int length) {
         final int size = size();

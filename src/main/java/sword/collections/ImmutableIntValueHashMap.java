@@ -343,6 +343,7 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
      *         or the empty instance if the given length is equal or greater
      *         than the actual length of the set.
      */
+    @Override
     public ImmutableIntValueHashMap<T> skipLast(int length) {
         return skip(0, length);
     }
