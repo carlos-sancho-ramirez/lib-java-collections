@@ -122,6 +122,7 @@ public interface IntSet extends IntTransformable {
      *         or an empty instance if the given length is equal or greater
      *         than the actual length of the set.
      */
+    @Override
     default IntSet skipLast(int length) {
         if (length == 0) {
             return this;

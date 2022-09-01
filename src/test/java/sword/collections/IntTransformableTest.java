@@ -516,4 +516,49 @@ interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTra
             }
         }))));
     }
+
+    @Test
+    default void testSkipLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntTransformable transformable = supplier.newBuilder().build();
+            assertSame(transformable, transformable.skipLast(0));
+            assertTrue(transformable.skipLast(1).isEmpty());
+            assertTrue(transformable.skipLast(2).isEmpty());
+            assertTrue(transformable.skipLast(24).isEmpty());
+        });
+    }
+
+    @Test
+    default void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntTransformable transformable = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertSame(transformable, transformable.skipLast(0));
+
+            final int size = transformable.size();
+            final int first = transformable.valueAt(0);
+            final int second = (size >= 2)? transformable.valueAt(1) : 0;
+
+            final IntTransformable transformable1 = transformable.skipLast(1);
+            assertEquals(size - 1, transformable1.size());
+            if (size >= 2) {
+                assertEquals(first, transformable1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(second, transformable1.valueAt(1));
+                }
+            }
+
+            final IntTransformable transformable2 = transformable.skipLast(2);
+            if (size < 3) {
+                assertTrue(transformable2.isEmpty());
+            }
+            else {
+                assertEquals(1, transformable2.size());
+                assertEquals(first, transformable2.valueAt(0));
+            }
+
+            assertTrue(transformable.skipLast(3).isEmpty());
+            assertTrue(transformable.skipLast(4).isEmpty());
+            assertTrue(transformable.skipLast(24).isEmpty());
+        }))));
+    }
 }

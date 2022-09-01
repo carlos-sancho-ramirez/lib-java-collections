@@ -134,4 +134,28 @@ public interface IntTransformable extends IntTraversable {
     default IntTransformable take(int length) {
         return (length == 0)? ImmutableIntList.empty() : slice(new ImmutableIntRange(0, length - 1));
     }
+
+    /**
+     * Returns a new collection where the <code>length</code> amount of last elements
+     * has been removed.
+     * <p>
+     * This will return an empty collection if the given parameter matches
+     * or exceeds the length of this array.
+     *
+     * @param length the amount of elements to be removed from the end of this collection.
+     * @return A new instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the collection.
+     */
+    @ToBeAbstract("This implementation is unable to provide the proper transformable type. So the iteration order gets broken")
+    default IntTransformable skipLast(int length) {
+        if (length == 0) {
+            return this;
+        }
+
+        final int size = size();
+        final int max = size - length - 1;
+        return (max < 0)? ImmutableIntList.empty() : slice(new ImmutableIntRange(0, max));
+    }
 }

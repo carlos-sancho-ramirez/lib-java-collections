@@ -740,6 +740,7 @@ interface IntPairMapTest<B extends IntTransformableBuilder, MB extends IntPairMa
     }
 
     @Test
+    @Override
     default void testSkipLastWhenEmpty() {
         final IntPairMap map = newBuilder().build();
         assertSame(map, map.skipLast(0));
@@ -749,6 +750,7 @@ interface IntPairMapTest<B extends IntTransformableBuilder, MB extends IntPairMa
     }
 
     @Test
+    @Override
     default void testSkipLast() {
         withInt(a -> withInt(b -> withInt(c -> {
             final int aValue = valueFromKey(a);

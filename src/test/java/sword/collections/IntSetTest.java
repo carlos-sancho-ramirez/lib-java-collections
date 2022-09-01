@@ -198,6 +198,7 @@ abstract class IntSetTest<B extends IntSet.Builder> implements IntTransformableT
     }
 
     @Test
+    @Override
     public void testSkipLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final IntSet set = supplier.newBuilder().build();
@@ -209,6 +210,7 @@ abstract class IntSetTest<B extends IntSet.Builder> implements IntTransformableT
     }
 
     @Test
+    @Override
     public void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();

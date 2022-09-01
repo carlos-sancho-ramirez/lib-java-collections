@@ -835,6 +835,7 @@ interface IntValueMapTest<K, B extends IntTransformableBuilder, MB extends IntVa
     }
 
     @Test
+    @Override
     default void testSkipLastWhenEmpty() {
         final IntValueMap<K> map = newBuilder().build();
         assertSame(map, map.skipLast(0));
@@ -844,6 +845,7 @@ interface IntValueMapTest<K, B extends IntTransformableBuilder, MB extends IntVa
     }
 
     @Test
+    @Override
     default void testSkipLast() {
         withKey(a -> withKey(b -> withKey(c -> {
             final int aValue = valueFromKey(a);

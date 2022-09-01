@@ -167,6 +167,7 @@ public interface IntPairMap extends IntTransformable, IntPairMapGetter {
      *         or an empty instance if the given length is equal or greater
      *         than the actual length of the map.
      */
+    @Override
     default IntPairMap skipLast(int length) {
         if (length == 0) {
             return this;

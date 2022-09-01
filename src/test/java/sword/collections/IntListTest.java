@@ -129,6 +129,7 @@ abstract class IntListTest<B extends IntListBuilder> implements IntTransformable
     }
 
     @Test
+    @Override
     public void testSkipLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final IntList list = supplier.newBuilder().build();
@@ -140,6 +141,7 @@ abstract class IntListTest<B extends IntListBuilder> implements IntTransformable
     }
 
     @Test
+    @Override
     public void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntList list = supplier.newBuilder().add(a).add(b).add(c).build();
