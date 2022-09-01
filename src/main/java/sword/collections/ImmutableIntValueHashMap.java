@@ -272,8 +272,7 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
-    @Override
-    public ImmutableIntValueHashMap<T> skip(int length) {
+    private ImmutableIntValueHashMap<T> skip(int index, int length) {
         if (length < 0) {
             throw new IllegalArgumentException("Unable to skip a negative number of elements");
         }
@@ -288,10 +287,15 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
         final Object[] newKeys = new Object[remain];
         final int[] newValues = new int[remain];
         final int[] newHashCodes = new int[remain];
-        System.arraycopy(_keys, length, newKeys, 0, remain);
-        System.arraycopy(_hashCodes, length, newHashCodes, 0, remain);
-        System.arraycopy(_values, length, newValues, 0, remain);
+        System.arraycopy(_keys, index, newKeys, 0, remain);
+        System.arraycopy(_hashCodes, index, newHashCodes, 0, remain);
+        System.arraycopy(_values, index, newValues, 0, remain);
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
+    @Override
+    public ImmutableIntValueHashMap<T> skip(int length) {
+        return skip(length, length);
     }
 
     /**
@@ -324,6 +328,23 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
         System.arraycopy(_hashCodes, 0, newHashCodes, 0, length);
         System.arraycopy(_values, 0, newValues, 0, length);
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
+    /**
+     * Returns a new ImmutableIntValueHashMap where the <code>length</code> amount of
+     * last elements has been removed.
+     * <p>
+     * This will return the empty instance if the given parameter matches
+     * or exceeds the length of this map.
+     *
+     * @param length the amount of elements to be removed from the end of the map.
+     * @return A new ImmutableIntValueHashMap instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or the empty instance if the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    public ImmutableIntValueHashMap<T> skipLast(int length) {
+        return skip(0, length);
     }
 
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {
