@@ -246,6 +246,7 @@ public interface ImmutableIntSet extends IntSet, ImmutableIntTransformable {
      *         or the empty instance if the given length is equal or greater
      *         than the actual length of the set.
      */
+    @Override
     default ImmutableIntSet skipLast(int length) {
         final int size = size();
         if (size == 0) {

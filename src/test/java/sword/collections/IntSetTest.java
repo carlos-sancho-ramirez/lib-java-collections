@@ -198,6 +198,51 @@ abstract class IntSetTest<B extends IntSet.Builder> implements IntTransformableT
     }
 
     @Test
+    public void testSkipLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntSet set = supplier.newBuilder().build();
+            assertSame(set, set.skipLast(0));
+            assertTrue(set.skipLast(1).isEmpty());
+            assertTrue(set.skipLast(2).isEmpty());
+            assertTrue(set.skipLast(24).isEmpty());
+        });
+    }
+
+    @Test
+    public void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertSame(set, set.skipLast(0));
+
+            final int size = set.size();
+            final int first = set.valueAt(0);
+            final int second = (size >= 2)? set.valueAt(1) : 0;
+
+            final IntSet set1 = set.skipLast(1);
+            assertEquals(size - 1, set1.size());
+            if (size >= 2) {
+                assertEquals(first, set1.valueAt(0));
+                if (size == 3) {
+                    assertEquals(second, set1.valueAt(1));
+                }
+            }
+
+            final IntSet set2 = set.skipLast(2);
+            if (size < 3) {
+                assertTrue(set2.isEmpty());
+            }
+            else {
+                assertEquals(1, set2.size());
+                assertEquals(first, set2.valueAt(0));
+            }
+
+            assertTrue(set.skipLast(3).isEmpty());
+            assertTrue(set.skipLast(4).isEmpty());
+            assertTrue(set.skipLast(24).isEmpty());
+        }))));
+    }
+
+    @Test
     void testMutate() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntSet set = supplier.newBuilder().add(a).add(b).build();

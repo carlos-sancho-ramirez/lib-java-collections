@@ -110,6 +110,29 @@ public interface IntSet extends IntTransformable {
     }
 
     /**
+     * Returns a new IntSet where the <code>length</code> amount of last elements
+     * has been removed.
+     * <p>
+     * This will return an empty set if the given parameter matches
+     * or exceeds the length of this collection.
+     *
+     * @param length the amount of elements to be removed from the end of the set.
+     * @return A new IntSet instance without the last elements,
+     *         the same instance in case the given length is 0,
+     *         or an empty instance if the given length is equal or greater
+     *         than the actual length of the set.
+     */
+    default IntSet skipLast(int length) {
+        if (length == 0) {
+            return this;
+        }
+
+        final int size = size();
+        final int max = size - length - 1;
+        return (max < 0)? ImmutableIntArraySet.empty() : slice(new ImmutableIntRange(0, max));
+    }
+
+    /**
      * Return an immutable set from the values contained in this set.
      * The same instance will be returned in case of being already immutable.
      */

@@ -578,6 +578,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
+    @Override
     public void testSkipLastWhenEmpty() {
         final ImmutableIntSet set = newIntBuilder().build();
         assertSame(set, set.skipLast(0));
@@ -587,6 +588,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
+    @Override
     public void testSkipLast() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntSet set = newIntBuilder().add(a).add(b).add(c).build();
