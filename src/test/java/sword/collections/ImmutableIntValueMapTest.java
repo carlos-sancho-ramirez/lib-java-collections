@@ -580,4 +580,59 @@ interface ImmutableIntValueMapTest<T, B extends ImmutableIntTransformableBuilder
             assertSame(map, map.take(24));
         })));
     }
+
+    @Test
+    default void testSkipLastWhenEmpty() {
+        final ImmutableIntValueMap<T> map = newBuilder().build();
+        assertSame(map, map.skipLast(0));
+        assertSame(map, map.skipLast(1));
+        assertSame(map, map.skipLast(2));
+        assertSame(map, map.skipLast(24));
+    }
+
+    @Test
+    default void testSkipLast() {
+        withKey(a -> withKey(b -> withKey(c -> {
+            final int aValue = valueFromKey(a);
+            final int bValue = valueFromKey(b);
+            final int cValue = valueFromKey(c);
+            final ImmutableIntValueMap<T> map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            assertSame(map, map.skipLast(0));
+
+            final int size = map.size();
+            final T firstKey = map.keyAt(0);
+            final int firstValue = map.valueAt(0);
+            final T secondKey = (size >= 2)? map.keyAt(1) : null;
+            final int secondValue = (size >= 2)? map.valueAt(1) : 0;
+
+            final ImmutableIntValueMap<T> map1 = map.skipLast(1);
+            assertEquals(size - 1, map1.size());
+            if (size >= 2) {
+                assertSame(firstKey, map1.keyAt(0));
+                assertEquals(firstValue, map1.valueAt(0));
+                if (size == 3) {
+                    assertSame(secondKey, map1.keyAt(1));
+                    assertEquals(secondValue, map1.valueAt(1));
+                }
+            }
+
+            final ImmutableIntValueMap<T> map2 = map.skipLast(2);
+            if (size < 3) {
+                assertTrue(map2.isEmpty());
+            }
+            else {
+                assertEquals(1, map2.size());
+                assertSame(firstKey, map2.keyAt(0));
+                assertEquals(firstValue, map2.valueAt(0));
+            }
+
+            assertTrue(map.skipLast(3).isEmpty());
+            assertTrue(map.skipLast(4).isEmpty());
+            assertTrue(map.skipLast(24).isEmpty());
+        })));
+    }
 }
