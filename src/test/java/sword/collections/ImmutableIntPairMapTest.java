@@ -596,6 +596,62 @@ public final class ImmutableIntPairMapTest implements IntPairMapTest<ImmutableIn
         })));
     }
 
+    @Test
+    public void testTakeLastWhenEmpty() {
+        final ImmutableIntPairMap map = newBuilder().build();
+        assertSame(map, map.takeLast(0));
+        assertSame(map, map.takeLast(1));
+        assertSame(map, map.takeLast(2));
+        assertSame(map, map.takeLast(24));
+    }
+
+    @Test
+    public void testTakeLast() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final int aValue = valueFromKey(a);
+            final int bValue = valueFromKey(b);
+            final int cValue = valueFromKey(c);
+            final ImmutableIntPairMap map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            assertSame(ImmutableIntPairMap.empty(), map.takeLast(0));
+
+            final int size = map.size();
+            final int secondKey = (size >= 2)? map.keyAt(1) : 0;
+            final int secondValue = (size >= 2)? map.valueAt(1) : 0;
+            final int thirdKey = (size >= 3)? map.keyAt(2) : 0;
+            final int thirdValue = (size >= 3)? map.valueAt(2) : 0;
+
+            final ImmutableIntPairMap take1 = map.takeLast(1);
+            if (size == 1) {
+                assertSame(map, take1);
+            }
+            else {
+                assertEquals(1, take1.size());
+                assertEquals((size == 2)? secondKey : thirdKey, take1.keyAt(0));
+                assertEquals((size == 2)? secondValue : thirdValue, take1.valueAt(0));
+            }
+
+            final ImmutableIntPairMap take2 = map.takeLast(2);
+            if (size <= 2) {
+                assertSame(map, take2);
+            }
+            else {
+                assertEquals(2, take2.size());
+                assertEquals(secondKey, take2.keyAt(0));
+                assertEquals(secondValue, take2.valueAt(0));
+                assertEquals(thirdKey, take2.keyAt(1));
+                assertEquals(thirdValue, take2.valueAt(1));
+            }
+
+            assertSame(map, map.takeLast(3));
+            assertSame(map, map.takeLast(4));
+            assertSame(map, map.takeLast(24));
+        })));
+    }
+
     static final class SameKeyAndValueTraversableBuilder implements ImmutableIntTransformableBuilder {
         private final ImmutableIntPairMap.Builder builder = new ImmutableIntPairMap.Builder();
 

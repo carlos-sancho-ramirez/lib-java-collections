@@ -259,6 +259,23 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
         return new ImmutableIntPairMap(newKeys, newValues);
     }
 
+    private ImmutableIntPairMap take(int index, int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableIntPairMap.empty();
+        }
+
+        final int[] newKeys = new int[length];
+        final int[] newValues = new int[length];
+        System.arraycopy(_keys, index, newKeys, 0, length);
+        System.arraycopy(_values, index, newValues, 0, length);
+        return new ImmutableIntPairMap(newKeys, newValues);
+    }
+
     @Override
     public ImmutableIntPairMap skip(int length) {
         return skip(length, length);
@@ -278,20 +295,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
      */
     @Override
     public ImmutableIntPairMap take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableIntPairMap.empty();
-        }
-
-        final int[] newKeys = new int[length];
-        final int[] newValues = new int[length];
-        System.arraycopy(_keys, 0, newKeys, 0, length);
-        System.arraycopy(_values, 0, newValues, 0, length);
-        return new ImmutableIntPairMap(newKeys, newValues);
+        return take(0, length);
     }
 
     /**
@@ -310,6 +314,22 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
     @Override
     public ImmutableIntPairMap skipLast(int length) {
         return skip(0, length);
+    }
+
+    /**
+     * Returns a new ImmutableIntPairMap where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this map.
+     * @return A new ImmutableIntPairMap instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableIntPairMap takeLast(int length) {
+        return take(_values.length - length, length);
     }
 
     @Override
