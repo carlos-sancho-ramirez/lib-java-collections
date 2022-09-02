@@ -160,6 +160,7 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         final ImmutableBitSetImpl set = newIntBuilder().build();
         assertSame(set, set.takeLast(0));
@@ -169,6 +170,7 @@ public final class ImmutableBitSetImplTest extends ImmutableIntSetTest {
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableBitSetImpl set = newIntBuilder().add(a).add(b).add(c).build();

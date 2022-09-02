@@ -432,6 +432,7 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     public ImmutableIntSet takeLast(int length) {
         if (_value == null) {
             return this;

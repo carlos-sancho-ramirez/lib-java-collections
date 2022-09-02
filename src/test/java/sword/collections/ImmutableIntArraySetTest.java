@@ -250,6 +250,7 @@ public final class ImmutableIntArraySetTest extends ImmutableIntSetTest {
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         final ImmutableIntArraySet set = newIntBuilder().build();
         assertSame(set, set.takeLast(0));
@@ -259,6 +260,7 @@ public final class ImmutableIntArraySetTest extends ImmutableIntSetTest {
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntArraySet set = newIntBuilder().add(a).add(b).add(c).build();
