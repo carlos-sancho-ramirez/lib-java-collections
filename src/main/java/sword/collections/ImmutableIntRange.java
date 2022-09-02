@@ -130,6 +130,24 @@ public final class ImmutableIntRange extends AbstractImmutableIntSet {
                 ImmutableIntArraySet.empty();
     }
 
+    /**
+     * Returns a new ImmutableIntSet where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this range.
+     * @return A new ImmutableIntSet instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    @Override
+    public ImmutableIntSet takeLast(int length) {
+        return (length == 0)? ImmutableIntArraySet.empty() :
+                (length >= _max - _min + 1)? this : new ImmutableIntRange(_max - length + 1, _max);
+    }
+
     @Override
     public ImmutableIntSet removeAt(int index) {
         if (index < 0 || index >= size()) {

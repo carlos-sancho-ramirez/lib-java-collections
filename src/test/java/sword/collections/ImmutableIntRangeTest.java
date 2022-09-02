@@ -416,4 +416,44 @@ class ImmutableIntRangeTest {
             }
         });
     }
+
+    @Test
+    public void testTakeLast() {
+        withRange(set -> {
+            assertTrue(set.takeLast(0).isEmpty());
+
+            final int size = set.size();
+            if (size > 0) {
+                final ImmutableIntSet take1 = set.takeLast(1);
+                if (size == 1) {
+                    assertSame(set, take1);
+                }
+                else {
+                    assertEquals(1, take1.size());
+                    assertEquals(set.valueAt(size - 1), take1.valueAt(0));
+                }
+
+                final ImmutableIntSet take2 = set.takeLast(2);
+                if (size <= 2) {
+                    assertSame(set, take2);
+                }
+                else {
+                    assertEquals(2, take2.size());
+                    assertEquals(set.valueAt(size - 2), take2.valueAt(0));
+                    assertEquals(set.valueAt(size - 1), take2.valueAt(1));
+                }
+
+                final ImmutableIntSet take24 = set.takeLast(24);
+                if (size <= 24) {
+                    assertSame(set, take24);
+                }
+                else {
+                    assertEquals(24, take24.size());
+                    for (int i = 0; i < 24; i++) {
+                        assertEquals(set.valueAt(size - 24 + i), take24.valueAt(i));
+                    }
+                }
+            }
+        });
+    }
 }
