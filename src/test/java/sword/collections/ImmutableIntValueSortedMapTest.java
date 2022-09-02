@@ -377,6 +377,7 @@ public final class ImmutableIntValueSortedMapTest implements ImmutableIntValueMa
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         final ImmutableIntValueSortedMap<String> map = newBuilder().build();
         assertSame(map, map.takeLast(0));
@@ -386,6 +387,7 @@ public final class ImmutableIntValueSortedMapTest implements ImmutableIntValueMa
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withKey(a -> withKey(b -> withKey(c -> {
             final int aValue = valueFromKey(a);

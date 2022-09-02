@@ -155,6 +155,24 @@ public interface ImmutableIntValueMap<T> extends IntValueMap<T>, ImmutableIntTra
         return (max < 0)? ImmutableIntValueHashMap.empty() : slice(new ImmutableIntRange(0, max));
     }
 
+    /**
+     * Returns a new ImmutableIntValueMap where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this map.
+     * @return A new ImmutableIntValueMap instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    @ToBeAbstract("Unable to provide the proper type. If it was a sorted map, it sortFunction is lost")
+    default ImmutableIntValueMap<T> takeLast(int length) {
+        final int size = size();
+        return (size == 0)? this : (length == 0)? ImmutableIntValueHashMap.empty() : slice(new ImmutableIntRange(size - length, size - 1));
+    }
+
     interface Builder<E> extends IntValueMap.Builder<E> {
         Builder<E> put(E key, int value);
         ImmutableIntValueMap<E> build();
