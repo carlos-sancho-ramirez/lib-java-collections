@@ -164,6 +164,46 @@ abstract class IntListTest<B extends IntListBuilder> implements IntTransformable
     }
 
     @Test
+    public void testTakeLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntList list = supplier.newBuilder().build();
+            assertSame(list, list.takeLast(0));
+            assertSame(list, list.takeLast(1));
+            assertSame(list, list.takeLast(2));
+            assertSame(list, list.takeLast(24));
+        });
+    }
+
+    @Test
+    public void testTakeLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntList list = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertSame(ImmutableIntList.empty(), list.takeLast(0));
+
+            final IntList take1 = list.takeLast(1);
+            assertEquals(1, take1.size());
+            assertEquals(c, take1.valueAt(0));
+
+            final IntList take2 = list.takeLast(2);
+            assertEquals(2, take2.size());
+            assertEquals(b, take2.valueAt(0));
+            assertEquals(c, take2.valueAt(1));
+
+            final IntList take3 = list.takeLast(3);
+            assertEquals(3, take3.size());
+            assertEquals(a, take3.valueAt(0));
+            assertEquals(b, take3.valueAt(1));
+            assertEquals(c, take3.valueAt(2));
+
+            final IntList take4 = list.takeLast(4);
+            assertEquals(3, take4.size());
+            assertEquals(a, take4.valueAt(0));
+            assertEquals(b, take4.valueAt(1));
+            assertEquals(c, take4.valueAt(2));
+        }))));
+    }
+
+    @Test
     void testToImmutableWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableIntList immutableList = supplier.newBuilder().build().toImmutable();

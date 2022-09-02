@@ -543,6 +543,7 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         final ImmutableIntList list = newIntBuilder().build();
         assertSame(list, list.takeLast(0));
@@ -552,6 +553,7 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withValue(a -> withValue(b -> withValue(c -> {
             final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();

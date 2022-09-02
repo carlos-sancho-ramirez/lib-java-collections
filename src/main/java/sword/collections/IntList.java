@@ -112,6 +112,23 @@ public interface IntList extends IntTransformable {
     }
 
     /**
+     * Returns a new IntList where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this list.
+     * @return A new IntList instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    default IntList takeLast(int length) {
+        final int size = size();
+        return (size == 0)? this : (length == 0)? ImmutableIntList.empty() : slice(new ImmutableIntRange(size - length, size - 1));
+    }
+
+    /**
      * Return an immutable list from the values contained in this map.
      * The same instance will be returned in case of being already immutable.
      */

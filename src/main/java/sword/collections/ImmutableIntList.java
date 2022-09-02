@@ -222,6 +222,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     public ImmutableIntList takeLast(int length) {
         return take(_values.length - length, length);
     }
