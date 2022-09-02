@@ -420,6 +420,59 @@ final class ImmutableBitSetImpl extends AbstractImmutableIntSet {
         return result;
     }
 
+    /**
+     * Returns a new ImmutableIntSet where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this set.
+     * @return A new ImmutableIntSet instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableIntSet takeLast(int length) {
+        if (_value == null) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableIntArraySet.empty();
+        }
+
+        final int wordCount = _value.length;
+        int wordIndex;
+        int bitIndex = 31;
+        int count = 0;
+
+        outLoop:
+        for (wordIndex = wordCount - 1; wordIndex >= 0; wordIndex--) {
+            for (bitIndex = 31; bitIndex >= 0; bitIndex--) {
+                if ((_value[wordIndex] & (1 << bitIndex)) != 0) {
+                    if (++count > length) {
+                        break outLoop;
+                    }
+                }
+            }
+        }
+
+        if (count <= length) {
+            return this;
+        }
+
+        final int[] newValue = new int[wordCount];
+        final int copyFrom = (bitIndex != 31)? wordIndex : wordIndex + 1;
+        System.arraycopy(_value, copyFrom, newValue, copyFrom, wordCount - copyFrom);
+        if (bitIndex != 31) {
+            newValue[wordIndex] &= (-1) << (bitIndex + 1);
+        }
+
+        final ImmutableBitSetImpl result = new ImmutableBitSetImpl(newValue);
+        result._size = length;
+        return result;
+    }
+
     @Override
     public ImmutableIntSet toImmutable() {
         return this;
