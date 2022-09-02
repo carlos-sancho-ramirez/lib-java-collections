@@ -126,6 +126,38 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
         return new ImmutableIntList(newValues);
     }
 
+    private ImmutableIntList skip(int index, int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Unable to skip a negative number of elements");
+        }
+        else if (length == 0) {
+            return this;
+        }
+        else if (length >= _values.length) {
+            return empty();
+        }
+
+        final int remain = _values.length - length;
+        int[] newValues = new int[remain];
+        System.arraycopy(_values, index, newValues, 0, remain);
+        return new ImmutableIntList(newValues);
+    }
+
+    private ImmutableIntList take(int index, int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableIntList.empty();
+        }
+
+        final int[] newValues = new int[length];
+        System.arraycopy(_values, index, newValues, 0, length);
+        return new ImmutableIntList(newValues);
+    }
+
     /**
      * Returns a new ImmutableIntList where the <code>length</code>
      * amount of first elements has been removed.
@@ -141,20 +173,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
      */
     @Override
     public ImmutableIntList skip(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Unable to skip a negative number of elements");
-        }
-        else if (length == 0) {
-            return this;
-        }
-        else if (length >= _values.length) {
-            return empty();
-        }
-
-        final int remain = _values.length - length;
-        int[] newValues = new int[remain];
-        System.arraycopy(_values, length, newValues, 0, remain);
-        return new ImmutableIntList(newValues);
+        return skip(length, length);
     }
 
     /**
@@ -171,18 +190,7 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
      */
     @Override
     public ImmutableIntList take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableIntList.empty();
-        }
-
-        final int[] newValues = new int[length];
-        System.arraycopy(_values, 0, newValues, 0, length);
-        return new ImmutableIntList(newValues);
+        return take(0, length);
     }
 
     /**
@@ -199,20 +207,23 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
      *         than the actual length of the list.
      */
     public ImmutableIntList skipLast(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Unable to skip a negative number of elements");
-        }
-        else if (length == 0) {
-            return this;
-        }
-        else if (length >= _values.length) {
-            return empty();
-        }
+        return skip(0, length);
+    }
 
-        final int remain = _values.length - length;
-        int[] newValues = new int[remain];
-        System.arraycopy(_values, 0, newValues, 0, remain);
-        return new ImmutableIntList(newValues);
+    /**
+     * Returns a new ImmutableIntList where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this list.
+     * @return A new ImmutableIntList instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableIntList takeLast(int length) {
+        return take(_values.length - length, length);
     }
 
     @Override

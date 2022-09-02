@@ -482,35 +482,6 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
 
     @Test
     @Override
-    public void testSkipLastWhenEmpty() {
-        withBuilderSupplier(supplier -> {
-            final ImmutableIntList list = supplier.newBuilder().build();
-            assertSame(list, list.skipLast(0));
-            assertSame(list, list.skipLast(1));
-            assertSame(list, list.skipLast(2));
-            assertSame(list, list.skipLast(24));
-        });
-    }
-
-    @Test
-    @Override
-    public void testSkipLast() {
-        withValue(a -> withValue(b -> withValue(c -> {
-            final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
-
-            assertSame(list, list.skipLast(0));
-            assertEquals(newIntBuilder().add(a).add(b).build(), list.skipLast(1));
-            assertEquals(newIntBuilder().add(a).build(), list.skipLast(2));
-
-            final ImmutableIntList emptyList = ImmutableIntList.empty();
-            assertSame(emptyList, list.skipLast(3));
-            assertSame(emptyList, list.skipLast(4));
-            assertSame(emptyList, list.skipLast(24));
-        })));
-    }
-
-    @Test
-    @Override
     public void testTakeWhenEmpty() {
         final ImmutableIntList list = newIntBuilder().build();
         assertSame(list, list.take(0));
@@ -539,6 +510,66 @@ public final class ImmutableIntListTest extends IntListTest<ImmutableIntList.Bui
             assertSame(list, list.take(3));
             assertSame(list, list.take(4));
             assertSame(list, list.take(24));
+        })));
+    }
+
+    @Test
+    @Override
+    public void testSkipLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final ImmutableIntList list = supplier.newBuilder().build();
+            assertSame(list, list.skipLast(0));
+            assertSame(list, list.skipLast(1));
+            assertSame(list, list.skipLast(2));
+            assertSame(list, list.skipLast(24));
+        });
+    }
+
+    @Test
+    @Override
+    public void testSkipLast() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
+
+            assertSame(list, list.skipLast(0));
+            assertEquals(newIntBuilder().add(a).add(b).build(), list.skipLast(1));
+            assertEquals(newIntBuilder().add(a).build(), list.skipLast(2));
+
+            final ImmutableIntList emptyList = ImmutableIntList.empty();
+            assertSame(emptyList, list.skipLast(3));
+            assertSame(emptyList, list.skipLast(4));
+            assertSame(emptyList, list.skipLast(24));
+        })));
+    }
+
+    @Test
+    public void testTakeLastWhenEmpty() {
+        final ImmutableIntList list = newIntBuilder().build();
+        assertSame(list, list.takeLast(0));
+        assertSame(list, list.takeLast(1));
+        assertSame(list, list.takeLast(2));
+        assertSame(list, list.takeLast(24));
+    }
+
+    @Test
+    public void testTakeLast() {
+        withValue(a -> withValue(b -> withValue(c -> {
+            final ImmutableIntList list = newIntBuilder().add(a).add(b).add(c).build();
+
+            assertSame(ImmutableIntList.empty(), list.takeLast(0));
+
+            final ImmutableIntList take1 = list.takeLast(1);
+            assertEquals(1, take1.size());
+            assertEquals(c, take1.valueAt(0));
+
+            final ImmutableIntList take2 = list.takeLast(2);
+            assertEquals(2, take2.size());
+            assertEquals(b, take2.valueAt(0));
+            assertEquals(c, take2.valueAt(1));
+
+            assertSame(list, list.takeLast(3));
+            assertSame(list, list.takeLast(4));
+            assertSame(list, list.takeLast(24));
         })));
     }
 }
