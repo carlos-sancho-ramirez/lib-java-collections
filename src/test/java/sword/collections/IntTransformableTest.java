@@ -561,4 +561,65 @@ interface IntTransformableTest<B extends IntTransformableBuilder> extends IntTra
             assertTrue(transformable.skipLast(24).isEmpty());
         }))));
     }
+
+    @Test
+    default void testTakeLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntTransformable transformable = supplier.newBuilder().build();
+            assertSame(transformable, transformable.takeLast(0));
+            assertTrue(transformable.takeLast(1).isEmpty());
+            assertTrue(transformable.takeLast(2).isEmpty());
+            assertTrue(transformable.takeLast(24).isEmpty());
+        });
+    }
+
+    @Test
+    default void testTakeLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntTransformable transformable = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertTrue(transformable.takeLast(0).isEmpty());
+
+            final int size = transformable.size();
+            final int first = transformable.valueAt(0);
+            final int second = (size >= 2)? transformable.valueAt(1) : 0;
+            final int third = (size >= 3)? transformable.valueAt(2) : 0;
+
+            final IntTransformable take1 = transformable.takeLast(1);
+            assertEquals(1, take1.size());
+            assertEquals((size == 1)? first : (size == 2)? second : third, take1.valueAt(0));
+
+            final IntTransformable take2 = transformable.takeLast(2);
+            assertEquals(Math.min(size, 2), take2.size());
+            if (size <= 2) {
+                assertEquals(first, take2.valueAt(0));
+                if (size == 2) {
+                    assertEquals(second, take2.valueAt(1));
+                }
+            }
+            else {
+                assertEquals(second, take2.valueAt(0));
+                assertEquals(third, take2.valueAt(1));
+            }
+
+            final IntTransformable take3 = transformable.takeLast(3);
+            assertEquals(size, take3.size());
+            assertEquals(first, take3.valueAt(0));
+            if (size >= 2) {
+                assertEquals(second, take3.valueAt(1));
+                if (size == 3) {
+                    assertEquals(third, take3.valueAt(2));
+                }
+            }
+
+            final IntTransformable take4 = transformable.takeLast(3);
+            assertEquals(size, take4.size());
+            assertEquals(first, take4.valueAt(0));
+            if (size >= 2) {
+                assertEquals(second, take4.valueAt(1));
+                if (size == 3) {
+                    assertEquals(third, take4.valueAt(2));
+                }
+            }
+        }))));
+    }
 }

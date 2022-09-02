@@ -158,4 +158,20 @@ public interface IntTransformable extends IntTraversable {
         final int max = size - length - 1;
         return (max < 0)? ImmutableIntList.empty() : slice(new ImmutableIntRange(0, max));
     }
+
+    /**
+     * Returns a new collection where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this collection.
+     * @return A new instance just including the last elements,
+     *         an empty instance in case the given length is 0.
+     */
+    @ToBeAbstract("Unable to provide the proper type. If it was a sorted collection, its sortFunction is lost")
+    default IntTransformable takeLast(int length) {
+        final int size = size();
+        return (size == 0)? this : (length == 0)? ImmutableIntList.empty() : slice(new ImmutableIntRange(size - length, size - 1));
+    }
 }
