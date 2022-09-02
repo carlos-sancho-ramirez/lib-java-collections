@@ -623,6 +623,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
+    @Override
     public void testTakeLastWhenEmpty() {
         withBuilderSupplier(supplier -> {
             final ImmutableIntSet set = supplier.newBuilder().build();
@@ -634,6 +635,7 @@ abstract class ImmutableIntSetTest extends IntSetTest<ImmutableIntSet.Builder> i
     }
 
     @Test
+    @Override
     public void testTakeLast() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final ImmutableIntSet set = supplier.newBuilder().add(a).add(b).add(c).build();

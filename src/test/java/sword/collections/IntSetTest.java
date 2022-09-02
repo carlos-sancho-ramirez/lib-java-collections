@@ -245,6 +245,67 @@ abstract class IntSetTest<B extends IntSet.Builder> implements IntTransformableT
     }
 
     @Test
+    public void testTakeLastWhenEmpty() {
+        withBuilderSupplier(supplier -> {
+            final IntSet set = supplier.newBuilder().build();
+            assertSame(set, set.takeLast(0));
+            assertTrue(set.takeLast(1).isEmpty());
+            assertTrue(set.takeLast(2).isEmpty());
+            assertTrue(set.takeLast(24).isEmpty());
+        });
+    }
+
+    @Test
+    public void testTakeLast() {
+        withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
+            final IntSet set = supplier.newBuilder().add(a).add(b).add(c).build();
+            assertTrue(set.takeLast(0).isEmpty());
+
+            final int size = set.size();
+            final int first = set.valueAt(0);
+            final int second = (size >= 2)? set.valueAt(1) : 0;
+            final int third = (size >= 3)? set.valueAt(2) : 0;
+
+            final IntSet take1 = set.takeLast(1);
+            assertEquals(1, take1.size());
+            assertEquals((size == 1)? first : (size == 2)? second : third, take1.valueAt(0));
+
+            final IntSet take2 = set.takeLast(2);
+            assertEquals(Math.min(size, 2), take2.size());
+            if (size <= 2) {
+                assertEquals(first, take2.valueAt(0));
+                if (size == 2) {
+                    assertEquals(second, take2.valueAt(1));
+                }
+            }
+            else {
+                assertEquals(second, take2.valueAt(0));
+                assertEquals(third, take2.valueAt(1));
+            }
+
+            final IntSet take3 = set.takeLast(3);
+            assertEquals(size, take3.size());
+            assertEquals(first, take3.valueAt(0));
+            if (size >= 2) {
+                assertEquals(second, take3.valueAt(1));
+                if (size == 3) {
+                    assertEquals(third, take3.valueAt(2));
+                }
+            }
+
+            final IntSet take4 = set.takeLast(3);
+            assertEquals(size, take4.size());
+            assertEquals(first, take4.valueAt(0));
+            if (size >= 2) {
+                assertEquals(second, take4.valueAt(1));
+                if (size == 3) {
+                    assertEquals(third, take4.valueAt(2));
+                }
+            }
+        }))));
+    }
+
+    @Test
     void testMutate() {
         withValue(a -> withValue(b -> withValue(c -> withBuilderSupplier(supplier -> {
             final IntSet set = supplier.newBuilder().add(a).add(b).build();
