@@ -1,7 +1,5 @@
 package sword.collections;
 
-import sword.annotations.ToBeAbstract;
-
 public interface IntSet extends IntTransformable {
 
     /**

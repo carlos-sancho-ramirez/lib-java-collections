@@ -293,6 +293,25 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
         return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
     }
 
+    private ImmutableIntValueHashMap<T> take(int index, int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableIntValueHashMap.empty();
+        }
+
+        final Object[] newKeys = new Object[length];
+        final int[] newHashCodes = new int[length];
+        final int[] newValues = new int[length];
+        System.arraycopy(_keys, index, newKeys, 0, length);
+        System.arraycopy(_hashCodes, index, newHashCodes, 0, length);
+        System.arraycopy(_values, index, newValues, 0, length);
+        return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
+    }
+
     @Override
     public ImmutableIntValueHashMap<T> skip(int length) {
         return skip(length, length);
@@ -312,22 +331,7 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
      */
     @Override
     public ImmutableIntValueHashMap<T> take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableIntValueHashMap.empty();
-        }
-
-        final Object[] newKeys = new Object[length];
-        final int[] newHashCodes = new int[length];
-        final int[] newValues = new int[length];
-        System.arraycopy(_keys, 0, newKeys, 0, length);
-        System.arraycopy(_hashCodes, 0, newHashCodes, 0, length);
-        System.arraycopy(_values, 0, newValues, 0, length);
-        return new ImmutableIntValueHashMap<>(newKeys, newHashCodes, newValues);
+        return take(0, length);
     }
 
     /**
@@ -346,6 +350,22 @@ public final class ImmutableIntValueHashMap<T> extends AbstractImmutableIntValue
     @Override
     public ImmutableIntValueHashMap<T> skipLast(int length) {
         return skip(0, length);
+    }
+
+    /**
+     * Returns a new ImmutableIntValueHashMap where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this map.
+     * @return A new ImmutableIntValueHashMap instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableIntValueHashMap<T> takeLast(int length) {
+        return take(_values.length - length, length);
     }
 
     public static class Builder<E> implements ImmutableIntValueMap.Builder<E> {
