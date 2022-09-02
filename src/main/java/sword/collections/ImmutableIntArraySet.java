@@ -278,6 +278,21 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
         return new ImmutableIntArraySet(newValues);
     }
 
+    private ImmutableIntArraySet take(int index, int length) {
+        final int size = _values.length;
+        if (length >= size) {
+            return this;
+        }
+
+        if (length == 0) {
+            return ImmutableIntArraySet.empty();
+        }
+
+        final int[] newValues = new int[length];
+        System.arraycopy(_values, index, newValues, 0, length);
+        return new ImmutableIntArraySet(newValues);
+    }
+
     /**
      * Returns a new ImmutableIntArraySet where the <code>length</code>
      * amount of first elements in iteration order has been removed.
@@ -310,18 +325,7 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
      */
     @Override
     public ImmutableIntArraySet take(int length) {
-        final int size = _values.length;
-        if (length >= size) {
-            return this;
-        }
-
-        if (length == 0) {
-            return ImmutableIntArraySet.empty();
-        }
-
-        final int[] newValues = new int[length];
-        System.arraycopy(_values, 0, newValues, 0, length);
-        return new ImmutableIntArraySet(newValues);
+        return take(0, length);
     }
 
     /**
@@ -340,6 +344,22 @@ public final class ImmutableIntArraySet extends AbstractImmutableIntSet {
     @Override
     public ImmutableIntArraySet skipLast(int length) {
         return skip(0, length);
+    }
+
+    /**
+     * Returns a new ImmutableIntArraySet where only the <code>length</code> amount of
+     * last elements are included, and the rest is discarded if any.
+     * <p>
+     * If length is equal or greater than the actual size, the same instance will be returned.
+     *
+     * @param length the maximum number of elements to be included from the end of this set.
+     * @return A new ImmutableIntArraySet instance just including the last elements,
+     *         the empty instance in case the given length is 0, or the same
+     *         instance in case the given length equals or greater than the
+     *         actual size of this collection.
+     */
+    public ImmutableIntArraySet takeLast(int length) {
+        return take(_values.length - length, length);
     }
 
     @Override
