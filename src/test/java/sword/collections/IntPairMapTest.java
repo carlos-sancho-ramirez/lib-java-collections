@@ -795,4 +795,84 @@ interface IntPairMapTest<B extends IntTransformableBuilder, MB extends IntPairMa
             assertTrue(map.skipLast(24).isEmpty());
         })));
     }
+
+    @Test
+    default void testTakeLastWhenEmpty() {
+        final IntPairMap map = newBuilder().build();
+        assertSame(map, map.takeLast(0));
+        assertTrue(map.takeLast(1).isEmpty());
+        assertTrue(map.takeLast(2).isEmpty());
+        assertTrue(map.takeLast(24).isEmpty());
+    }
+
+    @Test
+    default void testTakeLast() {
+        withInt(a -> withInt(b -> withInt(c -> {
+            final int aValue = valueFromKey(a);
+            final int bValue = valueFromKey(b);
+            final int cValue = valueFromKey(c);
+            final IntPairMap map = newBuilder()
+                    .put(a, aValue)
+                    .put(b, bValue)
+                    .put(c, cValue)
+                    .build();
+            assertTrue(map.takeLast(0).isEmpty());
+
+            final int size = map.size();
+            final int firstKey = map.keyAt(0);
+            final int firstValue = map.valueAt(0);
+            final int secondKey = (size >= 2)? map.keyAt(1) : 0;
+            final int secondValue = (size >= 2)? map.valueAt(1) : 0;
+            final int thirdKey = (size >= 3)? map.keyAt(2) : 0;
+            final int thirdValue = (size >= 3)? map.valueAt(2) : 0;
+
+            final IntPairMap take1 = map.takeLast(1);
+            assertEquals(1, take1.size());
+            assertEquals((size == 1)? firstKey : (size == 2)? secondKey : thirdKey, take1.keyAt(0));
+            assertEquals((size == 1)? firstValue : (size == 2)? secondValue : thirdValue, take1.valueAt(0));
+
+            final IntPairMap take2 = map.takeLast(2);
+            assertEquals(Math.min(size, 2), take2.size());
+            if (size <= 2) {
+                assertEquals(firstKey, take2.keyAt(0));
+                assertEquals(firstValue, take2.valueAt(0));
+                if (size == 2) {
+                    assertEquals(secondKey, take2.keyAt(1));
+                    assertEquals(secondValue, take2.valueAt(1));
+                }
+            }
+            else {
+                assertEquals(secondKey, take2.keyAt(0));
+                assertEquals(secondValue, take2.valueAt(0));
+                assertEquals(thirdKey, take2.keyAt(1));
+                assertEquals(thirdValue, take2.valueAt(1));
+            }
+
+            final IntPairMap take3 = map.takeLast(3);
+            assertEquals(size, take3.size());
+            assertEquals(firstKey, take3.keyAt(0));
+            assertEquals(firstValue, take3.valueAt(0));
+            if (size >= 2) {
+                assertEquals(secondKey, take3.keyAt(1));
+                assertEquals(secondValue, take3.valueAt(1));
+                if (size == 3) {
+                    assertEquals(thirdKey, take3.keyAt(2));
+                    assertEquals(thirdValue, take3.valueAt(2));
+                }
+            }
+
+            final IntPairMap take4 = map.takeLast(3);
+            assertEquals(size, take4.size());
+            assertEquals(firstKey, take4.keyAt(0));
+            assertEquals(firstValue, take4.valueAt(0));
+            if (size >= 2) {
+                assertEquals(secondKey, take4.keyAt(1));
+                assertEquals(secondValue, take4.valueAt(1));
+                if (size == 3) {
+                    assertEquals(thirdKey, take4.keyAt(2));
+                    assertEquals(thirdValue, take4.valueAt(2));
+                }
+            }
+        })));
+    }
 }

@@ -328,6 +328,7 @@ public final class ImmutableIntPairMap extends AbstractIntPairMap implements Int
      *         instance in case the given length equals or greater than the
      *         actual size of this collection.
      */
+    @Override
     public ImmutableIntPairMap takeLast(int length) {
         return take(_values.length - length, length);
     }
