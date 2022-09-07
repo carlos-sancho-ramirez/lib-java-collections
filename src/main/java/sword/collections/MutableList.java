@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.SignatureRequired;
+
 import static sword.collections.SortUtils.equal;
 
 public final class MutableList<T> extends AbstractTraversable<T> implements List<T>, MutableTraversable<T> {
@@ -325,6 +327,11 @@ public final class MutableList<T> extends AbstractTraversable<T> implements List
                 append(item);
             }
         }
+    }
+
+    @SignatureRequired
+    public void appendAll(List<T> that) {
+        appendAll((Iterable<T>) that);
     }
 
     @Override

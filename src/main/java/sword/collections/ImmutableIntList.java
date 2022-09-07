@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.SignatureRequired;
+
 public final class ImmutableIntList extends AbstractImmutableIntTransformable implements IntList {
 
     private static final ImmutableIntList EMPTY = new ImmutableIntList(new int[0]);
@@ -467,6 +469,11 @@ public final class ImmutableIntList extends AbstractImmutableIntTransformable im
 
             return builder.build();
         }
+    }
+
+    @SignatureRequired
+    public ImmutableIntList appendAll(IntList that) {
+        return appendAll((Iterable<Integer>) that);
     }
 
     @Override

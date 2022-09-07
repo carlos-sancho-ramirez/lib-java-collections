@@ -3,7 +3,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'checkstyle'
 
 group = 'com.github.carlos-sancho-ramirez'
-version = '1.4.0'
+version = '1.4.1'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

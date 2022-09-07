@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.SignatureRequired;
+
 public final class MutableIntList extends AbstractIntTraversable implements IntList, MutableIntTransformable {
 
     public static MutableIntList empty(ArrayLengthFunction arrayLengthFunction) {
@@ -166,6 +168,11 @@ public final class MutableIntList extends AbstractIntTraversable implements IntL
                 append(item);
             }
         }
+    }
+
+    @SignatureRequired
+    public void appendAll(IntList that) {
+        appendAll((Iterable<Integer>) that);
     }
 
     /**

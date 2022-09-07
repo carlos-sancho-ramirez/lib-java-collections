@@ -1,5 +1,7 @@
 package sword.collections;
 
+import sword.annotations.SignatureRequired;
+
 import java.util.Collection;
 
 public final class ImmutableList<T> extends AbstractImmutableTransformable<T> implements List<T> {
@@ -593,6 +595,11 @@ public final class ImmutableList<T> extends AbstractImmutableTransformable<T> im
         }
 
         return builder.build();
+    }
+
+    @SignatureRequired
+    public ImmutableList<T> appendAll(ImmutableList<T> that) {
+        return appendAll((Iterable<T>) that);
     }
 
     @Override
